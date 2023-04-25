@@ -43,18 +43,19 @@ GO
 
 INSERT INTO acce.tbPantallas(pant_Nombre, pant_Url, pant_Menu, pant_HtmlId, pant_UsuCreacion)
 VALUES ('Usuarios', '/Usuario/Listado', 'Seguridad', 'usuariosItem', 1),
-       ('Departamentos', '/Departamento/Listado', 'General', 'departamentosItem', 1),
-	   ('Municipios', '/Municipio/Listado', 'General', 'municipiosItem', 1),
-	   ('Estados Civiles', '/EstadoCivil/Listado', 'General', 'estadosItem', 1),
-	   ('Categorías', '/Categorias/Listado', 'optiillaje', 'categoriasItem', 1),
-	   ('Clientes', '/Clientes/Listado', 'optiillaje', 'clientesItem', 1),
-	   ('Empleados', '/Empleados/Listado','optiillaje', 'empleadosItem', 1),
-	   ('Facturas', '/Facturas/Listado', 'optiillaje', 'facturasItem', 1),
-	   ('Métodos de Pago', '/MetodosPago/Listado', 'optiillaje', 'metodosItem', 1),
-	   ('Productos', '/Producto/Listado', 'optiillaje', 'productosItem', 1),
-	   ('Proveedores', '/Proveedor/Listado', 'optiillaje', 'proveedoresItem', 1),
-	   ('Sucursales', '/Sucursal/Listado', 'optiillaje', 'sucursalesItem', 1)
-
+       ('Rol', '/Rol/Listado', 'Seguridad', 'rolItem', 1),
+       ('Empleados', '/Empleados/Listado', 'Optica', 'empleadosItem', 1),
+	   ('Clientes', '/Clientes/Listado', 'Optica', 'clientesItem', 1),
+	   ('Proveedores', '/Proveedores/Listado', 'Optica', 'proveedoresItem', 1),
+	   ('Citas', '/Citas/Listado', 'Optica', 'opticaItem', 1),
+	   ('Consultorio', '/Consultorio/Listado', 'Optica', 'opticaItem', 1),
+	   ('Consultas', '/Consultas/Listado','Optica', 'consultasItem', 1),
+	   ('Ordenes', '/Ordenes/Listado', 'Optica', 'ordenesItem', 1),
+	   ('Aros', '/Aros/Listado', 'Optica', 'arosItem', 1),
+	   ('Envios', '/Envios/Listado', 'Optica', 'enviosItem', 1),
+	   ('Categorias', '/Categorias/Listado', 'Optica', 'categoriasItem', 1),
+	   ('Direcciones', '/Direcciones/Listado', 'Optica', 'direccionItem', 1),
+       ('Marca', '/Marca/Listado', 'Optica', 'marcasItem', 1)
 
 --***********CREACION TABLA ROLES/PANTALLA*****************---
 CREATE TABLE acce.tbPantallasPorRoles(
@@ -165,7 +166,7 @@ CREATE TABLE gral.tbMunicipios(
 	muni_FechaModificacion	DATETIME,
 	muni_Estado				BIT	NOT NULL CONSTRAINT DF_muni_Estado DEFAULT(1)
 	CONSTRAINT PK_gral_tbMunicipios_muni_Id 										PRIMARY KEY(muni_Id),
-	CONSTRAINT FK_gral_tbMunicipios_gral_tbDepartamentos_depa_Id 						FOREIGN KEY (depa_Id) 						REFERENCES gral.tbDepartamentos(depa_Id),
+	CONSTRAINT FK_gral_tbMunicipios_gral_tbDepartamentos_depa_Id 				    FOREIGN KEY (depa_Id) 						REFERENCES gral.tbDepartamentos(depa_Id),
 	CONSTRAINT FK_gral_tbMunicipios_acce_tbUsuarios_muni_UsuCreacion_user_Id  		FOREIGN KEY(muni_UsuCreacion) 				REFERENCES acce.tbUsuarios(user_Id),
 	CONSTRAINT FK_gral_tbMunicipios_acce_tbUsuarios_muni_UsuModificacion_user_Id  	FOREIGN KEY(muni_UsuModificacion) 			REFERENCES acce.tbUsuarios(user_Id)
 );
@@ -672,3 +673,34 @@ VALUES('0101','La Ceiba ','01', 1),
       ('1803','El Negrito','18', 1),
 	  ('1804','El Progreso','18', 1),
       ('1805','Jocon','18', 1)
+
+	  
+--********INSERT TABLA Categorias****************---
+GO
+INSERT INTO opti.tbCategorias(cate_Nombre, cate_UsuCreacion)
+VALUES('Aros de metal',1),
+      ('Aros de acetato',1),
+	  ('Aros semirrï¿½gidos',1),
+	  ('Aros de titanio',1),
+	  ('Aros de titanio',1),
+	  ('Aros deportivos',1),
+	  ('Aros de diseï¿½o',1)
+
+
+--********INSERT TABLA METODOS DE PAGOS****************---
+GO
+INSERT INTO opti.tbMetodosPago(meto_Nombre, meto_UsuCreacion)
+VALUES('Efectivo',1),
+      ('Tarjeta',1)
+
+--********INSERT TABLA Estados Civiles****************---
+GO
+INSERT INTO gral.tbEstadosCiviles(estacivi_Nombre,estacivi_UsuCreacion)
+VALUES('Soltero(a)',1),
+      ('Casado(a)',1),
+	  ('Divorciado(a)',1),
+	  ('Union Libre',1)
+--********INSERT TABLA Estados Civiles****************---
+INSERT INTO opti.tbProveedores(prov_Nombre,prov_Direccion,prov_CorreoElectronico,prov_Telefono,prov_UsuCreacion)
+VALUES('Optica Universal','2 Calle 6 Avenida N.O. Bï¿½, Guamilito, 6 Avenida','Optica_Universal@hotmail.com','2550-1550',1),
+      ('Optica Optimas','Barrio Medina 3ra ave, entre 10 y 11 Calle','Optica.Optimas@hotmail.com','9928-0486',1)
