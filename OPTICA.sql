@@ -276,8 +276,6 @@ CREATE TABLE opti.tbEmpleados(
 	empe_FechaNacimiento		DATE			NOT NULL,
 	empe_Sexo					CHAR(1)			NOT NULL,
 	estacivi_Id					INT				NOT NULL,
-	--muni_Id						CHAR(4)			NOT NULL,
-	--empe_Direccion				NVARCHAR(250)	NOT NULL,
 	empe_Telefono				NVARCHAR(15)	NOT NULL,
 	empe_CorreoElectronico		NVARCHAR(200)	NOT NULL,
 	carg_Id						INT				NOT NULL,
@@ -291,8 +289,7 @@ CREATE TABLE opti.tbEmpleados(
 	
 	CONSTRAINT PK_opti_tbEmpleados_empe_Id 										PRIMARY KEY(empe_Id),
 	CONSTRAINT CK_opti_tbEmpleados_empe_Sexo									CHECK(empe_sexo IN ('F', 'M')),
-	CONSTRAINT FK_opti_tbEmpleados_gral_tbEstadosCiviles_estacivi_Id			FOREIGN KEY(estacivi_Id)					REFERENCES gral.tbEstadosCiviles(estacivi_Id),			
-	--CONSTRAINT FK_opti_tbEmpleados_gral_tbMunicipios_muni_Id					FOREIGN KEY(muni_Id)						REFERENCES gral.tbMunicipios(muni_Id),		
+	CONSTRAINT FK_opti_tbEmpleados_gral_tbEstadosCiviles_estacivi_Id			FOREIGN KEY(estacivi_Id)					REFERENCES gral.tbEstadosCiviles(estacivi_Id),		
 	CONSTRAINT FK_opti_tbEmpleados_opti_tbCargos_carg_Id						FOREIGN KEY(carg_Id)						REFERENCES opti.tbCargos(carg_Id),
 	CONSTRAINT FK_opti_tbEmpleados_acce_tbUsuarios_UserCreate					FOREIGN KEY(empe_UsuCreacion)				REFERENCES acce.tbUsuarios(user_Id),
 	CONSTRAINT FK_opti_tbEmpleados_acce_tbUsuarios_UserUpdate					FOREIGN KEY(empe_UsuModificacion)			REFERENCES acce.tbUsuarios(user_Id),
@@ -350,54 +347,6 @@ CREATE TABLE opti.tbAros
 	CONSTRAINT FK_opti_tbAros_acce_tbUsuarios_clie_UsuModificacion_user_Id  	FOREIGN KEY(aros_UsuModificacion) 	REFERENCES acce.tbUsuarios(user_Id)
 );
 
-
---********TABLA Factura****************---
-CREATE TABLE opti.tbFacturas
-(
-	fact_Id								INT IDENTITY,
-	clie_Id								INT NOT NULL,
-	fact_Fecha							DATETIME NOT NULL,
-	meto_Id								INT NOT NULL,
-	empe_Id								INT NOT NULL,
-	fact_esEnvio						BIT NOT NULL,
-	fact_PrecioTotal					DECIMAL(18,2),
-	fact_UsuCreacion					INT NOT NULL,
-	fact_FechaCreacion					DATETIME NOT NULL CONSTRAINT DF_fact_FechaCreacion DEFAULT(GETDATE()),
-	fact_FechaModificacion				DATETIME,
-	fact_UsuModificacion				INT,
-	fact_Estado							BIT NOT NULL CONSTRAINT DF_fact_Estado DEFAULT(1),
-
-	CONSTRAINT PK_opti_tbFacturas_fact_Id 											PRIMARY KEY(fact_Id),
-	CONSTRAINT FK_opti_tbFacturas_opti_tbClientes_clie_Id 							FOREIGN KEY(clie_Id) 				REFERENCES opti.tbClientes(clie_Id),
-	CONSTRAINT FK_opti_tbFacturas_opti_tbMetodosPago_meto_Id 						FOREIGN KEY(meto_Id) 				REFERENCES opti.tbMetodosPago(meto_Id),
-	CONSTRAINT FK_opti_tbFacturas_opti_tbEmpleados_empe_Id							FOREIGN KEY(empe_Id)				REFERENCES opti.tbEmpleados(empe_Id),
-	CONSTRAINT FK_opti_tbFacturas_acce_tbUsuarios_fact_UsuCreacion_user_Id  		FOREIGN KEY(fact_UsuCreacion) 		REFERENCES acce.tbUsuarios(user_Id),
-	CONSTRAINT FK_opti_tbFacturas_acce_tbUsuarios_fact_UsuModificacion_user_Id  	FOREIGN KEY(fact_UsuModificacion) 	REFERENCES acce.tbUsuarios(user_Id)
-)
-
---********TABLA Factura Detalles****************---
-CREATE TABLE opti.tbFacturasDetalles
-(
-	factdeta_Id								INT IDENTITY,
-	fact_Id									INT NOT NULL,
-	cons_Id									INT NOT NULL,
-	aros_Id									INT NOT NULL,
-	orde_Id									INT NOT NULL,
-	envi_Id									INT NOT NULL,
-	factdeta_Precio							DECIMAL(18,2) NOT NULL,
-	factdeta_UsuCreacion					INT NOT NULL,
-	factdeta_FechaCreacion					DATETIME NOT NULL CONSTRAINT DF_factdeta_FechaCreacion DEFAULT(GETDATE()),
-	factdeta_FechaModificacion				DATETIME,
-	factdeta_UsuModificacion				INT,
-	factdeta_Estado							BIT NOT NULL CONSTRAINT DF_factdeta_Estado DEFAULT(1),
-
-	CONSTRAINT PK_opti_tbFacturasDetalles_factdeta_Id 											PRIMARY KEY(factdeta_Id),
-	CONSTRAINT FK_opti_tbFacturasDetalles_opti_tbFacturas_fact_Id 								FOREIGN KEY(fact_Id) 					REFERENCES opti.tbFacturas(fact_Id),
-	CONSTRAINT FK_opti_tbFacturasDetalles_opti_tbAros_aros_Id									FOREIGN KEY(aros_Id)					REFERENCES opti.tbAros(aros_Id),
-	CONSTRAINT FK_opti_tbFacturasDetalles_acce_tbUsuarios_factdeta_UsuCreacion_user_Id  		FOREIGN KEY(factdeta_UsuCreacion) 		REFERENCES acce.tbUsuarios(user_Id),
-	CONSTRAINT FK_opti_tbFacturasDetalles_acce_tbUsuarios_factdeta_UsuModificacion_user_Id  	FOREIGN KEY(factdeta_UsuModificacion) 	REFERENCES acce.tbUsuarios(user_Id)
-);
-
 --******************************************************TABLE Marcas******************************************************--
 
 CREATE TABLE opti.tbMarcas
@@ -412,7 +361,6 @@ CREATE TABLE opti.tbMarcas
 	marc_FechaModificacion  DATETIME DEFAULT NULL,
 	CONSTRAINT PK_opti_tbMarcas_marc_Id	PRIMARY KEY (marc_Id)
 );
-GO
 
 ALTER TABLE opti.tbMarcas 
 ADD CONSTRAINT FK_opti_tbMarcas_usua_IdCreacion_acce_tbUsuarios_usua_Id REFERENCES acce.tbUsuarios (usua_Id)
@@ -629,6 +577,56 @@ GO
 ALTER TABLE opti.tbEnvios 
 ADD CONSTRAINT FK_opti_tbEnvios_usua_IdModificacion_acce_tbUsuarios_usua_Id REFERENCES acce.tbUsuarios (usua_Id)
 GO
+
+
+--********TABLA Factura****************---
+CREATE TABLE opti.tbFacturas
+(
+	fact_Id								INT IDENTITY,
+	clie_Id								INT NOT NULL,
+	fact_Fecha							DATETIME NOT NULL,
+	meto_Id								INT NOT NULL,
+	empe_Id								INT NOT NULL,
+	fact_esEnvio						BIT NOT NULL,
+	fact_PrecioTotal					DECIMAL(18,2),
+	fact_UsuCreacion					INT NOT NULL,
+	fact_FechaCreacion					DATETIME NOT NULL CONSTRAINT DF_fact_FechaCreacion DEFAULT(GETDATE()),
+	fact_FechaModificacion				DATETIME,
+	fact_UsuModificacion				INT,
+	fact_Estado							BIT NOT NULL CONSTRAINT DF_fact_Estado DEFAULT(1),
+
+	CONSTRAINT PK_opti_tbFacturas_fact_Id 											PRIMARY KEY(fact_Id),
+	CONSTRAINT FK_opti_tbFacturas_opti_tbClientes_clie_Id 							FOREIGN KEY(clie_Id) 				REFERENCES opti.tbClientes(clie_Id),
+	CONSTRAINT FK_opti_tbFacturas_opti_tbMetodosPago_meto_Id 						FOREIGN KEY(meto_Id) 				REFERENCES opti.tbMetodosPago(meto_Id),
+	CONSTRAINT FK_opti_tbFacturas_opti_tbEmpleados_empe_Id							FOREIGN KEY(empe_Id)				REFERENCES opti.tbEmpleados(empe_Id),
+	CONSTRAINT FK_opti_tbFacturas_acce_tbUsuarios_fact_UsuCreacion_user_Id  		FOREIGN KEY(fact_UsuCreacion) 		REFERENCES acce.tbUsuarios(user_Id),
+	CONSTRAINT FK_opti_tbFacturas_acce_tbUsuarios_fact_UsuModificacion_user_Id  	FOREIGN KEY(fact_UsuModificacion) 	REFERENCES acce.tbUsuarios(user_Id)
+)
+
+--********TABLA Factura Detalles****************---
+CREATE TABLE opti.tbFacturasDetalles
+(
+	factdeta_Id								INT IDENTITY,
+	fact_Id									INT NOT NULL,
+	cons_Id									INT NOT NULL,
+	aros_Id									INT NOT NULL,
+	orde_Id									INT NOT NULL,
+	envi_Id									INT NOT NULL,
+	factdeta_Precio							DECIMAL(18,2) NOT NULL,
+	factdeta_UsuCreacion					INT NOT NULL,
+	factdeta_FechaCreacion					DATETIME NOT NULL CONSTRAINT DF_factdeta_FechaCreacion DEFAULT(GETDATE()),
+	factdeta_FechaModificacion				DATETIME,
+	factdeta_UsuModificacion				INT,
+	factdeta_Estado							BIT NOT NULL CONSTRAINT DF_factdeta_Estado DEFAULT(1),
+
+	CONSTRAINT PK_opti_tbFacturasDetalles_factdeta_Id 											PRIMARY KEY(factdeta_Id),
+	CONSTRAINT FK_opti_tbFacturasDetalles_opti_tbFacturas_fact_Id 								FOREIGN KEY(fact_Id) 					REFERENCES opti.tbFacturas(fact_Id),
+	CONSTRAINT FK_opti_tbFacturasDetalles_opti_tbAros_aros_Id									FOREIGN KEY(aros_Id)					REFERENCES opti.tbAros(aros_Id),
+	CONSTRAINT FK_opti_tbFacturasDetalles_opti_tbEnvios_envi_Id									FOREIGN KEY(envi_Id)					REFERENCES opti.tbEnvios(envi_Id),
+	CONSTRAINT FK_opti_tbFacturasDetalles_opti_tbOrdenes_orde_Id								FOREIGN KEY(orde_Id)					REFERENCES opti.tbOrdenes(orde_Id),
+	CONSTRAINT FK_opti_tbFacturasDetalles_acce_tbUsuarios_factdeta_UsuCreacion_user_Id  		FOREIGN KEY(factdeta_UsuCreacion) 		REFERENCES acce.tbUsuarios(user_Id),
+	CONSTRAINT FK_opti_tbFacturasDetalles_acce_tbUsuarios_factdeta_UsuModificacion_user_Id  	FOREIGN KEY(factdeta_UsuModificacion) 	REFERENCES acce.tbUsuarios(user_Id)
+);
 
 --******************************************************/TABLE Envios******************************************************--
 
