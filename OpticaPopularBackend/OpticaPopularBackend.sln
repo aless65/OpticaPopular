@@ -1,0 +1,43 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.33328.57
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpticaPopular.API", "OpticaPopular.API\OpticaPopular.API.csproj", "{BF366BDA-DAC9-49F5-918D-62FE78150CC4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpticaPopular.DataAccess", "OpticaPopular.DataAccess\OpticaPopular.DataAccess.csproj", "{998B6E79-611A-4ED9-B94F-6EE173C8DCF7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpticaPopular.Entities", "OpticaPopular.Entities\OpticaPopular.Entities.csproj", "{8E63A471-C4B7-4DFD-A688-F9EDC7B4D351}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpticaPopular.BusinessLogic", "OpticaPopular.BusinessLogic\OpticaPopular.BusinessLogic.csproj", "{6C877C12-22E5-4505-8D9E-3445A54D20EF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BF366BDA-DAC9-49F5-918D-62FE78150CC4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF366BDA-DAC9-49F5-918D-62FE78150CC4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF366BDA-DAC9-49F5-918D-62FE78150CC4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF366BDA-DAC9-49F5-918D-62FE78150CC4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{998B6E79-611A-4ED9-B94F-6EE173C8DCF7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{998B6E79-611A-4ED9-B94F-6EE173C8DCF7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{998B6E79-611A-4ED9-B94F-6EE173C8DCF7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{998B6E79-611A-4ED9-B94F-6EE173C8DCF7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8E63A471-C4B7-4DFD-A688-F9EDC7B4D351}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8E63A471-C4B7-4DFD-A688-F9EDC7B4D351}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8E63A471-C4B7-4DFD-A688-F9EDC7B4D351}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8E63A471-C4B7-4DFD-A688-F9EDC7B4D351}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6C877C12-22E5-4505-8D9E-3445A54D20EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6C877C12-22E5-4505-8D9E-3445A54D20EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6C877C12-22E5-4505-8D9E-3445A54D20EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6C877C12-22E5-4505-8D9E-3445A54D20EF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {88EB006E-49F8-4337-8882-421BD207228B}
+	EndGlobalSection
+EndGlobal
