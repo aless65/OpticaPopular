@@ -1139,6 +1139,8 @@ AS
 	ON T1.clie_UsuModificacion = T3.usua_Id INNER JOIN gral.tbEstadosCiviles T4
 	ON T1.estacivi_Id = T4.estacivi_Id
 
+	
+
 /*List vista clientes*/
 GO
 CREATE OR ALTER PROCEDURE opti.UDP_tbClientes_List
@@ -1294,6 +1296,326 @@ BEGIN
 		SELECT 'Ha ocurrido un error'
 	END CATCH
 END
+
+---------- Empleados -----------
+
+/*Vista Empleadaos*/
+GO
+CREATE OR ALTER VIEW opti.VW_tbEmpleados
+AS
+	SELECT T1.empe_Id, 
+	       empe_Nombres, 
+		   empe_Apellidos, 
+		   ([empe_Nombres] + ' ' + [empe_Apellidos]) AS empe_NombreCompleto,
+		   empe_Identidad, 
+		   empe_FechaNacimiento, 
+		   CASE WHEN  empe_Sexo = 'F' THEN 'Femenino'
+				ELSE 'Masculino'
+		   END AS  empe_Sexo,
+		   T1.estacivi_Id, 
+		   T4.estacivi_Nombre AS Empe_EstadoCivilNombre,
+		   empe_Telefono, 
+		   empe_CorreoElectronico, 
+		   T1.sucu_Id,
+		   T5.sucu_Descripcion AS Empe_SucursalNombre,
+		   empe_UsuCreacion, 
+		   T2.user_NombreUsuario AS Empe_NombreUsuarioCreacion,
+		   empe_FechaCreacion, 
+		   empe_UsuModificacion, 
+		   T3.user_NombreUsuario AS Empe_NombreUsuarioModificacion,
+		   empe_FechaModificacion, 
+		   empe_Estado
+	FROM [opti].[tbEmpleados] T1  INNER JOIN acce.tbUsuarios T2
+	ON T1.empe_UsuCreacion = T2.usua_Id LEFT JOIN acce.tbUsuarios T3 
+	ON T1.empe_UsuModificacion = T3.usua_Id INNER JOIN gral.tbEstadosCiviles T4
+	ON T1.estacivi_Id = T4.estacivi_Id INNER JOIN opti.tbSucursales T5
+	ON T1.sucu_Id = T5.sucu_Id
+
+/*List vista Empleados*/
+GO
+CREATE OR ALTER PROCEDURE opti.UDP_tbEmpleados_List
+AS
+BEGIN
+	SELECT * FROM opti.VW_tbEmpleados
+END	
+
+/*Insertar Empleados*/
+GO
+CREATE OR ALTER PROCEDURE opti.UDP_tbEmpleados_Insert 
+	 @empe_Nombres                 NVARCHAR(100), 
+	 @empe_Apellidos               NVARCHAR(100), 
+	 @empe_Identidad               VARCHAR(13), 
+	 @empe_FechaNacimiento         DATE, 
+	 @empe_Sexo                    CHAR(1), 
+	 @estacivi_Id                  INT, 
+	 @empe_Telefono                NVARCHAR(15), 
+	 @empe_CorreoElectronico       NVARCHAR(200), 
+	 @sucu_Id                      INT, 
+	 @empe_UsuCreacion             INT
+
+AS
+BEGIN
+	BEGIN TRY
+
+		IF NOT EXISTS (SELECT empe_Identidad FROM opti.tbEmpleados
+						WHERE empe_Identidad = @empe_Identidad)
+			BEGIN
+				INSERT INTO opti.tbEmpleados(empe_Nombres, 
+				                             empe_Apellidos, 
+											 empe_Identidad, 
+											 empe_FechaNacimiento, 
+											 empe_Sexo, 
+											 estacivi_Id, 
+											 empe_Telefono, 
+											 empe_CorreoElectronico, 
+											 sucu_Id, 
+											 empe_UsuCreacion)
+				VALUES(@empe_Nombres,@empe_Apellidos,@empe_Identidad, @empe_FechaNacimiento,         
+	                   @empe_Sexo, @estacivi_Id, @empe_Telefono, @empe_CorreoElectronico,       
+	                   @sucu_Id, @empe_UsuCreacion)
+
+				SELECT 'El Empleado ha sido ingresado con éxito'
+
+			END
+		ELSE IF EXISTS (SELECT empe_Identidad FROM opti.tbEmpleados
+						WHERE empe_Identidad = @empe_Identidad
+						AND empe_Estado = 1)
+
+			SELECT 'Ya existe un Empleado con este número de identidad'
+		ELSE
+			BEGIN
+				UPDATE opti.tbEmpleados
+				SET [empe_Estado] = 1,
+					[empe_Nombres] = @empe_Nombres, 
+					[empe_Apellidos] = @empe_Apellidos, 
+					[empe_Identidad] = @empe_Identidad, 
+					[empe_FechaNacimiento] = @empe_FechaNacimiento, 
+					[empe_Sexo] = @empe_Sexo, 
+					[estacivi_Id] = @estacivi_Id, 
+					[empe_Telefono] = @empe_Telefono, 
+					[empe_CorreoElectronico] = @empe_CorreoElectronico 
+				WHERE empe_Identidad = @empe_Identidad
+
+				SELECT 'El Empleado ha sido ingresado con éxito'
+			END
+	END TRY
+	BEGIN CATCH
+		SELECT 'Ha ocurrido un error'
+	END CATCH
+END
+
+/*Editar Empleados*/
+GO
+CREATE OR ALTER PROCEDURE opti.UDP_tbEmpleados_Update 
+	 @empe_Id				       INT,
+	 @empe_Nombres                 NVARCHAR(100), 
+	 @empe_Apellidos               NVARCHAR(100), 
+	 @empe_Identidad               VARCHAR(13), 
+	 @empe_FechaNacimiento         DATE, 
+	 @empe_Sexo                    CHAR(1), 
+	 @estacivi_Id                  INT, 
+	 @empe_Telefono                NVARCHAR(15), 
+	 @empe_CorreoElectronico       NVARCHAR(200), 
+	 @sucu_Id                      INT, 
+	 @empe_UsuModificacion         INT
+AS
+BEGIN
+	BEGIN TRY
+	IF NOT EXISTS (SELECT empe_Identidad FROM opti.tbEmpleados
+						WHERE empe_Identidad = @empe_Identidad)
+		BEGIN	
+			UPDATE opti.tbEmpleados
+					   SET empe_Nombres = @empe_Nombres, 
+					       empe_Apellidos = @empe_Apellidos, 
+						   empe_Identidad = @empe_Identidad, 
+						   empe_FechaNacimiento = @empe_FechaNacimiento, 
+						   empe_Sexo= @empe_Sexo, 
+						   estacivi_Id = @estacivi_Id, 
+						   empe_Telefono = @empe_Telefono, 
+						   empe_CorreoElectronico = @empe_CorreoElectronico, 
+						   sucu_Id = @sucu_Id, 						   
+						   empe_UsuModificacion = @empe_UsuModificacion
+				       WHERE  empe_Id = @empe_Id
+
+			SELECT 'El Empleado ha sido editado con éxito'
+		END
+		ELSE IF EXISTS (SELECT * FROM opti.tbEmpleados
+						WHERE @empe_Identidad = empe_Identidad
+							  AND empe_Estado = 1
+							  AND empe_Id != @empe_Id)
+
+			SELECT 'Ya existe un Empleado con este número de identidad'
+		ELSE
+			BEGIN
+				UPDATE opti.tbEmpleados
+				SET [empe_Estado] = 1,
+				    [empe_UsuCreacion] = @empe_UsuModificacion,
+					[empe_Nombres] = @empe_Nombres, 
+					[empe_Apellidos] = @empe_Apellidos, 
+					[empe_Identidad] = @empe_Identidad, 
+					[empe_FechaNacimiento] = @empe_FechaNacimiento, 
+					[empe_Sexo] = @empe_Sexo, 
+					[estacivi_Id] = @estacivi_Id, 
+					[empe_Telefono] = @empe_Telefono, 
+					[empe_CorreoElectronico] = @empe_CorreoElectronico 
+				WHERE empe_Identidad = @empe_Identidad
+
+				SELECT 'El Empleado ha sido editado con éxito'
+			END
+	END TRY
+	BEGIN CATCH
+		SELECT 'Ha ocurrido un error'
+	END CATCH
+END
+
+/*Eliminar Empleados*/
+GO
+CREATE OR ALTER PROCEDURE opti.UDP_tbEmpleados_Delete 
+	@empe_Id INT
+AS
+BEGIN
+	
+	BEGIN TRY
+			BEGIN
+				UPDATE opti.tbEmpleados 
+				SET empe_Estado = 0
+				WHERE [empe_Id] = @empe_Id
+				
+				SELECT 'El Empleado ha sido eliminado'
+			END
+		
+	END TRY
+	BEGIN CATCH
+		SELECT 'Ha ocurrido un error'
+	END CATCH
+END
+
+---------- PROVEEDORES -----------
+
+/*Vista Proveedores*/
+GO
+CREATE OR ALTER VIEW opti.VW_tbProveedores
+AS
+	SELECT prov_Id, 
+	       prov_Nombre, 
+		   prov_Direccion, 
+		   prov_CorreoElectronico, 
+		   prov_Telefono, 
+		   prov_UsuCreacion, 
+		   T2.user_NombreUsuario AS prov_NombreUsuCreacion,
+		   prov_FechaCreacion, 
+		   prov_UsuModificacion, 
+		   T3.user_NombreUsuario AS prov_NombreUsuModificacion,
+		   prov_FechaModificacion, 
+		   prov_Estado
+	FROM opti.tbProveedores T1 INNER JOIN acce.tbUsuarios T2
+	ON T1.prov_UsuCreacion = T2.usua_Id LEFT JOIN acce.tbUsuarios T3 
+	ON T1.prov_UsuModificacion = T3.usua_Id
+
+GO
+/*Insertar Proveedor*/
+GO
+CREATE OR ALTER PROCEDURE opti.UDP_tbProveedor_Insert
+	@prov_Nombre                NVARCHAR(100),
+    @prov_Direccion             NVARCHAR(500),
+    @prov_CorreoElectronico     NVARCHAR(200),
+    @prov_Telefono              NVARCHAR(15),
+    @prov_UsuCreacion           INT
+AS
+BEGIN
+	BEGIN TRY
+		IF NOT EXISTS (SELECT * FROM opti.tbProveedores 
+						WHERE prov_Nombre = @prov_Nombre)
+			BEGIN
+			INSERT INTO opti.tbProveedores(prov_Nombre,prov_Direccion,prov_CorreoElectronico,prov_Telefono,prov_UsuCreacion)
+			VALUES(@prov_Nombre,@prov_Direccion,@prov_CorreoElectronico,@prov_Telefono,@prov_UsuCreacion)
+			
+			SELECT 'El proveedor ha sido insertada con éxito'
+			END
+		ELSE IF EXISTS (SELECT * FROM opti.tbProveedores 
+						WHERE prov_Nombre = @prov_Nombre
+						AND prov_Estado = 0)
+			BEGIN
+				UPDATE opti.tbProveedores
+				SET prov_Estado = 1
+				WHERE prov_Nombre = @prov_Nombre
+
+				SELECT 'El proveedor ha sido insertada con éxito'
+			END
+		ELSE
+			SELECT 'El proveedor ya existe'
+	END TRY
+	BEGIN CATCH
+		SELECT 'Ha ocurrido un error'
+	END CATCH
+END
+
+/*Editar Proveedor*/
+GO
+CREATE OR ALTER PROCEDURE opti.UDP_tbProveedor_Update
+	@prov_Id					INT,
+    @prov_Nombre                NVARCHAR(200),
+    @prov_Direccion             NVARCHAR(500),
+    @prov_CorreoElectronico     NVARCHAR(200),
+    @prov_Telefono              NVARCHAR(15),
+    @prov_UsuModificacion       INT
+AS
+BEGIN 
+	BEGIN TRY
+	IF NOT EXISTS (SELECT * FROM opti.tbProveedores
+						WHERE @prov_Nombre = [prov_Nombre])
+		BEGIN			
+			UPDATE opti.tbProveedores
+			SET 	[prov_Nombre] = @prov_Nombre,
+			        [prov_Direccion] = @prov_Direccion,
+                    [prov_CorreoElectronico] = @prov_CorreoElectronico,
+                    [prov_Telefono] = @prov_Telefono,
+                    [prov_UsuModificacion] = @prov_UsuModificacion,
+                    [prov_FechaModificacion] = GETDATE()
+			WHERE 	[prov_Id] = @prov_Id
+			SELECT 'El Proveedor ha sido editada con éxito'
+		END
+		ELSE IF EXISTS (SELECT * FROM opti.tbProveedores
+						WHERE @prov_Nombre = [prov_Nombre]
+							  AND  [prov_Estado] = 1
+							  AND [prov_Id] != @prov_Id)
+			SELECT 'EL Proveedor ya existe'
+		ELSE
+			UPDATE opti.tbProveedores
+			SET prov_Estado = 1,
+			  [prov_UsuModificacion] = @prov_UsuModificacion
+			WHERE [prov_Nombre] = @prov_Nombre
+
+			SELECT 'El proveedor ha sido editada con éxito'
+	END TRY
+	BEGIN CATCH
+		SELECT 'Ha ocurrido un error'
+	END CATCH
+END
+
+/*Eliminar Proveedor*/
+GO
+CREATE OR ALTER PROCEDURE opti.UDP_tbProveedor_Delete 
+	@prov_Id	INT
+AS
+BEGIN
+	BEGIN TRY
+		IF NOT EXISTS (SELECT * FROM opti.tbAros WHERE prov_Id = @prov_Id)
+			BEGIN
+				UPDATE opti.tbProveedores
+				SET prov_Estado = 0
+				WHERE prov_Id = @prov_Id
+
+				SELECT 'El Proveedor ha sido eliminado'
+			END
+		ELSE
+			SELECT 'El proveedor no puede ser eliminado ya que está siendo usado'
+	END TRY
+	BEGIN CATCH
+		SELECT 'Ha ocurrido un error'
+	END CATCH
+END
+
 
 /*
 INSERT DE LA BASE DE DATOS
