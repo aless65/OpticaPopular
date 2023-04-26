@@ -1,4 +1,4 @@
-CREATE DATABASE OpticaPopular
+--CREATE DATABASE OpticaPopular
 
 GO 
 USE OpticaPopular
@@ -10,6 +10,7 @@ CREATE SCHEMA acce
 GO
 CREATE SCHEMA opti
 GO
+
 
 --************CREACION TABLA ROLES******************--
 CREATE TABLE acce.tbRoles(
@@ -1255,3 +1256,32 @@ VALUES('Soltero(a)',1),
 INSERT INTO opti.tbProveedores(prov_Nombre,prov_Direccion,prov_CorreoElectronico,prov_Telefono,prov_UsuCreacion)
 VALUES('Optica Universal','2 Calle 6 Avenida N.O. B�, Guamilito, 6 Avenida','Optica_Universal@hotmail.com','2550-1550',1),
       ('Optica Optimas','Barrio Medina 3ra ave, entre 10 y 11 Calle','Optica.Optimas@hotmail.com','9928-0486',1)
+
+
+--	  DROP TABLE acce.tbRoles
+--DROP TABLE acce.tbPantallas
+--DROP TABLE acce.tbPantallasPorRoles
+--DROP TABLE acce.tbUsuarios
+--DROP TABLE [gral].[tbDepartamentos]
+--DROP TABLE gral.tbMunicipios
+--DROP TABLE opti.tbCategorias
+--DROP TABLE opti.tbMetodosPago
+--DROP TABLE opti.tbCargos
+--DROP TABLE gral.tbEstadosCiviles
+--DROP TABLE opti.tbProveedores
+--DROP TABLE opti.tbSucursales
+--DROP TABLE opti.tbEmpleados
+--DROP TABLE opti.tbClientes
+--DROP TABLE opti.tbAros
+--DROP TABLE opti.tbMarcas
+--DROP TABLE opti.tbConsultorios
+--DROP TABLE opti.tbCitas
+--DROP TABLE opti.tbDetallesCitas
+--DROP TABLE opti.tbOrdenes
+--DROP TABLE opti.tbDetallesOrdenes
+--DROP TABLE opti.tbDirecciones
+--DROP TABLE opti.tbDireccionesPorCliente
+--DROP TABLE opti.tbEnvios
+--DROP TABLE opti.tbFacturas
+--DROP TABLE opti.tbFacturasDetalles
+--DROP TABLE opti.tbDetallesEnvios
