@@ -1,0 +1,145 @@
+﻿{
+   "CodeGenerationMode": 0,
+   "ContextClassName": "OpticapopularContext",
+   "ContextNamespace": null,
+   "DefaultDacpacSchema": null,
+   "FilterSchemas": false,
+   "IncludeConnectionString": false,
+   "ModelNamespace": null,
+   "OutputContextPath": null,
+   "OutputPath": "Context",
+   "ProjectRootNamespace": "OpticaPopular.DataAccess",
+   "Schemas": null,
+   "SelectedHandlebarsLanguage": 0,
+   "SelectedToBeGenerated": 1,
+   "Tables": [
+      {
+         "Name": "[acce].[tbPantallas]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[acce].[tbPantallasPorRoles]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[acce].[tbRoles]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[acce].[tbUsuarios]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[gral].[tbDepartamentos]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[gral].[tbEstadosCiviles]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[gral].[tbMunicipios]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[opti].[tbAros]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[opti].[tbCargos]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[opti].[tbCategorias]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[opti].[tbCitas]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[opti].[tbClientes]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[opti].[tbConsultorios]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[opti].[tbDetallesCitas]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[opti].[tbDetallesEnvios]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[opti].[tbDetallesOrdenes]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[opti].[tbDirecciones]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[opti].[tbDireccionesPorCliente]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[opti].[tbEmpleados]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[opti].[tbEnvios]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[opti].[tbFacturas]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[opti].[tbFacturasDetalles]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[opti].[tbMarcas]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[opti].[tbMetodosPago]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[opti].[tbOrdenes]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[opti].[tbProveedores]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[opti].[tbSucursales]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[acce].[VW_tbUsuarios]",
+         "ObjectType": 3
+      }
+   ],
+   "UiHint": "EJSM\\SQLEXPRESS.OpticaPopular",
+   "UseBoolPropertiesWithoutDefaultSql": false,
+   "UseDatabaseNames": true,
+   "UseDbContextSplitting": false,
+   "UseFluentApiOnly": true,
+   "UseHandleBars": false,
+   "UseInflector": false,
+   "UseLegacyPluralizer": false,
+   "UseNoConstructor": false,
+   "UseNoDefaultConstructor": false,
+   "UseNoNavigations": false,
+   "UseNoObjectFilter": false,
+   "UseNodaTime": false,
+   "UseNullableReferences": false,
+   "UseSchemaFolders": false,
+   "UseSpatial": false
+}
