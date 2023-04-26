@@ -1,0 +1,15 @@
+C:\Users\eders\OneDrive\Documentos\GitHub\OpticaPopular\OpticaPopularBackend\OpticaPopular.DataAccess\bin\Debug\net5.0\OpticaPopular.DataAccess.deps.json
+C:\Users\eders\OneDrive\Documentos\GitHub\OpticaPopular\OpticaPopularBackend\OpticaPopular.DataAccess\bin\Debug\net5.0\OpticaPopular.DataAccess.dll
+C:\Users\eders\OneDrive\Documentos\GitHub\OpticaPopular\OpticaPopularBackend\OpticaPopular.DataAccess\bin\Debug\net5.0\ref\OpticaPopular.DataAccess.dll
+C:\Users\eders\OneDrive\Documentos\GitHub\OpticaPopular\OpticaPopularBackend\OpticaPopular.DataAccess\bin\Debug\net5.0\OpticaPopular.DataAccess.pdb
+C:\Users\eders\OneDrive\Documentos\GitHub\OpticaPopular\OpticaPopularBackend\OpticaPopular.DataAccess\bin\Debug\net5.0\OpticaPopular.Entities.dll
+C:\Users\eders\OneDrive\Documentos\GitHub\OpticaPopular\OpticaPopularBackend\OpticaPopular.DataAccess\bin\Debug\net5.0\OpticaPopular.Entities.pdb
+C:\Users\eders\OneDrive\Documentos\GitHub\OpticaPopular\OpticaPopularBackend\OpticaPopular.DataAccess\obj\Debug\net5.0\OpticaPopular.DataAccess.csproj.AssemblyReference.cache
+C:\Users\eders\OneDrive\Documentos\GitHub\OpticaPopular\OpticaPopularBackend\OpticaPopular.DataAccess\obj\Debug\net5.0\OpticaPopular.DataAccess.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\eders\OneDrive\Documentos\GitHub\OpticaPopular\OpticaPopularBackend\OpticaPopular.DataAccess\obj\Debug\net5.0\OpticaPopular.DataAccess.AssemblyInfoInputs.cache
+C:\Users\eders\OneDrive\Documentos\GitHub\OpticaPopular\OpticaPopularBackend\OpticaPopular.DataAccess\obj\Debug\net5.0\OpticaPopular.DataAccess.AssemblyInfo.cs
+C:\Users\eders\OneDrive\Documentos\GitHub\OpticaPopular\OpticaPopularBackend\OpticaPopular.DataAccess\obj\Debug\net5.0\OpticaPopular.DataAccess.csproj.CoreCompileInputs.cache
+C:\Users\eders\OneDrive\Documentos\GitHub\OpticaPopular\OpticaPopularBackend\OpticaPopular.DataAccess\obj\Debug\net5.0\OpticaPopular.DataAccess.csproj.CopyComplete
+C:\Users\eders\OneDrive\Documentos\GitHub\OpticaPopular\OpticaPopularBackend\OpticaPopular.DataAccess\obj\Debug\net5.0\OpticaPopular.DataAccess.dll
+C:\Users\eders\OneDrive\Documentos\GitHub\OpticaPopular\OpticaPopularBackend\OpticaPopular.DataAccess\obj\Debug\net5.0\ref\OpticaPopular.DataAccess.dll
+C:\Users\eders\OneDrive\Documentos\GitHub\OpticaPopular\OpticaPopularBackend\OpticaPopular.DataAccess\obj\Debug\net5.0\OpticaPopular.DataAccess.pdb
