@@ -1413,6 +1413,12 @@ VALUES('0101','La Ceiba ','01', 1),
 	  ('1804','El Progreso','18', 1),
       ('1805','Jocon','18', 1)
 
+	
+	--********INSERT TABLA Cargos****************---
+GO
+INSERT INTO opti.tbCargos(carg_Nombre,carg_UsuCreacion)
+VALUES('Oftalmólogos',1)
+
 	  
 --********INSERT TABLA Categorias****************---
 GO
@@ -1439,36 +1445,71 @@ VALUES('Soltero(a)',1),
 	  ('Divorciado(a)',1),
 	  ('Union Libre',1)
 
---********INSERT TABLA Estados Civiles****************---
+--********INSERT TABLA Estados Proveedores****************---
 INSERT INTO opti.tbProveedores(prov_Nombre,prov_Direccion,prov_CorreoElectronico,prov_Telefono,prov_UsuCreacion)
 VALUES('Optica Universal','2 Calle 6 Avenida N.O. B�, Guamilito, 6 Avenida','Optica_Universal@hotmail.com','2550-1550',1),
-      ('Optica Optimas','Barrio Medina 3ra ave, entre 10 y 11 Calle','Optica.Optimas@hotmail.com','9928-0486',1)
+      ('Optica Optimas','Barrio Medina 3ra ave, entre 10 y 11 Calle','Optica.Optimas@hotmail.com','9928-0486',1),
+	  ('Optica Buena Esperanza','Barrio El entro 3ra ave','buenaEsperanza@hotmail.com','9928-0486',1),
+	  ('PRODIST','la región de La Pobla De Vallbona (Valencia)','prodist@hotmail.com','34628-0486',1),
+	  ('Prosun','Barcelona','prosun@hotmail.com','23528-0486',1),
+	  ('Missandtrendy Sunglasses | London','Londres','Missandtrendy@hotmail.com','23528-0486',1)
+
+	  --********INSERT TABLA SUCURSALES****************---
+INSERT INTO opti.tbSucursales(sucu_Descripcion,muni_Id,sucu_DireccionExacta,sucu_UsuCreacion)
+VALUES('Optica Popular Mall Multiplaza','0801','Mall Multiplaza',1),
+      ('Optica Popular Mall Plaza Miraflores','0801','Mall Plaza Miraflores',1),
+	  ('Optica Popular City Mall','0501','City Mall',1),
+	  ('Optica Popular Mall Las Americas','0502','Mall Las Americas',1),
+	  ('Optica Popular City Mall','0801','City Mall',1)
+
+	   --********INSERT TABLA Empleados****************---
+INSERT INTO opti.tbEmpleados( empe_Nombres, empe_Apellidos, empe_Identidad, empe_FechaNacimiento, empe_Sexo, estacivi_Id, empe_Telefono, empe_CorreoElectronico, sucu_Id, empe_UsuCreacion)
+VALUES('Clara','Gomez','1234567890123','05-12-2003','F',1,'98107260','gomez23.e@gmail.com',1,1),
+      ('Maria Lucero','Ramirez','452879612354','02-12-2003','F',1,'97260425','maria.lucero@gmail.com',1,1),
+	  ('Karla Elisa','Ramirez','859679612354','02-02-2000','F',1,'98107260','karlaramirez@gmail.com',1,1),
+	  ('Manuel','Cardona','8759632415785','05-05-2001','M',1,'97307260','manuel@gmail.com',1,1),
+	  ('Mauricio','Mendosa','0529632415785','15-05-2001','M',1,'99307260','mMENDOZA@gmail.com',1,1),
+	  ('Rafael','Alvarado','0529582415785','05-05-2000','M',1,'99307260','mMENDOZA@gmail.com',1,1),
+	  ('Carlos','Amaya','0569582415785','04-05-2000','M',1,'99307260','amayacarlos@gmail.com',1,1),
+	  ('Jose Manuel','Hernadez','0569582415712','14-05-2004','M',1,'33207260','josemanuel12@gmail.com',1,1),
+	  ('Samuel','Bautista','0561272415712','14-04-2007','M',1,'32007260','samuel12@gmail.com',1,1),
+	  ('Erick','Hernadez','0561272415799','30-04-2007','M',1,'92007930','erickhernadez@gmail.com',1,1)
+
+  --********INSERT TABLA Clientes****************---
+INSERT INTO [opti].[tbClientes](clie_Nombres, clie_Apellidos, clie_Identidad, clie_Sexo, clie_FechaNacimiento, estacivi_Id, clie_Telefono, clie_CorreoElectronico, clie_UsuCreacion)
+VALUES('Juan','Perez','1234567890123','08-02-2000','M',2,'12345678','juan.perez@example.com',1),
+      ('María','Gómez','9876543210987','06-06-2004','F',1,'98765432','maria.gomez@example.com',1),
+      ('Pedro','González','4567890123456','05-02-2006','M',1,'45678901','pedro.gonzalez@example.com',1),
+	  ('Ana','Fernández','7654321098765','25-12-2009','F',1,'76543210','ana.fernandez@example.com',1),
+	  ('Carlos','López','9876543212345','28-02-2003','M',1,'98765432','carlos.lopez@example.com',1),
+	  ('Laura','Martínez','5678901234567','05-12-2003','F',1,'56789012','laura.martinez@example.com',1),
+      ('Manuel','Díaz','3456789012345','05-12-2007','M',1,'34567890','manuel.diaz@example.com',1),
+	  ('David','Hernández','5678901234567','05-12-2008','M',1,'55400045','david.hernandez@example.com',1)
+
+--********INSERT TABLA Marcas****************---
+INSERT INTO opti.tbMarcas(marc_Nombre , usua_IdCreacion)
+VALUES('Ray-Ban',1),
+      ('Oakley',1),
+	  ('Maui Jim',1),
+	  ('American Optical',1),
+	  ('Tom Ford',1),
+	  ('Prada',1),
+	  ('Oliver Peoples',1)
 
 
---	  DROP TABLE acce.tbRoles
---DROP TABLE acce.tbPantallas
---DROP TABLE acce.tbPantallasPorRoles
---DROP TABLE acce.tbUsuarios
---DROP TABLE [gral].[tbDepartamentos]
---DROP TABLE gral.tbMunicipios
---DROP TABLE opti.tbCategorias
---DROP TABLE opti.tbMetodosPago
---DROP TABLE opti.tbCargos
---DROP TABLE gral.tbEstadosCiviles
---DROP TABLE opti.tbProveedores
---DROP TABLE opti.tbSucursales
---DROP TABLE opti.tbEmpleados
---DROP TABLE opti.tbClientes
---DROP TABLE opti.tbAros
---DROP TABLE opti.tbMarcas
---DROP TABLE opti.tbConsultorios
---DROP TABLE opti.tbCitas
---DROP TABLE opti.tbDetallesCitas
---DROP TABLE opti.tbOrdenes
---DROP TABLE opti.tbDetallesOrdenes
---DROP TABLE opti.tbDirecciones
---DROP TABLE opti.tbDireccionesPorCliente
---DROP TABLE opti.tbEnvios
---DROP TABLE opti.tbFacturas
---DROP TABLE opti.tbFacturasDetalles
---DROP TABLE opti.tbDetallesEnvios
+ --********INSERT TABLA AROS****************---
+INSERT INTO opti.tbAros(aros_Descripcion, aros_CostoUni, cate_Id, prov_Id, marc_Id, aros_Stock, aros_UsuCreacion)
+VALUES('Deportivo',120,1,1,1,100,1),
+      ('Clubmaster',220,1,1,2,100,1),
+      ('Cuadrado',220,1,1,3,100,1),
+	  ('Redondo',220,1,1,4,100,1),
+	  ('Cat Eye',220,1,1,5,100,1),
+	  ('Ovalado',220,1,1,6,100,1),
+	  ('Rectangular',220,1,1,7,100,1),
+	  ('Al Aire',220,1,1,6,100,1)
+
+ --********INSERT TABLA Consultorio****************---
+INSERT INTO opti.tbConsultorios(cons_Nombre,empe_Id,usua_IdCreacion)
+VALUES('Consultorio 1',1,1),
+      ('Consultorio 2',2,1),
+	  ('Consultorio 3',3,1)
