@@ -18,10 +18,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Models\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\OpticaPopular.BusinessLogic\OpticaPopular.BusinessLogic.csproj" />
     <ProjectReference Include="..\OpticaPopular.DataAccess\OpticaPopular.DataAccess.csproj" />
     <ProjectReference Include="..\OpticaPopular.Entities\OpticaPopular.Entities.csproj" />

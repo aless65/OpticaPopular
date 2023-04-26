@@ -22,8 +22,10 @@ namespace OpticaPopular.Entities.Entities
         public bool? factdeta_Estado { get; set; }
 
         public virtual tbAros aros { get; set; }
+        public virtual tbEnvios envi { get; set; }
         public virtual tbFacturas fact { get; set; }
         public virtual tbUsuarios factdeta_UsuCreacionNavigation { get; set; }
         public virtual tbUsuarios factdeta_UsuModificacionNavigation { get; set; }
+        public virtual tbOrdenes orde { get; set; }
     }
 }

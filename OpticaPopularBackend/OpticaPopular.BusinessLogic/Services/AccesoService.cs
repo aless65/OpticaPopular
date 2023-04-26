@@ -21,7 +21,19 @@ namespace OpticaPopular.BusinessLogic.Services
         }
 
         #region Usuarios
-
+        public ServiceResult ListadoUsuarios()
+        {
+            var result = new ServiceResult();
+            try
+            {
+                var list = _usuariosRepository.List();
+                return result.Ok(list);
+            }
+            catch (Exception e)
+            {
+                return result.Error(e.Message);
+            }
+        }
 
 
         #endregion

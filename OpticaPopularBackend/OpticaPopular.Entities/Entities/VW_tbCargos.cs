@@ -6,17 +6,16 @@ using System.Collections.Generic;
 
 namespace OpticaPopular.Entities.Entities
 {
-    public partial class tbCargos
+    public partial class VW_tbCargos
     {
         public int carg_Id { get; set; }
         public string carg_Nombre { get; set; }
         public int carg_UsuCreacion { get; set; }
+        public string usua_UsuCreacion_Nombre { get; set; }
         public DateTime carg_FechaCreacion { get; set; }
         public int? carg_UsuModificacion { get; set; }
+        public string usua_UsuModificacion_Nombre { get; set; }
         public DateTime? carg_FechaModificacion { get; set; }
-        public bool? carg_Estado { get; set; }
-
-        public virtual tbUsuarios carg_UsuCreacionNavigation { get; set; }
-        public virtual tbUsuarios carg_UsuModificacionNavigation { get; set; }
+        public bool carg_Estado { get; set; }
     }
 }

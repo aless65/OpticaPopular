@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace OpticaPopular.DataAccess.Repositories
 {
-    public class ClientesRepository : IRepository<tbClientes>
+    public class ClientesRepository : IRepository<tbClientes, tbClientes>
     {
         public RequestStatus Delete(tbClientes item)
         {

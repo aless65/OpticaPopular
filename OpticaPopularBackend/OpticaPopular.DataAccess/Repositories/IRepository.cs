@@ -2,12 +2,12 @@
 
 namespace OpticaPopular.DataAccess.Repositories
 {
-    public interface IRepository<T>
+    public interface IRepository<T, U>
     {
-        public IEnumerable<T> List();
+        public IEnumerable<U> List();
         public RequestStatus Insert(T item);
         public RequestStatus Update(T item);
-        public T Find(int? id);
+        public U Find(int? id);
         public RequestStatus Delete(T item);
     }
 }

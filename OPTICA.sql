@@ -1,4 +1,4 @@
---CREATE DATABASE OpticaPopular
+CREATE DATABASE OpticaPopular
 
 GO 
 USE OpticaPopular
@@ -78,31 +78,31 @@ GO
 --****************CREACION TABLA USUARIOS****************--
 CREATE TABLE acce.tbUsuarios(
 	usua_Id 				INT IDENTITY(1,1),
-	user_NombreUsuario		NVARCHAR(100) NOT NULL,
-	user_Contrasena			NVARCHAR(MAX) NOT NULL,
-	user_EsAdmin			BIT,
+	usua_NombreUsuario		NVARCHAR(100) NOT NULL,
+	usua_Contrasena			NVARCHAR(MAX) NOT NULL,
+	usua_EsAdmin			BIT,
 	role_Id					INT,
 	empe_Id					INT,
-	user_UsuCreacion		INT,
-	user_FechaCreacion		DATETIME NOT NULL CONSTRAINT DF_user_FechaCreacion DEFAULT(GETDATE()),
-	user_UsuModificacion	INT,
-	user_FechaModificacion	DATETIME,
-	user_Estado				BIT NOT NULL CONSTRAINT DF_user_Estado DEFAULT(1)
+	usua_UsuCreacion		INT,
+	usua_FechaCreacion		DATETIME NOT NULL CONSTRAINT DF_usua_FechaCreacion DEFAULT(GETDATE()),
+	usua_UsuModificacion	INT,
+	usua_FechaModificacion	DATETIME,
+	usua_Estado				BIT NOT NULL CONSTRAINT DF_usua_Estado DEFAULT(1)
 	CONSTRAINT PK_acce_tbUsuarios_usua_Id  PRIMARY KEY(usua_Id),
 );
 
 --********* PROCEDIMIENTO INSERTAR USUARIOS ADMIN**************--
 GO
 CREATE OR ALTER PROCEDURE acce.UDP_InsertUsuario
-	@user_NombreUsuario NVARCHAR(100),	@user_Contrasena NVARCHAR(200),
-	@user_EsAdmin BIT,					@role_Id INT, 
+	@usua_NombreUsuario NVARCHAR(100),	@usua_Contrasena NVARCHAR(200),
+	@usua_EsAdmin BIT,					@role_Id INT, 
 	@empe_Id INT										
 AS
 BEGIN
-	DECLARE @password NVARCHAR(MAX)=(SELECT HASHBYTES('Sha2_512', @user_Contrasena));
+	DECLARE @password NVARCHAR(MAX)=(SELECT HASHBYTES('Sha2_512', @usua_Contrasena));
 
-	INSERT acce.tbUsuarios(user_NombreUsuario, user_Contrasena, user_EsAdmin, role_Id, empe_Id, user_UsuCreacion)
-	VALUES(@user_NombreUsuario, @password, @user_EsAdmin, @role_Id, @empe_Id, 1);
+	INSERT acce.tbUsuarios(usua_NombreUsuario, usua_Contrasena, usua_EsAdmin, role_Id, empe_Id, usua_UsuCreacion)
+	VALUES(@usua_NombreUsuario, @password, @usua_EsAdmin, @role_Id, @empe_Id, 1);
 END;
 
 
@@ -129,8 +129,8 @@ VALUES ('Vendedor', 1)
 --********* AGREGAR CAMPO ROL, AUDITORIA**************--
 GO
 ALTER TABLE [acce].[tbUsuarios]
-ADD CONSTRAINT FK_acce_tbUsuarios_acce_tbUsuarios_user_UsuCreacion_usua_Id  FOREIGN KEY(user_UsuCreacion) REFERENCES acce.tbUsuarios([usua_Id]),
-	CONSTRAINT FK_acce_tbUsuarios_acce_tbUsuarios_user_UsuModificacion_usua_Id  FOREIGN KEY(user_UsuModificacion) REFERENCES acce.tbUsuarios([usua_Id]),
+ADD CONSTRAINT FK_acce_tbUsuarios_acce_tbUsuarios_usua_UsuCreacion_usua_Id  FOREIGN KEY(usua_UsuCreacion) REFERENCES acce.tbUsuarios([usua_Id]),
+	CONSTRAINT FK_acce_tbUsuarios_acce_tbUsuarios_usua_UsuModificacion_usua_Id  FOREIGN KEY(usua_UsuModificacion) REFERENCES acce.tbUsuarios([usua_Id]),
 	CONSTRAINT FK_acce_tbUsuarios_acce_tbRoles_role_Id FOREIGN KEY(role_Id) REFERENCES acce.tbRoles(role_Id)
 
 GO 
@@ -289,8 +289,8 @@ CREATE TABLE opti.tbEmpleados(
     CONSTRAINT PK_maqu_tbEmpleados_empe_Id                                        PRIMARY KEY(empe_Id),
     CONSTRAINT CK_maqu_tbEmpleados_empe_Sexo                                      CHECK(empe_sexo IN ('F', 'M')),
     CONSTRAINT FK_maqu_tbEmpleados_gral_tbEstadosCiviles_estacivi_Id             FOREIGN KEY(estacivi_Id)                  REFERENCES gral.tbEstadosCiviles(estacivi_Id),        
-    CONSTRAINT FK_maqu_tbEmpleados_acce_tbUsuarios_UserCreate                    FOREIGN KEY(empe_UsuCreacion)             REFERENCES acce.tbUsuarios(usua_Id),
-    CONSTRAINT FK_maqu_tbEmpleados_acce_tbUsuarios_UserUpdate                    FOREIGN KEY(empe_UsuModificacion)         REFERENCES acce.tbUsuarios(usua_Id),
+    CONSTRAINT FK_maqu_tbEmpleados_acce_tbUsuarios_usuaCreate                    FOREIGN KEY(empe_UsuCreacion)             REFERENCES acce.tbUsuarios(usua_Id),
+    CONSTRAINT FK_maqu_tbEmpleados_acce_tbUsuarios_usuaUpdate                    FOREIGN KEY(empe_UsuModificacion)         REFERENCES acce.tbUsuarios(usua_Id),
     CONSTRAINT FK_maqu_tbEmpleados_maqu_tbSucursales_sucu_Id                      FOREIGN KEY(sucu_Id)                     REFERENCES opti.tbSucursales(sucu_Id)      
 );
 
@@ -694,18 +694,18 @@ GO
 --Iniciar sesion
 GO
 CREATE OR ALTER PROCEDURE UDP_Login 
-	@user_Nombre NVARCHAR(100), 
-	@user_Contrasena NVARCHAR(200)
+	@usua_Nombre NVARCHAR(100), 
+	@usua_Contrasena NVARCHAR(200)
 AS
 BEGIN
 
-	DECLARE @contraEncriptada NVARCHAR(MAX) = HASHBYTES('SHA2_512', @user_Contrasena);
+	DECLARE @contraEncriptada NVARCHAR(MAX) = HASHBYTES('SHA2_512', @usua_Contrasena);
 
-	SELECT [usua_Id], [user_NombreUsuario], [role_Id], user_EsAdmin, role_Id, empe_NombreCompleto
+	SELECT [usua_Id], [usua_NombreUsuario], [role_Id], usua_EsAdmin, role_Id, empe_NombreCompleto
 	FROM acce.VW_tbUsuarios
-	WHERE [user_Contrasena] = @contraEncriptada
-	AND [user_NombreUsuario] = @user_Nombre
-	AND [user_Estado] = 1
+	WHERE [usua_Contrasena] = @contraEncriptada
+	AND [usua_NombreUsuario] = @usua_Nombre
+	AND [usua_Estado] = 1
 END
 
 /*UDP para vista de usuarios*/
@@ -722,68 +722,68 @@ GO
 CREATE OR ALTER VIEW acce.VW_tbUsuarios
 AS
 	SELECT t1.usua_Id, 
-		   t1.user_NombreUsuario, 
-		   t1.user_Contrasena, 
-		   t1.user_EsAdmin, 
+		   t1.usua_NombreUsuario, 
+		   t1.usua_Contrasena, 
+		   t1.usua_EsAdmin, 
 		   t1.role_Id,
 		   t2.role_Nombre, 
 		   t1.empe_Id,
 		   (SELECT t3.empe_Nombres + ' '+ empe_Apellidos) AS empe_NombreCompleto, 
-		   t1.user_UsuCreacion, 
-		   t4.user_NombreUsuario AS user_UsuCreacion_Nombre,
-		   t1.user_FechaCreacion, 
-	       t1.user_UsuModificacion,
-		   t5.user_NombreUsuario AS user_UsuModificacion_Nombre, 
-		   t1.user_FechaModificacion,
-		   t1.user_Estado,
+		   t1.usua_UsuCreacion, 
+		   t4.usua_NombreUsuario AS usua_UsuCreacion_Nombre,
+		   t1.usua_FechaCreacion, 
+	       t1.usua_UsuModificacion,
+		   t5.usua_NombreUsuario AS usua_UsuModificacion_Nombre, 
+		   t1.usua_FechaModificacion,
+		   t1.usua_Estado,
 		   sucu_Id 
-		   FROM acce.tbUsuarios t1 INNER JOIN acce.tbRoles t2
+		   FROM acce.tbUsuarios t1 LEFT JOIN acce.tbRoles t2
 		   ON t1.role_Id = t2.role_Id
-		   INNER JOIN opti.tbEmpleados t3
+		   LEFT JOIN opti.tbEmpleados t3
 		   ON t3.empe_Id = t1.empe_Id 
-		   INNER JOIN acce.tbUsuarios t4
-		   ON t1.user_UsuCreacion = T4.usua_Id
+		   LEFT JOIN acce.tbUsuarios t4
+		   ON t1.usua_UsuCreacion = T4.usua_Id
 		   LEFT JOIN acce.tbUsuarios t5
-		   ON t1.user_UsuModificacion = t5.usua_Id
+		   ON t1.usua_UsuModificacion = t5.usua_Id
 
 /*Insertar Usuarios*/
 GO
 CREATE OR ALTER PROCEDURE acce.UDP_acce_tbUsuarios_Insert
-	@user_NombreUsuario NVARCHAR(150),
-	@user_Contrasena NVARCHAR(MAX),
-	@user_EsAdmin BIT,
+	@usua_NombreUsuario NVARCHAR(150),
+	@usua_Contrasena NVARCHAR(MAX),
+	@usua_EsAdmin BIT,
 	@role_Id INT, 
 	@empe_Id INT,
-	@user_usuCreacion INT
+	@usua_usuCreacion INT
 AS 
 BEGIN
 	
 	BEGIN TRY
 		
-		DECLARE @password NVARCHAR(MAX)=(SELECT HASHBYTES('Sha2_512', @user_Contrasena));
+		DECLARE @password NVARCHAR(MAX)=(SELECT HASHBYTES('Sha2_512', @usua_Contrasena));
 
 		IF NOT EXISTS (SELECT * FROM acce.tbUsuarios
-						WHERE @user_NombreUsuario = user_NombreUsuario)
+						WHERE @usua_NombreUsuario = usua_NombreUsuario)
 		BEGIN
 			INSERT INTO acce.tbUsuarios
-			VALUES(@user_NombreUsuario,@password,@user_EsAdmin,@role_Id,@empe_Id,@user_usuCreacion,GETDATE(),NULL,NULL,1)
+			VALUES(@usua_NombreUsuario,@password,@usua_EsAdmin,@role_Id,@empe_Id,@usua_usuCreacion,GETDATE(),NULL,NULL,1)
 
 			SELECT 'El usuario se ha insertado'
 		END
 		ELSE IF EXISTS (SELECT * FROM acce.tbUsuarios
-						WHERE @user_NombreUsuario = user_NombreUsuario
-							  AND user_Estado = 1)
+						WHERE @usua_NombreUsuario = usua_NombreUsuario
+							  AND usua_Estado = 1)
 
 			SELECT 'Este usuario ya existe'
 		ELSE
 			BEGIN
 				UPDATE acce.tbUsuarios
-				SET user_Estado = 1,
-					user_Contrasena = @password,
-					user_EsAdmin = @user_EsAdmin,
+				SET usua_Estado = 1,
+					usua_Contrasena = @password,
+					usua_EsAdmin = @usua_EsAdmin,
 					role_Id = @role_Id,
 					empe_Id = @empe_Id
-				WHERE user_NombreUsuario = @user_NombreUsuario
+				WHERE usua_NombreUsuario = @usua_NombreUsuario
 
 				SELECT 'El usuario se ha insertado'
 			END
@@ -805,19 +805,19 @@ END
 GO
 CREATE OR ALTER PROCEDURE acce.UDP_acce_tbUsuarios_UPDATE
 	@usua_Id					INT,
-	@user_EsAdmin				BIT,
+	@usua_EsAdmin				BIT,
 	@role_Id					INT,
 	@empe_Id					INT,
-	@user_UsuModificacion		INT
+	@usua_UsuModificacion		INT
 AS
 BEGIN
 	BEGIN TRY
 		UPDATE acce.tbUsuarios
-		SET user_EsAdmin = @user_EsAdmin,
+		SET usua_EsAdmin = @usua_EsAdmin,
 			role_Id = @role_Id,
 			empe_Id = @empe_Id,
-			user_UsuModificacion = @user_UsuModificacion,
-			user_FechaModificacion = GETDATE()
+			usua_UsuModificacion = @usua_UsuModificacion,
+			usua_FechaModificacion = GETDATE()
 		WHERE usua_Id = @usua_Id
 
 		SELECT 'El usuario ha sido editado'
@@ -835,7 +835,7 @@ AS
 BEGIN
 	BEGIN TRY
 		UPDATE acce.tbUsuarios
-		SET user_Estado = 0
+		SET usua_Estado = 0
 		WHERE usua_Id = @usua_Id
 
 		SELECT 'El usuario ha sido eliminado'
@@ -864,10 +864,10 @@ AS
 	SELECT t1.carg_Id, 
 		   t1.carg_Nombre,
 		   t1.carg_UsuCreacion, 
-		   t2.user_NombreUsuario AS user_UsuCreacion_Nombre,
+		   t2.usua_NombreUsuario AS usua_UsuCreacion_Nombre,
 		   t1.carg_FechaCreacion, 
 	       t1.carg_UsuModificacion,
-		   t3.user_NombreUsuario AS user_UsuModificacion_Nombre, 
+		   t3.usua_NombreUsuario AS usua_UsuModificacion_Nombre, 
 		   t1.carg_FechaModificacion,
 		   t1.carg_Estado
 		   FROM opti.tbCargos t1 INNER JOIN acce.tbUsuarios t2
@@ -984,15 +984,15 @@ AS
 	SELECT cate_Id, 
 		   cate_Nombre, 
 		   cate_UsuCreacion,
-		   [user1].user_NombreUsuario AS cate_UsuCreacion_Nombre, 
+		   [usua1].usua_NombreUsuario AS cate_UsuCreacion_Nombre, 
 		   cate_FechaCreacion, 
 		   cate_UsuModificacion,
-		   [user2].user_NombreUsuario AS cate_UsuModificacion_Nombre, 
+		   [usua2].usua_NombreUsuario AS cate_UsuModificacion_Nombre, 
 		   cate_FechaModificacion, 
 		   cate_Estado
-FROM opti.tbCategorias cate INNER JOIN acce.tbUsuarios [user1]
-ON cate.cate_UsuCreacion = [user1].usua_Id LEFT JOIN acce.tbUsuarios [user2]
-ON cate.cate_UsuModificacion = [user2].usua_Id
+FROM opti.tbCategorias cate INNER JOIN acce.tbUsuarios [usua1]
+ON cate.cate_UsuCreacion = [usua1].usua_Id LEFT JOIN acce.tbUsuarios [usua2]
+ON cate.cate_UsuModificacion = [usua2].usua_Id
 WHERE cate.cate_Estado = 1
 
 /*Vista Categorias UDP*/
@@ -1102,6 +1102,193 @@ BEGIN
 			END
 		ELSE
 			SELECT 'La categoría no puede ser eliminada ya que está siendo usada'
+	END TRY
+	BEGIN CATCH
+		SELECT 'Ha ocurrido un error'
+	END CATCH
+END
+
+---------- CLIENTES -----------
+
+/*Vista clientes*/
+GO
+CREATE OR ALTER VIEW opti.VW_tbClientes
+AS
+	SELECT [clie_Id], 
+		   [clie_Nombres], 
+		   [clie_Apellidos],
+		   ([clie_Nombres] + ' ' + [clie_Apellidos]) AS clie_NombreCompleto,
+		   [clie_Identidad], 
+		   CASE WHEN [clie_Sexo] = 'F' THEN 'Femenino'
+				ELSE 'Masculino'
+		   END AS clie_Sexo,
+		   [clie_FechaNacimiento], 
+		   T1.[estacivi_Id], 
+		   t4.estacivi_Nombre AS clie_EstadoCivilNombre,
+		   [clie_Telefono], 
+		   [clie_CorreoElectronico], 
+		   [clie_UsuCreacion], 
+		   T2.usua_NombreUsuario AS clie_NombreUsuarioCreacion,
+		   [clie_FechaCreacion], 
+		   [clie_UsuModificacion], 
+		   T3.usua_NombreUsuario AS clie_NombreUsuarioModificacion,
+		   [clie_FechaModificacion], 
+		   [clie_Estado]
+	FROM opti.tbClientes T1 INNER JOIN acce.tbUsuarios T2
+	ON T1.clie_UsuCreacion = T2.usua_Id LEFT JOIN acce.tbUsuarios T3 
+	ON T1.clie_UsuModificacion = T3.usua_Id INNER JOIN gral.tbEstadosCiviles T4
+	ON T1.estacivi_Id = T4.estacivi_Id
+
+/*List vista clientes*/
+GO
+CREATE OR ALTER PROCEDURE opti.UDP_tbClientes_List
+AS
+BEGIN
+	SELECT * FROM opti.VW_tbClientes
+END
+
+/*Insertar clientes*/
+GO
+CREATE OR ALTER PROCEDURE opti.UDP_tbClientes_Insert
+	@clie_Nombres				NVARCHAR(300), 
+	@clie_Apellidos				NVARCHAR(300), 
+	@clie_Identidad				NVARCHAR(13), 
+	@clie_Sexo					CHAR, 
+	@clie_FechaNacimiento		DATE, 
+	@estacivi_Id				INT, 
+	@clie_Telefono				NVARCHAR(15), 
+	@clie_CorreoElectronico		NVARCHAR(150), 
+	@clie_UsuCreacion			INT
+AS
+BEGIN
+	BEGIN TRY
+
+		IF NOT EXISTS (SELECT clie_Identidad FROM opti.tbClientes
+						WHERE clie_Identidad = @clie_Identidad)
+			BEGIN
+				INSERT INTO opti.tbClientes([clie_Nombres], 
+											[clie_Apellidos], [clie_Identidad], 
+											[clie_Sexo], [clie_FechaNacimiento], 
+											[estacivi_Id], [clie_Telefono], 
+											[clie_CorreoElectronico], 
+											[clie_UsuCreacion])
+				VALUES(@clie_Nombres, @clie_Apellidos,
+					   @clie_Identidad, @clie_Sexo,
+					   @clie_FechaNacimiento, @estacivi_Id,
+					   @clie_Telefono, @clie_CorreoElectronico,
+					   @clie_UsuCreacion)
+
+				SELECT 'El cliente ha sido ingresado con éxito'
+
+			END
+		ELSE IF EXISTS (SELECT clie_Identidad FROM opti.tbClientes
+						WHERE clie_Identidad = @clie_Identidad
+						AND clie_Estado = 1)
+
+			SELECT 'Ya existe un cliente con este número de identidad'
+		ELSE
+			BEGIN
+				UPDATE opti.tbClientes
+				SET clie_Estado = 1,
+					[clie_Nombres] = @clie_Nombres, 
+					[clie_Apellidos] = @clie_Apellidos, 
+					[clie_Identidad] = @clie_Identidad, 
+					[clie_Sexo] = @clie_Sexo, 
+					[clie_FechaNacimiento] = @clie_FechaNacimiento, 
+					[estacivi_Id] = @estacivi_Id, 
+					[clie_Telefono] = @clie_Telefono, 
+					[clie_CorreoElectronico] = @clie_CorreoElectronico 
+				WHERE clie_Identidad = @clie_Identidad
+
+				SELECT 'El cliente ha sido ingresado con éxito'
+			END
+	END TRY
+	BEGIN CATCH
+		SELECT 'Ha ocurrido un error'
+	END CATCH
+END
+
+/*Editar Cliente*/
+GO
+CREATE OR ALTER PROCEDURE opti.UDP_tbClientes_Update
+	@clie_Id					INT,
+	@clie_Nombres				NVARCHAR(300), 
+	@clie_Apellidos				NVARCHAR(300), 
+	@clie_Identidad				NVARCHAR(13), 
+	@clie_Sexo					CHAR, 
+	@clie_FechaNacimiento		DATE, 
+	@estacivi_Id				INT, 
+	@clie_Telefono				NVARCHAR(15), 
+	@clie_CorreoElectronico		NVARCHAR(150), 
+	@clie_UsuModificacion		INT
+AS
+BEGIN
+	BEGIN TRY
+	IF NOT EXISTS (SELECT * FROM opti.[tbClientes]
+						WHERE @clie_Identidad = clie_Identidad)
+		BEGIN	
+			UPDATE opti.[tbClientes]
+					   SET clie_Nombres = @clie_Nombres,
+						clie_Apellidos = @clie_Apellidos,
+						clie_Identidad = @clie_Identidad,
+						clie_Sexo = @clie_Sexo,
+						[clie_FechaNacimiento] = @clie_FechaNacimiento,
+						[estacivi_Id] = @estacivi_Id, 
+						clie_Telefono = @clie_Telefono,
+						clie_CorreoElectronico = @clie_CorreoElectronico,
+						clie_UsuModificacion = @clie_UsuModificacion,
+						clie_FechaModificacion = GETDATE()
+				WHERE   clie_Id = @clie_Id	
+
+			SELECT 'El cliente ha sido editado con éxito'
+		END
+		ELSE IF EXISTS (SELECT * FROM opti.[tbClientes]
+						WHERE @clie_Identidad = clie_Identidad
+							  AND clie_Estado = 1
+							  AND clie_Id != @clie_Id)
+
+			SELECT 'Ya existe un cliente con este número de identidad'
+		ELSE
+			BEGIN
+				UPDATE opti.[tbClientes]
+				SET clie_Estado = 1,
+				    clie_UsuCreacion = @clie_UsuModificacion,
+					clie_Nombres = @clie_Nombres,
+					clie_Apellidos = @clie_Apellidos,
+					clie_Identidad = @clie_Identidad,
+					clie_Sexo = @clie_Sexo,
+					[clie_FechaNacimiento] = @clie_FechaNacimiento,
+					[estacivi_Id] = @estacivi_Id, 
+					clie_Telefono = @clie_Telefono,
+					clie_CorreoElectronico = @clie_CorreoElectronico
+				WHERE clie_Identidad = @clie_Identidad
+
+				SELECT 'El cliente ha sido editado con éxito'
+			END
+	END TRY
+	BEGIN CATCH
+		SELECT 'Ha ocurrido un error'
+	END CATCH
+END
+
+/*Eliminar Cliente*/
+GO
+CREATE OR ALTER PROCEDURE opti.UDP_tbClientes_Delete
+	@clie_Id INT
+AS
+BEGIN
+	
+	BEGIN TRY
+		IF NOT EXISTS (SELECT * FROM opti.[tbFacturas] WHERE clie_Id = @clie_Id AND fact_Estado = 1)
+			BEGIN
+				UPDATE opti.[tbClientes] 
+				SET clie_Estado = 0
+				WHERE clie_Id = @clie_Id
+				
+				SELECT 'El cliente ha sido eliminado'
+			END
+		ELSE
+			SELECT 'El cliente no puede ser eliminado ya que está siendo utilizado en otro registro'
 	END TRY
 	BEGIN CATCH
 		SELECT 'Ha ocurrido un error'

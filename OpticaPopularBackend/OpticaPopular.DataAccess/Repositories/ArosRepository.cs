@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace OpticaPopular.DataAccess.Repositories
 {
-    public class ArosRepository : IRepository<tbAros>
+    public class ArosRepository : IRepository<tbAros, tbAros>
     {
         public RequestStatus Delete(tbAros item)
         {

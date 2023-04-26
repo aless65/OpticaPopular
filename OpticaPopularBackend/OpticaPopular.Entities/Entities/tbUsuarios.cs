@@ -10,12 +10,12 @@ namespace OpticaPopular.Entities.Entities
     {
         public tbUsuarios()
         {
-            Inverseuser_UsuCreacionNavigation = new HashSet<tbUsuarios>();
-            Inverseuser_UsuModificacionNavigation = new HashSet<tbUsuarios>();
+            Inverseusua_UsuCreacionNavigation = new HashSet<tbUsuarios>();
+            Inverseusua_UsuModificacionNavigation = new HashSet<tbUsuarios>();
             tbArosaros_UsuCreacionNavigation = new HashSet<tbAros>();
             tbArosaros_UsuModificacionNavigation = new HashSet<tbAros>();
-            tbCargosusua_IdCreacionNavigation = new HashSet<tbCargos>();
-            tbCargosusua_IdModificacionNavigation = new HashSet<tbCargos>();
+            tbCargoscarg_UsuCreacionNavigation = new HashSet<tbCargos>();
+            tbCargoscarg_UsuModificacionNavigation = new HashSet<tbCargos>();
             tbCategoriascate_UsuCreacionNavigation = new HashSet<tbCategorias>();
             tbCategoriascate_UsuModificacionNavigation = new HashSet<tbCategorias>();
             tbCitasusua_IdCreacionNavigation = new HashSet<tbCitas>();
@@ -63,27 +63,27 @@ namespace OpticaPopular.Entities.Entities
             tbSucursales = new HashSet<tbSucursales>();
         }
 
-        public int user_Id { get; set; }
-        public string user_NombreUsuario { get; set; }
-        public string user_Contrasena { get; set; }
-        public bool? user_EsAdmin { get; set; }
+        public int usua_Id { get; set; }
+        public string usua_NombreUsuario { get; set; }
+        public string usua_Contrasena { get; set; }
+        public bool? usua_EsAdmin { get; set; }
         public int? role_Id { get; set; }
         public int? empe_Id { get; set; }
-        public int? user_UsuCreacion { get; set; }
-        public DateTime user_FechaCreacion { get; set; }
-        public int? user_UsuModificacion { get; set; }
-        public DateTime? user_FechaModificacion { get; set; }
-        public bool? user_Estado { get; set; }
+        public int? usua_UsuCreacion { get; set; }
+        public DateTime usua_FechaCreacion { get; set; }
+        public int? usua_UsuModificacion { get; set; }
+        public DateTime? usua_FechaModificacion { get; set; }
+        public bool? usua_Estado { get; set; }
 
         public virtual tbRoles role { get; set; }
-        public virtual tbUsuarios user_UsuCreacionNavigation { get; set; }
-        public virtual tbUsuarios user_UsuModificacionNavigation { get; set; }
-        public virtual ICollection<tbUsuarios> Inverseuser_UsuCreacionNavigation { get; set; }
-        public virtual ICollection<tbUsuarios> Inverseuser_UsuModificacionNavigation { get; set; }
+        public virtual tbUsuarios usua_UsuCreacionNavigation { get; set; }
+        public virtual tbUsuarios usua_UsuModificacionNavigation { get; set; }
+        public virtual ICollection<tbUsuarios> Inverseusua_UsuCreacionNavigation { get; set; }
+        public virtual ICollection<tbUsuarios> Inverseusua_UsuModificacionNavigation { get; set; }
         public virtual ICollection<tbAros> tbArosaros_UsuCreacionNavigation { get; set; }
         public virtual ICollection<tbAros> tbArosaros_UsuModificacionNavigation { get; set; }
-        public virtual ICollection<tbCargos> tbCargosusua_IdCreacionNavigation { get; set; }
-        public virtual ICollection<tbCargos> tbCargosusua_IdModificacionNavigation { get; set; }
+        public virtual ICollection<tbCargos> tbCargoscarg_UsuCreacionNavigation { get; set; }
+        public virtual ICollection<tbCargos> tbCargoscarg_UsuModificacionNavigation { get; set; }
         public virtual ICollection<tbCategorias> tbCategoriascate_UsuCreacionNavigation { get; set; }
         public virtual ICollection<tbCategorias> tbCategoriascate_UsuModificacionNavigation { get; set; }
         public virtual ICollection<tbCitas> tbCitasusua_IdCreacionNavigation { get; set; }

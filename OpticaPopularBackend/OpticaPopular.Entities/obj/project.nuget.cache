@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "BjBoHmeaC4M1554RHqJcAVWwq3OU4S+ple8PVmza+OCaY8eq2E1WrgRzkDU2l8bauwJ8Q+Jpy2GrN1BaJM9hnw==",
+  "dgSpecHash": "ftMTGAEXMJMd52djoF4LvTMDuSSN9NGD0M7dGE7doT9TcpAAWLuTBH6OODGtsANZ8IoERIwyaQXlxiIFm1xspA==",
   "success": true,
-  "projectFilePath": "C:\\Users\\PC\\Documents\\GitHub\\OpticaPopular\\OpticaPopularBackend\\OpticaPopular.Entities\\OpticaPopular.Entities.csproj",
+  "projectFilePath": "C:\\Users\\LAB01\\Documents\\GitHub\\OpticaPopular\\OpticaPopularBackend\\OpticaPopular.Entities\\OpticaPopular.Entities.csproj",
   "expectedPackageFiles": [],
   "logs": []
 }

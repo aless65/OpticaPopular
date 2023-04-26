@@ -19,6 +19,9 @@ namespace OpticaPopular.DataAccess.Context
         {
         }
 
+        public virtual DbSet<VW_tbCargos> VW_tbCargos { get; set; }
+        public virtual DbSet<VW_tbCategorias> VW_tbCategorias { get; set; }
+        public virtual DbSet<VW_tbClientes> VW_tbClientes { get; set; }
         public virtual DbSet<VW_tbUsuarios> VW_tbUsuarios { get; set; }
         public virtual DbSet<tbAros> tbAros { get; set; }
         public virtual DbSet<tbCargos> tbCargos { get; set; }
@@ -50,7 +53,100 @@ namespace OpticaPopular.DataAccess.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.HasAnnotation("Relational:Collation", "SQL_Latin1_General_CP1_CI_AS");
+            modelBuilder.HasAnnotation("Relational:Collation", "Modern_Spanish_CI_AS");
+
+            modelBuilder.Entity<VW_tbCargos>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("VW_tbCargos", "opti");
+
+                entity.Property(e => e.carg_FechaCreacion).HasColumnType("datetime");
+
+                entity.Property(e => e.carg_FechaModificacion).HasColumnType("datetime");
+
+                entity.Property(e => e.carg_Nombre)
+                    .IsRequired()
+                    .HasMaxLength(100);
+
+                entity.Property(e => e.usua_UsuCreacion_Nombre)
+                    .IsRequired()
+                    .HasMaxLength(100);
+
+                entity.Property(e => e.usua_UsuModificacion_Nombre).HasMaxLength(100);
+            });
+
+            modelBuilder.Entity<VW_tbCategorias>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("VW_tbCategorias", "opti");
+
+                entity.Property(e => e.cate_FechaCreacion).HasColumnType("datetime");
+
+                entity.Property(e => e.cate_FechaModificacion).HasColumnType("datetime");
+
+                entity.Property(e => e.cate_Nombre)
+                    .IsRequired()
+                    .HasMaxLength(100);
+
+                entity.Property(e => e.cate_UsuCreacion_Nombre)
+                    .IsRequired()
+                    .HasMaxLength(100);
+
+                entity.Property(e => e.cate_UsuModificacion_Nombre).HasMaxLength(100);
+            });
+
+            modelBuilder.Entity<VW_tbClientes>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("VW_tbClientes", "opti");
+
+                entity.Property(e => e.clie_Apellidos)
+                    .IsRequired()
+                    .HasMaxLength(300);
+
+                entity.Property(e => e.clie_CorreoElectronico)
+                    .IsRequired()
+                    .HasMaxLength(150);
+
+                entity.Property(e => e.clie_EstadoCivilNombre).HasMaxLength(50);
+
+                entity.Property(e => e.clie_FechaCreacion).HasColumnType("datetime");
+
+                entity.Property(e => e.clie_FechaModificacion).HasColumnType("datetime");
+
+                entity.Property(e => e.clie_FechaNacimiento).HasColumnType("date");
+
+                entity.Property(e => e.clie_Identidad)
+                    .IsRequired()
+                    .HasMaxLength(13)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.clie_NombreCompleto)
+                    .IsRequired()
+                    .HasMaxLength(601);
+
+                entity.Property(e => e.clie_NombreUsuarioCreacion)
+                    .IsRequired()
+                    .HasMaxLength(100);
+
+                entity.Property(e => e.clie_NombreUsuarioModificacion).HasMaxLength(100);
+
+                entity.Property(e => e.clie_Nombres)
+                    .IsRequired()
+                    .HasMaxLength(300);
+
+                entity.Property(e => e.clie_Sexo)
+                    .IsRequired()
+                    .HasMaxLength(9)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.clie_Telefono)
+                    .IsRequired()
+                    .HasMaxLength(15);
+            });
 
             modelBuilder.Entity<VW_tbUsuarios>(entity =>
             {
@@ -64,21 +160,21 @@ namespace OpticaPopular.DataAccess.Context
                     .IsRequired()
                     .HasMaxLength(100);
 
-                entity.Property(e => e.user_Contrasena).IsRequired();
+                entity.Property(e => e.usua_Contrasena).IsRequired();
 
-                entity.Property(e => e.user_FechaCreacion).HasColumnType("datetime");
+                entity.Property(e => e.usua_FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.user_FechaModificacion).HasColumnType("datetime");
+                entity.Property(e => e.usua_FechaModificacion).HasColumnType("datetime");
 
-                entity.Property(e => e.user_NombreUsuario)
+                entity.Property(e => e.usua_NombreUsuario)
                     .IsRequired()
                     .HasMaxLength(100);
 
-                entity.Property(e => e.user_UsuCreacion_Nombre)
+                entity.Property(e => e.usua_UsuCreacion_Nombre)
                     .IsRequired()
                     .HasMaxLength(100);
 
-                entity.Property(e => e.user_UsuModificacion_Nombre).HasMaxLength(100);
+                entity.Property(e => e.usua_UsuModificacion_Nombre).HasMaxLength(100);
             });
 
             modelBuilder.Entity<tbAros>(entity =>
@@ -108,12 +204,12 @@ namespace OpticaPopular.DataAccess.Context
                     .WithMany(p => p.tbArosaros_UsuCreacionNavigation)
                     .HasForeignKey(d => d.aros_UsuCreacion)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_opti_tbAros_acce_tbUsuarios_clie_UsuCreacion_user_Id");
+                    .HasConstraintName("FK_opti_tbAros_acce_tbUsuarios_clie_UsuCreacion_usua_Id");
 
                 entity.HasOne(d => d.aros_UsuModificacionNavigation)
                     .WithMany(p => p.tbArosaros_UsuModificacionNavigation)
                     .HasForeignKey(d => d.aros_UsuModificacion)
-                    .HasConstraintName("FK_opti_tbAros_acce_tbUsuarios_clie_UsuModificacion_user_Id");
+                    .HasConstraintName("FK_opti_tbAros_acce_tbUsuarios_clie_UsuModificacion_usua_Id");
 
                 entity.HasOne(d => d.cate)
                     .WithMany(p => p.tbAros)
@@ -131,11 +227,13 @@ namespace OpticaPopular.DataAccess.Context
             modelBuilder.Entity<tbCargos>(entity =>
             {
                 entity.HasKey(e => e.carg_Id)
-                    .HasName("PK_opti_tbCargos_carg_Id");
+                    .HasName("PK_opti_tbMetodosPago_carg_Id");
 
                 entity.ToTable("tbCargos", "opti");
 
-                entity.Property(e => e.carg_Estado).HasDefaultValueSql("((1))");
+                entity.Property(e => e.carg_Estado)
+                    .IsRequired()
+                    .HasDefaultValueSql("((1))");
 
                 entity.Property(e => e.carg_FechaCreacion)
                     .HasColumnType("datetime")
@@ -145,18 +243,18 @@ namespace OpticaPopular.DataAccess.Context
 
                 entity.Property(e => e.carg_Nombre)
                     .IsRequired()
-                    .HasMaxLength(150);
+                    .HasMaxLength(100);
 
-                entity.HasOne(d => d.usua_IdCreacionNavigation)
-                    .WithMany(p => p.tbCargosusua_IdCreacionNavigation)
-                    .HasForeignKey(d => d.usua_IdCreacion)
+                entity.HasOne(d => d.carg_UsuCreacionNavigation)
+                    .WithMany(p => p.tbCargoscarg_UsuCreacionNavigation)
+                    .HasForeignKey(d => d.carg_UsuCreacion)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_opti_tbCargos_usua_IdCreacion_acce_tbUsuarios_usua_Id");
+                    .HasConstraintName("FK_opti_tbMetodosPago_acce_tbUsuarios_carg_UsuCreacion_usua_Id");
 
-                entity.HasOne(d => d.usua_IdModificacionNavigation)
-                    .WithMany(p => p.tbCargosusua_IdModificacionNavigation)
-                    .HasForeignKey(d => d.usua_IdModificacion)
-                    .HasConstraintName("FK_opti_tbCargos_usua_IdModificacion_acce_tbUsuarios_usua_Id");
+                entity.HasOne(d => d.carg_UsuModificacionNavigation)
+                    .WithMany(p => p.tbCargoscarg_UsuModificacionNavigation)
+                    .HasForeignKey(d => d.carg_UsuModificacion)
+                    .HasConstraintName("FK_opti_tbMetodosPago_acce_tbUsuarios_carg_UsuModificacion_usua_Id");
             });
 
             modelBuilder.Entity<tbCategorias>(entity =>
@@ -187,12 +285,12 @@ namespace OpticaPopular.DataAccess.Context
                     .WithMany(p => p.tbCategoriascate_UsuCreacionNavigation)
                     .HasForeignKey(d => d.cate_UsuCreacion)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_opti_tbCategorias_acce_tbUsuarios_cate_UsuCreacion_user_Id");
+                    .HasConstraintName("FK_opti_tbCategorias_acce_tbUsuarios_cate_UsuCreacion_usua_Id");
 
                 entity.HasOne(d => d.cate_UsuModificacionNavigation)
                     .WithMany(p => p.tbCategoriascate_UsuModificacionNavigation)
                     .HasForeignKey(d => d.cate_UsuModificacion)
-                    .HasConstraintName("FK_opti_tbCategorias_acce_tbUsuarios_cate_UsuModificacion_user_Id");
+                    .HasConstraintName("FK_opti_tbCategorias_acce_tbUsuarios_cate_UsuModificacion_usua_Id");
             });
 
             modelBuilder.Entity<tbCitas>(entity =>
@@ -286,12 +384,12 @@ namespace OpticaPopular.DataAccess.Context
                     .WithMany(p => p.tbClientesclie_UsuCreacionNavigation)
                     .HasForeignKey(d => d.clie_UsuCreacion)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_opti_tbClientes_acce_tbUsuarios_clie_UsuCreacion_user_Id");
+                    .HasConstraintName("FK_opti_tbClientes_acce_tbUsuarios_clie_UsuCreacion_usua_Id");
 
                 entity.HasOne(d => d.clie_UsuModificacionNavigation)
                     .WithMany(p => p.tbClientesclie_UsuModificacionNavigation)
                     .HasForeignKey(d => d.clie_UsuModificacion)
-                    .HasConstraintName("FK_opti_tbClientes_acce_tbUsuarios_clie_UsuModificacion_user_Id");
+                    .HasConstraintName("FK_opti_tbClientes_acce_tbUsuarios_clie_UsuModificacion_usua_Id");
 
                 entity.HasOne(d => d.estacivi)
                     .WithMany(p => p.tbClientes)
@@ -367,12 +465,12 @@ namespace OpticaPopular.DataAccess.Context
                     .WithMany(p => p.tbDepartamentosdepa_UsuCreacionNavigation)
                     .HasForeignKey(d => d.depa_UsuCreacion)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_gral_tbDepartamentos_acce_tbUsuarios_depa_UsuCreacion_user_Id");
+                    .HasConstraintName("FK_gral_tbDepartamentos_acce_tbUsuarios_depa_UsuCreacion_usua_Id");
 
                 entity.HasOne(d => d.depa_UsuModificacionNavigation)
                     .WithMany(p => p.tbDepartamentosdepa_UsuModificacionNavigation)
                     .HasForeignKey(d => d.depa_UsuModificacion)
-                    .HasConstraintName("FK_gral_tbDepartamentos_acce_tbUsuarios_depa_UsuModificacion_user_Id");
+                    .HasConstraintName("FK_gral_tbDepartamentos_acce_tbUsuarios_depa_UsuModificacion_usua_Id");
             });
 
             modelBuilder.Entity<tbDetallesCitas>(entity =>
@@ -593,7 +691,7 @@ namespace OpticaPopular.DataAccess.Context
             modelBuilder.Entity<tbEmpleados>(entity =>
             {
                 entity.HasKey(e => e.empe_Id)
-                    .HasName("PK_opti_tbEmpleados_empe_Id");
+                    .HasName("PK_maqu_tbEmpleados_empe_Id");
 
                 entity.ToTable("tbEmpleados", "opti");
 
@@ -626,8 +724,6 @@ namespace OpticaPopular.DataAccess.Context
                     .IsRequired()
                     .HasMaxLength(100);
 
-                entity.Property(e => e.empe_Salario).HasColumnType("decimal(18, 2)");
-
                 entity.Property(e => e.empe_Sexo)
                     .IsRequired()
                     .HasMaxLength(1)
@@ -638,34 +734,28 @@ namespace OpticaPopular.DataAccess.Context
                     .IsRequired()
                     .HasMaxLength(15);
 
-                entity.HasOne(d => d.carg)
-                    .WithMany(p => p.tbEmpleados)
-                    .HasForeignKey(d => d.carg_Id)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_opti_tbEmpleados_opti_tbCargos_carg_Id");
-
                 entity.HasOne(d => d.empe_UsuCreacionNavigation)
                     .WithMany(p => p.tbEmpleadosempe_UsuCreacionNavigation)
                     .HasForeignKey(d => d.empe_UsuCreacion)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_opti_tbEmpleados_acce_tbUsuarios_UserCreate");
+                    .HasConstraintName("FK_maqu_tbEmpleados_acce_tbUsuarios_usuaCreate");
 
                 entity.HasOne(d => d.empe_UsuModificacionNavigation)
                     .WithMany(p => p.tbEmpleadosempe_UsuModificacionNavigation)
                     .HasForeignKey(d => d.empe_UsuModificacion)
-                    .HasConstraintName("FK_opti_tbEmpleados_acce_tbUsuarios_UserUpdate");
+                    .HasConstraintName("FK_maqu_tbEmpleados_acce_tbUsuarios_usuaUpdate");
 
                 entity.HasOne(d => d.estacivi)
                     .WithMany(p => p.tbEmpleados)
                     .HasForeignKey(d => d.estacivi_Id)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_opti_tbEmpleados_gral_tbEstadosCiviles_estacivi_Id");
+                    .HasConstraintName("FK_maqu_tbEmpleados_gral_tbEstadosCiviles_estacivi_Id");
 
                 entity.HasOne(d => d.sucu)
                     .WithMany(p => p.tbEmpleados)
                     .HasForeignKey(d => d.sucu_Id)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_opti_tbEmpleados_opti_tbSucursales_sucu_Id");
+                    .HasConstraintName("FK_maqu_tbEmpleados_maqu_tbSucursales_sucu_Id");
             });
 
             modelBuilder.Entity<tbEnvios>(entity =>
@@ -738,12 +828,12 @@ namespace OpticaPopular.DataAccess.Context
                     .WithMany(p => p.tbEstadosCivilesestacivi_UsuCreacionNavigation)
                     .HasForeignKey(d => d.estacivi_UsuCreacion)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_gral_tbEstadosCiviles_acce_tbUsuarios_estacivi_UsuCreacion_user_Id");
+                    .HasConstraintName("FK_gral_tbEstadosCiviles_acce_tbUsuarios_estacivi_UsuCreacion_usua_Id");
 
                 entity.HasOne(d => d.estacivi_UsuModificacionNavigation)
                     .WithMany(p => p.tbEstadosCivilesestacivi_UsuModificacionNavigation)
                     .HasForeignKey(d => d.estacivi_UsuModificacion)
-                    .HasConstraintName("FK_gral_tbEstadosCiviles_acce_tbUsuarios_estacivi_UsuModificacion_user_Id");
+                    .HasConstraintName("FK_gral_tbEstadosCiviles_acce_tbUsuarios_estacivi_UsuModificacion_usua_Id");
             });
 
             modelBuilder.Entity<tbFacturas>(entity =>
@@ -783,12 +873,12 @@ namespace OpticaPopular.DataAccess.Context
                     .WithMany(p => p.tbFacturasfact_UsuCreacionNavigation)
                     .HasForeignKey(d => d.fact_UsuCreacion)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_opti_tbFacturas_acce_tbUsuarios_fact_UsuCreacion_user_Id");
+                    .HasConstraintName("FK_opti_tbFacturas_acce_tbUsuarios_fact_UsuCreacion_usua_Id");
 
                 entity.HasOne(d => d.fact_UsuModificacionNavigation)
                     .WithMany(p => p.tbFacturasfact_UsuModificacionNavigation)
                     .HasForeignKey(d => d.fact_UsuModificacion)
-                    .HasConstraintName("FK_opti_tbFacturas_acce_tbUsuarios_fact_UsuModificacion_user_Id");
+                    .HasConstraintName("FK_opti_tbFacturas_acce_tbUsuarios_fact_UsuModificacion_usua_Id");
 
                 entity.HasOne(d => d.meto)
                     .WithMany(p => p.tbFacturas)
@@ -822,6 +912,12 @@ namespace OpticaPopular.DataAccess.Context
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_opti_tbFacturasDetalles_opti_tbAros_aros_Id");
 
+                entity.HasOne(d => d.envi)
+                    .WithMany(p => p.tbFacturasDetalles)
+                    .HasForeignKey(d => d.envi_Id)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_opti_tbFacturasDetalles_opti_tbEnvios_envi_Id");
+
                 entity.HasOne(d => d.fact)
                     .WithMany(p => p.tbFacturasDetalles)
                     .HasForeignKey(d => d.fact_Id)
@@ -832,12 +928,18 @@ namespace OpticaPopular.DataAccess.Context
                     .WithMany(p => p.tbFacturasDetallesfactdeta_UsuCreacionNavigation)
                     .HasForeignKey(d => d.factdeta_UsuCreacion)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_opti_tbFacturasDetalles_acce_tbUsuarios_factdeta_UsuCreacion_user_Id");
+                    .HasConstraintName("FK_opti_tbFacturasDetalles_acce_tbUsuarios_factdeta_UsuCreacion_usua_Id");
 
                 entity.HasOne(d => d.factdeta_UsuModificacionNavigation)
                     .WithMany(p => p.tbFacturasDetallesfactdeta_UsuModificacionNavigation)
                     .HasForeignKey(d => d.factdeta_UsuModificacion)
-                    .HasConstraintName("FK_opti_tbFacturasDetalles_acce_tbUsuarios_factdeta_UsuModificacion_user_Id");
+                    .HasConstraintName("FK_opti_tbFacturasDetalles_acce_tbUsuarios_factdeta_UsuModificacion_usua_Id");
+
+                entity.HasOne(d => d.orde)
+                    .WithMany(p => p.tbFacturasDetalles)
+                    .HasForeignKey(d => d.orde_Id)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_opti_tbFacturasDetalles_opti_tbOrdenes_orde_Id");
             });
 
             modelBuilder.Entity<tbMarcas>(entity =>
@@ -896,12 +998,12 @@ namespace OpticaPopular.DataAccess.Context
                     .WithMany(p => p.tbMetodosPagometo_UsuCreacionNavigation)
                     .HasForeignKey(d => d.meto_UsuCreacion)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_opti_tbMetodosPago_acce_tbUsuarios_meto_UsuCreacion_user_Id");
+                    .HasConstraintName("FK_opti_tbMetodosPago_acce_tbUsuarios_meto_UsuCreacion_usua_Id");
 
                 entity.HasOne(d => d.meto_UsuModificacionNavigation)
                     .WithMany(p => p.tbMetodosPagometo_UsuModificacionNavigation)
                     .HasForeignKey(d => d.meto_UsuModificacion)
-                    .HasConstraintName("FK_opti_tbMetodosPago_acce_tbUsuarios_meto_UsuModificacion_user_Id");
+                    .HasConstraintName("FK_opti_tbMetodosPago_acce_tbUsuarios_meto_UsuModificacion_usua_Id");
             });
 
             modelBuilder.Entity<tbMunicipios>(entity =>
@@ -946,12 +1048,12 @@ namespace OpticaPopular.DataAccess.Context
                     .WithMany(p => p.tbMunicipiosmuni_UsuCreacionNavigation)
                     .HasForeignKey(d => d.muni_UsuCreacion)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_gral_tbMunicipios_acce_tbUsuarios_muni_UsuCreacion_user_Id");
+                    .HasConstraintName("FK_gral_tbMunicipios_acce_tbUsuarios_muni_UsuCreacion_usua_Id");
 
                 entity.HasOne(d => d.muni_UsuModificacionNavigation)
                     .WithMany(p => p.tbMunicipiosmuni_UsuModificacionNavigation)
                     .HasForeignKey(d => d.muni_UsuModificacion)
-                    .HasConstraintName("FK_gral_tbMunicipios_acce_tbUsuarios_muni_UsuModificacion_user_Id");
+                    .HasConstraintName("FK_gral_tbMunicipios_acce_tbUsuarios_muni_UsuModificacion_usua_Id");
             });
 
             modelBuilder.Entity<tbOrdenes>(entity =>
@@ -1062,12 +1164,12 @@ namespace OpticaPopular.DataAccess.Context
                     .WithMany(p => p.tbPantallasPorRolespantrole_UsuCreacionNavigation)
                     .HasForeignKey(d => d.pantrole_UsuCreacion)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_acce_tbPantallasPorRoles_acce_tbUsuarios_pantrole_UsuCreacion_user_Id");
+                    .HasConstraintName("FK_acce_tbPantallasPorRoles_acce_tbUsuarios_pantrole_UsuCreacion_usua_Id");
 
                 entity.HasOne(d => d.pantrole_UsuModificacionNavigation)
                     .WithMany(p => p.tbPantallasPorRolespantrole_UsuModificacionNavigation)
                     .HasForeignKey(d => d.pantrole_UsuModificacion)
-                    .HasConstraintName("FK_acce_tbPantallasPorRoles_acce_tbUsuarios_pantrole_UsuModificacion_user_Id");
+                    .HasConstraintName("FK_acce_tbPantallasPorRoles_acce_tbUsuarios_pantrole_UsuModificacion_usua_Id");
 
                 entity.HasOne(d => d.role)
                     .WithMany(p => p.tbPantallasPorRoles)
@@ -1113,12 +1215,12 @@ namespace OpticaPopular.DataAccess.Context
                     .WithMany(p => p.tbProveedoresprov_UsuCreacionNavigation)
                     .HasForeignKey(d => d.prov_UsuCreacion)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_opti_tbProveedores_acce_tbUsuarios_prov_UsuCreacion_user_Id");
+                    .HasConstraintName("FK_opti_tbProveedores_acce_tbUsuarios_prov_UsuCreacion_usua_Id");
 
                 entity.HasOne(d => d.prov_UsuModificacionNavigation)
                     .WithMany(p => p.tbProveedoresprov_UsuModificacionNavigation)
                     .HasForeignKey(d => d.prov_UsuModificacion)
-                    .HasConstraintName("FK_opti_tbProveedores_acce_tbUsuarios_prov_UsuModificacion_user_Id");
+                    .HasConstraintName("FK_opti_tbProveedores_acce_tbUsuarios_prov_UsuModificacion_usua_Id");
             });
 
             modelBuilder.Entity<tbRoles>(entity =>
@@ -1146,12 +1248,12 @@ namespace OpticaPopular.DataAccess.Context
                     .WithMany(p => p.tbRolesrole_UsuCreacionNavigation)
                     .HasForeignKey(d => d.role_UsuCreacion)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_acce_tbRoles_acce_tbUsuarios_role_UsuCreacion_user_Id");
+                    .HasConstraintName("FK_acce_tbRoles_acce_tbUsuarios_role_UsuCreacion_usua_Id");
 
                 entity.HasOne(d => d.role_UsuModificacionNavigation)
                     .WithMany(p => p.tbRolesrole_UsuModificacionNavigation)
                     .HasForeignKey(d => d.role_UsuModificacion)
-                    .HasConstraintName("FK_acce_tbRoles_acce_tbUsuarios_role_UsuModificacion_user_Id");
+                    .HasConstraintName("FK_acce_tbRoles_acce_tbUsuarios_role_UsuModificacion_usua_Id");
             });
 
             modelBuilder.Entity<tbSucursales>(entity =>
@@ -1193,29 +1295,29 @@ namespace OpticaPopular.DataAccess.Context
                     .WithMany(p => p.tbSucursales)
                     .HasForeignKey(d => d.sucu_UsuCreacion)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_opti_acce_tbSucursales_user_Id");
+                    .HasConstraintName("FK_opti_acce_tbSucursales_usua_Id");
             });
 
             modelBuilder.Entity<tbUsuarios>(entity =>
             {
-                entity.HasKey(e => e.user_Id)
-                    .HasName("PK_acce_tbUsuarios_user_Id");
+                entity.HasKey(e => e.usua_Id)
+                    .HasName("PK_acce_tbUsuarios_usua_Id");
 
                 entity.ToTable("tbUsuarios", "acce");
 
-                entity.Property(e => e.user_Contrasena).IsRequired();
+                entity.Property(e => e.usua_Contrasena).IsRequired();
 
-                entity.Property(e => e.user_Estado)
+                entity.Property(e => e.usua_Estado)
                     .IsRequired()
                     .HasDefaultValueSql("((1))");
 
-                entity.Property(e => e.user_FechaCreacion)
+                entity.Property(e => e.usua_FechaCreacion)
                     .HasColumnType("datetime")
                     .HasDefaultValueSql("(getdate())");
 
-                entity.Property(e => e.user_FechaModificacion).HasColumnType("datetime");
+                entity.Property(e => e.usua_FechaModificacion).HasColumnType("datetime");
 
-                entity.Property(e => e.user_NombreUsuario)
+                entity.Property(e => e.usua_NombreUsuario)
                     .IsRequired()
                     .HasMaxLength(100);
 
@@ -1224,15 +1326,15 @@ namespace OpticaPopular.DataAccess.Context
                     .HasForeignKey(d => d.role_Id)
                     .HasConstraintName("FK_acce_tbUsuarios_acce_tbRoles_role_Id");
 
-                entity.HasOne(d => d.user_UsuCreacionNavigation)
-                    .WithMany(p => p.Inverseuser_UsuCreacionNavigation)
-                    .HasForeignKey(d => d.user_UsuCreacion)
-                    .HasConstraintName("FK_acce_tbUsuarios_acce_tbUsuarios_user_UsuCreacion_user_Id");
+                entity.HasOne(d => d.usua_UsuCreacionNavigation)
+                    .WithMany(p => p.Inverseusua_UsuCreacionNavigation)
+                    .HasForeignKey(d => d.usua_UsuCreacion)
+                    .HasConstraintName("FK_acce_tbUsuarios_acce_tbUsuarios_usua_UsuCreacion_usua_Id");
 
-                entity.HasOne(d => d.user_UsuModificacionNavigation)
-                    .WithMany(p => p.Inverseuser_UsuModificacionNavigation)
-                    .HasForeignKey(d => d.user_UsuModificacion)
-                    .HasConstraintName("FK_acce_tbUsuarios_acce_tbUsuarios_user_UsuModificacion_user_Id");
+                entity.HasOne(d => d.usua_UsuModificacionNavigation)
+                    .WithMany(p => p.Inverseusua_UsuModificacionNavigation)
+                    .HasForeignKey(d => d.usua_UsuModificacion)
+                    .HasConstraintName("FK_acce_tbUsuarios_acce_tbUsuarios_usua_UsuModificacion_usua_Id");
             });
 
             OnModelCreatingPartial(modelBuilder);

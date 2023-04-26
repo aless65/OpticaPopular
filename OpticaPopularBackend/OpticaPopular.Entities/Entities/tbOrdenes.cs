@@ -12,6 +12,7 @@ namespace OpticaPopular.Entities.Entities
         {
             tbDetallesEnvios = new HashSet<tbDetallesEnvios>();
             tbDetallesOrdenes = new HashSet<tbDetallesOrdenes>();
+            tbFacturasDetalles = new HashSet<tbFacturasDetalles>();
         }
 
         public int orde_Id { get; set; }
@@ -32,5 +33,6 @@ namespace OpticaPopular.Entities.Entities
         public virtual tbUsuarios usua_IdModificacionNavigation { get; set; }
         public virtual ICollection<tbDetallesEnvios> tbDetallesEnvios { get; set; }
         public virtual ICollection<tbDetallesOrdenes> tbDetallesOrdenes { get; set; }
+        public virtual ICollection<tbFacturasDetalles> tbFacturasDetalles { get; set; }
     }
 }
