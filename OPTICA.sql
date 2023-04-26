@@ -789,7 +789,7 @@ BEGIN
 			END
 	END TRY
 	BEGIN CATCH
-		SELECT 0
+		SELECT 'Ha ocurrido un error'
 	END CATCH 
 END
 
@@ -820,7 +820,7 @@ BEGIN
 			usua_FechaModificacion = GETDATE()
 		WHERE usua_Id = @usua_Id
 
-		SELECT 'El usuario ha sido editado'
+		SELECT 'El usuario ha sido editado con éxito'
 	END TRY
 	BEGIN CATCH
 		SELECT 'Ha ocurrido un error'

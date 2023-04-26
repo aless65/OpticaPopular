@@ -432,3 +432,4 @@ C:\Users\LAB01\Documents\GitHub\OpticaPopular\OpticaPopularBackend\OpticaPopular
 C:\Users\LAB01\Documents\GitHub\OpticaPopular\OpticaPopularBackend\OpticaPopular.API\obj\Debug\net5.0\ref\OpticaPopular.API.dll
 C:\Users\LAB01\Documents\GitHub\OpticaPopular\OpticaPopularBackend\OpticaPopular.API\obj\Debug\net5.0\OpticaPopular.API.pdb
 C:\Users\LAB01\Documents\GitHub\OpticaPopular\OpticaPopularBackend\OpticaPopular.API\obj\Debug\net5.0\OpticaPopular.API.genruntimeconfig.cache
+C:\Users\LAB01\Documents\GitHub\OpticaPopular\OpticaPopularBackend\OpticaPopular.API\obj\Debug\net5.0\OpticaPopular.API.MvcApplicationPartsAssemblyInfo.cs

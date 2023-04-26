@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using OpticaPopular.API.Models;
+using OpticaPopular.Entities.Entities;
 
 namespace OpticaPopular.API.Extensions
 {
@@ -6,7 +8,7 @@ namespace OpticaPopular.API.Extensions
     {
         public MappingProfileExtensions()
         {
-
+            CreateMap<UsuarioViewModel, tbUsuarios>().ReverseMap();
         }
     }
 }

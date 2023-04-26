@@ -33,3 +33,4 @@ C:\Users\LAB01\Documents\GitHub\OpticaPopular\OpticaPopularBackend\OpticaPopular
 C:\Users\LAB01\Documents\GitHub\OpticaPopular\OpticaPopularBackend\OpticaPopular.Entities\obj\Debug\net5.0\OpticaPopular.Entities.dll
 C:\Users\LAB01\Documents\GitHub\OpticaPopular\OpticaPopularBackend\OpticaPopular.Entities\obj\Debug\net5.0\ref\OpticaPopular.Entities.dll
 C:\Users\LAB01\Documents\GitHub\OpticaPopular\OpticaPopularBackend\OpticaPopular.Entities\obj\Debug\net5.0\OpticaPopular.Entities.pdb
+C:\Users\LAB01\Documents\GitHub\OpticaPopular\OpticaPopularBackend\OpticaPopular.Entities\obj\Debug\net5.0\OpticaPopular.Entities.csproj.AssemblyReference.cache
