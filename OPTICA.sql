@@ -368,7 +368,7 @@ CREATE TABLE opti.tbAros
 	CONSTRAINT PK_opti_tbAros_aros_Id 											PRIMARY KEY(aros_Id),
 	CONSTRAINT FK_opti_tbAros_opti_tbProveedores_prov_Id 						FOREIGN KEY(prov_Id) 				REFERENCES opti.tbProveedores(prov_Id),
 	CONSTRAINT FK_opti_tbAros_opti_tbCategorias_cate_Id 						FOREIGN KEY(cate_Id) 				REFERENCES opti.tbCategorias(cate_Id),
-	CONSTRAINT FK_opti_tbAros_opti_tbMarcas_marc_Id 							FOREIGN KEY(marc_Id) 				REFERENCES opti.tbMatcas(marc_Id),
+	CONSTRAINT FK_opti_tbAros_opti_tbMarcas_marc_Id 							FOREIGN KEY(marc_Id) 				REFERENCES opti.tbMarcas(marc_Id),
 	CONSTRAINT FK_opti_tbAros_acce_tbUsuarios_clie_UsuCreacion_usua_Id  		FOREIGN KEY(aros_UsuCreacion) 		REFERENCES acce.tbUsuarios(usua_Id),
 	CONSTRAINT FK_opti_tbAros_acce_tbUsuarios_clie_UsuModificacion_usua_Id  	FOREIGN KEY(aros_UsuModificacion) 	REFERENCES acce.tbUsuarios(usua_Id)
 );
@@ -503,7 +503,7 @@ CREATE TABLE opti.tbDetallesOrdenes
 	deor_Cantidad			INT NOT NULL,
 	deor_Total				DECIMAL(18,2) NOT NULL,
 
-	orde_Estado				BIT DEFAULT 1,
+	deor_Estado				BIT DEFAULT 1,
 	usua_IdCreacion			INT NOT NULL,
 	orde_FechaCreacion		DATETIME DEFAULT GETDATE(),
 	usua_IdModificacion		INT DEFAULT NULL,
@@ -561,7 +561,7 @@ CREATE TABLE opti.tbDireccionesPorCliente
 	clie_Id						INT NOT NULL,
 	dire_Id						INT NOT NULL,
 
-	clie_Estado					BIT DEFAULT 1,
+	dicl_Estado					BIT DEFAULT 1,
 	usua_IdCreacion				INT NOT NULL,
 	clie_FechaCreacion			DATETIME DEFAULT GETDATE(),
 	usua_IdModificacion			INT DEFAULT NULL,
@@ -593,7 +593,7 @@ CREATE TABLE opti.tbEnvios
 	envi_FechaEntrega			DATE NOT NULL,
 	envi_FechaEntregaReal		DATE NOT NULL,
 
-	clie_Estado					BIT DEFAULT 1,
+	envi_Estado					BIT DEFAULT 1,
 	usua_IdCreacion				INT NOT NULL,
 	clie_FechaCreacion			DATETIME DEFAULT GETDATE(),
 	usua_IdModificacion			INT DEFAULT NULL,
@@ -673,7 +673,7 @@ CREATE TABLE opti.tbDetallesEnvios
 	envi_Id		INT NOT NULL,
 	orde_Id		INT NOT NULL,
 
-	clie_Estado					BIT DEFAULT 1,
+	deen_Estado					BIT DEFAULT 1,
 	usua_IdCreacion				INT NOT NULL,
 	clie_FechaCreacion			DATETIME DEFAULT GETDATE(),
 	usua_IdModificacion			INT DEFAULT NULL,
