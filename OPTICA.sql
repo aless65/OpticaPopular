@@ -107,7 +107,7 @@ END;
 
 
 GO
-EXEC acce.UDP_InsertUsuario 'admin', '123', 1, NULL, 1;
+EXEC acce.UDP_InsertUsuario 'admin', '123', 1, NULL, NULL;
 
 
 --********* ALTERAR TABLA ROLES **************--
@@ -294,6 +294,12 @@ CREATE TABLE opti.tbEmpleados(
     CONSTRAINT FK_maqu_tbEmpleados_maqu_tbSucursales_sucu_Id                      FOREIGN KEY(sucu_Id)                     REFERENCES opti.tbSucursales(sucu_Id)      
 );
 
+
+GO
+ALTER TABLE acce.tbUsuarios 
+ADD CONSTRAINT FK_acce_tbUsuarios_opti_tbEmpleados_empe_Id FOREIGN KEY([empe_Id]) REFERENCES [opti].[tbEmpleados]([empe_Id]) 
+GO
+
 --********TABLA Clientes****************---
 CREATE TABLE opti.tbClientes
 (
@@ -319,29 +325,6 @@ CREATE TABLE opti.tbClientes
 	CONSTRAINT FK_opti_tbClientes_acce_tbUsuarios_clie_UsuModificacion_usua_Id  FOREIGN KEY(clie_UsuModificacion) 	REFERENCES acce.tbUsuarios(usua_Id)		
 );
 
---********TABLA Aros****************---
-CREATE TABLE opti.tbAros
-(
-	aros_Id								INT IDENTITY,
-	aros_Descripcion					NVARCHAR(300)NOT NULL,
-	aros_CostoUni						DECIMAL(18,2) NOT NULL,
-	cate_Id								INT NOT NULL,
-	prov_Id								INT NOT NULL,
-	marc_Id								INT NOT NULL,
-	aros_Stock							INT NOT NULL,
-	aros_UsuCreacion					INT NOT NULL,
-	aros_FechaCreacion					DATETIME NOT NULL CONSTRAINT DF_aros_FechaCreacion DEFAULT(GETDATE()),
-	aros_FechaModificacion				DATETIME,
-	aros_UsuModificacion				INT,
-	aros_Estado							BIT NOT NULL CONSTRAINT DF_aros_Estado DEFAULT(1),
-
-	CONSTRAINT PK_opti_tbAros_aros_Id 											PRIMARY KEY(aros_Id),
-	CONSTRAINT FK_opti_tbAros_opti_tbProveedores_prov_Id 						FOREIGN KEY(prov_Id) 				REFERENCES opti.tbProveedores(prov_Id),
-	CONSTRAINT FK_opti_tbAros_opti_tbCategorias_cate_Id 						FOREIGN KEY(cate_Id) 				REFERENCES opti.tbCategorias(cate_Id),
-	CONSTRAINT FK_opti_tbAros_acce_tbUsuarios_clie_UsuCreacion_usua_Id  		FOREIGN KEY(aros_UsuCreacion) 		REFERENCES acce.tbUsuarios(usua_Id),
-	CONSTRAINT FK_opti_tbAros_acce_tbUsuarios_clie_UsuModificacion_usua_Id  	FOREIGN KEY(aros_UsuModificacion) 	REFERENCES acce.tbUsuarios(usua_Id)
-);
-
 --******************************************************TABLE Marcas******************************************************--
 
 CREATE TABLE opti.tbMarcas
@@ -365,6 +348,30 @@ ALTER TABLE opti.tbMarcas
 ADD CONSTRAINT FK_opti_tbMarcas_usua_IdModificacion_acce_tbUsuarios_usua_Id FOREIGN KEY (usua_IdModificacion) REFERENCES acce.tbUsuarios (usua_Id)
 GO
 --*****************************************************/TABLE Marcas******************************************************--
+
+--********TABLA Aros****************---
+CREATE TABLE opti.tbAros
+(
+	aros_Id								INT IDENTITY,
+	aros_Descripcion					NVARCHAR(300)NOT NULL,
+	aros_CostoUni						DECIMAL(18,2) NOT NULL,
+	cate_Id								INT NOT NULL,
+	prov_Id								INT NOT NULL,
+	marc_Id								INT NOT NULL,
+	aros_Stock							INT NOT NULL,
+	aros_UsuCreacion					INT NOT NULL,
+	aros_FechaCreacion					DATETIME NOT NULL CONSTRAINT DF_aros_FechaCreacion DEFAULT(GETDATE()),
+	aros_FechaModificacion				DATETIME,
+	aros_UsuModificacion				INT,
+	aros_Estado							BIT NOT NULL CONSTRAINT DF_aros_Estado DEFAULT(1),
+
+	CONSTRAINT PK_opti_tbAros_aros_Id 											PRIMARY KEY(aros_Id),
+	CONSTRAINT FK_opti_tbAros_opti_tbProveedores_prov_Id 						FOREIGN KEY(prov_Id) 				REFERENCES opti.tbProveedores(prov_Id),
+	CONSTRAINT FK_opti_tbAros_opti_tbCategorias_cate_Id 						FOREIGN KEY(cate_Id) 				REFERENCES opti.tbCategorias(cate_Id),
+	CONSTRAINT FK_opti_tbAros_opti_tbMarcas_marc_Id 							FOREIGN KEY(marc_Id) 				REFERENCES opti.tbMatcas(marc_Id),
+	CONSTRAINT FK_opti_tbAros_acce_tbUsuarios_clie_UsuCreacion_usua_Id  		FOREIGN KEY(aros_UsuCreacion) 		REFERENCES acce.tbUsuarios(usua_Id),
+	CONSTRAINT FK_opti_tbAros_acce_tbUsuarios_clie_UsuModificacion_usua_Id  	FOREIGN KEY(aros_UsuModificacion) 	REFERENCES acce.tbUsuarios(usua_Id)
+);
 
 --**************************************************TABLE Consultorios****************************************************--
 
@@ -635,7 +642,7 @@ CREATE TABLE opti.tbFacturasDetalles
 (
 	factdeta_Id								INT IDENTITY,
 	fact_Id									INT NOT NULL,
-	cons_Id									INT NOT NULL,
+	deci_Id									INT NOT NULL,
 	aros_Id									INT NOT NULL,
 	orde_Id									INT NOT NULL,
 	envi_Id									INT NOT NULL,
@@ -651,6 +658,7 @@ CREATE TABLE opti.tbFacturasDetalles
 	CONSTRAINT FK_opti_tbFacturasDetalles_opti_tbAros_aros_Id									FOREIGN KEY(aros_Id)					REFERENCES opti.tbAros(aros_Id),
 	CONSTRAINT FK_opti_tbFacturasDetalles_opti_tbEnvios_envi_Id									FOREIGN KEY(envi_Id)					REFERENCES opti.tbEnvios(envi_Id),
 	CONSTRAINT FK_opti_tbFacturasDetalles_opti_tbOrdenes_orde_Id								FOREIGN KEY(orde_Id)					REFERENCES opti.tbOrdenes(orde_Id),
+	CONSTRAINT FK_opti_tbFacturasDetalles_opti_tbDetallesCitas_deci_Id							FOREIGN KEY(deci_Id)					REFERENCES opti.tbDetallesCitas(deci_Id),
 	CONSTRAINT FK_opti_tbFacturasDetalles_acce_tbUsuarios_factdeta_UsuCreacion_usua_Id  		FOREIGN KEY(factdeta_UsuCreacion) 		REFERENCES acce.tbUsuarios(usua_Id),
 	CONSTRAINT FK_opti_tbFacturasDetalles_acce_tbUsuarios_factdeta_UsuModificacion_usua_Id  	FOREIGN KEY(factdeta_UsuModificacion) 	REFERENCES acce.tbUsuarios(usua_Id)
 );
@@ -1462,29 +1470,30 @@ VALUES('Optica Popular Mall Multiplaza','0801','Mall Multiplaza',1),
 	  ('Optica Popular Mall Las Americas','0502','Mall Las Americas',1),
 	  ('Optica Popular City Mall','0801','City Mall',1)
 
-	   --********INSERT TABLA Empleados****************---
+--INSERT TABLA Empleados********---
 INSERT INTO opti.tbEmpleados( empe_Nombres, empe_Apellidos, empe_Identidad, empe_FechaNacimiento, empe_Sexo, estacivi_Id, empe_Telefono, empe_CorreoElectronico, sucu_Id, empe_UsuCreacion)
-VALUES('Clara','Gomez','1234567890123','05-12-2003','F',1,'98107260','gomez23.e@gmail.com',1,1),
-      ('Maria Lucero','Ramirez','452879612354','02-12-2003','F',1,'97260425','maria.lucero@gmail.com',1,1),
-	  ('Karla Elisa','Ramirez','859679612354','02-02-2000','F',1,'98107260','karlaramirez@gmail.com',1,1),
-	  ('Manuel','Cardona','8759632415785','05-05-2001','M',1,'97307260','manuel@gmail.com',1,1),
-	  ('Mauricio','Mendosa','0529632415785','15-05-2001','M',1,'99307260','mMENDOZA@gmail.com',1,1),
-	  ('Rafael','Alvarado','0529582415785','05-05-2000','M',1,'99307260','mMENDOZA@gmail.com',1,1),
-	  ('Carlos','Amaya','0569582415785','04-05-2000','M',1,'99307260','amayacarlos@gmail.com',1,1),
-	  ('Jose Manuel','Hernadez','0569582415712','14-05-2004','M',1,'33207260','josemanuel12@gmail.com',1,1),
-	  ('Samuel','Bautista','0561272415712','14-04-2007','M',1,'32007260','samuel12@gmail.com',1,1),
-	  ('Erick','Hernadez','0561272415799','30-04-2007','M',1,'92007930','erickhernadez@gmail.com',1,1)
+VALUES('Clara','Gomez','1234567890123','2003-12-05','F',1,'98107260','gomez23.e@gmail.com',1,1),
+('Maria Lucero','Ramirez','452879612354','2003-12-02','F',1,'97260425','maria.lucero@gmail.com',1,1),
+('Karla Elisa','Ramirez','859679612354','2000-02-02','F',1,'98107260','karlaramirez@gmail.com',1,1),
+('Manuel','Cardona','8759632415785','2001-05-05','M',1,'97307260','manuel@gmail.com',1,1),
+('Mauricio','Mendosa','0529632415785','2001-05-15','M',1,'99307260','mMENDOZA@gmail.com',1,1),
+('Rafael','Alvarado','0529582415785','2000-05-05','M',1,'99307260','mMENDOZA@gmail.com',1,1),
+('Carlos','Amaya','0569582415785','2000-05-04','M',1,'99307260','amayacarlos@gmail.com',1,1),
+('Jose Manuel','Hernadez','0569582415712','2004-05-14','M',1,'33207260','josemanuel12@gmail.com',1,1),
+('Samuel','Bautista','0561272415712','2007-04-14','M',1,'32007260','samuel12@gmail.com',1,1),
+('Erick','Hernadez','0561272415799','2007-04-30','M',1,'92007930','erickhernadez@gmail.com',1,1)
+
 
   --********INSERT TABLA Clientes****************---
 INSERT INTO [opti].[tbClientes](clie_Nombres, clie_Apellidos, clie_Identidad, clie_Sexo, clie_FechaNacimiento, estacivi_Id, clie_Telefono, clie_CorreoElectronico, clie_UsuCreacion)
-VALUES('Juan','Perez','1234567890123','08-02-2000','M',2,'12345678','juan.perez@example.com',1),
-      ('María','Gómez','9876543210987','06-06-2004','F',1,'98765432','maria.gomez@example.com',1),
-      ('Pedro','González','4567890123456','05-02-2006','M',1,'45678901','pedro.gonzalez@example.com',1),
-	  ('Ana','Fernández','7654321098765','25-12-2009','F',1,'76543210','ana.fernandez@example.com',1),
-	  ('Carlos','López','9876543212345','28-02-2003','M',1,'98765432','carlos.lopez@example.com',1),
-	  ('Laura','Martínez','5678901234567','05-12-2003','F',1,'56789012','laura.martinez@example.com',1),
-      ('Manuel','Díaz','3456789012345','05-12-2007','M',1,'34567890','manuel.diaz@example.com',1),
-	  ('David','Hernández','5678901234567','05-12-2008','M',1,'55400045','david.hernandez@example.com',1)
+VALUES('Juan','Perez','1234567890123','M','2000-02-08',2,'12345678','juan.perez@example.com',1),
+('María','Gómez','9876543210987','F','2004-06-06',1,'98765432','maria.gomez@example.com',1),
+('Pedro','González','4567890123456','M','2006-02-05',1,'45678901','pedro.gonzalez@example.com',1),
+('Ana','Fernández','7654321098765','F','2009-12-25',1,'76543210','ana.fernandez@example.com',1),
+('Carlos','López','9876543212345','M','2003-02-28',1,'98765432','carlos.lopez@example.com',1),
+('Laura','Martínez','5678901234567','F','2003-12-05',1,'56789012','laura.martinez@example.com',1),
+('Manuel','Díaz','3456789012345','M','2007-12-05',1,'34567890','manuel.diaz@example.com',1),
+('David','Hernández','5678901234567','M','2008-12-05',1,'55400045','david.hernandez@example.com',1)
 
 --********INSERT TABLA Marcas****************---
 INSERT INTO opti.tbMarcas(marc_Nombre , usua_IdCreacion)

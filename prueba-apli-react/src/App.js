@@ -42,6 +42,10 @@ class App extends Component {
       .then(json => this.setState({ posts: json.data }))
   }
 
+  handleSubmit = (event) => {
+    event.preventDefault();
+    alert("subió");
+  }
 
   render() {
     const { posts } = this.state;
@@ -58,6 +62,11 @@ class App extends Component {
         }}>
           Send data to backend
         </button>
+        <form action="submit" onSubmit={this.handleSubmit}>
+          <input type="text" className="form-control" placeholder="Nombre de usuario" />
+          <input type="password" className="form-control" placeholder="Contraseña" />
+          <button className="btn btn-primary">Ajouter</button>
+        </form>
 
         {posts.map((post) => (
           <div className="card" key={post.usua_Id}>
