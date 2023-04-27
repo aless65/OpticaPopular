@@ -1513,6 +1513,15 @@ AS
 	ON T1.prov_UsuModificacion = T3.usua_Id
 
 GO
+
+/*List vista Proveedores*/
+GO
+CREATE OR ALTER PROCEDURE opti.UDP_tbProveedore_List
+AS
+BEGIN
+	SELECT * FROM opti.VW_tbProveedores
+END	
+
 /*Insertar Proveedor*/
 GO
 CREATE OR ALTER PROCEDURE opti.UDP_tbProveedor_Insert
@@ -1615,6 +1624,1698 @@ BEGIN
 		SELECT 'Ha ocurrido un error'
 	END CATCH
 END
+
+
+---------- AROS -----------
+
+/*Vista Aros*/
+GO
+CREATE OR ALTER VIEW opti.VW_tbAros
+AS
+	SELECT aros_Id, 
+	       aros_Descripcion, 
+		   aros_CostoUni, 
+		   T1.cate_Id, 
+		   T4.cate_Nombre AS aros_NombreCategoria,
+		   T1.prov_Id, 
+		   T5.prov_Nombre AS aros_NombreProveedor,
+		   T1.marc_Id, 
+		   T6.marc_Nombre AS aros_NombreMarca,
+		   aros_Stock, 
+		   aros_UsuCreacion, 
+		   T2.user_NombreUsuario AS aros_NombreUsuarioCreacion,
+		   aros_FechaCreacion, 
+		   aros_FechaModificacion, 
+		   aros_UsuModificacion, 
+		   T3.usua_NombreUsuario AS aros_NombreUsuarioModificacion,
+		   aros_Estado
+	FROM opti.tbAros T1 INNER JOIN acce.tbUsuarios T2
+	ON T1.aros_UsuCreacion = T2.usua_Id LEFT JOIN acce.tbUsuarios T3 
+	ON T1.aros_UsuModificacion = T3.usua_Id INNER JOIN opti.tbCategorias T4
+	ON T1.cate_Id = T4.cate_Id INNER JOIN opti.tbProveedores T5 
+	ON T1.prov_Id = T5.prov_Id INNER JOIN opti.tbMarcas T6
+	ON T1.marc_Id = T6.marc_Id
+
+GO
+
+/*List vista Aros*/
+GO
+CREATE OR ALTER PROCEDURE opti.UDP_tbAros_List
+AS
+BEGIN
+	SELECT * FROM opti.VW_tbAros
+END	
+
+/*Insertar Proveedor*/
+GO
+CREATE OR ALTER PROCEDURE opti.UDP_tbAros_Insert
+	@aros_Descripcion              NVARCHAR(300),
+    @aros_CostoUni                 DECIMAL(18,2),
+    @cate_Id                       INT,
+	@prov_Id                       INT,
+    @marc_Id                       INT,
+    @aros_Stock                    INT,
+    @aros_UsuCreacion              INT
+
+AS
+BEGIN
+	BEGIN TRY
+		
+			BEGIN
+			INSERT INTO opti.tbAros(aros_Descripcion, aros_CostoUni, cate_Id, prov_Id, marc_Id, aros_Stock, aros_UsuCreacion)
+			VALUES(@aros_Descripcion, @aros_CostoUni, @cate_Id, @prov_Id, @marc_Id, @aros_Stock, @aros_UsuCreacion)
+			
+			SELECT 'El Aro ha sido insertada con éxito'
+			END
+		 IF EXISTS (SELECT * FROM opti.tbAros
+						WHERE aros_Descripcion = @aros_Descripcion
+						AND aros_Estado = 0)
+			BEGIN
+				UPDATE opti.tbAros
+				SET aros_Estado = 1
+				WHERE @aros_Descripcion = @aros_Descripcion
+
+				SELECT 'El Aro ha sido insertada con éxito'
+			END
+		ELSE
+			SELECT 'El Aro ya existe'
+	END TRY
+	BEGIN CATCH
+		SELECT 'Ha ocurrido un error'
+	END CATCH
+END
+
+/*Editar Aro*/
+GO
+CREATE OR ALTER PROCEDURE opti.UDP_tbAros_Update
+	@aros_Id                 INT,
+    @aros_Descripcion        NVARCHAR(300), 
+	@aros_CostoUni           DECIMAL(18,2), 
+	@cate_Id                 INT, 
+	@prov_Id                 INT, 
+	@marc_Id                 INT, 
+	@aros_Stock              INT, 
+	@aros_UsuModificacion    INT
+	 
+AS
+BEGIN 
+	BEGIN TRY
+	IF NOT EXISTS (SELECT * FROM opti.tbAros
+						WHERE @aros_Descripcion = [aros_Descripcion])
+		BEGIN			
+			UPDATE opti.tbAros
+			SET   aros_Descripcion = @aros_Descripcion, 
+			      aros_CostoUni = @aros_CostoUni, 
+				  cate_Id = @cate_Id, 
+				  prov_Id = @prov_Id, 
+				  marc_Id = @marc_Id, 
+				  aros_Stock = @aros_Stock, 
+				  aros_FechaModificacion = GETDATE(), 
+				  aros_UsuModificacion = @aros_UsuModificacion
+			WHERE 	aros_Id = @aros_Id
+			SELECT 'El Aro ha sido editada con éxito'
+		END
+		ELSE IF EXISTS (SELECT * FROM opti.tbAros
+						WHERE @aros_Descripcion = [aros_Descripcion]
+							  AND  [aros_Estado] = 1
+							  AND [aros_Id] != @aros_Id)
+			SELECT 'EL Aro ya existe'
+		ELSE
+			UPDATE opti.tbAros
+			SET aros_Estado = 1,
+			  aros_UsuModificacion = @aros_UsuModificacion
+			WHERE [aros_Descripcion] = @aros_Descripcion
+
+			SELECT 'El Aro ha sido editada con éxito'
+	END TRY
+	BEGIN CATCH
+		SELECT 'Ha ocurrido un error'
+	END CATCH
+END
+
+/*Eliminar Aros*/
+GO
+CREATE OR ALTER PROCEDURE opti.UDP_tbAros_Delete 
+	@aros_Id	INT
+AS
+BEGIN
+	BEGIN TRY
+		
+			BEGIN
+				UPDATE opti.tbAros
+				SET aros_Estado = 0
+				WHERE aros_Id = @aros_Id
+
+				SELECT 'El Aro ha sido eliminado'
+			END
+		
+	END TRY
+	BEGIN CATCH
+		SELECT 'Ha ocurrido un error'
+	END CATCH
+END
+
+---------- DIRECCIONES -----------
+
+/*Vista Direcciones*/
+GO
+CREATE OR ALTER VIEW opti.VW_tbDirecciones
+AS
+	SELECT dire_Id,
+	       T1.muni_Id, 
+		   T4.muni_Nombre AS muni_NombreMunicipio,
+		   dire_DireccionExacta, 
+		   clie_Estado, 
+		   usua_IdCreacion, 
+		   t2.usua_NombreUsuario AS dire_UsuarioCreacion,
+		   clie_FechaCreacion, 
+		   usua_IdModificacion, 
+		   T3.usua_NombreUsuario AS dire_UsuarioModificacion,
+		   clie_FechaModificacion
+		   FROM opti.tbDirecciones T1 INNER JOIN acce.tbUsuarios T2
+		   ON T1.usua_IdCreacion = T2.usua_Id
+		   LEFT JOIN acce.tbUsuarios T3
+		   ON T1.usua_IdModificacion = T3.usua_Id INNER JOIN gral.tbMunicipios T4
+		   ON T1.muni_Id = T4.muni_Nombre
+		   
+
+/*Insertar Direcciones*/
+GO
+CREATE OR ALTER PROCEDURE opti.UDP_tbDirecciones_Insert
+	@muni_Id                INT, 
+	@dire_DireccionExacta   NVARCHAR(300), 
+	@usua_IdCreacion        INT
+AS 
+BEGIN
+	BEGIN TRY
+		IF NOT EXISTS (SELECT * FROM opti.tbDirecciones
+						WHERE dire_DireccionExacta = @dire_DireccionExacta)
+			BEGIN
+			INSERT INTO opti.tbDirecciones(muni_Id,dire_DireccionExacta,usua_IdCreacion)
+			VALUES(@muni_Id,@dire_DireccionExacta,@usua_IdCreacion)
+			
+			SELECT 'La direccion ha sido insertado'
+			END
+		ELSE IF EXISTS (SELECT * FROM opti.tbDirecciones 
+						WHERE dire_DireccionExacta = @dire_DireccionExacta
+						AND clie_Estado = 0)
+			BEGIN
+				UPDATE opti.tbDirecciones 
+				SET clie_Estado = 1
+				WHERE dire_DireccionExacta = @dire_DireccionExacta
+
+				SELECT 'La direccion ha sido insertado'
+			END
+		ELSE
+			SELECT 'La direccion ya existe'
+	END TRY
+	BEGIN CATCH
+		SELECT 'Ha ocurrido un error'
+	END CATCH
+END
+
+
+
+/*Editar Direccion*/
+GO
+CREATE OR ALTER PROCEDURE opti.UDP_tbDirecciones_Update
+    @dire_Id                INT,
+	@muni_Id                INT, 
+	@dire_DireccionExacta   NVARCHAR(300), 
+	@usua_IdModificacion        INT
+AS
+BEGIN
+	BEGIN TRY
+	IF NOT EXISTS (SELECT * FROM opti.tbDirecciones 
+						WHERE @dire_DireccionExacta = [dire_DireccionExacta])
+		BEGIN			
+			UPDATE opti.tbDirecciones
+			SET 	muni_Id  = @muni_Id,
+			        dire_DireccionExacta = @dire_DireccionExacta,
+					usua_IdModificacion = @usua_IdModificacion, 
+					clie_FechaModificacion = GETDATE()
+			WHERE 	[dire_Id] = @dire_Id
+
+			SELECT 'La direccion ha sido editado'
+		END
+		ELSE IF EXISTS (SELECT * FROM opti.tbDirecciones
+						WHERE @dire_DireccionExacta = [dire_DireccionExacta]
+							  AND clie_Estado = 1
+							  AND [dire_Id] != @dire_Id)
+
+			SELECT 'La direccion ya existe'
+		ELSE
+			UPDATE opti.tbDirecciones
+			SET clie_Estado = 1,
+			    [usua_IdModificacion] = @usua_IdModificacion,
+				[clie_FechaModificacion] = GETDATE()
+			WHERE @dire_DireccionExacta = [dire_DireccionExacta]
+
+			SELECT 'La dirreccion ha sido editado'
+	END TRY
+	BEGIN CATCH
+		SELECT 'Ha ocurrido un error'
+	END CATCH
+END
+
+/*Eliminar Direccion*/
+GO
+CREATE OR ALTER PROCEDURE opti.UDP_tbDireccion_Delete
+	@dire_Id	INT
+AS
+BEGIN
+	BEGIN TRY
+		UPDATE opti.tbDirecciones
+		SET clie_Estado = 0
+		WHERE dire_Id = @dire_Id
+
+		SELECT 'La direccion ha sido eliminado'
+	END TRY
+	BEGIN CATCH
+		SELECT 'Ha ocurrido un error'
+	END CATCH
+END
+
+
+---------- Direcciones Por Clientes  -----------
+
+
+/*Vista direcciones por cliente*/
+GO
+CREATE OR ALTER VIEW opti.VW_tbDireccionesPorClientes
+AS
+	SELECT dicl_Id,
+	       t1.clie_Id, 
+		   T4.clie_Nombres AS dicl_NombreClientes,
+		   T1.dire_Id,
+		   t5.dire_DireccionExacta AS dicl_DireccionExacta, 
+		   t1.clie_Estado, 
+		   T1.usua_IdCreacion, 
+		   t2.user_NombreUsuario AS dicl_NombreUsuarioCreacion,
+		   t1.clie_FechaCreacion, 
+		   T1.usua_IdModificacion, 
+		   t3.user_NombreUsuario AS dicl_NombreUsuarioModificacion,
+		   t1.clie_FechaModificacion
+		   FROM opti.tbDireccionesPorCliente t1 INNER JOIN acce.tbUsuarios t2
+		   ON t1.usua_IdCreacion = T2.usua_Id
+		   LEFT JOIN acce.tbUsuarios t3
+		   ON t1.usua_IdModificacion = t3.usua_Id INNER JOIN opti.tbClientes T4
+		   ON T1.clie_Id = T4.clie_Id INNER JOIN opti.tbDirecciones t5
+		   ON T1.dire_Id = T5.dire_Id
+		   WHERE T1.clie_Estado = 1
+
+/*Insertar Direcciones por Cliente*/
+GO
+CREATE OR ALTER PROCEDURE opti.UDP_tbDireccionesPorClientes_Insert
+    @clie_Id           INT, 
+	@dire_Id           INT, 
+	@usua_IdCreacion   INT
+	
+AS 
+BEGIN
+	BEGIN TRY
+		IF NOT EXISTS (SELECT * FROM opti.tbDireccionesPorCliente 
+						WHERE clie_Id = @clie_Id AND dire_Id = @dire_Id)
+			BEGIN
+			INSERT INTO opti.tbDireccionesPorCliente(clie_Id,dire_Id,usua_IdCreacion)
+			VALUES(@clie_Id,@dire_Id,@usua_IdCreacion)
+			
+			SELECT 'La direccion ha sido insertado'
+			END
+		ELSE IF EXISTS (SELECT * FROM opti.tbDireccionesPorCliente
+						WHERE clie_Id = @clie_Id AND dire_Id = @dire_Id
+						AND clie_Estado = 0)
+			BEGIN
+				UPDATE opti.tbDireccionesPorCliente 
+				SET clie_Estado = 1
+				WHERE clie_Id = @clie_Id AND dire_Id = @dire_Id
+
+				SELECT 'La direccion ha sido insertado'
+			END
+		ELSE
+			SELECT 'Eata direccion ya existe'
+	END TRY
+	BEGIN CATCH
+		SELECT 'Ha ocurrido un error'
+	END CATCH
+END
+
+/*Listar cargos*/
+GO
+CREATE OR ALTER PROCEDURE opti.UDP_tbDireccionPorCliente_List
+AS
+BEGIN
+	SELECT * 
+	From opti.VW_tbDireccionesPorClientes
+END
+
+/*Editar cargos*/
+GO
+CREATE OR ALTER PROCEDURE opti.UDP_opti_tbDireccionPorCliente_Update
+	@dicl_Id              INT, 
+	@clie_Id              INT, 
+	@dire_Id              INT, 
+	@usua_IdModificacion  INT
+AS
+BEGIN
+	BEGIN TRY
+	IF NOT EXISTS (SELECT * FROM opti.tbDireccionesPorCliente 
+						WHERE clie_Id = @clie_Id AND dire_Id = @dire_Id)
+		BEGIN			
+			UPDATE opti.tbDireccionesPorCliente
+			SET 	[clie_Id] = @clie_Id,
+                    [dire_Id] = @dire_Id,
+                    [usua_IdModificacion] = @usua_IdModificacion,
+					[clie_FechaModificacion] = GETDATE()
+			WHERE 	[dicl_Id] = @dicl_Id
+
+			SELECT 'La direción ha sido editado'
+		END
+		ELSE IF EXISTS (SELECT * FROM opti.tbDireccionesPorCliente
+						WHERE @dire_Id = dire_Id
+						      AND @clie_Id = clie_Id
+							  AND clie_Estado = 1
+							  AND [dicl_Id] != @dicl_Id)
+
+			SELECT 'La dirección ya existe'
+		ELSE
+			UPDATE opti.tbDireccionesPorCliente
+			SET clie_Estado = 1,
+			    [usua_IdModificacion] = @usua_IdModificacion,
+				[clie_FechaModificacion] = GETDATE()
+			WHERE clie_Id = @clie_Id AND dire_Id = @dire_Id
+
+			SELECT 'La direccioon ha sido editado'
+	END TRY
+	BEGIN CATCH
+		SELECT 'Ha ocurrido un error'
+	END CATCH
+END
+
+/*Eliminar cargos*/
+GO
+CREATE OR ALTER PROCEDURE opti.UDP_tbDireccionesPorCliente_Delete
+	@dicl_Id   INT
+AS
+BEGIN
+	BEGIN TRY
+		UPDATE opti.tbDireccionesPorCliente
+		SET clie_Estado = 0
+		WHERE dicl_Id = @dicl_Id
+
+		SELECT 'La direccion ha sido eliminado'
+	END TRY
+	BEGIN CATCH
+		SELECT 'Ha ocurrido un error'
+	END CATCH
+END
+
+---------- Marcas -----------
+GO
+CREATE OR ALTER VIEW opti.VW_tbMarcas
+AS
+	SELECT marc_Id,
+	       marc_Nombre,
+		   marc_Estado, 
+		   usua_IdCreacion,
+		   T2.user_NombreUsuario AS marc_NombreUsuarioCreacion, 
+		   marc_FechaCreacion 
+		   usua_IdModificacion,
+		   t3.user_NombreUsuario AS marc_NombreUsuarioModificacion, 
+		   marc_FechaModificacion
+FROM opti.tbMarcas T1 INNER JOIN acce.tbUsuarios T2
+ON T1.usua_IdCreacion = T2.usua_Id LEFT JOIN acce.tbUsuarios T3
+ON T1.usua_IdModificacion = T3.usua_Id
+WHERE t1.marc_Estado = 1
+
+
+/*Listado de Marca*/
+GO
+CREATE OR ALTER PROCEDURE opti.UDP_tbMarca_List
+AS
+BEGIN
+	SELECT *
+	FROM opti.VW_tbMarcas
+END
+
+/*Insertar categoria*/
+GO
+CREATE OR ALTER PROCEDURE opti.UDP_tbMarcas_Insert
+    @marc_Nombre       NVARCHAR(150),
+    @usua_IdCreacion   INT
+AS
+BEGIN
+	BEGIN TRY
+		IF NOT EXISTS (SELECT * FROM opti.tbMarcas 
+						WHERE marc_Nombre = @marc_Nombre)
+			BEGIN
+			INSERT INTO opti.tbMarcas(marc_Nombre,usua_IdCreacion)
+			VALUES(@marc_Nombre,@usua_IdCreacion)
+			
+			SELECT 'La Marca ha sido insertada con éxito'
+			END
+		ELSE IF EXISTS (SELECT * FROM opti.tbMarcas
+						WHERE marc_Nombre = @marc_Nombre
+						AND marc_Estado = 0)
+			BEGIN
+				UPDATE opti.tbMarcas
+				SET marc_Estado = 1
+				WHERE marc_Nombre = @marc_Nombre
+
+				SELECT 'La marca ha sido insertada con éxito'
+			END
+		ELSE
+			SELECT 'La marca ya existe'
+	END TRY
+	BEGIN CATCH
+		SELECT 'Ha ocurrido un error'
+	END CATCH
+END
+GO
+
+
+/*Editar Marca*/
+GO
+CREATE OR ALTER PROCEDURE opti.UDP_tbMarcas_Update
+	@marc_Id              INT,
+    @marc_Nombre          NVARCHAR(150), 
+	@usua_IdModificacion  INT
+AS
+BEGIN 
+	BEGIN TRY
+	IF NOT EXISTS (SELECT * FROM opti.tbMarcas
+						WHERE @marc_Nombre = marc_Nombre)
+		BEGIN			
+			UPDATE opti.tbMarcas
+			SET 	marc_Nombre = @marc_Nombre,
+					usua_IdModificacion = @usua_IdModificacion,
+					marc_FechaModificacion = GETDATE()
+			WHERE 	marc_Id = @marc_Id
+			SELECT 'La marca ha sido editada con éxito'
+		END
+		ELSE IF EXISTS (SELECT * FROM opti.tbMarcas
+						WHERE @marc_Nombre = [marc_Nombre]
+							  AND marc_Estado = 1
+							  AND marc_Id != @marc_Id)
+			SELECT 'La marca ya existe'
+		ELSE
+			UPDATE opti.tbMarcas
+			SET marc_Estado = 1,
+			   usua_IdModificacion = @usua_IdModificacion
+			WHERE [marc_Nombre] = @marc_Nombre
+
+			SELECT 'La marca ha sido editada con éxito'
+	END TRY
+	BEGIN CATCH
+		SELECT 'Ha ocurrido un error'
+	END CATCH
+END
+
+/*Eliminar Marcas*/
+GO
+CREATE OR ALTER PROCEDURE opti.UDP_tbMarcas_Delete 
+	@marc_Id	INT
+AS
+BEGIN
+	BEGIN TRY
+		IF NOT EXISTS (SELECT * FROM opti.tbAros WHERE marc_Id = @marc_Id)
+			BEGIN
+				UPDATE opti.tbMarcas
+				SET marc_Estado = 0
+				WHERE marc_Id = @marc_Id
+
+				SELECT 'La marca ha sido eliminada'
+			END
+		ELSE
+			SELECT 'La marca no puede ser eliminada ya que está siendo usada'
+	END TRY
+	BEGIN CATCH
+		SELECT 'Ha ocurrido un error'
+	END CATCH
+END
+
+---------- METODO DE PAGO -----------
+GO
+CREATE OR ALTER VIEW opti.VW_tbMetodosPagos
+AS
+	SELECT meto_Id, 
+	       meto_Nombre, 
+		   meto_UsuCreacion, 
+		   T2.user_NombreUsuario AS meto_NombreUsuarioCreacion,
+		   meto_FechaCreacion, 
+		   meto_UsuModificacion, 
+		   t3.user_NombreUsuario AS meto_NombreUsuarioModificacion,
+		   meto_FechaModificacion, 
+		   meto_Estado
+FROM opti.tbMetodosPago t1 INNER JOIN acce.tbUsuarios T2
+ON T1.meto_UsuCreacion = T2.usua_Id LEFT JOIN acce.tbUsuarios T3
+ON T1.meto_UsuModificacion = T3.usua_Id
+WHERE T1.meto_Estado = 1
+
+
+/*Listado de metodos de pago*/
+GO
+CREATE OR ALTER PROCEDURE opti.UDP_tbMetodosPagos_List
+AS
+BEGIN
+	SELECT * 
+	FROM opti.VW_tbMetodosPagos
+END
+
+/*Insertar Metodos de pagos*/
+GO
+CREATE OR ALTER PROCEDURE opti.UDP_tbMetodosPagos_Insert
+	@meto_Nombre       NVARCHAR(100),
+	@meto_UsuCreacion  INT
+AS
+BEGIN
+	BEGIN TRY
+		IF NOT EXISTS (SELECT * FROM opti.tbMetodosPago 
+						WHERE meto_Nombre = @meto_Nombre)
+			BEGIN
+			INSERT INTO opti.tbMetodosPago([meto_Nombre],[meto_UsuCreacion])
+			VALUES(@meto_Nombre, @meto_UsuCreacion)
+			
+			SELECT 'El metodo de pago ha sido insertada con éxito'
+			END
+		ELSE IF EXISTS (SELECT * FROM opti.tbMetodosPago 
+						WHERE meto_Nombre = @meto_Nombre
+						AND meto_Estado = 0)
+			BEGIN
+				UPDATE opti.tbMetodosPago
+				SET meto_Estado = 1
+				WHERE meto_Nombre = @meto_Nombre
+
+				SELECT 'El metodo de pago ha sido insertada con éxito'
+			END
+		ELSE
+			SELECT 'El metodo de pago ya existe'
+	END TRY
+	BEGIN CATCH
+		SELECT 'Ha ocurrido un error'
+	END CATCH
+END
+GO
+
+
+/*Editar Metodo de pago*/
+GO
+CREATE OR ALTER PROCEDURE opti.UDP_tbMetodosPagos_Update
+	@meto_Id               INT,
+	@meto_Nombre           NVARCHAR(100),
+	@meto_UsuModificacion  INT
+AS
+BEGIN 
+	BEGIN TRY
+	IF NOT EXISTS (SELECT * FROM opti.tbMetodosPago
+						WHERE @meto_Nombre = [meto_Nombre])
+		BEGIN			
+			UPDATE opti.tbMetodosPago
+			SET 	meto_Nombre = @meto_Nombre,
+					meto_UsuModificacion = @meto_UsuModificacion,
+					meto_FechaModificacion = GETDATE()
+			WHERE 	meto_Id = @meto_Id
+			SELECT 'El metodo de pago ha sido editado con éxito'
+		END
+		ELSE IF EXISTS (SELECT * FROM opti.tbMetodosPago
+						WHERE @meto_Nombre = meto_Nombre
+							  AND meto_Estado = 1
+							  AND meto_Id != @meto_Id)
+			SELECT 'El metodo de pago ya existe'
+		ELSE
+			UPDATE opti.tbMetodosPago
+			SET meto_Estado = 1,
+			   meto_UsuModificacion = @meto_UsuModificacion
+			WHERE meto_Nombre = @meto_Nombre
+
+			SELECT 'El metodo de pago ha sido editada con éxito'
+	END TRY
+	BEGIN CATCH
+		SELECT 'Ha ocurrido un error'
+	END CATCH
+END
+
+/*Eliminar metodo de pago*/
+GO
+CREATE OR ALTER PROCEDURE opti.UDP_tbMetodosPagos_Delete 
+	@meto_Id	INT
+AS
+BEGIN
+	BEGIN TRY
+		IF NOT EXISTS (SELECT * FROM opti.tbFacturas WHERE meto_Id = @meto_Id)
+			BEGIN
+				UPDATE opti.tbMetodosPago
+				SET meto_Estado = 0
+				WHERE meto_Id = @meto_Id
+
+				SELECT 'El metodo de pago ha sido eliminado'
+			END
+		ELSE
+			SELECT 'El metodo de pago no puede ser eliminado ya que está siendo usado'
+	END TRY
+	BEGIN CATCH
+		SELECT 'Ha ocurrido un error'
+	END CATCH
+END
+
+
+---------- Pantallas -----------
+GO
+CREATE OR ALTER VIEW acce.VW_tbPantallas
+AS
+	SELECT  pant_Id,
+	        pant_Nombre, 
+			pant_Url, 
+			pant_Menu, 
+			pant_HtmlId, 
+			pant_UsuCreacion, 
+			T2.user_NombreUsuario AS pant_NombreUsuarioCreacion,
+			pant_FechaCreacion, 
+			pant_UsuModificacion,
+			T3.user_NombreUsuario AS pant_NombreUsuarioModificacio, 
+			pant_FechaModificacion, 
+			pant_Estado
+FROM [acce].[tbPantallas] t1 INNER JOIN acce.tbUsuarios T2
+ON T1.[pant_UsuCreacion] = T2.usua_Id LEFT JOIN acce.tbUsuarios T3
+ON T1.[pant_UsuModificacion] = T3.usua_Id 
+
+WHERE [pant_Estado] = 1
+
+
+/*Listado de Pantallas*/
+GO
+CREATE OR ALTER PROCEDURE acce.UDP_tbPantallas_List
+AS
+BEGIN
+	SELECT * 
+	FROM acce.VW_tbPantallas
+END
+
+/*Insertar Pantallas*/
+GO
+CREATE OR ALTER PROCEDURE acce.UDP_tbPantallas_Insert
+	@pant_Nombre          NVARCHAR(100), 
+	@pant_Url             NVARCHAR(300), 
+	@pant_Menu            NVARCHAR(300), 
+	@pant_HtmlId          NVARCHAR(80), 
+	@pant_UsuCreacion     INT 
+
+AS
+BEGIN
+	BEGIN TRY
+		IF NOT EXISTS (SELECT * FROM acce.tbPantallas
+						WHERE pant_Nombre = @pant_Nombre)
+			BEGIN
+			INSERT INTO [acce].[tbPantallas](pant_Nombre, pant_Url, pant_Menu, pant_HtmlId, pant_UsuCreacion)
+			VALUES(@pant_Nombre, @pant_Url, @pant_Menu, @pant_HtmlId, @pant_UsuCreacion)
+			
+			SELECT 'La pantalla ha sido insertada con éxito'
+			END
+		ELSE IF EXISTS (SELECT * FROM [acce].[tbPantallas]
+						WHERE [pant_Nombre] = @pant_Nombre AND
+						[pant_Estado]  = 0)
+			BEGIN
+				UPDATE [acce].[tbPantallas]
+				SET [pant_Estado] = 1
+				WHERE  [pant_Nombre] = @pant_Nombre
+
+				SELECT 'La pantalla ha sido insertada con éxito'
+			END
+		ELSE
+			SELECT 'La pantalla ya existe'
+	END TRY
+	BEGIN CATCH
+		SELECT 'Ha ocurrido un error'
+	END CATCH
+END
+GO
+
+
+/*Editar Pantallas*/
+GO
+CREATE OR ALTER PROCEDURE opti.UDP_tbPantallas_Update
+	@pant_Id               INT,
+	@pant_Nombre           NVARCHAR(100), 
+	@pant_Url              NVARCHAR(300), 
+	@pant_Menu             NVARCHAR(300), 
+	@pant_HtmlId           NVARCHAR(80), 
+	@pant_UsuModificacion   INT
+AS
+BEGIN 
+	BEGIN TRY
+	IF NOT EXISTS (SELECT * FROM [acce].[tbPantallas]
+						WHERE @pant_Nombre = [pant_Nombre])
+		BEGIN			
+			UPDATE  [acce].[tbPantallas]
+			SET 	[pant_Nombre] = @pant_Nombre,
+			        [pant_Url] = @pant_Url,
+                    [pant_Menu] = @pant_Menu,
+					[pant_HtmlId] = @pant_HtmlId,
+					[pant_UsuModificacion]= @pant_UsuModificacion,
+					[pant_FechaModificacion] = GETDATE()
+			WHERE 	[pant_Id] = @pant_Id
+			SELECT 'La pantalla ha sido editado con éxito'
+		END
+		ELSE IF EXISTS (SELECT * FROM [acce].[tbPantallas]
+						WHERE @pant_Nombre = [pant_Nombre]
+							  AND [pant_Estado] = 1
+							  AND [pant_Id] != @pant_Id)
+			SELECT 'La pantalla ya existe'
+		ELSE
+			UPDATE [acce].[tbPantallas]
+			SET [pant_Estado] = 1,
+			    [pant_UsuModificacion]  = @pant_UsuModificacion,
+			    [pant_Url] = @pant_Url,
+                [pant_Menu] = @pant_Menu,
+				[pant_HtmlId] = @pant_HtmlId,
+				[pant_UsuModificacion]= @pant_UsuModificacion,
+				[pant_FechaModificacion] = GETDATE()
+			WHERE  [pant_Nombre] = @pant_Nombre
+
+			SELECT 'La pantalla ha sido editada con éxito'
+	END TRY
+	BEGIN CATCH
+		SELECT 'Ha ocurrido un error'
+	END CATCH
+END
+
+/*Eliminar pantalla*/
+GO
+CREATE OR ALTER PROCEDURE opti.UDP_tbPantallas_Delete 
+	@pant_Id     INT
+AS
+BEGIN
+	BEGIN TRY
+		IF NOT EXISTS (SELECT * FROM [acce].[tbPantallasPorRoles] WHERE [pant_Id] = @pant_Id)
+			BEGIN
+				UPDATE [acce].[tbPantallas]
+				SET [pant_Estado] = 0
+				WHERE  [pant_Id]= @pant_Id
+
+				SELECT 'La pantalla ha sido eliminada'
+			END
+		ELSE
+			SELECT 'La pantalla no puede ser eliminada ya que está siendo usada'
+	END TRY
+	BEGIN CATCH
+		SELECT 'Ha ocurrido un error'
+	END CATCH
+END
+
+---------- SUCURSALES -----------
+GO
+CREATE OR ALTER VIEW opti.VW_tbSucursales
+AS
+	SELECT  sucu_Id, 
+	        sucu_Descripcion, 
+			t1.muni_Id,
+			T4.muni_Nombre AS sucu_MunicipioNombre, 
+			sucu_DireccionExacta, 
+			sucu_FechaCreacion, 
+			sucu_UsuCreacion, 
+			t2.user_NombreUsuario AS sucu_NombreUsuarioCreacion,
+			sucu_FechaModificacion,
+			t3.user_UsuModificacion AS sucu_NombreUsuarioModifica, 
+			sucu_UsuModificacion, 
+			sucu_Estado
+FROM [opti].[tbSucursales] t1 INNER JOIN acce.tbUsuarios T2
+ON T1.sucu_UsuCreacion = T2.usua_Id LEFT JOIN acce.tbUsuarios T3
+ON T1.sucu_UsuModificacion = T3.usua_Id INNER JOIN gral.tbMunicipios T4
+ON T1.muni_Id = T4.muni_Id
+
+WHERE T1.sucu_Estado = 1
+
+
+/*Listado de Sucursales*/
+GO
+CREATE OR ALTER PROCEDURE opti.UDP_tbSucursales_List
+AS
+BEGIN
+	SELECT * 
+	FROM opti.VW_tbSucursales
+END
+
+/*Insertar Sucursales*/
+GO
+CREATE OR ALTER PROCEDURE opti.UDP_tbSucursales_Insert
+	@sucu_Descripcion     NVARCHAR(200),
+	@muni_Id              INT,
+	@sucu_DireccionExacta NVARCHAR(500),
+    @sucu_UsuCreacion     INT
+AS
+BEGIN
+	BEGIN TRY
+		IF NOT EXISTS (SELECT * FROM opti.tbSucursales
+						WHERE sucu_Descripcion = @sucu_Descripcion)
+			BEGIN
+			INSERT INTO opti.tbSucursales(sucu_Descripcion,muni_Id,sucu_DireccionExacta,sucu_UsuCreacion)
+			VALUES(@sucu_Descripcion,@muni_Id,@sucu_DireccionExacta,@sucu_UsuCreacion)
+			
+			SELECT 'La sucursal ha sido insertada con éxito'
+			END
+		ELSE IF EXISTS (SELECT * FROM opti.tbSucursales 
+						WHERE sucu_Descripcion = @sucu_Descripcion
+						AND sucu_Estado = 0)
+			BEGIN
+				UPDATE opti.tbSucursales
+				SET sucu_Estado = 1
+				WHERE sucu_Descripcion = @sucu_Descripcion
+
+				SELECT 'La Sucursal ha sido insertada con éxito'
+			END
+		ELSE
+			SELECT 'La sucursal ya existe'
+	END TRY
+	BEGIN CATCH
+		SELECT 'Ha ocurrido un error'
+	END CATCH
+END
+GO
+
+
+/*Editar Sucursal*/
+GO
+CREATE OR ALTER PROCEDURE opti.UDP_tbSucursal_Update
+	@sucu_Id                 INT,
+    @sucu_Descripcion        NVARCHAR(200), 
+	@muni_Id                 INT, 
+	@sucu_DireccionExacta    NVARCHAR(500),  
+	@sucu_UsuModificacion    INT
+AS
+BEGIN 
+	BEGIN TRY
+	IF NOT EXISTS (SELECT * FROM opti.tbSucursales
+						WHERE @sucu_Descripcion = [sucu_Descripcion])
+		BEGIN			
+			UPDATE opti.tbSucursales
+			SET 	sucu_Descripcion = @sucu_Descripcion,
+					muni_Id = @muni_Id,
+					sucu_DireccionExacta = @sucu_DireccionExacta,
+					sucu_UsuModificacion = @sucu_UsuModificacion,
+					sucu_FechaModificacion = GETDATE()
+			WHERE 	sucu_Id = @sucu_Id
+			SELECT 'La sucursal ha sido editado con éxito'
+		END
+		ELSE IF EXISTS (SELECT * FROM opti.tbSucursales
+						WHERE @sucu_Descripcion = sucu_Descripcion
+							  AND sucu_Estado = 1
+							  AND sucu_Id != @sucu_Id)
+			SELECT 'La sucursal ya existe'
+		ELSE
+			UPDATE opti.tbSucursales
+			SET sucu_Estado = 1,
+			   sucu_UsuModificacion = @sucu_UsuModificacion
+			WHERE sucu_Descripcion = @sucu_Descripcion
+
+			SELECT 'La sucursal ha sido editada con éxito'
+	END TRY
+	BEGIN CATCH
+		SELECT 'Ha ocurrido un error'
+	END CATCH
+END
+
+
+/*Eliminar Sucursal*/
+GO
+CREATE OR ALTER PROCEDURE opti.UDP_tbSucursales_Delete 
+	@sucu_Id	INT
+AS
+BEGIN
+	BEGIN TRY
+		IF NOT EXISTS (SELECT * FROM opti.tbOrdenes WHERE sucu_Id = @sucu_Id)
+			BEGIN
+				UPDATE opti.tbSucursales
+				SET sucu_Estado = 0
+				WHERE sucu_Id = @sucu_Id
+
+				SELECT 'La sucursal ha sido eliminada'
+			END
+		ELSE
+			SELECT 'La sucursal no puede ser eliminada ya que está siendo usada'
+	END TRY
+	BEGIN CATCH
+		SELECT 'Ha ocurrido un error'
+	END CATCH
+END
+
+
+
+---------- Pantallas Por Roles -----------
+GO
+CREATE OR ALTER VIEW acce.VW_tbPantallasPorRoles
+AS
+	SELECT pantrole_Id,
+	       T1.role_Id, 
+		   T4.role_Nombre AS pantrole_NombreRol,
+		   T1.pant_Id,
+		   t5.pant_Nombre AS pantrole_NombrePantalla, 
+		   pantrole_UsuCreacion, 
+		   pantrole_FechaCreacion, 
+		   pantrole_UsuModificacion, 
+		   pantrole_FechaModificacion, 
+		   pantrole_Estado
+FROM [acce].[tbPantallasPorRoles] T1 INNER JOIN acce.tbUsuarios T2
+ON T1.pantrole_UsuCreacion = T2.usua_Id LEFT JOIN acce.tbUsuarios T3
+ON T1.pantrole_UsuModificacion = t3.usua_Id INNER JOIN [acce].[tbRoles] T4
+ON T1.role_Id = T4.role_Id INNER JOIN [acce].[tbPantallas] T5
+ON T1.pant_Id = T5.pant_Id
+WHERE T1.pantrole_Estado = 1
+
+
+/*Listado de Pantallas por rol*/
+GO
+CREATE OR ALTER PROCEDURE acce.UDP_tbPantallasPorRoles_List
+AS
+BEGIN
+	SELECT * 
+	FROM acce.VW_tbPantallasPorRoles
+END
+
+/*Insertar pantallas por roles*/
+GO
+CREATE OR ALTER PROCEDURE acce.UDP_tbPantallasPorRoles_Insert
+	@role_Id               INT, 
+	@pant_Id               INT, 
+	@pantrole_UsuCreacion  INT
+AS
+BEGIN
+	BEGIN TRY
+		IF NOT EXISTS (SELECT * FROM acce.tbPantallasPorRoles 
+						WHERE pant_Id = @pant_Id AND role_Id = @role_Id)
+			BEGIN
+			INSERT INTO acce.tbPantallasPorRoles(role_Id,pant_Id,pantrole_UsuCreacion)
+			VALUES(@role_Id,@pant_Id,@pantrole_UsuCreacion)
+			
+			SELECT 'La pantalla ha sido insertada con éxito'
+			END
+		ELSE IF EXISTS (SELECT * FROM acce.tbPantallasPorRoles 
+						WHERE pant_Id = @pant_Id AND role_Id = @role_Id
+						AND pantrole_Estado = 0)
+			BEGIN
+				UPDATE [acce].[tbPantallasPorRoles]
+				SET [pantrole_Estado] = 1
+				WHERE pant_Id = @pant_Id AND role_Id = @role_Id
+
+				SELECT 'La pantalla ha sido insertada con éxito'
+			END
+		ELSE
+			SELECT 'La pantalla ya existe'
+	END TRY
+	BEGIN CATCH
+		SELECT 'Ha ocurrido un error'
+	END CATCH
+END
+GO
+
+
+/*Editar categoria*/
+GO
+CREATE OR ALTER PROCEDURE acce.UDP_tbPantallaPorRol_Update
+	@pantrole_Id                INT, 
+	@role_Id                    INT, 
+	@pant_Id                    INT,  
+	@pantrole_UsuModificacion   INT
+AS
+BEGIN 
+	BEGIN TRY
+	IF NOT EXISTS (SELECT * FROM [acce].[tbPantallasPorRoles]
+						WHERE @role_Id = role_Id AND 
+						      @pant_Id = pant_Id)
+		BEGIN			
+			UPDATE [acce].[tbPantallasPorRoles]
+			SET 	role_Id = @role_Id,
+			        pant_Id = @pant_Id,
+					pantrole_UsuModificacion = GETDATE()
+			WHERE 	pantrole_Id = @pantrole_Id
+			SELECT 'La pantalla ha sido editada con éxito'
+		END
+		ELSE IF EXISTS (SELECT * FROM [acce].[tbPantallasPorRoles]
+						WHERE @pant_Id = pant_Id
+						      AND @role_Id = role_Id
+							  AND pantrole_Estado = 1
+							  AND pantrole_Id != @pantrole_Id)
+			SELECT 'La pantalla ya existe'
+		ELSE
+			UPDATE [acce].[tbPantallasPorRoles]
+			SET pantrole_Estado = 1,
+			    pantrole_UsuModificacion = @pantrole_UsuModificacion
+			WHERE @role_Id = role_Id AND 
+						      @pant_Id = pant_Id
+
+			SELECT 'La pantalla ha sido editada con éxito'
+	END TRY
+	BEGIN CATCH
+		SELECT 'Ha ocurrido un error'
+	END CATCH
+END
+
+/*Eliminar categoria*/
+GO
+CREATE OR ALTER PROCEDURE opti.UDP_tbPantallaPorRoles_Delete 
+	@pantrole_Id	INT
+AS
+BEGIN
+	BEGIN TRY
+			BEGIN
+				UPDATE [acce].[tbPantallasPorRoles]
+				SET pantrole_Estado = 0
+				WHERE pantrole_Id = @pantrole_Id
+
+				SELECT 'La pantalla ha sido eliminada'
+			END
+		
+	END TRY
+	BEGIN CATCH
+		SELECT 'Ha ocurrido un error'
+	END CATCH
+END
+
+
+
+---------- Consultorios -----------
+GO
+CREATE OR ALTER VIEW opti.VW_tbConsultorios
+AS
+	SELECT  cons_Id, 
+	        cons_Nombre, 
+			T1.empe_Id, 
+			T4.empe_Nombres AS cons_NombreEmpleado,
+			cons_Estado, 
+			usua_IdCreacion, 
+			t2.user_NombreUsuario AS cons_NombreUsuarioCreacion, 
+			cons_FechaCreacion, 
+			usua_IdModificacion,
+			t3.user_NombreUsuario AS cons_NombreUsuarioModificacion, 
+			cons_FechaModificacion
+FROM opti.tbConsultorios t1  INNER JOIN acce.tbUsuarios t2
+ON t1.usua_IdCreacion = t2.usua_Id LEFT JOIN acce.tbUsuarios t3
+ON t1.usua_IdModificacion = t3.usua_Id INNER JOIN opti.tbEmpleados t4
+ON t1.empe_Id = t4.empe_Id 
+
+
+
+
+/*Listado de Consultorios*/
+GO
+CREATE OR ALTER PROCEDURE opti.UDP_tbConsultorios_List
+AS
+BEGIN
+	SELECT *
+	FROM opti.VW_tbConsultorios
+	WHERE cons_Estado = 1
+END
+
+/*Insertar CONSULTORIOS*/
+GO
+CREATE OR ALTER PROCEDURE opti.UDP_tbConsultorios_Insert
+	 @cons_Nombre        NVARCHAR(150), 
+	 @empe_Id            INT,
+	 @usua_IdCreacion    INT
+AS
+BEGIN
+	BEGIN TRY
+		IF NOT EXISTS (SELECT * FROM [opti].[tbConsultorios]
+						WHERE [cons_Nombre] = @cons_Nombre)
+			BEGIN
+			INSERT INTO [opti].[tbConsultorios](cons_Nombre, empe_Id, usua_IdCreacion)
+			VALUES(@cons_Nombre, @empe_Id, @usua_IdCreacion)
+			
+			SELECT 'El Consultorio ha sido insertado con éxito'
+			END
+		ELSE IF EXISTS (SELECT * FROM  [opti].[tbConsultorios]
+						WHERE cons_Nombre = @cons_Nombre 
+						AND [cons_Estado] = 0)
+			BEGIN
+				UPDATE [opti].[tbConsultorios]
+				SET [cons_Estado] = 1
+				WHERE  [cons_Nombre] = @cons_Nombre
+
+				SELECT 'El Consultorio ha sido insertado con éxito'
+			END
+		ELSE
+			SELECT 'El Consultorio ya existe'
+	END TRY
+	BEGIN CATCH
+		SELECT 'Ha ocurrido un error'
+	END CATCH
+END
+GO
+
+
+/*Editar Consultorios*/
+GO
+CREATE OR ALTER PROCEDURE acce.UDP_tbConsultorios_Update
+	@cons_Id                 INT,
+	@cons_Nombre             NVARCHAR(150), 
+	@empe_Id                 INT, 
+	@usua_IdModificacion     INT
+
+AS
+BEGIN 
+	BEGIN TRY
+	IF NOT EXISTS (SELECT * FROM [opti].[tbConsultorios]
+						WHERE [cons_Nombre] = @cons_Nombre AND empe_Id = @empe_Id)
+		BEGIN			
+			UPDATE  [opti].[tbConsultorios]
+			SET 	[cons_Nombre] = @cons_Nombre,
+			        [empe_Id] = @empe_Id,
+                    [usua_IdModificacion] = @usua_IdModificacion,
+					[cons_FechaModificacion] = GETDATE()
+			WHERE 	[cons_Id] = @cons_Id
+			SELECT 'El Consultorio ha sido editado con éxito'
+		END
+		ELSE IF EXISTS (SELECT * FROM [opti].[tbConsultorios]
+						WHERE @cons_Nombre = cons_Nombre
+						      AND @empe_Id = @empe_Id
+							  AND cons_Estado = 1
+							  AND cons_Id != @cons_Id)
+			SELECT 'El consultorio ya existe'
+		ELSE
+			UPDATE [opti].[tbConsultorios]
+			SET cons_Estado = 1,
+			    empe_Id = @empe_Id,
+			    usua_IdModificacion = @usua_IdModificacion
+			WHERE  cons_Nombre = @cons_Nombre
+
+			SELECT 'El Consultorio ha sido editado con éxito'
+	END TRY
+	BEGIN CATCH
+		SELECT 'Ha ocurrido un error'
+	END CATCH
+END
+
+/*Eliminar Consultorio*/
+GO
+CREATE OR ALTER PROCEDURE acce.UDP_tbConsultorio_Delete 
+	@cons_Id	INT
+AS
+BEGIN
+	BEGIN TRY
+		IF NOT EXISTS (SELECT * FROM [opti].[tbCitas] WHERE [cons_Id] = @cons_Id)
+			BEGIN
+				UPDATE [opti].[tbConsultorios]
+				SET [cons_Estado] = 0
+				WHERE [cons_Id] = @cons_Id
+
+				SELECT 'El consultorio ha sido eliminado'
+			END
+		ELSE
+			SELECT 'El consultorio no puede ser eliminado ya que está siendo usado'
+	END TRY
+	BEGIN CATCH
+		SELECT 'Ha ocurrido un error'
+	END CATCH
+END
+
+---------- ROLES -----------
+GO
+CREATE OR ALTER VIEW acce.VW_tbRoles
+AS
+	SELECT t1.role_Id,
+	       role_Nombre, 
+		   role_UsuCreacion,
+		   t2.user_NombreUsuario AS role_NombreUsuarioCreacion, 
+		   role_FechaCreacion, 
+		   role_UsuModificacion,
+		   t3.user_NombreUsuario AS role_NombreUsuarioModificacion, 
+		   role_FechaModificacion, 
+		   role_Estado
+FROM acce.tbRoles t1  INNER JOIN acce.tbUsuarios t2
+ON t1.role_UsuCreacion = t2.usua_Id LEFT JOIN acce.tbUsuarios t3
+ON t1.role_UsuModificacion = t3.usua_Id 
+WHERE t1.role_Estado = 1
+
+
+
+/*Listado de roles*/
+GO
+CREATE OR ALTER PROCEDURE acce.UDP_tbRoles_List
+AS
+BEGIN
+	SELECT *
+	FROM acce.VW_tbRoles
+END
+
+/*Insertar roles*/
+GO
+CREATE OR ALTER PROCEDURE opti.UDP_tbRoles_Insert
+	@role_Nombre         NVARCHAR(100),
+	@role_UsuCreacion    INT
+AS
+BEGIN
+	BEGIN TRY
+		IF NOT EXISTS (SELECT * FROM [acce].[tbRoles]
+						WHERE [role_Nombre] = @role_Nombre)
+			BEGIN
+			INSERT INTO [acce].[tbRoles](role_Nombre, role_UsuCreacion)
+			VALUES(@role_Nombre, @role_UsuCreacion)
+			
+			SELECT 'El rol ha sido insertado con éxito'
+			END
+		ELSE IF EXISTS (SELECT * FROM  [acce].[tbRoles]
+						WHERE role_Nombre = @role_Nombre
+						AND role_Estado = 0)
+			BEGIN
+				UPDATE [acce].[tbRoles]
+				SET [role_Estado] = 1
+				WHERE [role_Nombre] = @role_Nombre
+
+				SELECT 'El rol ha sido insertado con éxito'
+			END
+		ELSE
+			SELECT 'El rol ya existe'
+	END TRY
+	BEGIN CATCH
+		SELECT 'Ha ocurrido un error'
+	END CATCH
+END
+GO
+
+
+/*Editar roles*/
+GO
+CREATE OR ALTER PROCEDURE acce.UDP_tbRoles_Update
+	@role_Id                  INT,
+	@role_Nombre              NVARCHAR(100),  
+	@role_UsuModificacion     INT
+
+AS
+BEGIN 
+	BEGIN TRY
+	IF NOT EXISTS (SELECT * FROM [acce].[tbRoles]
+						WHERE @role_Nombre = role_Nombre)
+		BEGIN			
+			UPDATE  [acce].[tbRoles]
+			SET 	[role_Nombre] = @role_Nombre,
+			        [role_UsuModificacion] = @role_UsuModificacion,
+					[role_FechaModificacion] = GETDATE()
+			WHERE 	[role_Id] = @role_Id
+			SELECT 'El rol ha sido editado con éxito'
+		END
+		ELSE IF EXISTS (SELECT * FROM [acce].[tbRoles]
+						WHERE @role_Nombre = role_Nombre
+							  AND role_Estado = 1
+							  AND role_Id != @role_Id)
+			SELECT 'El rol ya existe'
+		ELSE
+			UPDATE [acce].[tbRoles]
+			SET role_Estado = 1,
+			    role_UsuModificacion = @role_UsuModificacion
+			WHERE role_Nombre = @role_Nombre
+
+			SELECT 'El rol ha sido editado con éxito'
+	END TRY
+	BEGIN CATCH
+		SELECT 'Ha ocurrido un error'
+	END CATCH
+END
+
+/*Eliminar Rol*/
+GO
+CREATE OR ALTER PROCEDURE acce.UDP_tbRoles_Delete 
+	@role_Id	INT
+AS
+BEGIN
+	BEGIN TRY
+		IF NOT EXISTS (SELECT * FROM [acce].[tbPantallasPorRoles] WHERE [role_Id] = @role_Id)
+			BEGIN
+				UPDATE [acce].[tbRoles]
+				SET role_Estado = 0
+				WHERE role_Id = @role_Id
+
+				SELECT 'El rol ha sido eliminado'
+			END
+		ELSE
+			SELECT 'El rol no puede ser eliminado ya que está siendo usado'
+	END TRY
+	BEGIN CATCH
+		SELECT 'Ha ocurrido un error'
+	END CATCH
+END
+
+
+---------- DETALLE CITAS -----------
+GO
+CREATE OR ALTER VIEW opti.VW_tbDetallesCitas
+AS
+	SELECT deci_Id,
+	       t1.cita_Id, 
+		   deci_Costo, 
+		   deci_HoraInicio, 
+		   deci_HoraFin, 
+		   deci_Estado, 
+		   t1.usua_IdCreacion, 
+		   t2.user_NombreUsuario AS deci_NombreUsuarioCreacion,
+		   deci_FechaCreacion, 
+		   t1.usua_IdModificacion, 
+		   t3.user_NombreUsuario AS deci_NombreUsuarioModificacion,
+		   deci_FechaModificacion
+FROM opti.tbDetallesCitas t1  INNER JOIN acce.tbUsuarios t2
+ON t1.usua_IdCreacion = t2.usua_Id LEFT JOIN acce.tbUsuarios t3
+ON t1.usua_IdModificacion = t3.usua_Id 
+
+
+
+
+/*Listado de detalles citas*/
+GO
+CREATE OR ALTER PROCEDURE opti.UDP_tbDetallesCitas_List
+AS
+BEGIN
+	SELECT *
+	FROM opti.VW_tbDetallesCitas
+END
+
+/*Insertar roles*/
+GO
+CREATE OR ALTER PROCEDURE opti.UDP_tbDetallesCitas_Insert
+	 @cita_Id            INT, 
+	 @deci_Costo         DECIMAL(18,2), 
+	 @deci_HoraInicio    VARCHAR(5), 
+	 @deci_HoraFin       VARCHAR(5), 
+	 @usua_IdCreacion    INT
+AS
+BEGIN
+	BEGIN TRY
+
+			BEGIN
+			INSERT INTO [opti].[tbDetallesCitas] (deci_Id, cita_Id, deci_Costo, deci_HoraInicio, deci_HoraFin, usua_IdCreacion)
+			VALUES(@cita_Id, @deci_Costo, @deci_HoraInicio, @deci_HoraFin, @usua_IdCreacion)
+			
+			SELECT 'El Detalle de la cita ha sido insertado con éxito'
+			END
+		
+			BEGIN
+			IF EXISTS (SELECT * FROM  [opti].[tbDetallesCitas]
+						WHERE  [cita_Id] = @cita_Id AND
+						       [deci_HoraInicio] = @deci_HoraInicio 
+						      AND deci_Estado = 0)
+				UPDATE  [opti].[tbDetallesCitas]
+				SET deci_Estado = 1,
+                    [deci_Costo] = @deci_Costo,
+                    [deci_HoraFin] = @deci_HoraFin,
+                    [usua_IdCreacion] = @usua_IdCreacion
+				WHERE  [cita_Id] = @cita_Id AND
+					   [deci_HoraInicio] = @deci_HoraInicio 
+
+				SELECT 'El detalle de la cita ha sido insertado con éxito'
+			END
+		
+	END TRY
+	BEGIN CATCH
+		SELECT 'Ha ocurrido un error'
+	END CATCH
+END
+GO
+
+
+/*Editar detalle cita*/
+GO
+CREATE OR ALTER PROCEDURE acce.UDP_tbDetallesCitas_Update
+	@deci_Id               INT, 
+	@cita_Id               INT, 
+	@deci_Costo            DECIMAL(18,2), 
+	@deci_HoraInicio       VARCHAR(5), 
+	@deci_HoraFin          VARCHAR(5), 
+	@usua_IdModificacion   INT
+
+AS
+BEGIN 
+	BEGIN TRY
+
+		BEGIN			
+			UPDATE  [opti].[tbDetallesCitas]([cita_Id],[deci_Costo],[deci_HoraInicio],[deci_HoraFin],[usua_IdModificacion])
+			SET 	[cita_Id] = @cita_Id,
+			        [deci_Costo]=@deci_Costo,
+					[deci_HoraInicio]= @deci_HoraInicio,
+					[deci_HoraFin]= @deci_HoraFin,
+			        [usua_IdModificacion]=@usua_IdModificacion,
+					[deci_FechaModificacion]= GETDATE()
+			WHERE 	[deci_Id]= deci_Id
+			SELECT 'El detalle ha sido editado con éxito'
+		END
+	      
+	END TRY
+	BEGIN CATCH
+		SELECT 'Ha ocurrido un error'
+	END CATCH
+END
+
+/*Eliminar Detalle Cita*/
+GO
+CREATE OR ALTER PROCEDURE opti.UDP_tbRoles_Delete 
+	@deci_Id	INT
+AS
+BEGIN
+	BEGIN TRY
+			BEGIN
+				UPDATE [opti].[tbDetallesCitas]
+				SET [deci_Estado] = 0
+				WHERE [deci_Id] = @deci_Id
+
+				SELECT 'El detalle ha sido eliminado'
+			END
+	END TRY
+	BEGIN CATCH
+		SELECT 'Ha ocurrido un error'
+	END CATCH
+END
+
+
+---------- Ordenes -----------
+GO
+CREATE OR ALTER VIEW opti.VW_tbOrdenes
+AS
+	SELECT  orde_Id,
+	        T1.clie_Id,
+			T4.clie_Nombres
+		    orde_Fecha, 
+			orde_FechaEntrega, 
+			orde_FechaEntregaReal, 
+			T1.sucu_Id,
+			T5.sucu_Descripcion 
+			orde_Estado, 
+			usua_IdCreacion, 
+			orde_FechaCreacion, 
+			usua_IdModificacion, 
+			orde_FechaModificacion 
+FROM opti.tbOrdenes t1 INNER JOIN acce.tbUsuarios t2
+ON t1.usua_IdCreacion = t2.usua_Id LEFT JOIN acce.tbUsuarios t3
+ON t1.usua_IdModificacion = t3.usua_Id INNER JOIN opti.tbClientes T4
+ON T1.clie_Id = T4.clie_Id INNER JOIN opti.tbSucursales T5
+ON T1.sucu_Id = T5.sucu_Id
+
+
+/*Listado de Ordenes*/
+GO
+CREATE OR ALTER PROCEDURE opti.UDP_tbOrdenes_List
+AS
+BEGIN
+	SELECT *
+	FROM opti.VW_tbOrdenes
+END
+
+/*Insertar Ordenes*/
+GO
+CREATE OR ALTER PROCEDURE opti.UDP_tbOrdenes_Insert
+	 @clie_Id               INT, 
+	 @orde_Fecha            DATE, 
+	 @orde_FechaEntrega     DATE, 
+	 @orde_FechaEntregaReal DATE, 
+	 @sucu_Id               INT, 
+	 @usua_IdCreacion       INT
+	 
+AS
+BEGIN
+	BEGIN TRY
+			BEGIN
+			INSERT INTO [opti].[tbOrdenes](clie_Id, orde_Fecha, orde_FechaEntrega, orde_FechaEntregaReal, sucu_Id, usua_IdCreacion)
+			VALUES(@clie_Id, @orde_Fecha, @orde_FechaEntrega, @orde_FechaEntregaReal, @sucu_Id, @usua_IdCreacion)
+			
+			SELECT 'La orden ha sido insertada con éxito'
+			END
+
+	END TRY
+	BEGIN CATCH
+		SELECT 'Ha ocurrido un error'
+	END CATCH
+END
+GO
+
+
+/*Editar Ordenes*/
+GO
+CREATE OR ALTER PROCEDURE opti.UDP_tbOrdenes_Update
+	@orde_Id            INT, 
+	@clie_Id            INT, 
+	@orde_Fecha         DATE, 
+	@orde_FechaEntrega  DATE, 
+	@orde_FechaEntregaReal DATE, 
+	@sucu_Id             INT, 
+	@usua_IdModificacion INT
+AS
+BEGIN 
+	BEGIN TRY
+		BEGIN			
+			UPDATE  [opti].[tbOrdenes] 
+			SET 	clie_Id = @clie_Id,
+			        orde_Fecha = @orde_Fecha,
+					orde_FechaEntrega = @orde_FechaEntrega,
+					orde_FechaEntregaReal = @orde_FechaEntregaReal,
+					sucu_Id = sucu_Id,
+					usua_IdModificacion = usua_IdModificacion,
+                    orde_FechaModificacion = GETDATE()
+			WHERE 	orde_Id  = @orde_Id 
+			SELECT 'La Orden ha sido editada con éxito'
+		  END
+	END TRY
+	BEGIN CATCH
+		SELECT 'Ha ocurrido un error'
+	END CATCH
+END
+
+/*Eliminar Ordenes*/
+GO
+CREATE OR ALTER PROCEDURE opti.UDP_tbOrdenes_Delete 
+	@orde_Id	INT
+AS
+BEGIN
+	BEGIN TRY
+		IF NOT EXISTS (SELECT * FROM opti.tbFacturasDetalles WHERE orde_Id  = @orde_Id )
+			BEGIN
+				UPDATE [opti].[tbOrdenes]
+				SET [orde_Estado] = 0
+				WHERE orde_Id = @orde_Id 
+
+				SELECT 'La Orden ha sido eliminada'
+			END
+		ELSE
+			SELECT 'La orden no puede ser eliminada ya que está siendo usada'
+	END TRY
+	BEGIN CATCH
+		SELECT 'Ha ocurrido un error'
+	END CATCH
+END
+
+---------- Envios -----------
+GO
+CREATE OR ALTER VIEW opti.VW_tbEnvio
+AS
+	SELECT  envi_Id, 
+	        t1.clie_Id, 
+			t4.clie_Nombres
+			dire_Id,
+			t5.dire_DireccionExacta, 
+			envi_Fecha, 
+			envi_FechaEntrega, 
+			envi_FechaEntregaReal, 
+			t1.clie_Estado, 
+			t1.usua_IdCreacion,
+			T2.user_NombreUsuario AS envi_NombreUsuarioCreacion, 
+			t1.clie_FechaCreacion, 
+			t1.usua_IdModificacion,
+			t3.user_NombreUsuario AS envi_NombreUsuarioModificacion, 
+			t1.clie_FechaModificacion
+FROM opti.tbEnvios t1 INNER JOIN acce.tbUsuarios t2
+ON t1.usua_IdCreacion = t2.usua_Id LEFT JOIN acce.tbUsuarios t3
+ON t1.usua_IdModificacion = t3.usua_Id INNER JOIN opti.tbClientes T4
+ON T1.clie_Id = T4.clie_Id INNER JOIN opti.tbDirecciones t5
+ON T1.dire_Id = T5.dire_Id
+
+/*Listado de Envio*/
+GO
+CREATE OR ALTER PROCEDURE opti.UDP_tbEnvio_List
+AS
+BEGIN
+	SELECT *
+	FROM opti.VW_tbEnvio
+END
+
+/*Insertar Envio*/
+GO
+CREATE OR ALTER PROCEDURE opti.UDP_tbEnvios_Insert
+	 @clie_Id              INT, 
+	 @dire_Id              INT, 
+	 @envi_Fecha           DATE, 
+	 @envi_FechaEntrega    DATE, 
+	 @envi_FechaEntregaReal DATE, 
+	 @usua_IdCreacion      INT
+	 
+AS
+BEGIN
+	BEGIN TRY
+			BEGIN
+			INSERT INTO [opti].[tbEnvios](clie_Id, dire_Id, envi_Fecha, envi_FechaEntrega, envi_FechaEntregaReal, usua_IdCreacion)
+			VALUES(@clie_Id, @dire_Id, @envi_Fecha, @envi_FechaEntrega, @envi_FechaEntregaReal, @usua_IdCreacion)
+			
+			SELECT 'El envio ha sido insertado con éxito'
+			END
+
+	END TRY
+	BEGIN CATCH
+		SELECT 'Ha ocurrido un error'
+	END CATCH
+END
+GO
+
+
+/*Editar Envio*/
+GO
+CREATE OR ALTER PROCEDURE opti.UDP_tbEnvios_Update
+	@envi_Id                 INT, 
+	@clie_Id                 INT, 
+	@dire_Id                 INT, 
+	@envi_Fecha              DATE, 
+	@envi_FechaEntrega       DATE, 
+	@envi_FechaEntregaReal   DATE, 
+    @usua_IdModificacion     INT
+AS
+BEGIN 
+	BEGIN TRY
+		BEGIN			
+			UPDATE   [opti].[tbEnvios]
+			SET 	[clie_Id] = @clie_Id,
+			        dire_Id = @dire_Id,
+					 envi_Fecha = @envi_Fecha,
+                     envi_FechaEntrega = @envi_FechaEntrega,
+                     envi_FechaEntregaReal = @envi_FechaEntregaReal,
+					 usua_IdModificacion = @usua_IdModificacion , 
+                     [clie_FechaModificacion] = GETDATE()
+			WHERE envi_Id = @envi_Id	
+			SELECT 'El envio ha sido editado con éxito'
+		  END
+	END TRY
+	BEGIN CATCH
+		SELECT 'Ha ocurrido un error'
+	END CATCH
+END
+
+/*Eliminar Envio*/
+GO
+CREATE OR ALTER PROCEDURE opti.UDP_tbEnvio_Delete 
+	@envi_Id	INT
+AS
+BEGIN
+	BEGIN TRY
+		IF NOT EXISTS (SELECT * FROM [opti].[tbDetallesEnvios] WHERE [envi_Id] = @envi_Id)
+			BEGIN
+				UPDATE [opti].[tbEnvios]
+				SET [clie_Estado] = 0
+				WHERE envi_Id = @envi_Id 
+
+				SELECT 'El envio ha sido eliminado'
+			END
+		ELSE
+			SELECT 'El envio no puede ser eliminado ya que está siendo usado'
+	END TRY
+	BEGIN CATCH
+		SELECT 'Ha ocurrido un error'
+	END CATCH
+END
+
+
+
+
 
 
 /*
