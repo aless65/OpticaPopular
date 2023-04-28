@@ -279,6 +279,7 @@ CREATE TABLE opti.tbEmpleados(
     estacivi_Id                 INT            NOT NULL,
     empe_Telefono               NVARCHAR(15)   NOT NULL,
     empe_CorreoElectronico      NVARCHAR(200)  NOT NULL,
+	carg_Id						INT			   NOT NULL,
     sucu_Id                     INT            NOT NULL,
     empe_UsuCreacion            INT            NOT NULL,
     empe_FechaCreacion          DATETIME       NOT NULL CONSTRAINT DF_empe_FechaCreacion DEFAULT(GETDATE()),
@@ -291,7 +292,8 @@ CREATE TABLE opti.tbEmpleados(
     CONSTRAINT FK_maqu_tbEmpleados_gral_tbEstadosCiviles_estacivi_Id             FOREIGN KEY(estacivi_Id)                  REFERENCES gral.tbEstadosCiviles(estacivi_Id),        
     CONSTRAINT FK_maqu_tbEmpleados_acce_tbUsuarios_usuaCreate                    FOREIGN KEY(empe_UsuCreacion)             REFERENCES acce.tbUsuarios(usua_Id),
     CONSTRAINT FK_maqu_tbEmpleados_acce_tbUsuarios_usuaUpdate                    FOREIGN KEY(empe_UsuModificacion)         REFERENCES acce.tbUsuarios(usua_Id),
-    CONSTRAINT FK_maqu_tbEmpleados_maqu_tbSucursales_sucu_Id                      FOREIGN KEY(sucu_Id)                     REFERENCES opti.tbSucursales(sucu_Id)      
+    CONSTRAINT FK_maqu_tbEmpleados_maqu_tbSucursales_sucu_Id                     FOREIGN KEY(sucu_Id)                     REFERENCES opti.tbSucursales(sucu_Id), 
+    CONSTRAINT FK_maqu_tbEmpleados_maqu_tbCargos_carg_Id						 FOREIGN KEY(carg_Id)                     REFERENCES opti.tbCargos(carg_Id)      
 );
 
 
@@ -701,7 +703,7 @@ GO
 
 --Iniciar sesion
 GO
-CREATE OR ALTER PROCEDURE UDP_Login 
+CREATE OR ALTER PROCEDURE acce.UDP_Login 
 	@usua_Nombre NVARCHAR(100), 
 	@usua_Contrasena NVARCHAR(200)
 AS
@@ -858,7 +860,7 @@ END
 
 /*UDP para vista de cargos*/
 GO
-CREATE OR ALTER PROCEDURE opti.UDP_VW_tbCargos 
+CREATE OR ALTER PROCEDURE opti.UDP_opti_VW_tbCargos 
 	@carg_Id INT
 AS
 BEGIN
@@ -886,7 +888,7 @@ AS
 
 /*Insertar Cargos*/
 GO
-CREATE OR ALTER PROCEDURE opti.UDP_tbCargos_Insert
+CREATE OR ALTER PROCEDURE opti.UDP_opti_tbCargos_Insert
 	@carg_Nombre		NVARCHAR(150),
 	@carg_UsuCreacion   INT
 AS 
@@ -920,7 +922,7 @@ END
 
 /*Listar cargos*/
 GO
-CREATE OR ALTER PROCEDURE opti.UDP_tbCargos_List
+CREATE OR ALTER PROCEDURE opti.UDP_opti_tbCargos_List
 AS
 BEGIN
 	SELECT carg_Id, carg_Nombre 
@@ -969,7 +971,7 @@ END
 
 /*Eliminar cargos*/
 GO
-CREATE OR ALTER PROCEDURE opti.UDP_tbCargos_Delete
+CREATE OR ALTER PROCEDURE opti.UDP_opti_tbCargos_Delete
 	@carg_Id	INT
 AS
 BEGIN
@@ -1005,7 +1007,7 @@ WHERE cate.cate_Estado = 1
 
 /*Vista Categorias UDP*/
 GO
-CREATE OR ALTER PROCEDURE opti.UDP_VW_tbCategorias
+CREATE OR ALTER PROCEDURE opti.UDP_opti_VW_tbCategorias
 AS
 BEGIN
 	SELECT * FROM opti.VW_tbCategorias
@@ -1013,7 +1015,7 @@ END
 
 /*Listado de categorias*/
 GO
-CREATE OR ALTER PROCEDURE opti.UDP_tbCategorias_List
+CREATE OR ALTER PROCEDURE opti.UDP_opti_tbCategorias_List
 AS
 BEGIN
 	SELECT [cate_Id], [cate_Nombre] 
@@ -1022,7 +1024,7 @@ END
 
 /*Insertar categoria*/
 GO
-CREATE OR ALTER PROCEDURE opti.UDP_tbCategorias_Insert
+CREATE OR ALTER PROCEDURE opti.UDP_opti_tbCategorias_Insert
 	@cate_Nombre 			NVARCHAR(100),
 	@cate_UsuCreacion 		INT
 AS
@@ -1058,7 +1060,7 @@ GO
 
 /*Editar categoria*/
 GO
-CREATE OR ALTER PROCEDURE opti.UDP_tbCategorias_Update
+CREATE OR ALTER PROCEDURE opti.UDP_opti_tbCategorias_Update
 	@cate_Id					INT,
 	@cate_Nombre 				NVARCHAR(100),
 	@cate_UsuModificacion 		INT
@@ -1095,7 +1097,7 @@ END
 
 /*Eliminar categoria*/
 GO
-CREATE OR ALTER PROCEDURE opti.UDP_tbCategorias_Delete 
+CREATE OR ALTER PROCEDURE opti.UDP_opti_tbCategorias_Delete 
 	@cate_Id	INT
 AS
 BEGIN
@@ -1151,7 +1153,7 @@ AS
 
 /*List vista clientes*/
 GO
-CREATE OR ALTER PROCEDURE opti.UDP_tbClientes_List
+CREATE OR ALTER PROCEDURE opti.UDP_opti_tbClientes_List
 AS
 BEGIN
 	SELECT * FROM opti.VW_tbClientes
@@ -1159,7 +1161,7 @@ END
 
 /*Insertar clientes*/
 GO
-CREATE OR ALTER PROCEDURE opti.UDP_tbClientes_Insert
+CREATE OR ALTER PROCEDURE opti.UDP_opti_tbClientes_Insert
 	@clie_Nombres				NVARCHAR(300), 
 	@clie_Apellidos				NVARCHAR(300), 
 	@clie_Identidad				NVARCHAR(13), 
@@ -1220,7 +1222,7 @@ END
 
 /*Editar Cliente*/
 GO
-CREATE OR ALTER PROCEDURE opti.UDP_tbClientes_Update
+CREATE OR ALTER PROCEDURE opti.UDP_opti_tbClientes_Update
 	@clie_Id					INT,
 	@clie_Nombres				NVARCHAR(300), 
 	@clie_Apellidos				NVARCHAR(300), 
@@ -1283,7 +1285,7 @@ END
 
 /*Eliminar Cliente*/
 GO
-CREATE OR ALTER PROCEDURE opti.UDP_tbClientes_Delete
+CREATE OR ALTER PROCEDURE opti.UDP_opti_tbClientes_Delete
 	@clie_Id INT
 AS
 BEGIN
@@ -1327,10 +1329,10 @@ AS
 		   T1.sucu_Id,
 		   T5.sucu_Descripcion AS Empe_SucursalNombre,
 		   empe_UsuCreacion, 
-		   T2.user_NombreUsuario AS Empe_NombreUsuarioCreacion,
+		   T2.usua_NombreUsuario AS Empe_NombreUsuarioCreacion,
 		   empe_FechaCreacion, 
 		   empe_UsuModificacion, 
-		   T3.user_NombreUsuario AS Empe_NombreUsuarioModificacion,
+		   T3.usua_NombreUsuario AS Empe_NombreUsuarioModificacion,
 		   empe_FechaModificacion, 
 		   empe_Estado
 	FROM [opti].[tbEmpleados] T1  INNER JOIN acce.tbUsuarios T2
@@ -1341,7 +1343,7 @@ AS
 
 /*List vista Empleados*/
 GO
-CREATE OR ALTER PROCEDURE opti.UDP_tbEmpleados_List
+CREATE OR ALTER PROCEDURE opti.UDP_opti_tbEmpleados_List
 AS
 BEGIN
 	SELECT * FROM opti.VW_tbEmpleados
@@ -1349,7 +1351,7 @@ END
 
 /*Insertar Empleados*/
 GO
-CREATE OR ALTER PROCEDURE opti.UDP_tbEmpleados_Insert 
+CREATE OR ALTER PROCEDURE opti.UDP_opti_tbEmpleados_Insert 
 	 @empe_Nombres                 NVARCHAR(100), 
 	 @empe_Apellidos               NVARCHAR(100), 
 	 @empe_Identidad               VARCHAR(13), 
@@ -1414,7 +1416,7 @@ END
 
 /*Editar Empleados*/
 GO
-CREATE OR ALTER PROCEDURE opti.UDP_tbEmpleados_Update 
+CREATE OR ALTER PROCEDURE opti.UDP_opti_tbEmpleados_Update 
 	 @empe_Id				       INT,
 	 @empe_Nombres                 NVARCHAR(100), 
 	 @empe_Apellidos               NVARCHAR(100), 
@@ -1478,7 +1480,7 @@ END
 
 /*Eliminar Empleados*/
 GO
-CREATE OR ALTER PROCEDURE opti.UDP_tbEmpleados_Delete 
+CREATE OR ALTER PROCEDURE opti.UDP_opti_tbEmpleados_Delete 
 	@empe_Id INT
 AS
 BEGIN
@@ -1510,10 +1512,10 @@ AS
 		   prov_CorreoElectronico, 
 		   prov_Telefono, 
 		   prov_UsuCreacion, 
-		   T2.user_NombreUsuario AS prov_NombreUsuCreacion,
+		   T2.usua_NombreUsuario AS prov_NombreUsuCreacion,
 		   prov_FechaCreacion, 
 		   prov_UsuModificacion, 
-		   T3.user_NombreUsuario AS prov_NombreUsuModificacion,
+		   T3.usua_NombreUsuario AS prov_NombreUsuModificacion,
 		   prov_FechaModificacion, 
 		   prov_Estado
 	FROM opti.tbProveedores T1 INNER JOIN acce.tbUsuarios T2
@@ -1524,7 +1526,7 @@ GO
 
 /*List vista Proveedores*/
 GO
-CREATE OR ALTER PROCEDURE opti.UDP_tbProveedore_List
+CREATE OR ALTER PROCEDURE opti.UDP_opti_tbProveedore_List
 AS
 BEGIN
 	SELECT * FROM opti.VW_tbProveedores
@@ -1532,7 +1534,7 @@ END
 
 /*Insertar Proveedor*/
 GO
-CREATE OR ALTER PROCEDURE opti.UDP_tbProveedor_Insert
+CREATE OR ALTER PROCEDURE opti.UDP_opti_tbProveedor_Insert
 	@prov_Nombre                NVARCHAR(100),
     @prov_Direccion             NVARCHAR(500),
     @prov_CorreoElectronico     NVARCHAR(200),
@@ -1569,7 +1571,7 @@ END
 
 /*Editar Proveedor*/
 GO
-CREATE OR ALTER PROCEDURE opti.UDP_tbProveedor_Update
+CREATE OR ALTER PROCEDURE opti.UDP_opti_tbProveedor_Update
 	@prov_Id					INT,
     @prov_Nombre                NVARCHAR(200),
     @prov_Direccion             NVARCHAR(500),
@@ -1612,7 +1614,7 @@ END
 
 /*Eliminar Proveedor*/
 GO
-CREATE OR ALTER PROCEDURE opti.UDP_tbProveedor_Delete 
+CREATE OR ALTER PROCEDURE opti.UDP_opti_tbProveedor_Delete 
 	@prov_Id	INT
 AS
 BEGIN
@@ -1651,7 +1653,7 @@ AS
 		   T6.marc_Nombre AS aros_NombreMarca,
 		   aros_Stock, 
 		   aros_UsuCreacion, 
-		   T2.user_NombreUsuario AS aros_NombreUsuarioCreacion,
+		   T2.usua_NombreUsuario AS aros_NombreUsuarioCreacion,
 		   aros_FechaCreacion, 
 		   aros_FechaModificacion, 
 		   aros_UsuModificacion, 
@@ -1668,7 +1670,7 @@ GO
 
 /*List vista Aros*/
 GO
-CREATE OR ALTER PROCEDURE opti.UDP_tbAros_List
+CREATE OR ALTER PROCEDURE opti.UDP_opti_tbAros_List
 AS
 BEGIN
 	SELECT * FROM opti.VW_tbAros
@@ -1676,7 +1678,7 @@ END
 
 /*Insertar Proveedor*/
 GO
-CREATE OR ALTER PROCEDURE opti.UDP_tbAros_Insert
+CREATE OR ALTER PROCEDURE opti.UDP_opti_tbAros_Insert
 	@aros_Descripcion              NVARCHAR(300),
     @aros_CostoUni                 DECIMAL(18,2),
     @cate_Id                       INT,
@@ -1715,7 +1717,7 @@ END
 
 /*Editar Aro*/
 GO
-CREATE OR ALTER PROCEDURE opti.UDP_tbAros_Update
+CREATE OR ALTER PROCEDURE opti.UDP_opti_tbAros_Update
 	@aros_Id                 INT,
     @aros_Descripcion        NVARCHAR(300), 
 	@aros_CostoUni           DECIMAL(18,2), 
@@ -1763,7 +1765,7 @@ END
 
 /*Eliminar Aros*/
 GO
-CREATE OR ALTER PROCEDURE opti.UDP_tbAros_Delete 
+CREATE OR ALTER PROCEDURE opti.UDP_opti_tbAros_Delete 
 	@aros_Id	INT
 AS
 BEGIN
@@ -1809,7 +1811,7 @@ AS
 
 /*Insertar Direcciones*/
 GO
-CREATE OR ALTER PROCEDURE opti.UDP_tbDirecciones_Insert
+CREATE OR ALTER PROCEDURE opti.UDP_opti_tbDirecciones_Insert
 	@muni_Id                INT, 
 	@dire_DireccionExacta   NVARCHAR(300), 
 	@usua_IdCreacion        INT
@@ -1846,7 +1848,7 @@ END
 
 /*Editar Direccion*/
 GO
-CREATE OR ALTER PROCEDURE opti.UDP_tbDirecciones_Update
+CREATE OR ALTER PROCEDURE opti.UDP_opti_tbDirecciones_Update
     @dire_Id                INT,
 	@muni_Id                INT, 
 	@dire_DireccionExacta   NVARCHAR(300), 
@@ -1888,7 +1890,7 @@ END
 
 /*Eliminar Direccion*/
 GO
-CREATE OR ALTER PROCEDURE opti.UDP_tbDireccion_Delete
+CREATE OR ALTER PROCEDURE opti.UDP_opti_tbDireccion_Delete
 	@dire_Id	INT
 AS
 BEGIN
@@ -1917,12 +1919,12 @@ AS
 		   T4.clie_Nombres AS dicl_NombreClientes,
 		   T1.dire_Id,
 		   t5.dire_DireccionExacta AS dicl_DireccionExacta, 
-		   t1.clie_Estado, 
+		   t1.dicl_Estado, 
 		   T1.usua_IdCreacion, 
-		   t2.user_NombreUsuario AS dicl_NombreUsuarioCreacion,
+		   t2.usua_NombreUsuario AS dicl_NombreUsuarioCreacion,
 		   t1.clie_FechaCreacion, 
 		   T1.usua_IdModificacion, 
-		   t3.user_NombreUsuario AS dicl_NombreUsuarioModificacion,
+		   t3.usua_NombreUsuario AS dicl_NombreUsuarioModificacion,
 		   t1.clie_FechaModificacion
 		   FROM opti.tbDireccionesPorCliente t1 INNER JOIN acce.tbUsuarios t2
 		   ON t1.usua_IdCreacion = T2.usua_Id
@@ -1930,11 +1932,11 @@ AS
 		   ON t1.usua_IdModificacion = t3.usua_Id INNER JOIN opti.tbClientes T4
 		   ON T1.clie_Id = T4.clie_Id INNER JOIN opti.tbDirecciones t5
 		   ON T1.dire_Id = T5.dire_Id
-		   WHERE T1.clie_Estado = 1
+		   WHERE T1.dicl_Estado = 1
 
 /*Insertar Direcciones por Cliente*/
 GO
-CREATE OR ALTER PROCEDURE opti.UDP_tbDireccionesPorClientes_Insert
+CREATE OR ALTER PROCEDURE opti.UDP_opti_tbDireccionesPorClientes_Insert
     @clie_Id           INT, 
 	@dire_Id           INT, 
 	@usua_IdCreacion   INT
@@ -1952,10 +1954,10 @@ BEGIN
 			END
 		ELSE IF EXISTS (SELECT * FROM opti.tbDireccionesPorCliente
 						WHERE clie_Id = @clie_Id AND dire_Id = @dire_Id
-						AND clie_Estado = 0)
+						AND dicl_Estado = 0)
 			BEGIN
 				UPDATE opti.tbDireccionesPorCliente 
-				SET clie_Estado = 1
+				SET dicl_Estado = 1
 				WHERE clie_Id = @clie_Id AND dire_Id = @dire_Id
 
 				SELECT 'La direccion ha sido insertado'
@@ -1970,7 +1972,7 @@ END
 
 /*Listar cargos*/
 GO
-CREATE OR ALTER PROCEDURE opti.UDP_tbDireccionPorCliente_List
+CREATE OR ALTER PROCEDURE opti.UDP_opti_tbDireccionPorCliente_List
 AS
 BEGIN
 	SELECT * 
@@ -2002,13 +2004,13 @@ BEGIN
 		ELSE IF EXISTS (SELECT * FROM opti.tbDireccionesPorCliente
 						WHERE @dire_Id = dire_Id
 						      AND @clie_Id = clie_Id
-							  AND clie_Estado = 1
+							  AND dicl_Estado = 1
 							  AND [dicl_Id] != @dicl_Id)
 
 			SELECT 'La dirección ya existe'
 		ELSE
 			UPDATE opti.tbDireccionesPorCliente
-			SET clie_Estado = 1,
+			SET dicl_Estado = 1,
 			    [usua_IdModificacion] = @usua_IdModificacion,
 				[clie_FechaModificacion] = GETDATE()
 			WHERE clie_Id = @clie_Id AND dire_Id = @dire_Id
@@ -2022,13 +2024,13 @@ END
 
 /*Eliminar cargos*/
 GO
-CREATE OR ALTER PROCEDURE opti.UDP_tbDireccionesPorCliente_Delete
+CREATE OR ALTER PROCEDURE opti.UDP_opti_tbDireccionesPorCliente_Delete
 	@dicl_Id   INT
 AS
 BEGIN
 	BEGIN TRY
 		UPDATE opti.tbDireccionesPorCliente
-		SET clie_Estado = 0
+		SET dicl_Estado = 0
 		WHERE dicl_Id = @dicl_Id
 
 		SELECT 'La direccion ha sido eliminado'
@@ -2046,10 +2048,10 @@ AS
 	       marc_Nombre,
 		   marc_Estado, 
 		   usua_IdCreacion,
-		   T2.user_NombreUsuario AS marc_NombreUsuarioCreacion, 
+		   T2.usua_NombreUsuario AS marc_NombreUsuarioCreacion, 
 		   marc_FechaCreacion 
 		   usua_IdModificacion,
-		   t3.user_NombreUsuario AS marc_NombreUsuarioModificacion, 
+		   t3.usua_NombreUsuario AS marc_NombreUsuarioModificacion, 
 		   marc_FechaModificacion
 FROM opti.tbMarcas T1 INNER JOIN acce.tbUsuarios T2
 ON T1.usua_IdCreacion = T2.usua_Id LEFT JOIN acce.tbUsuarios T3
@@ -2059,7 +2061,7 @@ WHERE t1.marc_Estado = 1
 
 /*Listado de Marca*/
 GO
-CREATE OR ALTER PROCEDURE opti.UDP_tbMarca_List
+CREATE OR ALTER PROCEDURE opti.UDP_opti_tbMarca_List
 AS
 BEGIN
 	SELECT *
@@ -2068,7 +2070,7 @@ END
 
 /*Insertar categoria*/
 GO
-CREATE OR ALTER PROCEDURE opti.UDP_tbMarcas_Insert
+CREATE OR ALTER PROCEDURE opti.UDP_opti_tbMarcas_Insert
     @marc_Nombre       NVARCHAR(150),
     @usua_IdCreacion   INT
 AS
@@ -2104,7 +2106,7 @@ GO
 
 /*Editar Marca*/
 GO
-CREATE OR ALTER PROCEDURE opti.UDP_tbMarcas_Update
+CREATE OR ALTER PROCEDURE opti.UDP_opti_tbMarcas_Update
 	@marc_Id              INT,
     @marc_Nombre          NVARCHAR(150), 
 	@usua_IdModificacion  INT
@@ -2141,7 +2143,7 @@ END
 
 /*Eliminar Marcas*/
 GO
-CREATE OR ALTER PROCEDURE opti.UDP_tbMarcas_Delete 
+CREATE OR ALTER PROCEDURE opti.UDP_opti_tbMarcas_Delete 
 	@marc_Id	INT
 AS
 BEGIN
@@ -2169,10 +2171,10 @@ AS
 	SELECT meto_Id, 
 	       meto_Nombre, 
 		   meto_UsuCreacion, 
-		   T2.user_NombreUsuario AS meto_NombreUsuarioCreacion,
+		   T2.usua_NombreUsuario AS meto_NombreUsuarioCreacion,
 		   meto_FechaCreacion, 
 		   meto_UsuModificacion, 
-		   t3.user_NombreUsuario AS meto_NombreUsuarioModificacion,
+		   t3.usua_NombreUsuario AS meto_NombreUsuarioModificacion,
 		   meto_FechaModificacion, 
 		   meto_Estado
 FROM opti.tbMetodosPago t1 INNER JOIN acce.tbUsuarios T2
@@ -2183,7 +2185,7 @@ WHERE T1.meto_Estado = 1
 
 /*Listado de metodos de pago*/
 GO
-CREATE OR ALTER PROCEDURE opti.UDP_tbMetodosPagos_List
+CREATE OR ALTER PROCEDURE opti.UDP_opti_tbMetodosPagos_List
 AS
 BEGIN
 	SELECT * 
@@ -2192,7 +2194,7 @@ END
 
 /*Insertar Metodos de pagos*/
 GO
-CREATE OR ALTER PROCEDURE opti.UDP_tbMetodosPagos_Insert
+CREATE OR ALTER PROCEDURE opti.UDP_opti_tbMetodosPagos_Insert
 	@meto_Nombre       NVARCHAR(100),
 	@meto_UsuCreacion  INT
 AS
@@ -2228,7 +2230,7 @@ GO
 
 /*Editar Metodo de pago*/
 GO
-CREATE OR ALTER PROCEDURE opti.UDP_tbMetodosPagos_Update
+CREATE OR ALTER PROCEDURE opti.UDP_opti_tbMetodosPagos_Update
 	@meto_Id               INT,
 	@meto_Nombre           NVARCHAR(100),
 	@meto_UsuModificacion  INT
@@ -2265,7 +2267,7 @@ END
 
 /*Eliminar metodo de pago*/
 GO
-CREATE OR ALTER PROCEDURE opti.UDP_tbMetodosPagos_Delete 
+CREATE OR ALTER PROCEDURE opti.UDP_opti_tbMetodosPagos_Delete 
 	@meto_Id	INT
 AS
 BEGIN
@@ -2297,10 +2299,10 @@ AS
 			pant_Menu, 
 			pant_HtmlId, 
 			pant_UsuCreacion, 
-			T2.user_NombreUsuario AS pant_NombreUsuarioCreacion,
+			T2.usua_NombreUsuario AS pant_NombreUsuarioCreacion,
 			pant_FechaCreacion, 
 			pant_UsuModificacion,
-			T3.user_NombreUsuario AS pant_NombreUsuarioModificacio, 
+			T3.usua_NombreUsuario AS pant_NombreUsuarioModificacio, 
 			pant_FechaModificacion, 
 			pant_Estado
 FROM [acce].[tbPantallas] t1 INNER JOIN acce.tbUsuarios T2
@@ -2312,7 +2314,7 @@ WHERE [pant_Estado] = 1
 
 /*Listado de Pantallas*/
 GO
-CREATE OR ALTER PROCEDURE acce.UDP_tbPantallas_List
+CREATE OR ALTER PROCEDURE acce.UDP_acce_tbPantallas_List
 AS
 BEGIN
 	SELECT * 
@@ -2321,7 +2323,7 @@ END
 
 /*Insertar Pantallas*/
 GO
-CREATE OR ALTER PROCEDURE acce.UDP_tbPantallas_Insert
+CREATE OR ALTER PROCEDURE acce.UDP_acce_tbPantallas_Insert
 	@pant_Nombre          NVARCHAR(100), 
 	@pant_Url             NVARCHAR(300), 
 	@pant_Menu            NVARCHAR(300), 
@@ -2361,7 +2363,7 @@ GO
 
 /*Editar Pantallas*/
 GO
-CREATE OR ALTER PROCEDURE opti.UDP_tbPantallas_Update
+CREATE OR ALTER PROCEDURE acce.UDP_acce_tbPantallas_Update
 	@pant_Id               INT,
 	@pant_Nombre           NVARCHAR(100), 
 	@pant_Url              NVARCHAR(300), 
@@ -2396,7 +2398,6 @@ BEGIN
 			    [pant_Url] = @pant_Url,
                 [pant_Menu] = @pant_Menu,
 				[pant_HtmlId] = @pant_HtmlId,
-				[pant_UsuModificacion]= @pant_UsuModificacion,
 				[pant_FechaModificacion] = GETDATE()
 			WHERE  [pant_Nombre] = @pant_Nombre
 
@@ -2409,7 +2410,7 @@ END
 
 /*Eliminar pantalla*/
 GO
-CREATE OR ALTER PROCEDURE opti.UDP_tbPantallas_Delete 
+CREATE OR ALTER PROCEDURE acce.UDP_acce_tbPantallas_Delete 
 	@pant_Id     INT
 AS
 BEGIN
@@ -2441,9 +2442,9 @@ AS
 			sucu_DireccionExacta, 
 			sucu_FechaCreacion, 
 			sucu_UsuCreacion, 
-			t2.user_NombreUsuario AS sucu_NombreUsuarioCreacion,
+			t2.usua_NombreUsuario AS sucu_NombreUsuarioCreacion,
 			sucu_FechaModificacion,
-			t3.user_UsuModificacion AS sucu_NombreUsuarioModifica, 
+			t3.usua_UsuModificacion AS sucu_NombreUsuarioModifica, 
 			sucu_UsuModificacion, 
 			sucu_Estado
 FROM [opti].[tbSucursales] t1 INNER JOIN acce.tbUsuarios T2
@@ -2456,7 +2457,7 @@ WHERE T1.sucu_Estado = 1
 
 /*Listado de Sucursales*/
 GO
-CREATE OR ALTER PROCEDURE opti.UDP_tbSucursales_List
+CREATE OR ALTER PROCEDURE opti.UDP_opti_tbSucursales_List
 AS
 BEGIN
 	SELECT * 
@@ -2465,7 +2466,7 @@ END
 
 /*Insertar Sucursales*/
 GO
-CREATE OR ALTER PROCEDURE opti.UDP_tbSucursales_Insert
+CREATE OR ALTER PROCEDURE opti.UDP_opti_tbSucursales_Insert
 	@sucu_Descripcion     NVARCHAR(200),
 	@muni_Id              INT,
 	@sucu_DireccionExacta NVARCHAR(500),
@@ -2503,7 +2504,7 @@ GO
 
 /*Editar Sucursal*/
 GO
-CREATE OR ALTER PROCEDURE opti.UDP_tbSucursal_Update
+CREATE OR ALTER PROCEDURE opti.UDP_opti_tbSucursal_Update
 	@sucu_Id                 INT,
     @sucu_Descripcion        NVARCHAR(200), 
 	@muni_Id                 INT, 
@@ -2545,7 +2546,7 @@ END
 
 /*Eliminar Sucursal*/
 GO
-CREATE OR ALTER PROCEDURE opti.UDP_tbSucursales_Delete 
+CREATE OR ALTER PROCEDURE opti.UDP_opti_tbSucursales_Delete 
 	@sucu_Id	INT
 AS
 BEGIN
@@ -2592,16 +2593,18 @@ WHERE T1.pantrole_Estado = 1
 
 /*Listado de Pantallas por rol*/
 GO
-CREATE OR ALTER PROCEDURE acce.UDP_tbPantallasPorRoles_List
+CREATE OR ALTER PROCEDURE acce.UDP_acce_tbPantallasPorRoles_List
+	@role_Id	INT
 AS
 BEGIN
 	SELECT * 
 	FROM acce.VW_tbPantallasPorRoles
+	WHERE role_Id = @role_Id
 END
 
 /*Insertar pantallas por roles*/
 GO
-CREATE OR ALTER PROCEDURE acce.UDP_tbPantallasPorRoles_Insert
+CREATE OR ALTER PROCEDURE acce.UDP_acce_tbPantallasPorRoles_Insert
 	@role_Id               INT, 
 	@pant_Id               INT, 
 	@pantrole_UsuCreacion  INT
@@ -2638,7 +2641,7 @@ GO
 
 /*Editar categoria*/
 GO
-CREATE OR ALTER PROCEDURE acce.UDP_tbPantallaPorRol_Update
+CREATE OR ALTER PROCEDURE acce.UDP_acce_tbPantallasPorRoles_Update
 	@pantrole_Id                INT, 
 	@role_Id                    INT, 
 	@pant_Id                    INT,  
@@ -2653,7 +2656,8 @@ BEGIN
 			UPDATE [acce].[tbPantallasPorRoles]
 			SET 	role_Id = @role_Id,
 			        pant_Id = @pant_Id,
-					pantrole_UsuModificacion = GETDATE()
+					pantrole_UsuModificacion = @pantrole_UsuModificacion,
+					pantrole_FechaModificacion = GETDATE()
 			WHERE 	pantrole_Id = @pantrole_Id
 			SELECT 'La pantalla ha sido editada con éxito'
 		END
@@ -2679,7 +2683,7 @@ END
 
 /*Eliminar categoria*/
 GO
-CREATE OR ALTER PROCEDURE opti.UDP_tbPantallaPorRoles_Delete 
+CREATE OR ALTER PROCEDURE acce.UDP_acce_tbPantallaPorRoles_Delete 
 	@pantrole_Id	INT
 AS
 BEGIN
@@ -2710,10 +2714,10 @@ AS
 			T4.empe_Nombres AS cons_NombreEmpleado,
 			cons_Estado, 
 			usua_IdCreacion, 
-			t2.user_NombreUsuario AS cons_NombreUsuarioCreacion, 
+			t2.usua_NombreUsuario AS cons_NombreUsuarioCreacion, 
 			cons_FechaCreacion, 
 			usua_IdModificacion,
-			t3.user_NombreUsuario AS cons_NombreUsuarioModificacion, 
+			t3.usua_NombreUsuario AS cons_NombreUsuarioModificacion, 
 			cons_FechaModificacion
 FROM opti.tbConsultorios t1  INNER JOIN acce.tbUsuarios t2
 ON t1.usua_IdCreacion = t2.usua_Id LEFT JOIN acce.tbUsuarios t3
@@ -2725,7 +2729,7 @@ ON t1.empe_Id = t4.empe_Id
 
 /*Listado de Consultorios*/
 GO
-CREATE OR ALTER PROCEDURE opti.UDP_tbConsultorios_List
+CREATE OR ALTER PROCEDURE opti.UDP_opti_tbConsultorios_List
 AS
 BEGIN
 	SELECT *
@@ -2735,7 +2739,7 @@ END
 
 /*Insertar CONSULTORIOS*/
 GO
-CREATE OR ALTER PROCEDURE opti.UDP_tbConsultorios_Insert
+CREATE OR ALTER PROCEDURE opti.UDP_opti_tbConsultorios_Insert
 	 @cons_Nombre        NVARCHAR(150), 
 	 @empe_Id            INT,
 	 @usua_IdCreacion    INT
@@ -2772,7 +2776,7 @@ GO
 
 /*Editar Consultorios*/
 GO
-CREATE OR ALTER PROCEDURE acce.UDP_tbConsultorios_Update
+CREATE OR ALTER PROCEDURE opti.UDP_opti_tbConsultorios_Update
 	@cons_Id                 INT,
 	@cons_Nombre             NVARCHAR(150), 
 	@empe_Id                 INT, 
@@ -2814,7 +2818,7 @@ END
 
 /*Eliminar Consultorio*/
 GO
-CREATE OR ALTER PROCEDURE acce.UDP_tbConsultorio_Delete 
+CREATE OR ALTER PROCEDURE opti.UDP_opti_tbConsultorio_Delete 
 	@cons_Id	INT
 AS
 BEGIN
@@ -2842,10 +2846,10 @@ AS
 	SELECT t1.role_Id,
 	       role_Nombre, 
 		   role_UsuCreacion,
-		   t2.user_NombreUsuario AS role_NombreUsuarioCreacion, 
+		   t2.usua_NombreUsuario AS role_NombreUsuarioCreacion, 
 		   role_FechaCreacion, 
 		   role_UsuModificacion,
-		   t3.user_NombreUsuario AS role_NombreUsuarioModificacion, 
+		   t3.usua_NombreUsuario AS role_NombreUsuarioModificacion, 
 		   role_FechaModificacion, 
 		   role_Estado
 FROM acce.tbRoles t1  INNER JOIN acce.tbUsuarios t2
@@ -2857,7 +2861,7 @@ WHERE t1.role_Estado = 1
 
 /*Listado de roles*/
 GO
-CREATE OR ALTER PROCEDURE acce.UDP_tbRoles_List
+CREATE OR ALTER PROCEDURE acce.UDP_acce_tbRoles_List
 AS
 BEGIN
 	SELECT *
@@ -2866,7 +2870,7 @@ END
 
 /*Insertar roles*/
 GO
-CREATE OR ALTER PROCEDURE opti.UDP_tbRoles_Insert
+CREATE OR ALTER PROCEDURE acce.UDP_acce_tbRoles_Insert
 	@role_Nombre         NVARCHAR(100),
 	@role_UsuCreacion    INT
 AS
@@ -2902,7 +2906,7 @@ GO
 
 /*Editar roles*/
 GO
-CREATE OR ALTER PROCEDURE acce.UDP_tbRoles_Update
+CREATE OR ALTER PROCEDURE acce.UDP_acce_tbRoles_Update
 	@role_Id                  INT,
 	@role_Nombre              NVARCHAR(100),  
 	@role_UsuModificacion     INT
@@ -2940,7 +2944,7 @@ END
 
 /*Eliminar Rol*/
 GO
-CREATE OR ALTER PROCEDURE acce.UDP_tbRoles_Delete 
+CREATE OR ALTER PROCEDURE acce.UDP_acce_tbRoles_Delete 
 	@role_Id	INT
 AS
 BEGIN
@@ -2973,10 +2977,10 @@ AS
 		   deci_HoraFin, 
 		   deci_Estado, 
 		   t1.usua_IdCreacion, 
-		   t2.user_NombreUsuario AS deci_NombreUsuarioCreacion,
+		   t2.usua_NombreUsuario AS deci_NombreUsuarioCreacion,
 		   deci_FechaCreacion, 
 		   t1.usua_IdModificacion, 
-		   t3.user_NombreUsuario AS deci_NombreUsuarioModificacion,
+		   t3.usua_NombreUsuario AS deci_NombreUsuarioModificacion,
 		   deci_FechaModificacion
 FROM opti.tbDetallesCitas t1  INNER JOIN acce.tbUsuarios t2
 ON t1.usua_IdCreacion = t2.usua_Id LEFT JOIN acce.tbUsuarios t3
@@ -2987,7 +2991,7 @@ ON t1.usua_IdModificacion = t3.usua_Id
 
 /*Listado de detalles citas*/
 GO
-CREATE OR ALTER PROCEDURE opti.UDP_tbDetallesCitas_List
+CREATE OR ALTER PROCEDURE opti.UDP_opti_tbDetallesCitas_List
 AS
 BEGIN
 	SELECT *
@@ -2996,7 +3000,7 @@ END
 
 /*Insertar roles*/
 GO
-CREATE OR ALTER PROCEDURE opti.UDP_tbDetallesCitas_Insert
+CREATE OR ALTER PROCEDURE opti.UDP_opti_tbDetallesCitas_Insert
 	 @cita_Id            INT, 
 	 @deci_Costo         DECIMAL(18,2), 
 	 @deci_HoraInicio    VARCHAR(5), 
@@ -3007,7 +3011,7 @@ BEGIN
 	BEGIN TRY
 
 			BEGIN
-			INSERT INTO [opti].[tbDetallesCitas] (deci_Id, cita_Id, deci_Costo, deci_HoraInicio, deci_HoraFin, usua_IdCreacion)
+			INSERT INTO [opti].[tbDetallesCitas] (cita_Id, deci_Costo, deci_HoraInicio, deci_HoraFin, usua_IdCreacion)
 			VALUES(@cita_Id, @deci_Costo, @deci_HoraInicio, @deci_HoraFin, @usua_IdCreacion)
 			
 			SELECT 'El Detalle de la cita ha sido insertado con éxito'
@@ -3039,7 +3043,7 @@ GO
 
 /*Editar detalle cita*/
 GO
-CREATE OR ALTER PROCEDURE acce.UDP_tbDetallesCitas_Update
+CREATE OR ALTER PROCEDURE opti.UDP_opti_tbDetallesCitas_Update
 	@deci_Id               INT, 
 	@cita_Id               INT, 
 	@deci_Costo            DECIMAL(18,2), 
@@ -3052,7 +3056,7 @@ BEGIN
 	BEGIN TRY
 
 		BEGIN			
-			UPDATE  [opti].[tbDetallesCitas]([cita_Id],[deci_Costo],[deci_HoraInicio],[deci_HoraFin],[usua_IdModificacion])
+			UPDATE  [opti].[tbDetallesCitas]
 			SET 	[cita_Id] = @cita_Id,
 			        [deci_Costo]=@deci_Costo,
 					[deci_HoraInicio]= @deci_HoraInicio,
@@ -3071,7 +3075,7 @@ END
 
 /*Eliminar Detalle Cita*/
 GO
-CREATE OR ALTER PROCEDURE opti.UDP_tbRoles_Delete 
+CREATE OR ALTER PROCEDURE opti.UDP_opti_tbDetallesCitas_Delete 
 	@deci_Id	INT
 AS
 BEGIN
@@ -3116,7 +3120,7 @@ ON T1.sucu_Id = T5.sucu_Id
 
 /*Listado de Ordenes*/
 GO
-CREATE OR ALTER PROCEDURE opti.UDP_tbOrdenes_List
+CREATE OR ALTER PROCEDURE opti.UDP_opti_tbOrdenes_List
 AS
 BEGIN
 	SELECT *
@@ -3125,7 +3129,7 @@ END
 
 /*Insertar Ordenes*/
 GO
-CREATE OR ALTER PROCEDURE opti.UDP_tbOrdenes_Insert
+CREATE OR ALTER PROCEDURE opti.UDP_opti_tbOrdenes_Insert
 	 @clie_Id               INT, 
 	 @orde_Fecha            DATE, 
 	 @orde_FechaEntrega     DATE, 
@@ -3153,7 +3157,7 @@ GO
 
 /*Editar Ordenes*/
 GO
-CREATE OR ALTER PROCEDURE opti.UDP_tbOrdenes_Update
+CREATE OR ALTER PROCEDURE opti.UDP_opti_tbOrdenes_Update
 	@orde_Id            INT, 
 	@clie_Id            INT, 
 	@orde_Fecha         DATE, 
@@ -3184,7 +3188,7 @@ END
 
 /*Eliminar Ordenes*/
 GO
-CREATE OR ALTER PROCEDURE opti.UDP_tbOrdenes_Delete 
+CREATE OR ALTER PROCEDURE opti.UDP_opti_tbOrdenes_Delete 
 	@orde_Id	INT
 AS
 BEGIN
@@ -3217,12 +3221,12 @@ AS
 			envi_Fecha, 
 			envi_FechaEntrega, 
 			envi_FechaEntregaReal, 
-			t1.clie_Estado, 
+			t1.envi_Estado, 
 			t1.usua_IdCreacion,
-			T2.user_NombreUsuario AS envi_NombreUsuarioCreacion, 
+			T2.usua_NombreUsuario AS envi_NombreUsuarioCreacion, 
 			t1.clie_FechaCreacion, 
 			t1.usua_IdModificacion,
-			t3.user_NombreUsuario AS envi_NombreUsuarioModificacion, 
+			t3.usua_NombreUsuario AS envi_NombreUsuarioModificacion, 
 			t1.clie_FechaModificacion
 FROM opti.tbEnvios t1 INNER JOIN acce.tbUsuarios t2
 ON t1.usua_IdCreacion = t2.usua_Id LEFT JOIN acce.tbUsuarios t3
@@ -3232,7 +3236,7 @@ ON T1.dire_Id = T5.dire_Id
 
 /*Listado de Envio*/
 GO
-CREATE OR ALTER PROCEDURE opti.UDP_tbEnvio_List
+CREATE OR ALTER PROCEDURE opti.UDP_opti_tbEnvio_List
 AS
 BEGIN
 	SELECT *
@@ -3241,7 +3245,7 @@ END
 
 /*Insertar Envio*/
 GO
-CREATE OR ALTER PROCEDURE opti.UDP_tbEnvios_Insert
+CREATE OR ALTER PROCEDURE opti.UDP_opti_tbEnvios_Insert
 	 @clie_Id              INT, 
 	 @dire_Id              INT, 
 	 @envi_Fecha           DATE, 
@@ -3269,7 +3273,7 @@ GO
 
 /*Editar Envio*/
 GO
-CREATE OR ALTER PROCEDURE opti.UDP_tbEnvios_Update
+CREATE OR ALTER PROCEDURE opti.UDP_opti_tbEnvios_Update
 	@envi_Id                 INT, 
 	@clie_Id                 INT, 
 	@dire_Id                 INT, 
@@ -3300,7 +3304,7 @@ END
 
 /*Eliminar Envio*/
 GO
-CREATE OR ALTER PROCEDURE opti.UDP_tbEnvio_Delete 
+CREATE OR ALTER PROCEDURE opti.UDP_opti_tbEnvio_Delete 
 	@envi_Id	INT
 AS
 BEGIN
@@ -3308,7 +3312,7 @@ BEGIN
 		IF NOT EXISTS (SELECT * FROM [opti].[tbDetallesEnvios] WHERE [envi_Id] = @envi_Id)
 			BEGIN
 				UPDATE [opti].[tbEnvios]
-				SET [clie_Estado] = 0
+				SET envi_Estado = 0
 				WHERE envi_Id = @envi_Id 
 
 				SELECT 'El envio ha sido eliminado'
@@ -3448,7 +3452,7 @@ VALUES('0101','La Ceiba ','01', 1),
 	--********INSERT TABLA Cargos****************---
 GO
 INSERT INTO opti.tbCargos(carg_Nombre,carg_UsuCreacion)
-VALUES('Oftalmólogos',1)
+VALUES('Oftalmólogo',1)
 
 	  
 --********INSERT TABLA Categorias****************---
@@ -3494,17 +3498,17 @@ VALUES('Optica Popular Mall Multiplaza','0801','Mall Multiplaza',1),
 	  ('Optica Popular City Mall','0801','City Mall',1)
 
 --INSERT TABLA Empleados********---
-INSERT INTO opti.tbEmpleados( empe_Nombres, empe_Apellidos, empe_Identidad, empe_FechaNacimiento, empe_Sexo, estacivi_Id, empe_Telefono, empe_CorreoElectronico, sucu_Id, empe_UsuCreacion)
-VALUES('Clara','Gomez','1234567890123','2003-12-05','F',1,'98107260','gomez23.e@gmail.com',1,1),
-('Maria Lucero','Ramirez','452879612354','2003-12-02','F',1,'97260425','maria.lucero@gmail.com',1,1),
-('Karla Elisa','Ramirez','859679612354','2000-02-02','F',1,'98107260','karlaramirez@gmail.com',1,1),
-('Manuel','Cardona','8759632415785','2001-05-05','M',1,'97307260','manuel@gmail.com',1,1),
-('Mauricio','Mendosa','0529632415785','2001-05-15','M',1,'99307260','mMENDOZA@gmail.com',1,1),
-('Rafael','Alvarado','0529582415785','2000-05-05','M',1,'99307260','mMENDOZA@gmail.com',1,1),
-('Carlos','Amaya','0569582415785','2000-05-04','M',1,'99307260','amayacarlos@gmail.com',1,1),
-('Jose Manuel','Hernadez','0569582415712','2004-05-14','M',1,'33207260','josemanuel12@gmail.com',1,1),
-('Samuel','Bautista','0561272415712','2007-04-14','M',1,'32007260','samuel12@gmail.com',1,1),
-('Erick','Hernadez','0561272415799','2007-04-30','M',1,'92007930','erickhernadez@gmail.com',1,1)
+INSERT INTO opti.tbEmpleados(empe_Nombres, empe_Apellidos, empe_Identidad, empe_FechaNacimiento, empe_Sexo, estacivi_Id, empe_Telefono, empe_CorreoElectronico, carg_Id, sucu_Id, empe_UsuCreacion)
+VALUES('Clara','Gomez','1234567890123','2003-12-05','F',1,'98107260','gomez23.e@gmail.com', 1, 1,1),
+('Maria Lucero','Ramirez','452879612354','2003-12-02','F',1,'97260425','maria.lucero@gmail.com', 1, 1,1),
+('Karla Elisa','Ramirez','859679612354','2000-02-02','F',1,'98107260','karlaramirez@gmail.com', 1,1,1),
+('Manuel','Cardona','8759632415785','2001-05-05','M',1,'97307260','manuel@gmail.com', 1, 1,1),
+('Mauricio','Mendosa','0529632415785','2001-05-15','M',1,'99307260','mMENDOZA@gmail.com', 1, 1,1),
+('Rafael','Alvarado','0529582415785','2000-05-05','M',1,'99307260','mMENDOZA@gmail.com', 1, 1,1),
+('Carlos','Amaya','0569582415785','2000-05-04','M',1,'99307260','amayacarlos@gmail.com',1, 1,1),
+('Jose Manuel','Hernadez','0569582415712','2004-05-14','M',1,'33207260','josemanuel12@gmail.com',1,1,1),
+('Samuel','Bautista','0561272415712','2007-04-14','M',1,'32007260','samuel12@gmail.com',1,1,1),
+('Erick','Hernadez','0561272415799','2007-04-30','M',1,'92007930','erickhernadez@gmail.com',1,1,1)
 
 
   --********INSERT TABLA Clientes****************---
