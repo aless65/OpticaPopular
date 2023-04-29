@@ -25,7 +25,6 @@ CREATE TABLE acce.tbRoles(
 );
 GO
 
-
 --***********CREACION TABLA PANTALLAS*****************---
 CREATE TABLE acce.tbPantallas(
 	pant_Id					INT IDENTITY,
@@ -57,6 +56,7 @@ VALUES ('Usuarios', '/Usuario/Listado', 'Seguridad', 'usuariosItem', 1),
 	   ('Categorias', '/Categorias/Listado', 'Optica', 'categoriasItem', 1),
 	   ('Direcciones', '/Direcciones/Listado', 'Optica', 'direccionItem', 1),
        ('Marca', '/Marca/Listado', 'Optica', 'marcasItem', 1)
+GO
 
 --***********CREACION TABLA ROLES/PANTALLA*****************---
 CREATE TABLE acce.tbPantallasPorRoles(
@@ -74,7 +74,6 @@ CREATE TABLE acce.tbPantallasPorRoles(
 );
 GO
 
-
 --****************CREACION TABLA USUARIOS****************--
 CREATE TABLE acce.tbUsuarios(
 	usua_Id 				INT IDENTITY(1,1),
@@ -88,11 +87,11 @@ CREATE TABLE acce.tbUsuarios(
 	usua_UsuModificacion	INT,
 	usua_FechaModificacion	DATETIME,
 	usua_Estado				BIT NOT NULL CONSTRAINT DF_usua_Estado DEFAULT(1)
-	CONSTRAINT PK_acce_tbUsuarios_usua_Id  PRIMARY KEY(usua_Id),
+	CONSTRAINT PK_acce_tbUsuarios_usua_Id  PRIMARY KEY(usua_Id)
 );
+GO
 
 --********* PROCEDIMIENTO INSERTAR USUARIOS ADMIN**************--
-GO
 CREATE OR ALTER PROCEDURE acce.UDP_InsertUsuario
 	@usua_NombreUsuario NVARCHAR(100),	@usua_Contrasena NVARCHAR(200),
 	@usua_EsAdmin BIT,					@role_Id INT, 
@@ -103,44 +102,41 @@ BEGIN
 
 	INSERT acce.tbUsuarios(usua_NombreUsuario, usua_Contrasena, usua_EsAdmin, role_Id, empe_Id, usua_UsuCreacion)
 	VALUES(@usua_NombreUsuario, @password, @usua_EsAdmin, @role_Id, @empe_Id, 1);
-END;
-
-
+END
 GO
-EXEC acce.UDP_InsertUsuario 'admin', '123', 1, NULL, NULL;
 
+EXEC acce.UDP_InsertUsuario 'admin', '123', 1, NULL, NULL;
+GO
 
 --********* ALTERAR TABLA ROLES **************--
 --********* AGREGAR CAMPOS AUDITORIA**************--
-GO
+
 ALTER TABLE acce.tbRoles
 ADD CONSTRAINT FK_acce_tbRoles_acce_tbUsuarios_role_UsuCreacion_usua_Id 	FOREIGN KEY(role_UsuCreacion) REFERENCES acce.tbUsuarios(usua_Id),
 	CONSTRAINT FK_acce_tbRoles_acce_tbUsuarios_role_UsuModificacion_usua_Id 	FOREIGN KEY(role_UsuModificacion) REFERENCES acce.tbUsuarios(usua_Id);
-
-
-
-
 GO
+
 INSERT INTO acce.tbRoles(role_Nombre, role_UsuCreacion)
 VALUES ('Vendedor', 1)
-
+GO
 
 --********* ALTERAR TABLA USUARIOS **************--
 --********* AGREGAR CAMPO ROL, AUDITORIA**************--
-GO
+
 ALTER TABLE [acce].[tbUsuarios]
 ADD CONSTRAINT FK_acce_tbUsuarios_acce_tbUsuarios_usua_UsuCreacion_usua_Id  FOREIGN KEY(usua_UsuCreacion) REFERENCES acce.tbUsuarios([usua_Id]),
 	CONSTRAINT FK_acce_tbUsuarios_acce_tbUsuarios_usua_UsuModificacion_usua_Id  FOREIGN KEY(usua_UsuModificacion) REFERENCES acce.tbUsuarios([usua_Id]),
 	CONSTRAINT FK_acce_tbUsuarios_acce_tbRoles_role_Id FOREIGN KEY(role_Id) REFERENCES acce.tbRoles(role_Id)
-
 GO 
+
 ALTER TABLE [acce].[tbPantallasPorRoles]
 ADD CONSTRAINT FK_acce_tbPantallasPorRoles_acce_tbUsuarios_pantrole_UsuCreacion_usua_Id FOREIGN KEY([pantrole_UsuCreacion]) REFERENCES acce.tbUsuarios([usua_Id]),
 	CONSTRAINT FK_acce_tbPantallasPorRoles_acce_tbUsuarios_pantrole_UsuModificacion_usua_Id FOREIGN KEY([pantrole_UsuModificacion]) REFERENCES acce.tbUsuarios([usua_Id])
+GO
 
 --*******************************************--
 --********TABLA DEPARTAMENTO****************---
-GO
+
 CREATE TABLE [gral].[tbDepartamentos](
 	depa_Id  					CHAR(2) NOT NULL,
 	depa_Nombre 				NVARCHAR(100) NOT NULL,
@@ -153,10 +149,9 @@ CREATE TABLE [gral].[tbDepartamentos](
 	CONSTRAINT FK_gral_tbDepartamentos_acce_tbUsuarios_depa_UsuCreacion_usua_Id  		FOREIGN KEY(depa_UsuCreacion) 		REFERENCES acce.tbUsuarios(usua_Id),
 	CONSTRAINT FK_gral_tbDepartamentos_acce_tbUsuarios_depa_UsuModificacion_usua_Id  	FOREIGN KEY(depa_UsuModificacion) 	REFERENCES acce.tbUsuarios(usua_Id)
 );
-
+GO
 
 --********TABLA MUNICIPIO****************---
-GO
 CREATE TABLE gral.tbMunicipios(
 	muni_id					CHAR(4)	NOT NULL,
 	muni_Nombre				NVARCHAR(80) NOT NULL,
@@ -171,6 +166,7 @@ CREATE TABLE gral.tbMunicipios(
 	CONSTRAINT FK_gral_tbMunicipios_acce_tbUsuarios_muni_UsuCreacion_usua_Id  		FOREIGN KEY(muni_UsuCreacion) 				REFERENCES acce.tbUsuarios(usua_Id),
 	CONSTRAINT FK_gral_tbMunicipios_acce_tbUsuarios_muni_UsuModificacion_usua_Id  	FOREIGN KEY(muni_UsuModificacion) 			REFERENCES acce.tbUsuarios(usua_Id)
 );
+GO
 
 CREATE TABLE opti.tbCategorias
 (
@@ -187,6 +183,7 @@ CREATE TABLE opti.tbCategorias
 	CONSTRAINT FK_opti_tbCategorias_acce_tbUsuarios_cate_UsuModificacion_usua_Id  		FOREIGN KEY(cate_UsuModificacion) 		REFERENCES acce.tbUsuarios(usua_Id),
 	CONSTRAINT UQ_opti_tbCategorias_cate_Nombre UNIQUE(cate_Nombre)
 );
+GO
 
 CREATE TABLE opti.tbMetodosPago
 (
@@ -202,6 +199,7 @@ CREATE TABLE opti.tbMetodosPago
 	CONSTRAINT FK_opti_tbMetodosPago_acce_tbUsuarios_meto_UsuCreacion_usua_Id  				FOREIGN KEY(meto_UsuCreacion) 			REFERENCES acce.tbUsuarios(usua_Id),
 	CONSTRAINT FK_opti_tbMetodosPago_acce_tbUsuarios_meto_UsuModificacion_usua_Id  			FOREIGN KEY(meto_UsuModificacion) 		REFERENCES acce.tbUsuarios(usua_Id)
 );
+GO
 
 CREATE TABLE opti.tbCargos
 (
@@ -216,6 +214,7 @@ CREATE TABLE opti.tbCargos
 	CONSTRAINT FK_opti_tbMetodosPago_acce_tbUsuarios_carg_UsuCreacion_usua_Id  				FOREIGN KEY(carg_UsuCreacion) 			REFERENCES acce.tbUsuarios(usua_Id),
 	CONSTRAINT FK_opti_tbMetodosPago_acce_tbUsuarios_carg_UsuModificacion_usua_Id  			FOREIGN KEY(carg_UsuModificacion) 		REFERENCES acce.tbUsuarios(usua_Id)
 );
+GO
 
 CREATE TABLE gral.tbEstadosCiviles
 (
@@ -231,6 +230,7 @@ CREATE TABLE gral.tbEstadosCiviles
    CONSTRAINT FK_gral_tbEstadosCiviles_acce_tbUsuarios_estacivi_UsuCreacion_usua_Id  	FOREIGN KEY(estacivi_UsuCreacion) 		REFERENCES acce.tbUsuarios(usua_Id),
    CONSTRAINT FK_gral_tbEstadosCiviles_acce_tbUsuarios_estacivi_UsuModificacion_usua_Id  FOREIGN KEY(estacivi_UsuModificacion) 	REFERENCES acce.tbUsuarios(usua_Id)
 );
+GO
 
 CREATE TABLE opti.tbProveedores
 (
@@ -249,9 +249,67 @@ CREATE TABLE opti.tbProveedores
 	CONSTRAINT FK_opti_tbProveedores_acce_tbUsuarios_prov_UsuCreacion_usua_Id  			FOREIGN KEY(prov_UsuCreacion) 		REFERENCES acce.tbUsuarios(usua_Id),
 	CONSTRAINT  FK_opti_tbProveedores_acce_tbUsuarios_prov_UsuModificacion_usua_Id 		FOREIGN KEY(prov_UsuModificacion) 	REFERENCES acce.tbUsuarios(usua_Id)
 );
+GO
+
+--TABLA 'tbComprasAros'
+CREATE TABLE  opti.tbComprasAros(
+   comp_Id					INT IDENTITY(1,1),
+   prov_Id					INT NOT NULL,
+   comp_Fecha               DATE DEFAULT GETDATE(),
+   comp_Descuento			DECIMAL(18,2) NOT NULL,
+   comp_MontoFinal          DECIMAL (18,2) NOT NULL,
+   sucu_Id					INT NOT NULL,
+
+   comp_Estado              BIT DEFAULT 1,
+   usua_IdCreacion			INT NOT NULL,
+   comp_FechaCreacion       DATETIME DEFAULT GETDATE(),
+   usua_IdModificacion		INT DEFAULT NULL,
+   comp_FechaModificacion   DATETIME DEFAULT NULL
+   CONSTRAINT PK_opti_tbCompras_comp_Id PRIMARY KEY (comp_Id),
+   CONSTRAINT FK_opti_tbCompras_prov_Id_tbProveedores_prov_Id FOREIGN KEY (prov_Id) REFERENCES opti.tbProveedores(prov_Id),
+   CONSTRAINT FK_opti_tbComprasAros_sucu_Id_tbSucursales_sucu_Id FOREIGN KEY (sucu_Id) REFERENCES gral.tbSucursales (sucu_Id) 
+);
+GO
+
+ALTER TABLE opti.tbComprasAros 
+ADD CONSTRAINT FK_opti_tbComprasAros_usua_IdCreacion_acce_tbUsuarios_usua_Id FOREIGN KEY (usua_IdCreacion) REFERENCES acce.tbUsuarios (usua_Id)
+GO
+
+ALTER TABLE opti.tbComprasAros 
+ADD CONSTRAINT FK_opti_tbComprasAros_usua_IdModificacion_acce_tbUsuarios_usua_Id FOREIGN KEY (usua_IdModificacion) REFERENCES acce.tbUsuarios (usua_Id)
+GO
+
+
+--TABLA 'tbDetallesComprasAros'
+CREATE TABLE opti.tbDetallesComprasAros(
+	deco_Id					INT IDENTITY(1,1),
+	comp_Id					INT NOT NULL,
+	aros_Id					INT NOT NULL,
+	deco_Cantidad			INT NOT NULL,
+	deco_PrecioCompra		DECIMAL(18,2) NOT NULL,
+	deco_MontoTotal			DECIMAL(18,2) NOT NULL,
+
+	deco_Estado				BIT DEFAULT 1,
+	usua_IdCreacion			INT NOT NULL,
+	deco_FechaCreacion      DATETIME DEFAULT GETDATE(),
+	usua_IdModificacion		INT DEFAULT NULL,
+	deco_FechaModificacion  DATETIME DEFAULT NULL
+	CONSTRAINT PK_opti_tbDetallesCompras_deco_Id PRIMARY KEY (deco_Id),
+	CONSTRAINT FK_opti_tbDetallesCompras_comp_Id_opti_tbCompras_comp_Id FOREIGN KEY (comp_Id) REFERENCES opti.tbComprasAros (comp_Id),
+	CONSTRAINT FK_opti_tbDetallesCompras_aros_Id_opti_Id_tbAros_aros_Id FOREIGN KEY (aros_Id) REFERENCES opti.tbAros (aros_Id)
+);
+GO
+
+ALTER TABLE opti.tbDetallesComprasAros 
+ADD CONSTRAINT FK_opti_tbDetallesComprasAros_usua_IdCreacion_acce_tbUsuarios_usua_Id FOREIGN KEY (usua_IdCreacion) REFERENCES acce.tbUsuarios (usua_Id)
+GO
+
+ALTER TABLE opti.tbDetallesComprasAros 
+ADD CONSTRAINT FK_opti_tbDetallesComprasAros_usua_IdModificacion_acce_tbUsuarios_usua_Id FOREIGN KEY (usua_IdModificacion) REFERENCES acce.tbUsuarios (usua_Id)
+GO
+
 
 --***************TABLA SucursalES*************************--
-GO
 CREATE TABLE opti.tbSucursales(
     sucu_Id                             INT IDENTITY(1,1), 
     sucu_Descripcion                    NVARCHAR(200) NOT NULL,
@@ -264,11 +322,13 @@ CREATE TABLE opti.tbSucursales(
     sucu_Estado                         BIT NOT NULL CONSTRAINT DF_sucu_Estado DEFAULT(1),
     CONSTRAINT PK_opti_tbSucursales_sucu_Id PRIMARY KEY(sucu_Id),
     CONSTRAINT FK_opti_gral_tbSucursales_muni_Id FOREIGN KEY (muni_Id) REFERENCES gral.tbMunicipios (muni_Id),
-    CONSTRAINT FK_opti_acce_tbSucursales_usua_Id FOREIGN KEY (sucu_UsuCreacion) REFERENCES acce.tbUsuarios (usua_Id)
+    CONSTRAINT FK_opti_acce_tbSucursales_sucu_UsuCreacion FOREIGN KEY (sucu_UsuCreacion) REFERENCES acce.tbUsuarios (usua_Id),
+	CONSTRAINT FK_opti_acce_tbSucursales_sucu_UsuModificacion FOREIGN KEY (sucu_UsuModificacion) REFERENCES acce.tbUsuarios (usua_Id)
 );
+GO
 
 --********TABLA EMPLEADOS****************---
-GO
+
 CREATE TABLE opti.tbEmpleados(
     empe_Id                     INT IDENTITY(1,1),
     empe_Nombres                NVARCHAR(100)  NOT NULL,
@@ -295,9 +355,8 @@ CREATE TABLE opti.tbEmpleados(
     CONSTRAINT FK_maqu_tbEmpleados_maqu_tbSucursales_sucu_Id                     FOREIGN KEY(sucu_Id)                     REFERENCES opti.tbSucursales(sucu_Id), 
     CONSTRAINT FK_maqu_tbEmpleados_maqu_tbCargos_carg_Id						 FOREIGN KEY(carg_Id)                     REFERENCES opti.tbCargos(carg_Id)      
 );
-
-
 GO
+
 ALTER TABLE acce.tbUsuarios 
 ADD CONSTRAINT FK_acce_tbUsuarios_opti_tbEmpleados_empe_Id FOREIGN KEY([empe_Id]) REFERENCES [opti].[tbEmpleados]([empe_Id]) 
 GO
@@ -314,6 +373,7 @@ CREATE TABLE opti.tbClientes
 	estacivi_Id					INT	NOT NULL,
 	clie_Telefono				NVARCHAR(15) NOT NULL,
 	clie_CorreoElectronico		NVARCHAR(150) NOT NULL,
+
     clie_UsuCreacion			INT				NOT NULL,
 	clie_FechaCreacion			DATETIME		NOT NULL CONSTRAINT DF_clie_FechaCreacion DEFAULT(GETDATE()),
 	clie_UsuModificacion		INT,
@@ -326,6 +386,7 @@ CREATE TABLE opti.tbClientes
 	CONSTRAINT FK_opti_tbClientes_acce_tbUsuarios_clie_UsuCreacion_usua_Id  	FOREIGN KEY(clie_UsuCreacion) 		REFERENCES acce.tbUsuarios(usua_Id),
 	CONSTRAINT FK_opti_tbClientes_acce_tbUsuarios_clie_UsuModificacion_usua_Id  FOREIGN KEY(clie_UsuModificacion) 	REFERENCES acce.tbUsuarios(usua_Id)		
 );
+GO
 
 --******************************************************TABLE Marcas******************************************************--
 
@@ -341,6 +402,7 @@ CREATE TABLE opti.tbMarcas
 	marc_FechaModificacion  DATETIME DEFAULT NULL,
 	CONSTRAINT PK_opti_tbMarcas_marc_Id	PRIMARY KEY (marc_Id)
 );
+GO
 
 ALTER TABLE opti.tbMarcas 
 ADD CONSTRAINT FK_opti_tbMarcas_usua_IdCreacion_acce_tbUsuarios_usua_Id FOREIGN KEY (usua_IdCreacion) REFERENCES acce.tbUsuarios(usua_Id)
@@ -349,6 +411,7 @@ GO
 ALTER TABLE opti.tbMarcas 
 ADD CONSTRAINT FK_opti_tbMarcas_usua_IdModificacion_acce_tbUsuarios_usua_Id FOREIGN KEY (usua_IdModificacion) REFERENCES acce.tbUsuarios (usua_Id)
 GO
+
 --*****************************************************/TABLE Marcas******************************************************--
 
 --********TABLA Aros****************---
@@ -662,7 +725,8 @@ CREATE TABLE opti.tbFacturas
 	CONSTRAINT FK_opti_tbFacturas_opti_tbEmpleados_empe_Id							FOREIGN KEY(empe_Id)				REFERENCES opti.tbEmpleados(empe_Id),
 	CONSTRAINT FK_opti_tbFacturas_acce_tbUsuarios_fact_UsuCreacion_usua_Id  		FOREIGN KEY(fact_UsuCreacion) 		REFERENCES acce.tbUsuarios(usua_Id),
 	CONSTRAINT FK_opti_tbFacturas_acce_tbUsuarios_fact_UsuModificacion_usua_Id  	FOREIGN KEY(fact_UsuModificacion) 	REFERENCES acce.tbUsuarios(usua_Id)
-)
+);
+GO
 
 --********TABLA Factura Detalles****************---
 CREATE TABLE opti.tbFacturasDetalles
@@ -689,6 +753,7 @@ CREATE TABLE opti.tbFacturasDetalles
 	CONSTRAINT FK_opti_tbFacturasDetalles_acce_tbUsuarios_factdeta_UsuCreacion_usua_Id  		FOREIGN KEY(factdeta_UsuCreacion) 		REFERENCES acce.tbUsuarios(usua_Id),
 	CONSTRAINT FK_opti_tbFacturasDetalles_acce_tbUsuarios_factdeta_UsuModificacion_usua_Id  	FOREIGN KEY(factdeta_UsuModificacion) 	REFERENCES acce.tbUsuarios(usua_Id)
 );
+GO
 
 --******************************************************/TABLE Envios******************************************************--
 
@@ -724,8 +789,8 @@ GO
 
 --*****PROCEDIMIENTOS ALMACENADOS*****--
 
----------- USUARIOS -----------
 
+---------- USUARIOS -----------
 --Iniciar sesion
 GO
 CREATE OR ALTER PROCEDURE acce.UDP_Login 
@@ -742,18 +807,20 @@ BEGIN
 	AND [usua_NombreUsuario] = @usua_Nombre
 	AND [usua_Estado] = 1
 END
+GO
+
 
 /*UDP para vista de usuarios*/
-GO
 CREATE OR ALTER PROCEDURE acce.UDP_VW_tbUsuarios
 	@usua_Id INT
 AS
 BEGIN
 	SELECT * FROM acce.VW_tbUsuarios WHERE usua_Id = @usua_Id
 END
+GO
+
 
 /*Vista usuarios*/
-GO
 CREATE OR ALTER VIEW acce.VW_tbUsuarios
 AS
 	SELECT t1.usua_Id, 
@@ -780,9 +847,10 @@ AS
 		   ON t1.usua_UsuCreacion = T4.usua_Id
 		   LEFT JOIN acce.tbUsuarios t5
 		   ON t1.usua_UsuModificacion = t5.usua_Id
+GO
+
 
 /*Insertar Usuarios*/
-GO
 CREATE OR ALTER PROCEDURE acce.UDP_acce_tbUsuarios_Insert
 	@usua_NombreUsuario NVARCHAR(150),
 	@usua_Contrasena NVARCHAR(MAX),
@@ -827,17 +895,19 @@ BEGIN
 		SELECT 'Ha ocurrido un error'
 	END CATCH 
 END
+GO
+
 
 /*Listar Usuarios*/
-GO
 CREATE OR ALTER PROCEDURE acce.UDP_acce_tbUsuarios_List
 AS
 BEGIN
 	SELECT * FROM acce.VW_tbUsuarios
 END
+GO
+
 
 /*Editar usuarios*/
-GO
 CREATE OR ALTER PROCEDURE acce.UDP_acce_tbUsuarios_UPDATE
 	@usua_Id					INT,
 	@usua_EsAdmin				BIT,
@@ -861,9 +931,10 @@ BEGIN
 		SELECT 'Ha ocurrido un error'
 	END CATCH
 END
+GO
+
 
 /*Eliminar usuarios*/
-GO
 CREATE OR ALTER PROCEDURE acce.UDP_acce_tbUsuarios_DELETE
 	@usua_Id	INT
 AS
@@ -879,21 +950,21 @@ BEGIN
 		SELECT 'Ha ocurrido un error'
 	END CATCH
 END
+GO
 
 
 ---------- CARGOS -----------
-
 /*UDP para vista de cargos*/
-GO
 CREATE OR ALTER PROCEDURE opti.UDP_opti_VW_tbCargos 
 	@carg_Id INT
 AS
 BEGIN
 	SELECT * FROM opti.VW_tbCargos WHERE carg_Id = @carg_Id
 END
+GO
+
 
 /*Vista cargos*/
-GO
 CREATE OR ALTER VIEW opti.VW_tbCargos
 AS
 	SELECT t1.carg_Id, 
@@ -910,9 +981,10 @@ AS
 		   LEFT JOIN acce.tbUsuarios t3
 		   ON t1.carg_UsuModificacion = t3.usua_Id
 		   WHERE carg_Estado = 1
+GO
+
 
 /*Insertar Cargos*/
-GO
 CREATE OR ALTER PROCEDURE opti.UDP_opti_tbCargos_Insert
 	@carg_Nombre		NVARCHAR(150),
 	@carg_UsuCreacion   INT
@@ -944,18 +1016,20 @@ BEGIN
 		SELECT 'Ha ocurrido un error'
 	END CATCH
 END
+GO
+
 
 /*Listar cargos*/
-GO
 CREATE OR ALTER PROCEDURE opti.UDP_opti_tbCargos_List
 AS
 BEGIN
 	SELECT carg_Id, carg_Nombre 
 	FROM opti.VW_tbCargos
 END
+GO
+
 
 /*Editar cargos*/
-GO
 CREATE OR ALTER PROCEDURE opti.UDP_opti_tbCargos_Update
 	@carg_Id					INT,
 	@carg_Nombre				NVARCHAR(150),
@@ -993,9 +1067,10 @@ BEGIN
 		SELECT 'Ha ocurrido un error'
 	END CATCH
 END
+GO
+
 
 /*Eliminar cargos*/
-GO
 CREATE OR ALTER PROCEDURE opti.UDP_opti_tbCargos_Delete
 	@carg_Id	INT
 AS
@@ -1011,9 +1086,10 @@ BEGIN
 		SELECT 'Ha ocurrido un error'
 	END CATCH
 END
+GO
+
 
 ---------- CATEGORÍAS -----------
-GO
 CREATE OR ALTER VIEW opti.VW_tbCategorias
 AS
 	SELECT cate_Id, 
@@ -1029,26 +1105,29 @@ FROM opti.tbCategorias cate INNER JOIN acce.tbUsuarios [usua1]
 ON cate.cate_UsuCreacion = [usua1].usua_Id LEFT JOIN acce.tbUsuarios [usua2]
 ON cate.cate_UsuModificacion = [usua2].usua_Id
 WHERE cate.cate_Estado = 1
+GO
+
 
 /*Vista Categorias UDP*/
-GO
 CREATE OR ALTER PROCEDURE opti.UDP_opti_VW_tbCategorias
 AS
 BEGIN
 	SELECT * FROM opti.VW_tbCategorias
 END
+GO
+
 
 /*Listado de categorias*/
-GO
 CREATE OR ALTER PROCEDURE opti.UDP_opti_tbCategorias_List
 AS
 BEGIN
 	SELECT [cate_Id], [cate_Nombre] 
 	FROM opti.VW_tbCategorias
 END
+GO
+
 
 /*Insertar categoria*/
-GO
 CREATE OR ALTER PROCEDURE opti.UDP_opti_tbCategorias_Insert
 	@cate_Nombre 			NVARCHAR(100),
 	@cate_UsuCreacion 		INT
@@ -1084,7 +1163,6 @@ GO
 
 
 /*Editar categoria*/
-GO
 CREATE OR ALTER PROCEDURE opti.UDP_opti_tbCategorias_Update
 	@cate_Id					INT,
 	@cate_Nombre 				NVARCHAR(100),
@@ -1119,9 +1197,10 @@ BEGIN
 		SELECT 'Ha ocurrido un error'
 	END CATCH
 END
+GO
+
 
 /*Eliminar categoria*/
-GO
 CREATE OR ALTER PROCEDURE opti.UDP_opti_tbCategorias_Delete 
 	@cate_Id	INT
 AS
@@ -1142,11 +1221,11 @@ BEGIN
 		SELECT 'Ha ocurrido un error'
 	END CATCH
 END
+GO
+
 
 ---------- CLIENTES -----------
-
 /*Vista clientes*/
-GO
 CREATE OR ALTER VIEW opti.VW_tbClientes
 AS
 	SELECT [clie_Id], 
@@ -1173,19 +1252,19 @@ AS
 	ON T1.clie_UsuCreacion = T2.usua_Id LEFT JOIN acce.tbUsuarios T3 
 	ON T1.clie_UsuModificacion = T3.usua_Id INNER JOIN gral.tbEstadosCiviles T4
 	ON T1.estacivi_Id = T4.estacivi_Id
+GO
 
-	
 
 /*List vista clientes*/
-GO
 CREATE OR ALTER PROCEDURE opti.UDP_opti_tbClientes_List
 AS
 BEGIN
 	SELECT * FROM opti.VW_tbClientes
 END
+GO
+
 
 /*Insertar clientes*/
-GO
 CREATE OR ALTER PROCEDURE opti.UDP_opti_tbClientes_Insert
 	@clie_Nombres				NVARCHAR(300), 
 	@clie_Apellidos				NVARCHAR(300), 
@@ -1244,9 +1323,10 @@ BEGIN
 		SELECT 'Ha ocurrido un error'
 	END CATCH
 END
+GO
+
 
 /*Editar Cliente*/
-GO
 CREATE OR ALTER PROCEDURE opti.UDP_opti_tbClientes_Update
 	@clie_Id					INT,
 	@clie_Nombres				NVARCHAR(300), 
@@ -1307,9 +1387,10 @@ BEGIN
 		SELECT 'Ha ocurrido un error'
 	END CATCH
 END
+GO
+
 
 /*Eliminar Cliente*/
-GO
 CREATE OR ALTER PROCEDURE opti.UDP_opti_tbClientes_Delete
 	@clie_Id INT
 AS
@@ -1331,11 +1412,10 @@ BEGIN
 		SELECT 'Ha ocurrido un error'
 	END CATCH
 END
+GO
 
 ---------- Empleados -----------
-
 /*Vista Empleadaos*/
-GO
 CREATE OR ALTER VIEW opti.VW_tbEmpleados
 AS
 	SELECT T1.empe_Id, 
@@ -1365,17 +1445,19 @@ AS
 	ON T1.empe_UsuModificacion = T3.usua_Id INNER JOIN gral.tbEstadosCiviles T4
 	ON T1.estacivi_Id = T4.estacivi_Id INNER JOIN opti.tbSucursales T5
 	ON T1.sucu_Id = T5.sucu_Id
+GO
+
 
 /*List vista Empleados*/
-GO
 CREATE OR ALTER PROCEDURE opti.UDP_opti_tbEmpleados_List
 AS
 BEGIN
 	SELECT * FROM opti.VW_tbEmpleados
 END	
+GO
+
 
 /*Insertar Empleados*/
-GO
 CREATE OR ALTER PROCEDURE opti.UDP_opti_tbEmpleados_Insert 
 	 @empe_Nombres                 NVARCHAR(100), 
 	 @empe_Apellidos               NVARCHAR(100), 
@@ -1438,9 +1520,10 @@ BEGIN
 		SELECT 'Ha ocurrido un error'
 	END CATCH
 END
+GO
+
 
 /*Editar Empleados*/
-GO
 CREATE OR ALTER PROCEDURE opti.UDP_opti_tbEmpleados_Update 
 	 @empe_Id				       INT,
 	 @empe_Nombres                 NVARCHAR(100), 
@@ -1502,9 +1585,10 @@ BEGIN
 		SELECT 'Ha ocurrido un error'
 	END CATCH
 END
+GO
+
 
 /*Eliminar Empleados*/
-GO
 CREATE OR ALTER PROCEDURE opti.UDP_opti_tbEmpleados_Delete 
 	@empe_Id INT
 AS
@@ -1524,11 +1608,11 @@ BEGIN
 		SELECT 'Ha ocurrido un error'
 	END CATCH
 END
+GO
+
 
 ---------- PROVEEDORES -----------
-
 /*Vista Proveedores*/
-GO
 CREATE OR ALTER VIEW opti.VW_tbProveedores
 AS
 	SELECT prov_Id, 
@@ -1546,19 +1630,19 @@ AS
 	FROM opti.tbProveedores T1 INNER JOIN acce.tbUsuarios T2
 	ON T1.prov_UsuCreacion = T2.usua_Id LEFT JOIN acce.tbUsuarios T3 
 	ON T1.prov_UsuModificacion = T3.usua_Id
-
 GO
+
 
 /*List vista Proveedores*/
-GO
 CREATE OR ALTER PROCEDURE opti.UDP_opti_tbProveedore_List
 AS
 BEGIN
 	SELECT * FROM opti.VW_tbProveedores
 END	
+GO
+
 
 /*Insertar Proveedor*/
-GO
 CREATE OR ALTER PROCEDURE opti.UDP_opti_tbProveedor_Insert
 	@prov_Nombre                NVARCHAR(100),
     @prov_Direccion             NVARCHAR(500),
@@ -1593,9 +1677,10 @@ BEGIN
 		SELECT 'Ha ocurrido un error'
 	END CATCH
 END
+GO
+
 
 /*Editar Proveedor*/
-GO
 CREATE OR ALTER PROCEDURE opti.UDP_opti_tbProveedor_Update
 	@prov_Id					INT,
     @prov_Nombre                NVARCHAR(200),
@@ -1636,9 +1721,10 @@ BEGIN
 		SELECT 'Ha ocurrido un error'
 	END CATCH
 END
+GO
+
 
 /*Eliminar Proveedor*/
-GO
 CREATE OR ALTER PROCEDURE opti.UDP_opti_tbProveedor_Delete 
 	@prov_Id	INT
 AS
@@ -1659,12 +1745,11 @@ BEGIN
 		SELECT 'Ha ocurrido un error'
 	END CATCH
 END
+GO
 
 
 ---------- AROS -----------
-
 /*Vista Aros*/
-GO
 CREATE OR ALTER VIEW opti.VW_tbAros
 AS
 	SELECT aros_Id, 
@@ -1690,19 +1775,19 @@ AS
 	ON T1.cate_Id = T4.cate_Id INNER JOIN opti.tbProveedores T5 
 	ON T1.prov_Id = T5.prov_Id INNER JOIN opti.tbMarcas T6
 	ON T1.marc_Id = T6.marc_Id
-
 GO
+
 
 /*List vista Aros*/
-GO
 CREATE OR ALTER PROCEDURE opti.UDP_opti_tbAros_List
 AS
 BEGIN
 	SELECT * FROM opti.VW_tbAros
 END	
+GO
+
 
 /*Insertar Proveedor*/
-GO
 CREATE OR ALTER PROCEDURE opti.UDP_opti_tbAros_Insert
 	@aros_Descripcion              NVARCHAR(300),
     @aros_CostoUni                 DECIMAL(18,2),
@@ -1739,9 +1824,10 @@ BEGIN
 		SELECT 'Ha ocurrido un error'
 	END CATCH
 END
+GO
+
 
 /*Editar Aro*/
-GO
 CREATE OR ALTER PROCEDURE opti.UDP_opti_tbAros_Update
 	@aros_Id                 INT,
     @aros_Descripcion        NVARCHAR(300), 
@@ -1787,9 +1873,10 @@ BEGIN
 		SELECT 'Ha ocurrido un error'
 	END CATCH
 END
+GO
+
 
 /*Eliminar Aros*/
-GO
 CREATE OR ALTER PROCEDURE opti.UDP_opti_tbAros_Delete 
 	@aros_Id	INT
 AS
@@ -1809,11 +1896,11 @@ BEGIN
 		SELECT 'Ha ocurrido un error'
 	END CATCH
 END
+GO
+
 
 ---------- DIRECCIONES -----------
-
 /*Vista Direcciones*/
-GO
 CREATE OR ALTER VIEW opti.VW_tbDirecciones
 AS
 	SELECT dire_Id,
@@ -1832,10 +1919,10 @@ AS
 		   LEFT JOIN acce.tbUsuarios T3
 		   ON T1.usua_IdModificacion = T3.usua_Id INNER JOIN gral.tbMunicipios T4
 		   ON T1.muni_Id = T4.muni_Nombre
-		   
+GO
+
 
 /*Insertar Direcciones*/
-GO
 CREATE OR ALTER PROCEDURE opti.UDP_opti_tbDirecciones_Insert
 	@muni_Id                INT, 
 	@dire_DireccionExacta   NVARCHAR(300), 
@@ -1868,11 +1955,10 @@ BEGIN
 		SELECT 'Ha ocurrido un error'
 	END CATCH
 END
-
+GO
 
 
 /*Editar Direccion*/
-GO
 CREATE OR ALTER PROCEDURE opti.UDP_opti_tbDirecciones_Update
     @dire_Id                INT,
 	@muni_Id                INT, 
@@ -1912,9 +1998,10 @@ BEGIN
 		SELECT 'Ha ocurrido un error'
 	END CATCH
 END
+GO
+
 
 /*Eliminar Direccion*/
-GO
 CREATE OR ALTER PROCEDURE opti.UDP_opti_tbDireccion_Delete
 	@dire_Id	INT
 AS
@@ -1930,13 +2017,11 @@ BEGIN
 		SELECT 'Ha ocurrido un error'
 	END CATCH
 END
+GO
 
 
 ---------- Direcciones Por Clientes  -----------
-
-
 /*Vista direcciones por cliente*/
-GO
 CREATE OR ALTER VIEW opti.VW_tbDireccionesPorClientes
 AS
 	SELECT dicl_Id,
@@ -1958,9 +2043,10 @@ AS
 		   ON T1.clie_Id = T4.clie_Id INNER JOIN opti.tbDirecciones t5
 		   ON T1.dire_Id = T5.dire_Id
 		   WHERE T1.dicl_Estado = 1
+GO
+
 
 /*Insertar Direcciones por Cliente*/
-GO
 CREATE OR ALTER PROCEDURE opti.UDP_opti_tbDireccionesPorClientes_Insert
     @clie_Id           INT, 
 	@dire_Id           INT, 
@@ -1994,18 +2080,20 @@ BEGIN
 		SELECT 'Ha ocurrido un error'
 	END CATCH
 END
+GO
+
 
 /*Listar cargos*/
-GO
 CREATE OR ALTER PROCEDURE opti.UDP_opti_tbDireccionPorCliente_List
 AS
 BEGIN
 	SELECT * 
 	From opti.VW_tbDireccionesPorClientes
 END
+GO
+
 
 /*Editar cargos*/
-GO
 CREATE OR ALTER PROCEDURE opti.UDP_opti_tbDireccionPorCliente_Update
 	@dicl_Id              INT, 
 	@clie_Id              INT, 
@@ -2046,9 +2134,10 @@ BEGIN
 		SELECT 'Ha ocurrido un error'
 	END CATCH
 END
+GO
+
 
 /*Eliminar cargos*/
-GO
 CREATE OR ALTER PROCEDURE opti.UDP_opti_tbDireccionesPorCliente_Delete
 	@dicl_Id   INT
 AS
@@ -2064,9 +2153,10 @@ BEGIN
 		SELECT 'Ha ocurrido un error'
 	END CATCH
 END
+GO
+
 
 ---------- Marcas -----------
-GO
 CREATE OR ALTER VIEW opti.VW_tbMarcas
 AS
 	SELECT marc_Id,
@@ -2082,19 +2172,20 @@ FROM opti.tbMarcas T1 INNER JOIN acce.tbUsuarios T2
 ON T1.usua_IdCreacion = T2.usua_Id LEFT JOIN acce.tbUsuarios T3
 ON T1.usua_IdModificacion = T3.usua_Id
 WHERE t1.marc_Estado = 1
+GO
 
 
 /*Listado de Marca*/
-GO
 CREATE OR ALTER PROCEDURE opti.UDP_opti_tbMarca_List
 AS
 BEGIN
 	SELECT *
 	FROM opti.VW_tbMarcas
 END
+GO
+
 
 /*Insertar categoria*/
-GO
 CREATE OR ALTER PROCEDURE opti.UDP_opti_tbMarcas_Insert
     @marc_Nombre       NVARCHAR(150),
     @usua_IdCreacion   INT
@@ -2130,7 +2221,6 @@ GO
 
 
 /*Editar Marca*/
-GO
 CREATE OR ALTER PROCEDURE opti.UDP_opti_tbMarcas_Update
 	@marc_Id              INT,
     @marc_Nombre          NVARCHAR(150), 
@@ -2165,9 +2255,10 @@ BEGIN
 		SELECT 'Ha ocurrido un error'
 	END CATCH
 END
+GO
+
 
 /*Eliminar Marcas*/
-GO
 CREATE OR ALTER PROCEDURE opti.UDP_opti_tbMarcas_Delete 
 	@marc_Id	INT
 AS
@@ -2188,9 +2279,10 @@ BEGIN
 		SELECT 'Ha ocurrido un error'
 	END CATCH
 END
+GO
+
 
 ---------- METODO DE PAGO -----------
-GO
 CREATE OR ALTER VIEW opti.VW_tbMetodosPagos
 AS
 	SELECT meto_Id, 
@@ -2206,19 +2298,20 @@ FROM opti.tbMetodosPago t1 INNER JOIN acce.tbUsuarios T2
 ON T1.meto_UsuCreacion = T2.usua_Id LEFT JOIN acce.tbUsuarios T3
 ON T1.meto_UsuModificacion = T3.usua_Id
 WHERE T1.meto_Estado = 1
+GO
 
 
 /*Listado de metodos de pago*/
-GO
 CREATE OR ALTER PROCEDURE opti.UDP_opti_tbMetodosPagos_List
 AS
 BEGIN
 	SELECT * 
 	FROM opti.VW_tbMetodosPagos
 END
+GO
+
 
 /*Insertar Metodos de pagos*/
-GO
 CREATE OR ALTER PROCEDURE opti.UDP_opti_tbMetodosPagos_Insert
 	@meto_Nombre       NVARCHAR(100),
 	@meto_UsuCreacion  INT
@@ -2254,7 +2347,6 @@ GO
 
 
 /*Editar Metodo de pago*/
-GO
 CREATE OR ALTER PROCEDURE opti.UDP_opti_tbMetodosPagos_Update
 	@meto_Id               INT,
 	@meto_Nombre           NVARCHAR(100),
@@ -2289,9 +2381,10 @@ BEGIN
 		SELECT 'Ha ocurrido un error'
 	END CATCH
 END
+GO
+
 
 /*Eliminar metodo de pago*/
-GO
 CREATE OR ALTER PROCEDURE opti.UDP_opti_tbMetodosPagos_Delete 
 	@meto_Id	INT
 AS
@@ -2312,10 +2405,10 @@ BEGIN
 		SELECT 'Ha ocurrido un error'
 	END CATCH
 END
+GO
 
 
 ---------- Pantallas -----------
-GO
 CREATE OR ALTER VIEW acce.VW_tbPantallas
 AS
 	SELECT  pant_Id,
@@ -2333,21 +2426,21 @@ AS
 FROM [acce].[tbPantallas] t1 INNER JOIN acce.tbUsuarios T2
 ON T1.[pant_UsuCreacion] = T2.usua_Id LEFT JOIN acce.tbUsuarios T3
 ON T1.[pant_UsuModificacion] = T3.usua_Id 
-
 WHERE [pant_Estado] = 1
+GO
 
 
 /*Listado de Pantallas*/
-GO
 CREATE OR ALTER PROCEDURE acce.UDP_acce_tbPantallas_List
 AS
 BEGIN
 	SELECT * 
 	FROM acce.VW_tbPantallas
 END
+GO
+
 
 /*Insertar Pantallas*/
-GO
 CREATE OR ALTER PROCEDURE acce.UDP_acce_tbPantallas_Insert
 	@pant_Nombre          NVARCHAR(100), 
 	@pant_Url             NVARCHAR(300), 
@@ -2387,7 +2480,6 @@ GO
 
 
 /*Editar Pantallas*/
-GO
 CREATE OR ALTER PROCEDURE acce.UDP_acce_tbPantallas_Update
 	@pant_Id               INT,
 	@pant_Nombre           NVARCHAR(100), 
@@ -2432,9 +2524,10 @@ BEGIN
 		SELECT 'Ha ocurrido un error'
 	END CATCH
 END
+GO
+
 
 /*Eliminar pantalla*/
-GO
 CREATE OR ALTER PROCEDURE acce.UDP_acce_tbPantallas_Delete 
 	@pant_Id     INT
 AS
@@ -2455,9 +2548,10 @@ BEGIN
 		SELECT 'Ha ocurrido un error'
 	END CATCH
 END
+GO
+
 
 ---------- SUCURSALES -----------
-GO
 CREATE OR ALTER VIEW opti.VW_tbSucursales
 AS
 	SELECT  sucu_Id, 
@@ -2476,21 +2570,21 @@ FROM [opti].[tbSucursales] t1 INNER JOIN acce.tbUsuarios T2
 ON T1.sucu_UsuCreacion = T2.usua_Id LEFT JOIN acce.tbUsuarios T3
 ON T1.sucu_UsuModificacion = T3.usua_Id INNER JOIN gral.tbMunicipios T4
 ON T1.muni_Id = T4.muni_Id
-
 WHERE T1.sucu_Estado = 1
+GO
 
 
 /*Listado de Sucursales*/
-GO
 CREATE OR ALTER PROCEDURE opti.UDP_opti_tbSucursales_List
 AS
 BEGIN
 	SELECT * 
 	FROM opti.VW_tbSucursales
 END
+GO
+
 
 /*Insertar Sucursales*/
-GO
 CREATE OR ALTER PROCEDURE opti.UDP_opti_tbSucursales_Insert
 	@sucu_Descripcion     NVARCHAR(200),
 	@muni_Id              INT,
@@ -2528,7 +2622,6 @@ GO
 
 
 /*Editar Sucursal*/
-GO
 CREATE OR ALTER PROCEDURE opti.UDP_opti_tbSucursal_Update
 	@sucu_Id                 INT,
     @sucu_Descripcion        NVARCHAR(200), 
@@ -2567,10 +2660,10 @@ BEGIN
 		SELECT 'Ha ocurrido un error'
 	END CATCH
 END
+GO
 
 
 /*Eliminar Sucursal*/
-GO
 CREATE OR ALTER PROCEDURE opti.UDP_opti_tbSucursales_Delete 
 	@sucu_Id	INT
 AS
@@ -2591,11 +2684,10 @@ BEGIN
 		SELECT 'Ha ocurrido un error'
 	END CATCH
 END
-
+GO
 
 
 ---------- Pantallas Por Roles -----------
-GO
 CREATE OR ALTER VIEW acce.VW_tbPantallasPorRoles
 AS
 	SELECT pantrole_Id,
@@ -2614,10 +2706,10 @@ ON T1.pantrole_UsuModificacion = t3.usua_Id INNER JOIN [acce].[tbRoles] T4
 ON T1.role_Id = T4.role_Id INNER JOIN [acce].[tbPantallas] T5
 ON T1.pant_Id = T5.pant_Id
 WHERE T1.pantrole_Estado = 1
+GO
 
 
 /*Listado de Pantallas por rol*/
-GO
 CREATE OR ALTER PROCEDURE acce.UDP_acce_tbPantallasPorRoles_List
 	@role_Id	INT
 AS
@@ -2626,9 +2718,10 @@ BEGIN
 	FROM acce.VW_tbPantallasPorRoles
 	WHERE role_Id = @role_Id
 END
+GO
+
 
 /*Insertar pantallas por roles*/
-GO
 CREATE OR ALTER PROCEDURE acce.UDP_acce_tbPantallasPorRoles_Insert
 	@role_Id               INT, 
 	@pant_Id               INT, 
@@ -2665,7 +2758,6 @@ GO
 
 
 /*Editar categoria*/
-GO
 CREATE OR ALTER PROCEDURE acce.UDP_acce_tbPantallasPorRoles_Update
 	@pantrole_Id                INT, 
 	@role_Id                    INT, 
@@ -2705,9 +2797,10 @@ BEGIN
 		SELECT 'Ha ocurrido un error'
 	END CATCH
 END
+GO
+
 
 /*Eliminar categoria*/
-GO
 CREATE OR ALTER PROCEDURE acce.UDP_acce_tbPantallaPorRoles_Delete 
 	@pantrole_Id	INT
 AS
@@ -2726,11 +2819,10 @@ BEGIN
 		SELECT 'Ha ocurrido un error'
 	END CATCH
 END
-
+GO
 
 
 ---------- Consultorios -----------
-GO
 CREATE OR ALTER VIEW opti.VW_tbConsultorios
 AS
 	SELECT  cons_Id, 
@@ -2748,12 +2840,10 @@ FROM opti.tbConsultorios t1  INNER JOIN acce.tbUsuarios t2
 ON t1.usua_IdCreacion = t2.usua_Id LEFT JOIN acce.tbUsuarios t3
 ON t1.usua_IdModificacion = t3.usua_Id INNER JOIN opti.tbEmpleados t4
 ON t1.empe_Id = t4.empe_Id 
-
-
+GO
 
 
 /*Listado de Consultorios*/
-GO
 CREATE OR ALTER PROCEDURE opti.UDP_opti_tbConsultorios_List
 AS
 BEGIN
@@ -2761,9 +2851,10 @@ BEGIN
 	FROM opti.VW_tbConsultorios
 	WHERE cons_Estado = 1
 END
+GO
+
 
 /*Insertar CONSULTORIOS*/
-GO
 CREATE OR ALTER PROCEDURE opti.UDP_opti_tbConsultorios_Insert
 	 @cons_Nombre        NVARCHAR(150), 
 	 @empe_Id            INT,
@@ -2800,7 +2891,6 @@ GO
 
 
 /*Editar Consultorios*/
-GO
 CREATE OR ALTER PROCEDURE opti.UDP_opti_tbConsultorios_Update
 	@cons_Id                 INT,
 	@cons_Nombre             NVARCHAR(150), 
@@ -2840,9 +2930,10 @@ BEGIN
 		SELECT 'Ha ocurrido un error'
 	END CATCH
 END
+GO
+
 
 /*Eliminar Consultorio*/
-GO
 CREATE OR ALTER PROCEDURE opti.UDP_opti_tbConsultorio_Delete 
 	@cons_Id	INT
 AS
@@ -2863,9 +2954,10 @@ BEGIN
 		SELECT 'Ha ocurrido un error'
 	END CATCH
 END
+GO
+
 
 ---------- ROLES -----------
-GO
 CREATE OR ALTER VIEW acce.VW_tbRoles
 AS
 	SELECT t1.role_Id,
@@ -2881,20 +2973,20 @@ FROM acce.tbRoles t1  INNER JOIN acce.tbUsuarios t2
 ON t1.role_UsuCreacion = t2.usua_Id LEFT JOIN acce.tbUsuarios t3
 ON t1.role_UsuModificacion = t3.usua_Id 
 WHERE t1.role_Estado = 1
-
+GO
 
 
 /*Listado de roles*/
-GO
 CREATE OR ALTER PROCEDURE acce.UDP_acce_tbRoles_List
 AS
 BEGIN
 	SELECT *
 	FROM acce.VW_tbRoles
 END
+GO
+
 
 /*Insertar roles*/
-GO
 CREATE OR ALTER PROCEDURE acce.UDP_acce_tbRoles_Insert
 	@role_Nombre         NVARCHAR(100),
 	@role_UsuCreacion    INT
@@ -2930,7 +3022,6 @@ GO
 
 
 /*Editar roles*/
-GO
 CREATE OR ALTER PROCEDURE acce.UDP_acce_tbRoles_Update
 	@role_Id                  INT,
 	@role_Nombre              NVARCHAR(100),  
@@ -2966,9 +3057,10 @@ BEGIN
 		SELECT 'Ha ocurrido un error'
 	END CATCH
 END
+GO
+
 
 /*Eliminar Rol*/
-GO
 CREATE OR ALTER PROCEDURE acce.UDP_acce_tbRoles_Delete 
 	@role_Id	INT
 AS
@@ -2989,10 +3081,10 @@ BEGIN
 		SELECT 'Ha ocurrido un error'
 	END CATCH
 END
+GO
 
 
 ---------- DETALLE CITAS -----------
-GO
 CREATE OR ALTER VIEW opti.VW_tbDetallesCitas
 AS
 	SELECT deci_Id,
@@ -3010,21 +3102,20 @@ AS
 FROM opti.tbDetallesCitas t1  INNER JOIN acce.tbUsuarios t2
 ON t1.usua_IdCreacion = t2.usua_Id LEFT JOIN acce.tbUsuarios t3
 ON t1.usua_IdModificacion = t3.usua_Id 
-
-
+GO
 
 
 /*Listado de detalles citas*/
-GO
 CREATE OR ALTER PROCEDURE opti.UDP_opti_tbDetallesCitas_List
 AS
 BEGIN
 	SELECT *
 	FROM opti.VW_tbDetallesCitas
 END
+GO
+
 
 /*Insertar roles*/
-GO
 CREATE OR ALTER PROCEDURE opti.UDP_opti_tbDetallesCitas_Insert
 	 @cita_Id            INT, 
 	 @deci_Costo         DECIMAL(18,2), 
@@ -3067,7 +3158,6 @@ GO
 
 
 /*Editar detalle cita*/
-GO
 CREATE OR ALTER PROCEDURE opti.UDP_opti_tbDetallesCitas_Update
 	@deci_Id               INT, 
 	@cita_Id               INT, 
@@ -3097,9 +3187,10 @@ BEGIN
 		SELECT 'Ha ocurrido un error'
 	END CATCH
 END
+GO
+
 
 /*Eliminar Detalle Cita*/
-GO
 CREATE OR ALTER PROCEDURE opti.UDP_opti_tbDetallesCitas_Delete 
 	@deci_Id	INT
 AS
@@ -3117,10 +3208,10 @@ BEGIN
 		SELECT 'Ha ocurrido un error'
 	END CATCH
 END
+GO
 
 
 ---------- Ordenes -----------
-GO
 CREATE OR ALTER VIEW opti.VW_tbOrdenes
 AS
 	SELECT  orde_Id,
@@ -3141,19 +3232,20 @@ ON t1.usua_IdCreacion = t2.usua_Id LEFT JOIN acce.tbUsuarios t3
 ON t1.usua_IdModificacion = t3.usua_Id INNER JOIN opti.tbClientes T4
 ON T1.clie_Id = T4.clie_Id INNER JOIN opti.tbSucursales T5
 ON T1.sucu_Id = T5.sucu_Id
-
-
-/*Listado de Ordenes*/
 GO
+
+
+/*Listado deOrdenes*/
 CREATE OR ALTER PROCEDURE opti.UDP_opti_tbOrdenes_List
 AS
 BEGIN
 	SELECT *
 	FROM opti.VW_tbOrdenes
 END
+GO
+
 
 /*Insertar Ordenes*/
-GO
 CREATE OR ALTER PROCEDURE opti.UDP_opti_tbOrdenes_Insert
 	 @clie_Id               INT, 
 	 @orde_Fecha            DATE, 
@@ -3181,7 +3273,6 @@ GO
 
 
 /*Editar Ordenes*/
-GO
 CREATE OR ALTER PROCEDURE opti.UDP_opti_tbOrdenes_Update
 	@orde_Id            INT, 
 	@clie_Id            INT, 
@@ -3210,9 +3301,10 @@ BEGIN
 		SELECT 'Ha ocurrido un error'
 	END CATCH
 END
+GO
+
 
 /*Eliminar Ordenes*/
-GO
 CREATE OR ALTER PROCEDURE opti.UDP_opti_tbOrdenes_Delete 
 	@orde_Id	INT
 AS
@@ -3233,9 +3325,10 @@ BEGIN
 		SELECT 'Ha ocurrido un error'
 	END CATCH
 END
+GO
+
 
 ---------- Envios -----------
-GO
 CREATE OR ALTER VIEW opti.VW_tbEnvio
 AS
 	SELECT  envi_Id, 
@@ -3258,18 +3351,20 @@ ON t1.usua_IdCreacion = t2.usua_Id LEFT JOIN acce.tbUsuarios t3
 ON t1.usua_IdModificacion = t3.usua_Id INNER JOIN opti.tbClientes T4
 ON T1.clie_Id = T4.clie_Id INNER JOIN opti.tbDirecciones t5
 ON T1.dire_Id = T5.dire_Id
+GO
+
 
 /*Listado de Envio*/
-GO
 CREATE OR ALTER PROCEDURE opti.UDP_opti_tbEnvio_List
 AS
 BEGIN
 	SELECT *
 	FROM opti.VW_tbEnvio
 END
+GO
+
 
 /*Insertar Envio*/
-GO
 CREATE OR ALTER PROCEDURE opti.UDP_opti_tbEnvios_Insert
 	 @clie_Id              INT, 
 	 @dire_Id              INT, 
@@ -3297,7 +3392,6 @@ GO
 
 
 /*Editar Envio*/
-GO
 CREATE OR ALTER PROCEDURE opti.UDP_opti_tbEnvios_Update
 	@envi_Id                 INT, 
 	@clie_Id                 INT, 
@@ -3326,9 +3420,10 @@ BEGIN
 		SELECT 'Ha ocurrido un error'
 	END CATCH
 END
+GO
+
 
 /*Eliminar Envio*/
-GO
 CREATE OR ALTER PROCEDURE opti.UDP_opti_tbEnvio_Delete 
 	@envi_Id	INT
 AS
@@ -3349,17 +3444,12 @@ BEGIN
 		SELECT 'Ha ocurrido un error'
 	END CATCH
 END
-
-
-
-
+GO
 
 
 /*
 INSERT DE LA BASE DE DATOS
 */
-
-GO
 INSERT gral.tbDepartamentos(depa_Id, depa_Nombre, depa_UsuCreacion)
 VALUES('01','Atlantida', 1),
       ('02','Colon', 1),
@@ -3379,8 +3469,8 @@ VALUES('01','Atlantida', 1),
 	  ('16','Santa Barbara', 1),
 	  ('17','Valle', 1),
 	  ('18','Yoro', 1);
-
 GO
+
 INSERT gral.tbMunicipios(muni_id, muni_Nombre, depa_Id, muni_UsuCreacion)
 VALUES('0101','La Ceiba ','01', 1),
       ('0102','El Porvenir','01', 1), 
@@ -3476,12 +3566,12 @@ VALUES('0101','La Ceiba ','01', 1),
 	
 	--********INSERT TABLA Cargos****************---
 GO
+
 INSERT INTO opti.tbCargos(carg_Nombre,carg_UsuCreacion)
 VALUES('Oftalmólogo',1)
-
+GO
 	  
 --********INSERT TABLA Categorias****************---
-GO
 INSERT INTO opti.tbCategorias(cate_Nombre, cate_UsuCreacion)
 VALUES('Aros de metal',1),
       ('Aros de acetato',1),
@@ -3489,21 +3579,21 @@ VALUES('Aros de metal',1),
 	  ('Aros de titanio',1),
 	  ('Aros deportivos',1),
 	  ('Aros de diseño',1)
-
+GO
 
 --********INSERT TABLA METODOS DE PAGOS****************---
-GO
 INSERT INTO opti.tbMetodosPago(meto_Nombre, meto_UsuCreacion)
 VALUES('Efectivo',1),
       ('Tarjeta',1)
+GO
 
 --********INSERT TABLA Estados Civiles****************---
-GO
 INSERT INTO gral.tbEstadosCiviles(estacivi_Nombre,estacivi_UsuCreacion)
 VALUES('Soltero(a)',1),
       ('Casado(a)',1),
 	  ('Divorciado(a)',1),
 	  ('Union Libre',1)
+GO
 
 --********INSERT TABLA Estados Proveedores****************---
 INSERT INTO opti.tbProveedores(prov_Nombre,prov_Direccion,prov_CorreoElectronico,prov_Telefono,prov_UsuCreacion)
@@ -3513,6 +3603,7 @@ VALUES('Optica Universal','2 Calle 6 Avenida N.O. B�, Guamilito, 6 Avenida','O
 	  ('PRODIST','la región de La Pobla De Vallbona (Valencia)','prodist@hotmail.com','34628-0486',1),
 	  ('Prosun','Barcelona','prosun@hotmail.com','23528-0486',1),
 	  ('Missandtrendy Sunglasses | London','Londres','Missandtrendy@hotmail.com','23528-0486',1)
+GO
 
 	  --********INSERT TABLA SUCURSALES****************---
 INSERT INTO opti.tbSucursales(sucu_Descripcion,muni_Id,sucu_DireccionExacta,sucu_UsuCreacion)
@@ -3521,6 +3612,7 @@ VALUES('Optica Popular Mall Multiplaza','0801','Mall Multiplaza',1),
 	  ('Optica Popular City Mall','0501','City Mall',1),
 	  ('Optica Popular Mall Las Americas','0502','Mall Las Americas',1),
 	  ('Optica Popular City Mall','0801','City Mall',1)
+GO
 
 --INSERT TABLA Empleados********---
 INSERT INTO opti.tbEmpleados(empe_Nombres, empe_Apellidos, empe_Identidad, empe_FechaNacimiento, empe_Sexo, estacivi_Id, empe_Telefono, empe_CorreoElectronico, carg_Id, sucu_Id, empe_UsuCreacion)
@@ -3534,7 +3626,7 @@ VALUES('Clara','Gomez','1234567890123','2003-12-05','F',1,'98107260','gomez23.e@
 ('Jose Manuel','Hernadez','0569582415712','2004-05-14','M',1,'33207260','josemanuel12@gmail.com',1,1,1),
 ('Samuel','Bautista','0561272415712','2007-04-14','M',1,'32007260','samuel12@gmail.com',1,1,1),
 ('Erick','Hernadez','0561272415799','2007-04-30','M',1,'92007930','erickhernadez@gmail.com',1,1,1)
-
+GO
 
   --********INSERT TABLA Clientes****************---
 INSERT INTO [opti].[tbClientes](clie_Nombres, clie_Apellidos, clie_Identidad, clie_Sexo, clie_FechaNacimiento, estacivi_Id, clie_Telefono, clie_CorreoElectronico, clie_UsuCreacion)
@@ -3546,6 +3638,7 @@ VALUES('Juan','Perez','1234567890123','M','2000-02-08',2,'12345678','juan.perez@
 ('Laura','Martínez','5678901234567','F','2003-12-05',1,'56789012','laura.martinez@example.com',1),
 ('Manuel','Díaz','3456789012345','M','2007-12-05',1,'34567890','manuel.diaz@example.com',1),
 ('David','Hernández','5678901234567','M','2008-12-05',1,'55400045','david.hernandez@example.com',1)
+GO
 
 --********INSERT TABLA Marcas****************---
 INSERT INTO opti.tbMarcas(marc_Nombre , usua_IdCreacion)
@@ -3556,7 +3649,7 @@ VALUES('Ray-Ban',1),
 	  ('Tom Ford',1),
 	  ('Prada',1),
 	  ('Oliver Peoples',1)
-
+GO
 
  --********INSERT TABLA AROS****************---
 INSERT INTO opti.tbAros(aros_Descripcion, aros_CostoUni, cate_Id, prov_Id, marc_Id, aros_Stock, aros_UsuCreacion)
@@ -3568,9 +3661,11 @@ VALUES('Deportivo',120,1,1,1,100,1),
 	  ('Ovalado',220,1,1,6,100,1),
 	  ('Rectangular',220,1,1,7,100,1),
 	  ('Al Aire',220,1,1,6,100,1)
+GO
 
  --********INSERT TABLA Consultorio****************---
 INSERT INTO opti.tbConsultorios(cons_Nombre,empe_Id,usua_IdCreacion)
 VALUES('Consultorio 1',1,1),
       ('Consultorio 2',2,1),
 	  ('Consultorio 3',3,1)
+GO
