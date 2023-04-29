@@ -360,13 +360,11 @@ CREATE TABLE opti.tbAros
 	cate_Id								INT NOT NULL,
 	prov_Id								INT NOT NULL,
 	marc_Id								INT NOT NULL,
-	aros_Stock							INT NOT NULL,
 	aros_UsuCreacion					INT NOT NULL,
 	aros_FechaCreacion					DATETIME NOT NULL CONSTRAINT DF_aros_FechaCreacion DEFAULT(GETDATE()),
 	aros_FechaModificacion				DATETIME,
 	aros_UsuModificacion				INT,
 	aros_Estado							BIT NOT NULL CONSTRAINT DF_aros_Estado DEFAULT(1),
-
 	CONSTRAINT PK_opti_tbAros_aros_Id 											PRIMARY KEY(aros_Id),
 	CONSTRAINT FK_opti_tbAros_opti_tbProveedores_prov_Id 						FOREIGN KEY(prov_Id) 				REFERENCES opti.tbProveedores(prov_Id),
 	CONSTRAINT FK_opti_tbAros_opti_tbCategorias_cate_Id 						FOREIGN KEY(cate_Id) 				REFERENCES opti.tbCategorias(cate_Id),
@@ -374,6 +372,33 @@ CREATE TABLE opti.tbAros
 	CONSTRAINT FK_opti_tbAros_acce_tbUsuarios_clie_UsuCreacion_usua_Id  		FOREIGN KEY(aros_UsuCreacion) 		REFERENCES acce.tbUsuarios(usua_Id),
 	CONSTRAINT FK_opti_tbAros_acce_tbUsuarios_clie_UsuModificacion_usua_Id  	FOREIGN KEY(aros_UsuModificacion) 	REFERENCES acce.tbUsuarios(usua_Id)
 );
+GO
+
+CREATE TABLE opti.tbStockArosPorSucursal
+(
+	stsu_Id					INT IDENTITY(1,1),
+	sucu_Id					INT NOT NULL,
+	aros_Id					INT NOT NULL,
+	stsu_Stock				INT NOT NULL,
+	
+	stsu_Estado				BIT DEFAULT 1,
+	usua_IdCreacion			INT NOT NULL,
+	stsu_FechaCreacion		DATETIME DEFAULT GETDATE(),
+	usua_IdModificacion		INT DEFAULT NULL,
+	stsu_FechaModificacion  DATETIME DEFAULT NULL,
+	CONSTRAINT PK_opti_tbStockArosPorSucursal_stsu_Id PRIMARY KEY (stsu_Id),
+	CONSTRAINT FK_opti_tbStockArosPorSucursal_sucu_Id_opti_tbSucursales_sucu_Id FOREIGN KEY (sucu_Id) REFERENCES opti.tbSucursales (sucu_Id),
+	CONSTRAINT FK_opti_tbStockArosPorSucursal_aros_Id_opti_tbAros_aros_Id FOREIGN KEY (aros_Id) REFERENCES opti.tbAros (aros_Id)
+);
+GO
+
+ALTER TABLE opti.tbStockArosPorSucursal 
+ADD CONSTRAINT FK_opti_tbStockArosPorSucursal_usua_IdCreacion_acce_tbUsuarios_usua_Id FOREIGN KEY (usua_IdCreacion) REFERENCES acce.tbUsuarios(usua_Id)
+GO
+
+ALTER TABLE opti.tbStockArosPorSucursal 
+ADD CONSTRAINT FK_opti_tbStockArosPorSucursal_usua_IdModificacion_acce_tbUsuarios_usua_Id FOREIGN KEY (usua_IdModificacion) REFERENCES acce.tbUsuarios (usua_Id)
+GO
 
 --**************************************************TABLE Consultorios****************************************************--
 
