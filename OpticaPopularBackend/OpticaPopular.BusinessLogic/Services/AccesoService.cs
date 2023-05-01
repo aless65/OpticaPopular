@@ -35,6 +35,20 @@ namespace OpticaPopular.BusinessLogic.Services
                 return result.Error(e.Message);
             }
         }
+        public ServiceResult FindUsuarios(int id)
+        {
+            var result = new ServiceResult();
+            try
+            {
+                var usuario = _usuariosRepository.Find(id);
+                return result.Ok(usuario);
+            }
+            catch (Exception e)
+            {
+                return result.Error(e.Message);
+            }
+        }
+
         public ServiceResult InsertUsuarios(tbUsuarios item)
         {
             var result = new ServiceResult();
@@ -101,7 +115,78 @@ namespace OpticaPopular.BusinessLogic.Services
 
         #region Roles
 
+        public ServiceResult ListadoRoles()
+        {
+            var result = new ServiceResult();
+            try
+            {
+                var list = _rolesRepository.List();
+                return result.Ok(list);
+            }
+            catch (Exception e)
+            {
+                return result.Error(e.Message);
+            }
+        }
+        public ServiceResult InsertRoles(tbRoles item)
+        {
+            var result = new ServiceResult();
+            try
+            {
+                var insert = _rolesRepository.Insert(item);
 
+                if (insert.MessageStatus == "El rol ha sido insertado con éxito")
+                    return result.SetMessage(insert.MessageStatus, ServiceResultType.Success);
+                else if (insert.MessageStatus == "El rol ya existe")
+                    return result.SetMessage(insert.MessageStatus, ServiceResultType.Warning);
+                else
+                    return result.SetMessage(insert.MessageStatus, ServiceResultType.Error);
+            }
+            catch (Exception e)
+            {
+                return result.Error(e.Message);
+            }
+        }
+
+        public ServiceResult UpdateRoles(tbRoles item)
+        {
+            var result = new ServiceResult();
+            try
+            {
+                var update = _rolesRepository.Update(item);
+
+                if (update.MessageStatus == "El rol ha sido editado con éxito")
+                    return result.SetMessage(update.MessageStatus, ServiceResultType.Success);
+                else if(update.MessageStatus == "El rol ya existe")
+                    return result.SetMessage(update.MessageStatus, ServiceResultType.Warning);
+                else
+                    return result.SetMessage(update.MessageStatus, ServiceResultType.Error);
+            }
+            catch (Exception e)
+            {
+                return result.Error(e.Message);
+            }
+        }
+
+        public ServiceResult DeleteRoles(tbRoles item)
+        {
+            var result = new ServiceResult();
+            try
+            {
+                var delete = _rolesRepository.Delete(item);
+
+                if (delete.MessageStatus == "El rol ha sido eliminado")
+                    return result.SetMessage(delete.MessageStatus, ServiceResultType.Success);
+                else if(delete.MessageStatus == "El rol no puede ser eliminado ya que está siendo usado")
+                    return result.SetMessage(delete.MessageStatus, ServiceResultType.Warning);
+                else
+                    return result.SetMessage(delete.MessageStatus, ServiceResultType.Error);
+            }
+            catch (Exception e)
+            {
+                return result.Error(e.Message);
+            }
+        }
 
         #endregion
 

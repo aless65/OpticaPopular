@@ -23,6 +23,6 @@ namespace OpticaPopular.Entities.Entities
         public string usua_UsuModificacion_Nombre { get; set; }
         public DateTime? usua_FechaModificacion { get; set; }
         public bool usua_Estado { get; set; }
-        public int sucu_Id { get; set; }
+        public int? sucu_Id { get; set; }
     }
 }

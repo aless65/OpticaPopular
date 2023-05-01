@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 // '@mui
-import { enUS, deDE, frFR } from '@mui/material/locale';
+import { enUS, deDE, frFR, esES } from '@mui/material/locale';
 
 // ----------------------------------------------------------------------
 
@@ -8,20 +8,20 @@ const LANGS = [
   {
     label: 'English',
     value: 'en',
-    systemValue: enUS,
+    systemValue: esES,
     icon: 'https://minimal-assets-api.vercel.app/assets/icons/ic_flag_en.svg',
   },
   {
     label: 'German',
     value: 'de',
-    systemValue: deDE,
+    systemValue: esES,
 
     icon: 'https://minimal-assets-api.vercel.app/assets/icons/ic_flag_de.svg',
   },
   {
     label: 'French',
     value: 'fr',
-    systemValue: frFR,
+    systemValue: esES,
     icon: 'https://minimal-assets-api.vercel.app/assets/icons/ic_flag_fr.svg',
   },
 ];

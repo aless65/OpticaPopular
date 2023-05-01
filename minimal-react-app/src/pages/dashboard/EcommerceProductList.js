@@ -42,10 +42,10 @@ import { ProductTableRow, ProductTableToolbar } from '../../sections/@dashboard/
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'name', label: 'Product', align: 'left' },
-  { id: 'createdAt', label: 'Create at', align: 'left' },
-  { id: 'inventoryType', label: 'Status', align: 'center', width: 180 },
-  { id: 'price', label: 'Price', align: 'right' },
+  { id: 'usua_NombreUsuario', label: 'Usuario', align: 'left' },
+  { id: 'empe_NombreCompleto', label: 'Empleado', align: 'left' },
+  { id: 'usua_EsAdmin', label: 'Es admin', align: 'center', width: 180 },
+  { id: 'role_Nombre', label: 'Rol', align: 'right' },
   { id: '' },
 ];
 
@@ -101,13 +101,13 @@ export default function EcommerceProductList() {
   };
 
   const handleDeleteRow = (id) => {
-    const deleteRow = tableData.filter((row) => row.id !== id);
+    const deleteRow = tableData.filter((row) => row.usua_Id !== id);
     setSelected([]);
     setTableData(deleteRow);
   };
 
   const handleDeleteRows = (selected) => {
-    const deleteRows = tableData.filter((row) => !selected.includes(row.id));
+    const deleteRows = tableData.filter((row) => !selected.includes(row.usua_Id));
     setSelected([]);
     setTableData(deleteRows);
   };
@@ -164,7 +164,7 @@ export default function EcommerceProductList() {
                   onSelectAllRows={(checked) =>
                     onSelectAllRows(
                       checked,
-                      tableData.map((row) => row.id)
+                      tableData.map((row) => row.usua_Id)
                     )
                   }
                   actions={
@@ -188,7 +188,7 @@ export default function EcommerceProductList() {
                   onSelectAllRows={(checked) =>
                     onSelectAllRows(
                       checked,
-                      tableData.map((row) => row.id)
+                      tableData.map((row) => row.usua_Id)
                     )
                   }
                 />
@@ -199,12 +199,12 @@ export default function EcommerceProductList() {
                     .map((row, index) =>
                       row ? (
                         <ProductTableRow
-                          key={row.id}
+                          key={row.usua_Id}
                           row={row}
-                          selected={selected.includes(row.id)}
-                          onSelectRow={() => onSelectRow(row.id)}
-                          onDeleteRow={() => handleDeleteRow(row.id)}
-                          onEditRow={() => handleEditRow(row.name)}
+                          selected={selected.includes(row.usua_Id)}
+                          onSelectRow={() => onSelectRow(row.usua_Id)}
+                          onDeleteRow={() => handleDeleteRow(row.usua_Id)}
+                          onEditRow={() => handleEditRow(row.usua_NombreUsuario)}
                         />
                       ) : (
                         !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
@@ -232,7 +232,7 @@ export default function EcommerceProductList() {
 
             <FormControlLabel
               control={<Switch checked={dense} onChange={onChangeDense} />}
-              label="Dense"
+              label="Denso"
               sx={{ px: 3, py: 1.5, top: 0, position: { md: 'absolute' } }}
             />
           </Box>
@@ -255,9 +255,23 @@ function applySortFilter({ tableData, comparator, filterName }) {
 
   tableData = stabilizedThis.map((el) => el[0]);
 
+  // if (filterName) {
+  //   tableData = tableData.filter((item) => 
+  //     Object.values(item).some(
+  //       (value) => 
+  //         value && value.toString().toLowerCase().indexOf(filterName.toLowerCase()) !== -1
+  //     )
+  //   );
+  // }
+
   if (filterName) {
-    tableData = tableData.filter((item) => item.name.toLowerCase().indexOf(filterName.toLowerCase()) !== -1);
+    tableData = tableData.filter((item) =>
+      item.usua_NombreUsuario.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 ||
+      item.empe_NombreCompleto.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 ||
+      item.role_Nombre.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
+    );
   }
+  
 
   return tableData;
 }

@@ -107,7 +107,7 @@ END;
 
 
 GO
-EXEC acce.UDP_InsertUsuario 'admin', '123', 1, NULL, NULL;
+EXEC acce.UDP_InsertUsuario 'admin', '123', 1, 1, 1;
 
 
 --********* ALTERAR TABLA ROLES **************--
@@ -122,7 +122,9 @@ ADD CONSTRAINT FK_acce_tbRoles_acce_tbUsuarios_role_UsuCreacion_usua_Id 	FOREIGN
 
 GO
 INSERT INTO acce.tbRoles(role_Nombre, role_UsuCreacion)
-VALUES ('Vendedor', 1)
+VALUES ('Gerente', 1),
+		('Vendedor', 1),
+		('Doctor', 1)
 
 
 --********* ALTERAR TABLA USUARIOS **************--
@@ -297,10 +299,6 @@ CREATE TABLE opti.tbEmpleados(
 );
 
 
-GO
-ALTER TABLE acce.tbUsuarios 
-ADD CONSTRAINT FK_acce_tbUsuarios_opti_tbEmpleados_empe_Id FOREIGN KEY([empe_Id]) REFERENCES [opti].[tbEmpleados]([empe_Id]) 
-GO
 
 --********TABLA Clientes****************---
 CREATE TABLE opti.tbClientes
@@ -718,13 +716,15 @@ BEGIN
 	AND [usua_Estado] = 1
 END
 
-/*UDP para vista de usuarios*/
+/*UDP find usuarios*/
 GO
-CREATE OR ALTER PROCEDURE acce.UDP_VW_tbUsuarios
+CREATE OR ALTER PROCEDURE acce.UDP_acce_VW_tbUsuarios_Find 
 	@usua_Id INT
 AS
 BEGIN
-	SELECT * FROM acce.VW_tbUsuarios WHERE usua_Id = @usua_Id
+	SELECT * FROM acce.VW_tbUsuarios 
+	WHERE usua_Id = @usua_Id
+	AND usua_Estado = 1
 END
 
 /*Vista usuarios*/
@@ -809,6 +809,7 @@ CREATE OR ALTER PROCEDURE acce.UDP_acce_tbUsuarios_List
 AS
 BEGIN
 	SELECT * FROM acce.VW_tbUsuarios
+	WHERE usua_Estado = 1
 END
 
 /*Editar usuarios*/
@@ -2866,6 +2867,7 @@ AS
 BEGIN
 	SELECT *
 	FROM acce.VW_tbRoles
+	WHERE role_Estado = 1
 END
 
 /*Insertar roles*/
@@ -3509,6 +3511,12 @@ VALUES('Clara','Gomez','1234567890123','2003-12-05','F',1,'98107260','gomez23.e@
 ('Jose Manuel','Hernadez','0569582415712','2004-05-14','M',1,'33207260','josemanuel12@gmail.com',1,1,1),
 ('Samuel','Bautista','0561272415712','2007-04-14','M',1,'32007260','samuel12@gmail.com',1,1,1),
 ('Erick','Hernadez','0561272415799','2007-04-30','M',1,'92007930','erickhernadez@gmail.com',1,1,1)
+
+
+GO
+ALTER TABLE acce.tbUsuarios 
+ADD CONSTRAINT FK_acce_tbUsuarios_opti_tbEmpleados_empe_Id FOREIGN KEY([empe_Id]) REFERENCES [opti].[tbEmpleados]([empe_Id]) 
+GO
 
 
   --********INSERT TABLA Clientes****************---

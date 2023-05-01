@@ -34,6 +34,10 @@ export const PATH_PAGE = {
 
 export const PATH_DASHBOARD = {
   root: ROOTS_DASHBOARD,
+  acceso: {
+    usuarios: path(ROOTS_DASHBOARD, '/usuarios'),
+    roles: path(ROOTS_DASHBOARD, '/roles')
+  },
   general: {
     app: path(ROOTS_DASHBOARD, '/app'),
     ecommerce: path(ROOTS_DASHBOARD, '/ecommerce'),

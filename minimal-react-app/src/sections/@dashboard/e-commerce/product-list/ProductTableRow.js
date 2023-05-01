@@ -31,10 +31,8 @@ export default function ProductTableRow({ row, selected, onEditRow, onSelectRow,
 
   const theme = useTheme();
 
-  const { usua_NombreUsuario, thumbnailUrl, createdAt, inventoryType, price } = row;
-
-  console.log(row);
-
+  const { usua_NombreUsuario, empe_NombreCompleto, usua_EsAdmin, role_Nombre } = row;
+  
   const [openMenu, setOpenMenuActions] = useState(null);
 
   const handleOpenMenu = (event) => {
@@ -51,28 +49,15 @@ export default function ProductTableRow({ row, selected, onEditRow, onSelectRow,
         <Checkbox checked={selected} onClick={onSelectRow} />
       </TableCell>
 
-      <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
-        <Image disabledEffect alt={usua_NombreUsuario} src={thumbnailUrl} sx={{ borderRadius: 1.5, width: 48, height: 48, mr: 2 }} />
-        <Typography variant="subtitle2" noWrap>
-          {usua_NombreUsuario}
-        </Typography>
-      </TableCell>
+      <TableCell>{(usua_NombreUsuario)}</TableCell>
 
-      <TableCell>{(createdAt)}</TableCell>
+      <TableCell>{(empe_NombreCompleto)}</TableCell>
 
       <TableCell align="center">
-        <Label
-          variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
-          color={
-            (inventoryType === 'out_of_stock' && 'error') || (inventoryType === 'low_stock' && 'warning') || 'success'
-          }
-          sx={{ textTransform: 'capitalize' }}
-        >
-          {inventoryType ? sentenceCase(inventoryType) : ''}
-        </Label>
+        <Checkbox checked={usua_EsAdmin} disabled={!usua_EsAdmin} />
       </TableCell>
 
-      <TableCell align="right">{fCurrency(price)}</TableCell>
+      <TableCell align="right">{role_Nombre}</TableCell>
 
       <TableCell align="right">
         <TableMoreMenu
@@ -107,3 +92,12 @@ export default function ProductTableRow({ row, selected, onEditRow, onSelectRow,
     </TableRow>
   );
 }
+
+/*
+<TableCell sx={{ display: 'flex', alignItems: 'center' }}>
+         <Image disabledEffect alt={usua_NombreUsuario} src={thumbnailUrl} sx={{ borderRadius: 1.5, width: 48, height: 48, mr: 2 }} /> 
+        <Typography variant="subtitle2" noWrap>
+          {usua_NombreUsuario}
+        </Typography>
+      </TableCell> 
+*/

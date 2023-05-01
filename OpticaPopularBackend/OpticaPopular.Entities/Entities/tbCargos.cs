@@ -8,6 +8,11 @@ namespace OpticaPopular.Entities.Entities
 {
     public partial class tbCargos
     {
+        public tbCargos()
+        {
+            tbEmpleados = new HashSet<tbEmpleados>();
+        }
+
         public int carg_Id { get; set; }
         public string carg_Nombre { get; set; }
         public int carg_UsuCreacion { get; set; }
@@ -18,5 +23,6 @@ namespace OpticaPopular.Entities.Entities
 
         public virtual tbUsuarios carg_UsuCreacionNavigation { get; set; }
         public virtual tbUsuarios carg_UsuModificacionNavigation { get; set; }
+        public virtual ICollection<tbEmpleados> tbEmpleados { get; set; }
     }
 }

@@ -122,7 +122,23 @@
          "ObjectType": 0
       },
       {
+         "Name": "[acce].[VW_tbPantallas]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[acce].[VW_tbPantallasPorRoles]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[acce].[VW_tbRoles]",
+         "ObjectType": 3
+      },
+      {
          "Name": "[acce].[VW_tbUsuarios]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[opti].[VW_tbAros]",
          "ObjectType": 3
       },
       {
@@ -135,6 +151,50 @@
       },
       {
          "Name": "[opti].[VW_tbClientes]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[opti].[VW_tbConsultorios]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[opti].[VW_tbDetallesCitas]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[opti].[VW_tbDirecciones]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[opti].[VW_tbDireccionesPorClientes]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[opti].[VW_tbEmpleados]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[opti].[VW_tbEnvio]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[opti].[VW_tbMarcas]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[opti].[VW_tbMetodosPagos]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[opti].[VW_tbOrdenes]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[opti].[VW_tbProveedores]",
+         "ObjectType": 3
+      },
+      {
+         "Name": "[opti].[VW_tbSucursales]",
          "ObjectType": 3
       }
    ],

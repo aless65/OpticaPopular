@@ -8,6 +8,11 @@ namespace OpticaPopular.Entities.Entities
 {
     public partial class tbMarcas
     {
+        public tbMarcas()
+        {
+            tbAros = new HashSet<tbAros>();
+        }
+
         public int marc_Id { get; set; }
         public string marc_Nombre { get; set; }
         public bool? marc_Estado { get; set; }
@@ -18,5 +23,6 @@ namespace OpticaPopular.Entities.Entities
 
         public virtual tbUsuarios usua_IdCreacionNavigation { get; set; }
         public virtual tbUsuarios usua_IdModificacionNavigation { get; set; }
+        public virtual ICollection<tbAros> tbAros { get; set; }
     }
 }

@@ -10,7 +10,7 @@ namespace OpticaPopular.Entities.Entities
     {
         public int factdeta_Id { get; set; }
         public int fact_Id { get; set; }
-        public int cons_Id { get; set; }
+        public int deci_Id { get; set; }
         public int aros_Id { get; set; }
         public int orde_Id { get; set; }
         public int envi_Id { get; set; }
@@ -22,6 +22,7 @@ namespace OpticaPopular.Entities.Entities
         public bool? factdeta_Estado { get; set; }
 
         public virtual tbAros aros { get; set; }
+        public virtual tbDetallesCitas deci { get; set; }
         public virtual tbEnvios envi { get; set; }
         public virtual tbFacturas fact { get; set; }
         public virtual tbUsuarios factdeta_UsuCreacionNavigation { get; set; }

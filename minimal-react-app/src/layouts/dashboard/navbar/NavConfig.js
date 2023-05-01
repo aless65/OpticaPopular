@@ -3,6 +3,7 @@ import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
 import Label from '../../../components/Label';
 import SvgIconStyle from '../../../components/SvgIconStyle';
+// import PermIdentityIcon from '@mui/icons-material/PermIdentity';
 
 // ----------------------------------------------------------------------
 
@@ -25,6 +26,15 @@ const ICONS = {
 };
 
 const navConfig = [
+  // ACCESO
+  //----------------------------------------------------------------------
+  {
+    subheader: 'acceso',
+    items: [
+      { title: 'usuarios', path: PATH_DASHBOARD.acceso.usuarios, icon: ICONS.user },
+      { title: 'roles', path: PATH_DASHBOARD.acceso.roles, icon: ICONS.kanban },
+    ],
+  },
   // GENERAL
   // ----------------------------------------------------------------------
   {
