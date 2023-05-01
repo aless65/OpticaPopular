@@ -129,21 +129,21 @@ GO
 --********* ALTERAR TABLA USUARIOS **************--
 --********* AGREGAR CAMPO ROL, AUDITORIA**************--
 
-ALTER TABLE [acce].[tbUsuarios]
-ADD CONSTRAINT FK_acce_tbUsuarios_acce_tbUsuarios_usua_UsuCreacion_usua_Id  FOREIGN KEY(usua_UsuCreacion) REFERENCES acce.tbUsuarios([usua_Id]),
-	CONSTRAINT FK_acce_tbUsuarios_acce_tbUsuarios_usua_UsuModificacion_usua_Id  FOREIGN KEY(usua_UsuModificacion) REFERENCES acce.tbUsuarios([usua_Id]),
+ALTER TABLE acce.tbUsuarios
+ADD CONSTRAINT FK_acce_tbUsuarios_acce_tbUsuarios_usua_UsuCreacion_usua_Id  FOREIGN KEY(usua_UsuCreacion) REFERENCES acce.tbUsuarios(usua_Id),
+	CONSTRAINT FK_acce_tbUsuarios_acce_tbUsuarios_usua_UsuModificacion_usua_Id  FOREIGN KEY(usua_UsuModificacion) REFERENCES acce.tbUsuarios(usua_Id),
 	CONSTRAINT FK_acce_tbUsuarios_acce_tbRoles_role_Id FOREIGN KEY(role_Id) REFERENCES acce.tbRoles(role_Id)
 GO 
 
-ALTER TABLE [acce].[tbPantallasPorRoles]
-ADD CONSTRAINT FK_acce_tbPantallasPorRoles_acce_tbUsuarios_pantrole_UsuCreacion_usua_Id FOREIGN KEY([pantrole_UsuCreacion]) REFERENCES acce.tbUsuarios([usua_Id]),
-	CONSTRAINT FK_acce_tbPantallasPorRoles_acce_tbUsuarios_pantrole_UsuModificacion_usua_Id FOREIGN KEY([pantrole_UsuModificacion]) REFERENCES acce.tbUsuarios([usua_Id])
+ALTER TABLE acce.tbPantallasPorRoles
+ADD CONSTRAINT FK_acce_tbPantallasPorRoles_acce_tbUsuarios_pantrole_UsuCreacion_usua_Id FOREIGN KEY(pantrole_UsuCreacion) REFERENCES acce.tbUsuarios(usua_Id),
+	CONSTRAINT FK_acce_tbPantallasPorRoles_acce_tbUsuarios_pantrole_UsuModificacion_usua_Id FOREIGN KEY(pantrole_UsuModificacion) REFERENCES acce.tbUsuarios(usua_Id)
 GO
 
 --*******************************************--
 --********TABLA DEPARTAMENTO****************---
 
-CREATE TABLE [gral].[tbDepartamentos](
+CREATE TABLE gral.tbDepartamentos(
 	depa_Id  					CHAR(2) NOT NULL,
 	depa_Nombre 				NVARCHAR(100) NOT NULL,
 	depa_UsuCreacion			INT NOT NULL,
@@ -183,11 +183,11 @@ CREATE TABLE opti.tbDirecciones
 	muni_Id						CHAR(4) NOT NULL,
 	dire_DireccionExacta		NVARCHAR(MAX) NOT NULL,
 	
-	clie_Estado					BIT DEFAULT 1,
+	dire_Estado					BIT DEFAULT 1,
 	usua_IdCreacion				INT NOT NULL,
-	clie_FechaCreacion			DATETIME DEFAULT GETDATE(),
+	dire_FechaCreacion			DATETIME DEFAULT GETDATE(),
 	usua_IdModificacion			INT DEFAULT NULL,
-	clie_FechaModificacion		DATETIME DEFAULT NULL,
+	dire_FechaModificacion		DATETIME DEFAULT NULL,
 	CONSTRAINT PK_tbDirecciones_dire_Id PRIMARY KEY (dire_Id),
 	CONSTRAINT FK_tbDirecciones_muni_Id_tbMunicipios_muni_Id FOREIGN KEY (muni_Id) REFERENCES gral.tbMunicipios (muni_Id)
 );
@@ -240,6 +240,7 @@ CREATE TABLE opti.tbCargos
 (
 	carg_Id					INT IDENTITY,
 	carg_Nombre				NVARCHAR(100)NOT NULL,
+
 	carg_UsuCreacion		INT NOT NULL,
 	carg_FechaCreacion		DATETIME NOT NULL CONSTRAINT DF_carg_FechaCreacion DEFAULT(GETDATE()),
 	carg_UsuModificacion	INT,
@@ -294,10 +295,10 @@ CREATE TABLE opti.tbSucursales(
     sucu_Id                             INT IDENTITY(1,1), 
     sucu_Descripcion                    NVARCHAR(200) NOT NULL,
 	dire_Id								INT NOT NULL,
-    sucu_FechaCreacion                  DATETIME NOT NULL CONSTRAINT DF_sucu_FechaCreacion DEFAULT(GETDATE()),
     sucu_UsuCreacion                    INT not null,
-    sucu_FechaModificacion              DATETIME,
+	sucu_FechaCreacion                  DATETIME NOT NULL CONSTRAINT DF_sucu_FechaCreacion DEFAULT(GETDATE()),
     sucu_UsuModificacion                INT,
+	sucu_FechaModificacion              DATETIME,
     sucu_Estado                         BIT NOT NULL CONSTRAINT DF_sucu_Estado DEFAULT(1),
     CONSTRAINT PK_opti_tbSucursales_sucu_Id PRIMARY KEY(sucu_Id),
     CONSTRAINT FK_opti_acce_tbSucursales_sucu_UsuCreacion FOREIGN KEY (sucu_UsuCreacion) REFERENCES acce.tbUsuarios (usua_Id),
@@ -342,7 +343,7 @@ ALTER TABLE opti.tbEmpleados ADD CONSTRAINT FK_opti_tbEmpleados_dire_Id_opti_tbD
 GO
 
 ALTER TABLE acce.tbUsuarios 
-ADD CONSTRAINT FK_acce_tbUsuarios_opti_tbEmpleados_empe_Id FOREIGN KEY([empe_Id]) REFERENCES [opti].[tbEmpleados]([empe_Id]) 
+ADD CONSTRAINT FK_acce_tbUsuarios_opti_tbEmpleados_empe_Id FOREIGN KEY(empe_Id) REFERENCES opti.tbEmpleados(empe_Id) 
 GO
 
 --********TABLA Clientes****************---
@@ -602,7 +603,7 @@ CREATE TABLE opti.tbDetallesOrdenes
 (
 	deor_Id					INT IDENTITY(1,1),
 	orde_Id					INT NOT NULL,
-	aros_Id					INT NOT NULL,
+	aros_Id					INT,
 	deor_GraduacionLeft		VARCHAR(10),
 	deor_GraduacionRight	VARCHAR(10),
 	deor_Precio				DECIMAL(18,2) NOT NULL,
@@ -643,9 +644,9 @@ CREATE TABLE opti.tbEnvios
 
 	envi_Estado					BIT DEFAULT 1,
 	usua_IdCreacion				INT NOT NULL,
-	clie_FechaCreacion			DATETIME DEFAULT GETDATE(),
+	envi_FechaCreacion			DATETIME DEFAULT GETDATE(),
 	usua_IdModificacion			INT DEFAULT NULL,
-	clie_FechaModificacion		DATETIME DEFAULT NULL,
+	envi_FechaModificacion		DATETIME DEFAULT NULL,
 	CONSTRAINT PK_opti_tbEnvios_envi_Id PRIMARY KEY (envi_Id),
 	CONSTRAINT FK_opti_tbEnvios_clie_Id_opti_tbClientes_clie_Id FOREIGN KEY (clie_Id) REFERENCES opti.tbClientes (clie_Id),
 	CONSTRAINT FK_opti_tbDirecciones_dire_Id_opti_tbDirecciones_dire_Id FOREIGN KEY (dire_Id) REFERENCES opti.tbDirecciones (dire_Id)
@@ -673,8 +674,8 @@ CREATE TABLE opti.tbFacturas
 	fact_PrecioTotal					DECIMAL(18,2),
 	fact_UsuCreacion					INT NOT NULL,
 	fact_FechaCreacion					DATETIME NOT NULL CONSTRAINT DF_fact_FechaCreacion DEFAULT(GETDATE()),
-	fact_FechaModificacion				DATETIME,
 	fact_UsuModificacion				INT,
+	fact_FechaModificacion				DATETIME,
 	fact_Estado							BIT NOT NULL CONSTRAINT DF_fact_Estado DEFAULT(1),
 
 	CONSTRAINT PK_opti_tbFacturas_fact_Id 											PRIMARY KEY(fact_Id),
@@ -691,10 +692,9 @@ CREATE TABLE opti.tbFacturasDetalles
 (
 	factdeta_Id								INT IDENTITY,
 	fact_Id									INT NOT NULL,
-	deci_Id									INT NOT NULL,
-	aros_Id									INT NOT NULL,
+	cita_Id									INT,
 	orde_Id									INT NOT NULL,
-	envi_Id									INT NOT NULL,
+	envi_Id									INT,
 	factdeta_Precio							DECIMAL(18,2) NOT NULL,
 	factdeta_UsuCreacion					INT NOT NULL,
 	factdeta_FechaCreacion					DATETIME NOT NULL CONSTRAINT DF_factdeta_FechaCreacion DEFAULT(GETDATE()),
@@ -704,10 +704,9 @@ CREATE TABLE opti.tbFacturasDetalles
 
 	CONSTRAINT PK_opti_tbFacturasDetalles_factdeta_Id 											PRIMARY KEY(factdeta_Id),
 	CONSTRAINT FK_opti_tbFacturasDetalles_opti_tbFacturas_fact_Id 								FOREIGN KEY(fact_Id) 					REFERENCES opti.tbFacturas(fact_Id),
-	CONSTRAINT FK_opti_tbFacturasDetalles_opti_tbAros_aros_Id									FOREIGN KEY(aros_Id)					REFERENCES opti.tbAros(aros_Id),
 	CONSTRAINT FK_opti_tbFacturasDetalles_opti_tbEnvios_envi_Id									FOREIGN KEY(envi_Id)					REFERENCES opti.tbEnvios(envi_Id),
 	CONSTRAINT FK_opti_tbFacturasDetalles_opti_tbOrdenes_orde_Id								FOREIGN KEY(orde_Id)					REFERENCES opti.tbOrdenes(orde_Id),
-	CONSTRAINT FK_opti_tbFacturasDetalles_opti_tbDetallesCitas_deci_Id							FOREIGN KEY(deci_Id)					REFERENCES opti.tbDetallesCitas(deci_Id),
+	CONSTRAINT FK_opti_tbFacturasDetalles_opti_tbCitas_cita_Id									FOREIGN KEY(cita_Id)					REFERENCES opti.tbCitas(cita_Id),
 	CONSTRAINT FK_opti_tbFacturasDetalles_acce_tbUsuarios_factdeta_UsuCreacion_usua_Id  		FOREIGN KEY(factdeta_UsuCreacion) 		REFERENCES acce.tbUsuarios(usua_Id),
 	CONSTRAINT FK_opti_tbFacturasDetalles_acce_tbUsuarios_factdeta_UsuModificacion_usua_Id  	FOREIGN KEY(factdeta_UsuModificacion) 	REFERENCES acce.tbUsuarios(usua_Id)
 );
@@ -725,9 +724,9 @@ CREATE TABLE opti.tbDetallesEnvios
 
 	deen_Estado					BIT DEFAULT 1,
 	usua_IdCreacion				INT NOT NULL,
-	clie_FechaCreacion			DATETIME DEFAULT GETDATE(),
+	deen_FechaCreacion			DATETIME DEFAULT GETDATE(),
 	usua_IdModificacion			INT DEFAULT NULL,
-	clie_FechaModificacion		DATETIME DEFAULT NULL,
+	deen_FechaModificacion		DATETIME DEFAULT NULL,
 	CONSTRAINT PK_opti_tbDetallesEnvios_deen_Id PRIMARY KEY (deen_Id),
 	CONSTRAINT FK_opti_tbDetallesEnvios_envi_Id_opti_tbEnvios_envi_Id FOREIGN KEY (envi_Id) REFERENCES opti.tbEnvios (envi_Id),
 	CONSTRAINT FK_opti_tbDetallesEnvios_orde_Id_opti_tbOrdenes_orde_Id FOREIGN KEY (orde_Id) REFERENCES opti.tbOrdenes (orde_Id)
@@ -1044,16 +1043,16 @@ VALUES('Clara','Gomez','1234567890123','2003-12-05','F',1,'98107260','gomez23.e@
 ('Maria Lucero','Ramirez','452879612354','2003-12-02','F',1,'97260425','maria.lucero@gmail.com', 13, 1, 1,1),
 ('Karla Elisa','Ramirez','859679612354','2000-02-02','F',1,'98107260','karlaramirez@gmail.com', 14, 1,1,1),
 ('Manuel','Cardona','8759632415785','2001-05-05','M',1,'97307260','manuel@gmail.com', 15, 1, 1,1),
-('Mauricio','Mendosa','0529632415785','2001-05-15','M',1,'99307260','mMENDOZA@gmail.com', 16, 1, 1,1),
-('Rafael','Alvarado','0529582415785','2000-05-05','M',1,'99307260','alvarado@gmail.com', 12, 1, 1,1),
-('Carlos','Amaya','0569582415785','2000-05-04','M',1,'99307260','amayacarlos@gmail.com', 13, 1, 1,1),
-('Jose Manuel','Hernadez','0569582415712','2004-05-14','M',1,'33207260','josemanuel12@gmail.com', 14, 1,1,1),
-('Samuel','Bautista','0561272415712','2007-04-14','M',1,'32007260','samuel12@gmail.com', 15, 1,1,1),
-('Erick','Hernadez','0561272415799','2007-04-30','M',1,'92007930','erickhernadez@gmail.com', 16, 1,1,1)
+('Mauricio','Mendosa','0529632415785','2001-05-15','M',1,'99307260','mMENDOZA@gmail.com', 16, 1, 2,1),
+('Rafael','Alvarado','0529582415785','2000-05-05','M',1,'99307260','alvarado@gmail.com', 12, 1, 2,1),
+('Carlos','Amaya','0569582415785','2000-05-04','M',1,'99307260','amayacarlos@gmail.com', 13, 1, 2,1),
+('Jose Manuel','Hernadez','0569582415712','2004-05-14','M',1,'33207260','josemanuel12@gmail.com', 14, 1,3,1),
+('Samuel','Bautista','0561272415712','2007-04-14','M',1,'32007260','samuel12@gmail.com', 15, 1,3,1),
+('Erick','Hernadez','0561272415799','2007-04-30','M',1,'92007930','erickhernadez@gmail.com', 16, 1,3,1)
 GO
 
   --********INSERT TABLA Clientes****************---
-INSERT INTO [opti].[tbClientes](clie_Nombres, clie_Apellidos, clie_Identidad, clie_Sexo, clie_FechaNacimiento, estacivi_Id, clie_Telefono, clie_CorreoElectronico, dire_Id, clie_UsuCreacion)
+INSERT INTO opti.tbClientes(clie_Nombres, clie_Apellidos, clie_Identidad, clie_Sexo, clie_FechaNacimiento, estacivi_Id, clie_Telefono, clie_CorreoElectronico, dire_Id, clie_UsuCreacion)
 VALUES('Juan','Perez','1234567890123','M','2000-02-08',2,'12345678','juan.perez@example.com', 16, 1),
 ('María','Gómez','9876543210987','F','2004-06-06',1,'98765432','maria.gomez@example.com', 15, 1),
 ('Pedro','González','4567890123456','M','2006-02-05',1,'45678901','pedro.gonzalez@example.com', 14, 1),
@@ -1371,5 +1370,12 @@ GO
 INSERT INTO opti.tbConsultorios(cons_Nombre,empe_Id,usua_IdCreacion)
 VALUES('Consultorio 1',1,1),
       ('Consultorio 2',2,1),
-	  ('Consultorio 3',3,1)
+	  ('Consultorio 3',3,1),
+	  ('Consultorio 4',4,1),
+	  ('Consultorio 1',5,1),
+      ('Consultorio 2',6,1),
+	  ('Consultorio 3',7,1),
+	  ('Consultorio 1',8,1),
+      ('Consultorio 2',9,1),
+	  ('Consultorio 3',10,1)
 GO
