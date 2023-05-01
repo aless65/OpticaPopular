@@ -37,7 +37,7 @@ import {
   TableSelectedActions,
 } from '../../components/table';
 // sections
-import { UsuarioTableRow, UsuarioTableToolbar } from '../../sections/@dashboard/acceso/usuario-list';
+import { UsuarioTableRow, TableToolbar } from '../../sections/@dashboard/acceso/usuario-list';
 
 // ----------------------------------------------------------------------
 
@@ -133,7 +133,7 @@ export default function AccesoUsuarioList() {
           heading="Listado de usuarios"
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            { name: 'Listado de usuarios' },
+            { name: 'Usuarios' },
           ]}
           action={
             <Button
@@ -148,7 +148,7 @@ export default function AccesoUsuarioList() {
         />
 
         <Card>
-          <UsuarioTableToolbar filterName={filterName} onFilterName={handleFilterName} />
+          <TableToolbar filterName={filterName} onFilterName={handleFilterName} />
 
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800 }}>

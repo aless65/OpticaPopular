@@ -1,2 +1,2 @@
 export { default as UsuarioTableRow } from './UsuarioTableRow';
-export { default as UsuarioTableToolbar } from './UsuarioTableToolbar';
+export { default as TableToolbar } from '../../TableToolbar';

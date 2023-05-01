@@ -66,6 +66,8 @@ export default function Router() {
         { element: <Navigate to={PATH_AFTER_LOGIN} replace />, index: true },
         { path: 'usuarios', element: <AccesoUsuarios /> },
         { path: 'roles', element: <AccesoRoles /> },
+        { path: 'empleados', element: <OpticaEmpleados /> },
+        { path: 'clientes', element: <OpticaClientes /> },
         { path: 'app', element: <GeneralApp /> },
         { path: 'ecommerce', element: <GeneralEcommerce /> },
         { path: 'analytics', element: <GeneralAnalytics /> },
@@ -177,6 +179,10 @@ const VerifyCode = Loadable(lazy(() => import('../pages/auth/VerifyCode')));
 // ACCESO
 const AccesoUsuarios = Loadable(lazy(() => import('../pages/dashboard/AccesoUsuarios')));
 const AccesoRoles = Loadable(lazy(() => import('../pages/dashboard/AccesoRoles')));
+
+// OPTICA
+const OpticaEmpleados = Loadable(lazy(() => import('../pages/dashboard/OpticaEmpleados')));
+const OpticaClientes = Loadable(lazy(() => import('../pages/dashboard/OpticaClientes')));
 
 // GENERAL
 const GeneralApp = Loadable(lazy(() => import('../pages/dashboard/GeneralApp')));

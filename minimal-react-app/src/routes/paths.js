@@ -38,6 +38,10 @@ export const PATH_DASHBOARD = {
     usuarios: path(ROOTS_DASHBOARD, '/usuarios'),
     roles: path(ROOTS_DASHBOARD, '/roles')
   },
+  optica: {
+    empleados: path(ROOTS_DASHBOARD, '/empleados'),
+    clientes: path(ROOTS_DASHBOARD, '/clientes')
+  },
   general: {
     app: path(ROOTS_DASHBOARD, '/app'),
     ecommerce: path(ROOTS_DASHBOARD, '/ecommerce'),

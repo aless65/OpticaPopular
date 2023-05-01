@@ -74,7 +74,7 @@ export default function UsuarioTableRow({ row, selected, onEditRow, onSelectRow,
                 sx={{ color: 'error.main' }}
               >
                 <Iconify icon={'eva:trash-2-outline'} />
-                Delete
+                Eliminar
               </MenuItem>
               <MenuItem
                 onClick={() => {

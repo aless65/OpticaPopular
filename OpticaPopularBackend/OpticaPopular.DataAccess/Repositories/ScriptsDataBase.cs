@@ -16,11 +16,19 @@ namespace OpticaPopular.DataAccess.Repositories
         public static string UDP_Elimina_Usuarios = "acce.UDP_acce_tbUsuarios_DELETE";
         #endregion
 
-        #region
+        #region Roles
         public static string UDP_Lista_Roles = "acce.UDP_acce_tbRoles_List";
         public static string UDP_Inserta_Roles = "acce.UDP_acce_tbRoles_Insert";
         public static string UDP_Edita_Roles = "acce.UDP_acce_tbRoles_Update";
         public static string UDP_Elimina_Roles = "acce.UDP_acce_tbRoles_Delete";
+        #endregion
+
+        #region Clientes
+        public static string UDP_Lista_Clientes = "opti.UDP_opti_tbClientes_List";
+        #endregion
+
+        #region Empleados
+        public static string UDP_Lista_Empleados = "opti.UDP_opti_tbEmpleados_List";
         #endregion
     }
 }

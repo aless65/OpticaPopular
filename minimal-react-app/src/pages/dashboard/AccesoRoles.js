@@ -18,7 +18,7 @@ import {
 } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
-import { getUsuarios } from '../../redux/slices/usuario';
+import { getRoles } from '../../redux/slices/rol';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // hooks
@@ -37,21 +37,19 @@ import {
   TableSelectedActions,
 } from '../../components/table';
 // sections
-import { UsuarioTableRow, UsuarioTableToolbar } from '../../sections/@dashboard/acceso/usuario-list';
+import { RolTableRow, TableToolbar } from '../../sections/@dashboard/acceso/rol-list';
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'usua_NombreUsuario', label: 'Usuario', align: 'left' },
-  { id: 'empe_NombreCompleto', label: 'Empleado', align: 'left' },
-  { id: 'usua_EsAdmin', label: 'Es admin', align: 'center', width: 180 },
-  { id: 'role_Nombre', label: 'Rol', align: 'right' },
+  { id: 'role_Id', label: 'ID', align: 'left' },
+  { id: 'role_Nombre', label: 'Nombre', align: 'left' },
   { id: '' },
 ];
 
 // ----------------------------------------------------------------------
 
-export default function AccesoUsuarioList() {
+export default function AccesoRolList() {
   const {
     dense,
     page,
@@ -70,7 +68,7 @@ export default function AccesoUsuarioList() {
     onChangePage,
     onChangeRowsPerPage,
   } = useTable({
-    defaultOrderBy: 'usua_NombreUsuario',
+    defaultOrderBy: 'role_Id',
   });
 
   const { themeStretch } = useSettings();
@@ -79,21 +77,21 @@ export default function AccesoUsuarioList() {
 
   const dispatch = useDispatch();
 
-  const { usuarios, isLoading } = useSelector((state) => state.usuario);
+  const { roles, isLoading } = useSelector((state) => state.rol);
 
   const [tableData, setTableData] = useState([]);
 
   const [filterName, setFilterName] = useState('');
 
   useEffect(() => {
-    dispatch(getUsuarios());
+    dispatch(getRoles());
   }, [dispatch]);
 
   useEffect(() => {
-    if (usuarios.length) {
-      setTableData(usuarios);
+    if (roles.length) {
+      setTableData(roles);
     }
-  }, [usuarios]);
+  }, [roles]);
 
   const handleFilterName = (filterName) => {
     setFilterName(filterName);
@@ -101,13 +99,13 @@ export default function AccesoUsuarioList() {
   };
 
   const handleDeleteRow = (id) => {
-    const deleteRow = tableData.filter((row) => row.usua_Id !== id);
+    const deleteRow = tableData.filter((row) => row.role_Id !== id);
     setSelected([]);
     setTableData(deleteRow);
   };
 
   const handleDeleteRows = (selected) => {
-    const deleteRows = tableData.filter((row) => !selected.includes(row.usua_Id));
+    const deleteRows = tableData.filter((row) => !selected.includes(row.role_Id));
     setSelected([]);
     setTableData(deleteRows);
   };
@@ -133,7 +131,7 @@ export default function AccesoUsuarioList() {
           heading="Listado de roles"
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            { name: 'Listado de roles' },
+            { name: 'Roles' },
           ]}
           action={
             <Button
@@ -148,7 +146,7 @@ export default function AccesoUsuarioList() {
         />
 
         <Card>
-          <UsuarioTableToolbar filterName={filterName} onFilterName={handleFilterName} />
+          <TableToolbar filterName={filterName} onFilterName={handleFilterName} />
 
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800 }}>
@@ -160,7 +158,7 @@ export default function AccesoUsuarioList() {
                   onSelectAllRows={(checked) =>
                     onSelectAllRows(
                       checked,
-                      tableData.map((row) => row.usua_Id)
+                      tableData.map((row) => row.role_Id)
                     )
                   }
                   actions={
@@ -184,7 +182,7 @@ export default function AccesoUsuarioList() {
                   onSelectAllRows={(checked) =>
                     onSelectAllRows(
                       checked,
-                      tableData.map((row) => row.usua_Id)
+                      tableData.map((row) => row.role_Id)
                     )
                   }
                 />
@@ -194,13 +192,13 @@ export default function AccesoUsuarioList() {
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row, index) =>
                       row ? (
-                        <UsuarioTableRow
-                          key={row.usua_Id}
+                        <RolTableRow
+                          key={row.role_Id}
                           row={row}
-                          selected={selected.includes(row.usua_Id)}
-                          onSelectRow={() => onSelectRow(row.usua_Id)}
-                          onDeleteRow={() => handleDeleteRow(row.usua_Id)}
-                          onEditRow={() => handleEditRow(row.usua_NombreUsuario)}
+                          selected={selected.includes(row.role_Id)}
+                          onSelectRow={() => onSelectRow(row.role_Id)}
+                          onDeleteRow={() => handleDeleteRow(row.role_Id)}
+                          onEditRow={() => handleEditRow(row.role_Nombre)}
                         />
                       ) : (
                         !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
@@ -262,9 +260,8 @@ function applySortFilter({ tableData, comparator, filterName }) {
 
   if (filterName) {
     tableData = tableData.filter((item) =>
-      item.usua_NombreUsuario.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 ||
-      item.empe_NombreCompleto.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 ||
-      item.role_Nombre.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
+      item.role_Id.toString().indexOf(filterName.toLowerCase()) !== -1 ||
+      item.role_Nombre.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 
     );
   }
   

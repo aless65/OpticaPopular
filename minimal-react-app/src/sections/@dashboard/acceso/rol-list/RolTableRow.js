@@ -17,7 +17,7 @@ import { TableMoreMenu } from '../../../../components/table';
 
 // ----------------------------------------------------------------------
 
-UsuarioTableRow.propTypes = {
+RolTableRow.propTypes = {
   row: PropTypes.object,
   selected: PropTypes.bool,
   onEditRow: PropTypes.func,
@@ -27,7 +27,7 @@ UsuarioTableRow.propTypes = {
 
 
 
-export default function UsuarioTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRow }) {
+export default function RolTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRow }) {
 
   const theme = useTheme();
 
@@ -68,7 +68,7 @@ export default function UsuarioTableRow({ row, selected, onEditRow, onSelectRow,
                 sx={{ color: 'error.main' }}
               >
                 <Iconify icon={'eva:trash-2-outline'} />
-                Delete
+                Eliminar
               </MenuItem>
               <MenuItem
                 onClick={() => {

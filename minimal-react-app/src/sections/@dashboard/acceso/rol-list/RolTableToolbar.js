@@ -6,12 +6,12 @@ import Iconify from '../../../../components/Iconify';
 
 // ----------------------------------------------------------------------
 
-UsuarioTableToolbar.propTypes = {
+RolTableToolbar.propTypes = {
   filterName: PropTypes.string,
   onFilterName: PropTypes.func,
 };
 
-export default function UsuarioTableToolbar({ filterName, onFilterName }) {
+export default function RolTableToolbar({ filterName, onFilterName }) {
   return (
     <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ py: 2.5, px: 3 }}>
       <TextField

@@ -6,6 +6,9 @@ import mailReducer from './slices/mail';
 import chatReducer from './slices/chat';
 import productReducer from './slices/product';
 import usuarioReducer from './slices/usuario';
+import rolReducer from './slices/rol';
+import clienteReducer from './slices/cliente';
+import empleadoReducer from './slices/empleado';
 import calendarReducer from './slices/calendar';
 import kanbanReducer from './slices/kanban';
 
@@ -32,6 +35,27 @@ const usuarioPersistConfig = {
   whitelist: ['sortBy', 'checkout'],
 };
 
+const rolPersistConfig = {
+  key: 'rol',
+  storage,
+  keyPrefix: 'redux-',
+  whitelist: ['sortBy', 'checkout'],
+};
+
+const clientePersistConfig = {
+  key: 'cliente',
+  storage,
+  keyPrefix: 'redux-',
+  whitelist: ['sortBy', 'checkout'],
+};
+
+const empleadoPersistConfig = {
+  key: 'empleado',
+  storage,
+  keyPrefix: 'redux-',
+  whitelist: ['sortBy', 'checkout'],
+};
+
 const rootReducer = combineReducers({
   mail: mailReducer,
   chat: chatReducer,
@@ -39,6 +63,9 @@ const rootReducer = combineReducers({
   kanban: kanbanReducer,
   product: persistReducer(productPersistConfig, productReducer),
   usuario: persistReducer(usuarioPersistConfig, usuarioReducer),
+  rol: persistReducer(rolPersistConfig, rolReducer),
+  cliente: persistReducer(clientePersistConfig, clienteReducer),
+  empleado: persistReducer(empleadoPersistConfig, empleadoReducer),
 });
 
 export { rootPersistConfig, rootReducer };

@@ -1,20 +1,23 @@
-﻿using OpticaPopular.Entities.Entities;
+﻿using Dapper;
+using Microsoft.Data.SqlClient;
+using OpticaPopular.Entities.Entities;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace OpticaPopular.DataAccess.Repositories
 {
-    public class EmpleadosRepository : IRepository<tbEmpleados, tbEmpleados>
+    public class EmpleadosRepository : IRepository<tbEmpleados, VW_tbEmpleados>
     {
         public RequestStatus Delete(tbEmpleados item)
         {
             throw new NotImplementedException();
         }
 
-        public tbEmpleados Find(int? id)
+        public VW_tbEmpleados Find(int? id)
         {
             throw new NotImplementedException();
         }
@@ -24,9 +27,10 @@ namespace OpticaPopular.DataAccess.Repositories
             throw new NotImplementedException();
         }
 
-        public IEnumerable<tbEmpleados> List()
+        public IEnumerable<VW_tbEmpleados> List()
         {
-            throw new NotImplementedException();
+            using var db = new SqlConnection(OpticaPopularContext.ConnectionString);
+            return db.Query<VW_tbEmpleados>(ScriptsDataBase.UDP_Lista_Empleados, null, commandType: CommandType.StoredProcedure);
         }
 
         public RequestStatus Update(tbEmpleados item)

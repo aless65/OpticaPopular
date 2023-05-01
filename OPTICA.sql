@@ -1158,6 +1158,7 @@ CREATE OR ALTER PROCEDURE opti.UDP_opti_tbClientes_List
 AS
 BEGIN
 	SELECT * FROM opti.VW_tbClientes
+	WHERE clie_Estado = 1
 END
 
 /*Insertar clientes*/
@@ -1348,6 +1349,7 @@ CREATE OR ALTER PROCEDURE opti.UDP_opti_tbEmpleados_List
 AS
 BEGIN
 	SELECT * FROM opti.VW_tbEmpleados
+	WHERE empe_Estado = 1
 END	
 
 /*Insertar Empleados*/
