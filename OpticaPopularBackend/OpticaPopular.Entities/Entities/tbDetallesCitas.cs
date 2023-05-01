@@ -8,6 +8,11 @@ namespace OpticaPopular.Entities.Entities
 {
     public partial class tbDetallesCitas
     {
+        public tbDetallesCitas()
+        {
+            tbFacturasDetalles = new HashSet<tbFacturasDetalles>();
+        }
+
         public int deci_Id { get; set; }
         public int cita_Id { get; set; }
         public decimal deci_Costo { get; set; }
@@ -22,5 +27,6 @@ namespace OpticaPopular.Entities.Entities
         public virtual tbCitas cita { get; set; }
         public virtual tbUsuarios usua_IdCreacionNavigation { get; set; }
         public virtual tbUsuarios usua_IdModificacionNavigation { get; set; }
+        public virtual ICollection<tbFacturasDetalles> tbFacturasDetalles { get; set; }
     }
 }

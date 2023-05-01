@@ -11,7 +11,7 @@ namespace OpticaPopular.Entities.Entities
         public int deen_Id { get; set; }
         public int envi_Id { get; set; }
         public int orde_Id { get; set; }
-        public bool? clie_Estado { get; set; }
+        public bool? deen_Estado { get; set; }
         public int usua_IdCreacion { get; set; }
         public DateTime? clie_FechaCreacion { get; set; }
         public int? usua_IdModificacion { get; set; }

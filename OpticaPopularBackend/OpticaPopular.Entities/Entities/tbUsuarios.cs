@@ -75,6 +75,7 @@ namespace OpticaPopular.Entities.Entities
         public DateTime? usua_FechaModificacion { get; set; }
         public bool? usua_Estado { get; set; }
 
+        public virtual tbEmpleados empe { get; set; }
         public virtual tbRoles role { get; set; }
         public virtual tbUsuarios usua_UsuCreacionNavigation { get; set; }
         public virtual tbUsuarios usua_UsuModificacionNavigation { get; set; }

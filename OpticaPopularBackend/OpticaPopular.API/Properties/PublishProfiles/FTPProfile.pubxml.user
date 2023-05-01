@@ -8,14 +8,14 @@ edite el archivo MSBuild. Visite https://go.microsoft.com/fwlink/?LinkID=208121 
     <TimeStampOfAssociatedLegacyPublishXmlFile />
     <EncryptedPassword>AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAvE8R0eocZEiVYWSX485cgAAAAAACAAAAAAAQZgAAAAEAACAAAAA/bvhYabreesuMopDau4vJndj5FZvBdE3ynkkK3htviAAAAAAOgAAAAAIAACAAAAB03j492u+uv0lCeI5d7K4XMk+7AaXoMlEVYb8NEbqeSCAAAAClTUGVeulbdJBklUGf6b4lHDxvbkk/ezJiGI7hr4Sv6EAAAAACLGk/z0q78yYS2gYmmNTRztHwLL1XZcX/h0ooq+PCOJ9cT0DYbZt1AspZZQlDrpHBVPuQSeyqFQAL7tdOtXvR</EncryptedPassword>
     <_PublishTargetUrl>ftp://opticapopular.somee.com/www.opticapopular.somee.com</_PublishTargetUrl>
-    <History>True|2023-04-27T02:14:08.8383133Z;True|2023-04-26T19:50:52.2355357-06:00;True|2023-04-26T14:33:15.2985819-06:00;</History>
+    <History>True|2023-05-01T16:00:00.7719423Z;True|2023-04-30T22:22:14.9092089-06:00;True|2023-04-26T20:14:08.8383133-06:00;True|2023-04-26T19:50:52.2355357-06:00;True|2023-04-26T14:33:15.2985819-06:00;</History>
   </PropertyGroup>
   <ItemGroup>
     <File Include="appsettings.Development.json">
-      <publishTime>04/25/2023 20:34:55</publishTime>
+      <publishTime>04/27/2023 20:18:15</publishTime>
     </File>
     <File Include="appsettings.json">
-      <publishTime>04/26/2023 18:05:23</publishTime>
+      <publishTime>04/27/2023 20:18:15</publishTime>
     </File>
     <File Include="AutoMapper.dll">
       <publishTime>01/05/2022 09:27:54</publishTime>
@@ -207,37 +207,37 @@ edite el archivo MSBuild. Visite https://go.microsoft.com/fwlink/?LinkID=208121 
       <publishTime>04/24/2018 15:27:10</publishTime>
     </File>
     <File Include="OpticaPopular.API.deps.json">
-      <publishTime>04/26/2023 20:11:17</publishTime>
+      <publishTime>05/01/2023 09:58:06</publishTime>
     </File>
     <File Include="OpticaPopular.API.dll">
-      <publishTime>04/26/2023 20:10:41</publishTime>
+      <publishTime>05/01/2023 09:57:57</publishTime>
     </File>
     <File Include="OpticaPopular.API.exe">
-      <publishTime>04/26/2023 20:10:41</publishTime>
+      <publishTime>05/01/2023 09:57:57</publishTime>
     </File>
     <File Include="OpticaPopular.API.pdb">
-      <publishTime>04/26/2023 20:10:41</publishTime>
+      <publishTime>05/01/2023 09:57:57</publishTime>
     </File>
     <File Include="OpticaPopular.API.runtimeconfig.json">
-      <publishTime>04/26/2023 19:47:38</publishTime>
+      <publishTime>04/30/2023 22:19:53</publishTime>
     </File>
     <File Include="OpticaPopular.BusinessLogic.dll">
-      <publishTime>04/26/2023 19:47:31</publishTime>
+      <publishTime>05/01/2023 09:53:45</publishTime>
     </File>
     <File Include="OpticaPopular.BusinessLogic.pdb">
-      <publishTime>04/26/2023 19:47:31</publishTime>
+      <publishTime>05/01/2023 09:53:45</publishTime>
     </File>
     <File Include="OpticaPopular.DataAccess.dll">
-      <publishTime>04/26/2023 19:47:27</publishTime>
+      <publishTime>05/01/2023 09:53:43</publishTime>
     </File>
     <File Include="OpticaPopular.DataAccess.pdb">
-      <publishTime>04/26/2023 19:47:27</publishTime>
+      <publishTime>05/01/2023 09:53:43</publishTime>
     </File>
     <File Include="OpticaPopular.Entities.dll">
-      <publishTime>04/26/2023 19:47:18</publishTime>
+      <publishTime>04/30/2023 22:19:30</publishTime>
     </File>
     <File Include="OpticaPopular.Entities.pdb">
-      <publishTime>04/26/2023 19:47:17</publishTime>
+      <publishTime>04/30/2023 22:19:30</publishTime>
     </File>
     <File Include="pl/Microsoft.CodeAnalysis.CSharp.resources.dll">
       <publishTime>09/12/2019 11:09:00</publishTime>
@@ -363,7 +363,7 @@ edite el archivo MSBuild. Visite https://go.microsoft.com/fwlink/?LinkID=208121 
       <publishTime>09/12/2019 11:08:36</publishTime>
     </File>
     <File Include="web.config">
-      <publishTime>04/26/2023 20:11:18</publishTime>
+      <publishTime>05/01/2023 09:58:08</publishTime>
     </File>
     <File Include="zh-Hans/Microsoft.CodeAnalysis.CSharp.resources.dll">
       <publishTime>09/12/2019 11:09:00</publishTime>

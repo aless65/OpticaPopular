@@ -30,7 +30,14 @@ namespace OpticaPopular.DataAccess.Repositories
 
         public VW_tbUsuarios Find(int? id)
         {
-            throw new NotImplementedException();
+            RequestStatus result = new RequestStatus();
+
+            using var db = new SqlConnection(OpticaPopularContext.ConnectionString);
+
+            var parametros = new DynamicParameters();
+            parametros.Add("@usua_Id", id, DbType.Int32, ParameterDirection.Input);
+
+            return db.QueryFirst<VW_tbUsuarios>(ScriptsDataBase.UDP_Find_Usuarios, parametros, commandType: CommandType.StoredProcedure);
         }
 
         public RequestStatus Insert(tbUsuarios item)

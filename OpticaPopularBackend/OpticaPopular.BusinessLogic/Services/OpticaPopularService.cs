@@ -79,7 +79,19 @@ namespace OpticaPopular.BusinessLogic.Services
         #endregion
 
         #region Clientes
-
+        public ServiceResult ListadoClientes()
+        {
+            var result = new ServiceResult();
+            try
+            {
+                var list = _clientesRepository.List();
+                return result.Ok(list);
+            }
+            catch (Exception e)
+            {
+                return result.Error(e.Message);
+            }
+        }
 
 
         #endregion
@@ -122,6 +134,19 @@ namespace OpticaPopular.BusinessLogic.Services
 
         #region Empleados
 
+        public ServiceResult ListadoEmpleados()
+        {
+            var result = new ServiceResult();
+            try
+            {
+                var list = _empleadosRepository.List();
+                return result.Ok(list);
+            }
+            catch (Exception e)
+            {
+                return result.Error(e.Message);
+            }
+        }
 
 
         #endregion

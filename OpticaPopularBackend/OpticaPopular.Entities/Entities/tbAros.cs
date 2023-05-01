@@ -30,6 +30,7 @@ namespace OpticaPopular.Entities.Entities
         public virtual tbUsuarios aros_UsuCreacionNavigation { get; set; }
         public virtual tbUsuarios aros_UsuModificacionNavigation { get; set; }
         public virtual tbCategorias cate { get; set; }
+        public virtual tbMarcas marc { get; set; }
         public virtual tbProveedores prov { get; set; }
         public virtual ICollection<tbDetallesOrdenes> tbDetallesOrdenes { get; set; }
         public virtual ICollection<tbFacturasDetalles> tbFacturasDetalles { get; set; }

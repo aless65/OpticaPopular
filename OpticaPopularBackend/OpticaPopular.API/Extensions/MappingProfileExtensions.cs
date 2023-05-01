@@ -9,6 +9,7 @@ namespace OpticaPopular.API.Extensions
         public MappingProfileExtensions()
         {
             CreateMap<UsuarioViewModel, tbUsuarios>().ReverseMap();
+            CreateMap<RolViewModel, tbRoles>().ReverseMap();
         }
     }
 }

@@ -16,7 +16,7 @@ namespace OpticaPopular.Entities.Entities
         public decimal deor_Precio { get; set; }
         public int deor_Cantidad { get; set; }
         public decimal deor_Total { get; set; }
-        public bool? orde_Estado { get; set; }
+        public bool? deor_Estado { get; set; }
         public int usua_IdCreacion { get; set; }
         public DateTime? orde_FechaCreacion { get; set; }
         public int? usua_IdModificacion { get; set; }
