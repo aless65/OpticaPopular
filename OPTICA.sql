@@ -111,7 +111,7 @@ BEGIN
 END
 GO
 
-EXEC acce.UDP_InsertUsuario 'admin', '123', 1, NULL, NULL;
+EXEC acce.UDP_InsertUsuario 'admin', '123', 1, 1, 1;
 GO
 
 --********* ALTERAR TABLA ROLES **************--
@@ -340,10 +340,6 @@ CREATE TABLE opti.tbEmpleados(
 GO
 
 ALTER TABLE opti.tbEmpleados ADD CONSTRAINT FK_opti_tbEmpleados_dire_Id_opti_tbDirecciones_dire_Id FOREIGN KEY (dire_Id) REFERENCES opti.tbDirecciones (dire_Id)
-GO
-
-ALTER TABLE acce.tbUsuarios 
-ADD CONSTRAINT FK_acce_tbUsuarios_opti_tbEmpleados_empe_Id FOREIGN KEY(empe_Id) REFERENCES opti.tbEmpleados(empe_Id) 
 GO
 
 --********TABLA Clientes****************---
@@ -1050,6 +1046,12 @@ VALUES('Clara','Gomez','1234567890123','2003-12-05','F',1,'98107260','gomez23.e@
 ('Samuel','Bautista','0561272415712','2007-04-14','M',1,'32007260','samuel12@gmail.com', 15, 1,3,1),
 ('Erick','Hernadez','0561272415799','2007-04-30','M',1,'92007930','erickhernadez@gmail.com', 16, 1,3,1)
 GO
+
+
+ALTER TABLE acce.tbUsuarios 
+ADD CONSTRAINT FK_acce_tbUsuarios_opti_tbEmpleados_empe_Id FOREIGN KEY(empe_Id) REFERENCES opti.tbEmpleados(empe_Id) 
+GO
+
 
   --********INSERT TABLA Clientes****************---
 INSERT INTO opti.tbClientes(clie_Nombres, clie_Apellidos, clie_Identidad, clie_Sexo, clie_FechaNacimiento, estacivi_Id, clie_Telefono, clie_CorreoElectronico, dire_Id, clie_UsuCreacion)

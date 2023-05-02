@@ -473,6 +473,7 @@ CREATE OR ALTER PROCEDURE opti.UDP_opti_tbClientes_List
 AS
 BEGIN
 	SELECT * FROM opti.VW_tbClientes
+	WHERE clie_Estado = 1
 END
 GO
 
