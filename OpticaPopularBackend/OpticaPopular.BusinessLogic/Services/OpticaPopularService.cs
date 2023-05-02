@@ -1,4 +1,5 @@
 ﻿using OpticaPopular.DataAccess.Repositories;
+using OpticaPopular.Entities.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -93,6 +94,62 @@ namespace OpticaPopular.BusinessLogic.Services
             }
         }
 
+        public ServiceResult InsertClientes(tbClientes item)
+        {
+            var result = new ServiceResult();
+            try
+            {
+                var insert = _clientesRepository.Insert(item);
+                if (insert.MessageStatus == "El cliente ha sido ingresado con éxito")
+                    return result.SetMessage(insert.MessageStatus, ServiceResultType.Success);
+                else if (insert.MessageStatus == "Ya existe un cliente con este número de identidad")
+                    return result.SetMessage(insert.MessageStatus, ServiceResultType.Warning);
+                else
+                    return result.SetMessage(insert.MessageStatus, ServiceResultType.Error);
+            }
+            catch (Exception e)
+            {
+                return result.Error(e.Message);
+            }
+        }
+
+        public ServiceResult UpdateClientes(tbClientes item)
+        {
+            var result = new ServiceResult();
+            try
+            {
+                var update = _clientesRepository.Update(item);
+                if (update.MessageStatus == "El cliente ha sido editado con éxito")
+                    return result.SetMessage(update.MessageStatus, ServiceResultType.Success);
+                else if (update.MessageStatus == "Ya existe un cliente con este número de identidad")
+                    return result.SetMessage(update.MessageStatus, ServiceResultType.Warning);
+                else
+                    return result.SetMessage(update.MessageStatus, ServiceResultType.Error);
+            }
+            catch (Exception e)
+            {
+                return result.Error(e.Message);
+            }
+        }
+
+        public ServiceResult DeleteClientes(tbClientes item)
+        {
+            var result = new ServiceResult();
+            try
+            {
+                var update = _clientesRepository.Delete(item);
+                if (update.MessageStatus == "El cliente ha sido eliminado")
+                    return result.SetMessage(update.MessageStatus, ServiceResultType.Success);
+                else if (update.MessageStatus == "El cliente no puede ser eliminado ya que está siendo utilizado en otro registro")
+                    return result.SetMessage(update.MessageStatus, ServiceResultType.Warning);
+                else
+                    return result.SetMessage(update.MessageStatus, ServiceResultType.Error);
+            }
+            catch (Exception e)
+            {
+                return result.Error(e.Message);
+            }
+        }
 
         #endregion
 

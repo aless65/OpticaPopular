@@ -25,6 +25,9 @@ namespace OpticaPopular.DataAccess.Repositories
 
         #region Clientes
         public static string UDP_Lista_Clientes = "opti.UDP_opti_tbClientes_List";
+        public static string UDP_Inserta_Clientes = "opti.UDP_opti_tbClientes_Insert";
+        public static string UDP_Edita_Clientes = "opti.UDP_opti_tbClientes_Update";
+        public static string UDP_Elimina_Clientes = "opti.UDP_opti_tbClientes_Delete";
         #endregion
 
         #region Empleados
