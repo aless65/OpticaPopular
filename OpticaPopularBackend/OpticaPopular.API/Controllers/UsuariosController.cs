@@ -64,5 +64,12 @@ namespace OpticaPopular.API.Controllers
 
             return Ok(delete);
         }
+
+        [HttpGet("Login")]
+        public IActionResult Login(string usuario, string contrasena)
+        {
+            var list = _accesoService.Login(usuario, contrasena);
+            return Ok(list);
+        }
     }
 }

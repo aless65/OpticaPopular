@@ -14,6 +14,7 @@ namespace OpticaPopular.DataAccess.Repositories
         public static string UDP_Inserta_Usuarios = "acce.UDP_acce_tbUsuarios_Insert";
         public static string UDP_Edita_Usuarios = "acce.UDP_acce_tbUsuarios_Update";
         public static string UDP_Elimina_Usuarios = "acce.UDP_acce_tbUsuarios_DELETE";
+        public static string UDP_Login_Usuarios = "acce.UDP_Login";
         #endregion
 
         #region Roles
