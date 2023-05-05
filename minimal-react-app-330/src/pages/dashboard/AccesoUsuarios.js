@@ -38,6 +38,11 @@ import {
 } from '../../components/table';
 // sections
 import { UsuarioTableRow, TableToolbar } from '../../sections/@dashboard/acceso/usuario-list';
+<<<<<<< HEAD
+=======
+import AddUserDialog from './AccesoUsuariosModales/ModalInsertUsuarios';
+import EditUserDialog from './AccesoUsuariosModales/ModalEditUsuarios';
+>>>>>>> aless
 
 // ----------------------------------------------------------------------
 
@@ -85,6 +90,17 @@ export default function AccesoUsuarios() {
 
   const [filterName, setFilterName] = useState('');
 
+<<<<<<< HEAD
+=======
+  const [usuaId, setUsuaId] = useState('');
+
+  const [openAddUserDialog, setOpenAddUserDialog] = useState(false);
+
+  const [openEditUserDialog, setOpenEditUserDialog] = useState(false);
+
+  const [insertSuccess, setInsertSuccess] = useState(false);
+
+>>>>>>> aless
   useEffect(() => {
     dispatch(getUsuarios());
   }, [dispatch]);
@@ -112,8 +128,18 @@ export default function AccesoUsuarios() {
     setTableData(deleteRows);
   };
 
+<<<<<<< HEAD
   const handleEditRow = (id) => {
     navigate(PATH_DASHBOARD.eCommerce.edit(paramCase(id)));
+=======
+  // useEffect(() => {
+  //   console.log(usuaId);
+  // }, [usuaId]);
+
+  const handleEditRow = (id) => {
+    setUsuaId(id);
+    setOpenEditUserDialog(true);
+>>>>>>> aless
   };
 
   const dataFiltered = applySortFilter({
@@ -122,6 +148,33 @@ export default function AccesoUsuarios() {
     filterName,
   });
 
+<<<<<<< HEAD
+=======
+  const handleOpenAddUserDialog = () => {
+    setOpenAddUserDialog(true)
+  }
+
+  const handleCloseAddUserDialog = () => {
+    setOpenAddUserDialog(false);
+  }
+
+  const handleOpenEditUserDialog = () => {
+    setOpenEditUserDialog(true);
+  }
+
+  const handleCloseEditUserDialog = () => {
+    setOpenEditUserDialog(false);
+  }
+
+  // useEffect(() => {
+  //   if (insertSuccess) {
+  //     dispatch(getUsuarios());
+
+  //     setInsertSuccess(false);
+  //   }
+  // }, [dispatch]);
+
+>>>>>>> aless
   const denseHeight = dense ? 60 : 80;
 
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
@@ -136,6 +189,7 @@ export default function AccesoUsuarios() {
             { name: 'Usuarios' },
           ]}
           action={
+<<<<<<< HEAD
             <Button
               variant="contained"
               startIcon={<Iconify icon="eva:plus-fill" />}
@@ -144,6 +198,21 @@ export default function AccesoUsuarios() {
             >
               Agregar
             </Button>
+=======
+            <div>
+              <Button
+                variant="contained"
+                startIcon={<Iconify icon="eva:plus-fill" />}
+                onClick={handleOpenAddUserDialog}
+
+              >
+                Agregar
+              </Button>
+              <AddUserDialog open={openAddUserDialog} onClose={handleCloseAddUserDialog} usuarios={usuarios} setTableData={setTableData} />
+              <EditUserDialog open={openEditUserDialog} onClose={handleCloseEditUserDialog} usuarios={usuarios} setTableData={setTableData} usuaId={usuaId} />
+            </div>
+
+>>>>>>> aless
           }
         />
 
@@ -179,7 +248,11 @@ export default function AccesoUsuarios() {
                           selected={selected.includes(row.usua_Id)}
                           onSelectRow={() => onSelectRow(row.usua_Id)}
                           onDeleteRow={() => handleDeleteRow(row.usua_Id)}
+<<<<<<< HEAD
                           onEditRow={() => handleEditRow(row.usua_NombreUsuario)}
+=======
+                          onEditRow={() => handleEditRow(row.usua_Id)}
+>>>>>>> aless
                         />
                       ) : (
                         !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
@@ -206,7 +279,11 @@ export default function AccesoUsuarios() {
             />
 
             <FormControlLabel
+<<<<<<< HEAD
               control={<Switch checked={dense} onChange={onChangeDense} />}
+=======
+              control={<Switch checked={dense} onChange={onChangeDense}  />}
+>>>>>>> aless
               label="Denso"
               sx={{ px: 3, py: 1.5, top: 0, position: { md: 'absolute' } }}
             />
@@ -246,7 +323,11 @@ function applySortFilter({ tableData, comparator, filterName }) {
       item.role_Nombre.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
     );
   }
+<<<<<<< HEAD
   
+=======
+
+>>>>>>> aless
 
   return tableData;
 }

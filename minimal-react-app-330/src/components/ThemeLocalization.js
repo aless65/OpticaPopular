@@ -14,7 +14,11 @@ export default function ThemeLocalization({ children }) {
   const defaultTheme = useTheme();
   const { currentLang } = useLocales();
 
+<<<<<<< HEAD
   const theme = createTheme(defaultTheme, currentLang.systemValue);
+=======
+  const theme = createTheme(defaultTheme, currentLang?.systemValue);
+>>>>>>> aless
 
   return <ThemeProvider theme={theme}>{children}</ThemeProvider>;
 }
