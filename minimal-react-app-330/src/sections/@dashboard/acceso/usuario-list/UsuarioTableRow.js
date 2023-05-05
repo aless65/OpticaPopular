@@ -26,7 +26,6 @@ UsuarioTableRow.propTypes = {
 };
 
 
-
 export default function UsuarioTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRow }) {
 
   const theme = useTheme();
@@ -82,8 +81,7 @@ export default function UsuarioTableRow({ row, selected, onEditRow, onSelectRow,
                 <Iconify icon={'eva:edit-fill'} />
                 Editar
               </MenuItem>
-<<<<<<< HEAD
-=======
+
               <MenuItem
                 onClick={() => {
                   onEditRow();
@@ -93,7 +91,6 @@ export default function UsuarioTableRow({ row, selected, onEditRow, onSelectRow,
                 <Iconify icon={'eva:list-fill'} />
                 Detalles
               </MenuItem>
->>>>>>> aless
             </>
           }
         />

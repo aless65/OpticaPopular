@@ -38,10 +38,7 @@ import {
 } from '../../components/table';
 // sections
 import { RolTableRow, TableToolbar } from '../../sections/@dashboard/acceso/rol-list';
-<<<<<<< HEAD
-=======
 import AddRolDialog from './AccesoRolesModales/ModalInsertRoles';
->>>>>>> aless
 
 // ----------------------------------------------------------------------
 
@@ -83,11 +80,8 @@ export default function AccesoRoles() {
 
   const { roles, isLoading } = useSelector((state) => state.rol);
 
-<<<<<<< HEAD
-=======
   const [openAddRolDialog, setOpenAddRolDialog] = useState(false);
 
->>>>>>> aless
   const [tableData, setTableData] = useState([]);
 
   const [filterName, setFilterName] = useState('');
@@ -129,8 +123,6 @@ export default function AccesoRoles() {
     filterName,
   });
 
-<<<<<<< HEAD
-=======
   const handleOpenAddRolDialog = () => {
     setOpenAddRolDialog(true)
   }
@@ -139,7 +131,6 @@ export default function AccesoRoles() {
     setOpenAddRolDialog(false);
   }
 
->>>>>>> aless
   const denseHeight = dense ? 60 : 80;
 
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
@@ -154,16 +145,6 @@ export default function AccesoRoles() {
             { name: 'Roles' },
           ]}
           action={
-<<<<<<< HEAD
-            <Button
-              variant="contained"
-              startIcon={<Iconify icon="eva:plus-fill" />}
-              component={RouterLink}
-              to={PATH_DASHBOARD.eCommerce.new}
-            >
-              Agregar
-            </Button>
-=======
             <div>
               <Button
                 variant="contained"
@@ -174,10 +155,8 @@ export default function AccesoRoles() {
               </Button>
               <AddRolDialog open={openAddRolDialog} onClose={handleCloseAddRolDialog} roles={roles} setTableData={setTableData} />
             </div>
->>>>>>> aless
           }
         />
-
         <Card>
           <TableToolbar filterName={filterName} onFilterName={handleFilterName} />
 

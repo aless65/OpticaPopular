@@ -48,10 +48,8 @@ const slice = createSlice({
     getUsuarioSuccess(state, action) {
       state.isLoading = false;
       state.usuario = action.payload;
-<<<<<<< HEAD
-=======
       // console.log('User data:', action.payload);
->>>>>>> aless
+
     },
 
     //  SORT & FILTER USUARIOS
@@ -66,7 +64,6 @@ const slice = createSlice({
       state.filters.priceRange = action.payload.priceRange;
       state.filters.rating = action.payload.rating;
     },
-    
   },
 });
 
@@ -86,10 +83,7 @@ export function getUsuarios() {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get('http://opticapopular.somee.com/api/Usuarios/Listado');
-<<<<<<< HEAD
-      console.log(response.data.data);
-=======
->>>>>>> aless
+     
       dispatch(slice.actions.getUsuariosSuccess(response.data.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
@@ -99,21 +93,12 @@ export function getUsuarios() {
 
 // ----------------------------------------------------------------------
 
-<<<<<<< HEAD
-export function getUsuario(name) {
-  return async () => {
-    dispatch(slice.actions.startLoading());
-    try {
-      const response = await axios.get('/api/products/product', {
-        params: { name },
-      });
-=======
 export function getUsuario(id) {
   return async (dispatch) => { // add dispatch parameter
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get(`http://opticapopular.somee.com/api/Usuarios/Find?id=${id}`);
->>>>>>> aless
+
       dispatch(slice.actions.getUsuarioSuccess(response.data.data));
     } catch (error) {
       console.error(error);

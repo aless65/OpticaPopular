@@ -33,11 +33,7 @@ export default function LanguagePopover() {
           ...(open && { bgcolor: 'action.selected' }),
         }}
       >
-<<<<<<< HEAD
-        <Image disabledEffect src={currentLang.icon} alt={currentLang.label} />
-=======
         <Image disabledEffect src={currentLang?.icon} alt={currentLang?.label} />
->>>>>>> aless
       </IconButtonAnimate>
 
       <MenuPopover
@@ -55,11 +51,7 @@ export default function LanguagePopover() {
           {allLang.map((option) => (
             <MenuItem
               key={option.value}
-<<<<<<< HEAD
-              selected={option.value === currentLang.value}
-=======
               selected={option.value === currentLang?.value}
->>>>>>> aless
               onClick={() => {
                 onChangeLang(option.value);
                 handleClose();
