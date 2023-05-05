@@ -123,7 +123,9 @@ ADD CONSTRAINT FK_acce_tbRoles_acce_tbUsuarios_role_UsuCreacion_usua_Id 	FOREIGN
 GO
 
 INSERT INTO acce.tbRoles(role_Nombre, role_UsuCreacion)
-VALUES ('Vendedor', 1)
+VALUES ('Ventas', 1),
+	   ('Inventario', 1),
+	   ('Gerencia', 1)
 GO
 
 --********* ALTERAR TABLA USUARIOS **************--
