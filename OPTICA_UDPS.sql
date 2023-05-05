@@ -116,6 +116,19 @@ CREATE OR ALTER PROCEDURE acce.UDP_acce_tbUsuarios_List
 AS
 BEGIN
 	SELECT * FROM acce.VW_tbUsuarios
+	WHERE usua_Estado = 1
+END
+GO
+
+
+/*Find Usuarios*/
+CREATE OR ALTER PROCEDURE acce.UDP_acce_VW_tbUsuarios_Find 
+	@usua_Id	INT
+AS
+BEGIN
+	SELECT * FROM acce.VW_tbUsuarios
+	WHERE usua_Estado = 1
+	AND usua_Id = @usua_Id
 END
 GO
 
