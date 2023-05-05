@@ -164,7 +164,7 @@ export default function AddUserDialog({ open, onClose, usuarios, setTableData })
       setInsertSuccess(false);
     }
 
-  }, [dispatch, insertSuccess]);
+  }, [insertSuccess]);
 
   const handleEsAdminChange = (event) => {
     methods.setValue('esAdmin', event.target.checked);

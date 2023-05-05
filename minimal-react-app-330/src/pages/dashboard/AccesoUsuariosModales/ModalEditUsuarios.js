@@ -52,13 +52,17 @@ export default function EditUserDialog({ open, onClose, usuarios, setTableData, 
 
     const usuario = useSelector((state) => state.usuario.usuario);
 
-    const usuarioCopia = {...usuario}
+    // const usuarioCopia = { ...usuario }
 
     const dispatch = useDispatch();
-    
-    // const [empleadoTemporal, setEmpleadoTemporal] = useState('');
-  
-    // const [rolTemporal, setRolTemporal] = useState('');
+
+    const [empleadoTemporal, setEmpleadoTemporal] = useState('');
+
+    const [rolTemporal, setRolTemporal] = useState('');
+
+    const [esAdminTemporal, setEsAdminTemporal] = useState(false);
+
+    // const { register, handleSubmit, setValue, reset, formState: { errors } } = useForm({ defaultValues });
 
     useEffect(() => {
         if (usuaId) {
@@ -66,10 +70,17 @@ export default function EditUserDialog({ open, onClose, usuarios, setTableData, 
         }
     }, [usuaId, dispatch, insertSuccess]);
 
-    // useEffect(() => {
-    //     console.log(usuario);
-    // }, [usuario]);
-
+    useEffect(() => {
+        console.log("usuario:", usuario);
+        if (usuario) {
+          console.log("setting empleadoTemporal to", usuario.empe_Id);
+          setEmpleadoTemporal(usuario.empe_Id);
+          console.log("setting rolTemporal to", usuario.role_Id);
+          setRolTemporal(usuario.role_Id);
+          console.log("setting esAdminTemporal to", usuario.usua_EsAdmin);
+          setEsAdminTemporal(usuario.usua_EsAdmin);
+        }
+      }, [usuario]);
 
     useEffect(() => {
         fetch('http://opticapopular.somee.com/api/Empleados/Listado')
@@ -102,15 +113,15 @@ export default function EditUserDialog({ open, onClose, usuarios, setTableData, 
     const InsertSchema = Yup.object().shape({
         // username: Yup.string().required('Nombre de usuario requerido'),
         // password: Yup.string().required('Contraseña requerida'),
-        empleado: Yup.string().required('Empleado requerido'),
-        rol: Yup.string().required('Rol requerido'),
+        // empleado: Yup.string().required('Empleado requerido'),
+        // rol: Yup.string().required('Rol requerido'),
     });
 
     const defaultValues = {
         username: usuario?.usua_NombreUsuario || '',
-        empleado: usuario?.empe_Id || '',
-        rol: usuario?.role_Id || '',
-        esAdmin: false,
+        empleado: empleadoTemporal || '',
+        rol: rolTemporal || '',
+        esAdmin: esAdminTemporal || false,
     };
 
     const methods = useForm({
@@ -125,6 +136,14 @@ export default function EditUserDialog({ open, onClose, usuarios, setTableData, 
         handleSubmit,
         formState: { errors, isSubmitting },
     } = methods;
+
+    useEffect(() => {
+        console.log("infinito?");
+        methods.setValue('username', defaultValues.username);
+        methods.setValue('empleado', defaultValues.empleado);
+        methods.setValue('rol', defaultValues.rol);
+        methods.setValue('esAdmin', defaultValues.esAdmin);
+      }, [defaultValues]);
 
     const onSubmit = async (data) => {
         console.log(data);
@@ -176,10 +195,11 @@ export default function EditUserDialog({ open, onClose, usuarios, setTableData, 
             setInsertSuccess(false);
         }
 
-    }, [dispatch, insertSuccess]);
+    }, [insertSuccess]);
 
     const handleEsAdminChange = (event) => {
         methods.setValue('esAdmin', event.target.checked);
+        setEsAdminTemporal(event.target.checked);
     };
 
     const submitHandler = handleSubmit(onSubmit);
@@ -191,7 +211,7 @@ export default function EditUserDialog({ open, onClose, usuarios, setTableData, 
 
     return (
         <FormProvider methods={methods}>
-            <Dialog open={open} fullWidth maxWidth="sm" onClose={handleDialogClose} usuarios={usuarios} >
+            <Dialog open={open} fullWidth maxWidth="sm" onClose={handleDialogClose} usuarios={usuarios}>
                 <DialogTitle>Editar usuario</DialogTitle>
 
                 {!!errors.afterSubmit && <Alert severity="error">{errors.afterSubmit.message}</Alert>}
@@ -211,12 +231,11 @@ export default function EditUserDialog({ open, onClose, usuarios, setTableData, 
                                 onChange={(event, value) => {
                                     if (value != null) {
                                         methods.setValue('empleado', value.id);
-                                        // usuario.empe_Id = value.id;
-                                        console.log(value);
+                                        setEmpleadoTemporal(value.id);
                                     }
                                 }}
                                 isOptionEqualToValue={(option, value) => option.id === value.id}
-                                value={usuario && optionsEmpleados.find(option => option.id === usuario.empe_Id)}
+                                value={optionsEmpleados.find((option) => option.id === empleadoTemporal)}
                             />
                         </Grid>
                         <Grid item xs={12} sx={{ pl: 1 }} sm={6}>
@@ -230,19 +249,20 @@ export default function EditUserDialog({ open, onClose, usuarios, setTableData, 
                                 onChange={(event, value) => {
                                     if (value != null) {
                                         methods.setValue('rol', value.id);
+                                        setRolTemporal(value.id);
                                     }
                                 }}
                                 isOptionEqualToValue={(option, value) => option.id === value.id}
-                                value={usuario && optionsRoles.find(option => option.id === usuario.role_Id)}
+                                value={optionsRoles.find((option) => option.id === rolTemporal)}
                             />
                         </Grid>
                     </Grid>
                     <FormControlLabel
                         control={
                             <Checkbox
-                                // checked={defaultValues.esAdmin}
+                                checked={esAdminTemporal}
                                 onChange={handleEsAdminChange}
-                                checked={usuario?.usua_EsAdmin || false}
+                            // checked={usuario?.usua_EsAdmin || false}
                             />
                         }
                         label="Es Admin"
