@@ -20,19 +20,20 @@ const RootStyle = styled('div')(({ theme }) => ({
 
 export default function Page500() {
   return (
-    <Page title="500 Internal Server Error" sx={{ height: 1 }}>
+    <Page title="500 Error interno de servidor" sx={{ height: 1 }}>
       <RootStyle>
         <Container>
           <Box sx={{ maxWidth: 480, margin: 'auto', textAlign: 'center' }}>
             <Typography variant="h3" paragraph>
-              500 Internal Server Error
+             500 Error interno de servidor
             </Typography>
-            <Typography sx={{ color: 'text.secondary' }}>There was an error, please try again later.</Typography>
-
+            <Typography sx={{ color: 'text.secondary' }}>
+              Hubo un error, inténtalo de nuevo más tarde.
+            </Typography>
             <SeverErrorIllustration sx={{ height: 260, my: { xs: 5, sm: 10 } }} />
 
             <Button to="/" size="large" variant="contained" component={RouterLink}>
-              Go to Home
+              Volver al inicio
             </Button>
           </Box>
         </Container>

@@ -132,7 +132,7 @@ export default function OpticaClientes() {
         <HeaderBreadcrumbs
           heading="Listado de clientes"
           links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
+            { name: 'Optica', href: PATH_DASHBOARD.root },
             { name: 'Clientes' },
           ]}
           action={
@@ -140,7 +140,7 @@ export default function OpticaClientes() {
               variant="contained"
               startIcon={<Iconify icon="eva:plus-fill" />}
               component={RouterLink}
-              to={PATH_DASHBOARD.eCommerce.new}
+              to={PATH_DASHBOARD.general.app}
             >
               Agregar
             </Button>
