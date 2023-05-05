@@ -74,9 +74,9 @@ export default function Login() {
           <Logo />
           {smUp && (
             <Typography variant="body2" sx={{ mt: { md: -2 } }}>
-              Don’t have an account? {''}
+                ¿No tienes una cuenta? {''}
               <Link variant="subtitle2" component={RouterLink} to={PATH_AUTH.register}>
-                Get started
+                Crear cuenta
               </Link>
             </Typography>
           )}
@@ -85,7 +85,7 @@ export default function Login() {
         {mdUp && (
           <SectionStyle>
             <Typography variant="h3" sx={{ px: 5, mt: 10, mb: 5 }}>
-              Hi, Welcome Back
+              Hola, Bienvenido(a) de vuelta
             </Typography>
             <Image
               visibleByDefault
@@ -101,25 +101,21 @@ export default function Login() {
             <Stack direction="row" alignItems="center" sx={{ mb: 5 }}>
               <Box sx={{ flexGrow: 1 }}>
                 <Typography variant="h4" gutterBottom>
-                  Sign in to Minimal
+                  Inicia sesión
                 </Typography>
-                <Typography sx={{ color: 'text.secondary' }}>Enter your details below.</Typography>
+                <Typography sx={{ color: 'text.secondary' }}>A continuación introduzca sus datos.</Typography>
               </Box>
 
               <Tooltip title={capitalCase(method)} placement="right">
                 <>
                   <Image
                     disabledEffect
-                    src={`https://minimal-assets-api.vercel.app/assets/icons/auth/ic_${method}.png`}
+                    src={`https://minimal-assets-api.vercel.app/assets/icons/auth/ic_jwt.png`}
                     sx={{ width: 32, height: 32 }}
                   />
                 </>
               </Tooltip>
             </Stack>
-
-            <Alert severity="info" sx={{ mb: 3 }}>
-              Use email : <strong>demo@minimals.cc</strong> / password :<strong> demo1234</strong>
-            </Alert>
 
             <LoginForm />
 

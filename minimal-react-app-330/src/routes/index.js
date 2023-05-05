@@ -5,7 +5,6 @@ import DashboardLayout from '../layouts/dashboard';
 import LogoOnlyLayout from '../layouts/LogoOnlyLayout';
 // guards
 import GuestGuard from '../guards/GuestGuard';
-import AuthGuard from '../guards/AuthGuard';
 // import RoleBasedGuard from '../guards/RoleBasedGuard';
 // config
 import { PATH_AFTER_LOGIN } from '../config';
@@ -59,9 +58,9 @@ export default function Router() {
     {
       path: 'dashboard',
       element: (
-        <AuthGuard>
+        <GuestGuard>
           <DashboardLayout />
-        </AuthGuard>
+        </GuestGuard>
       ),
       children: [
         { element: <Navigate to={PATH_AFTER_LOGIN} replace />, index: true },
@@ -71,9 +70,9 @@ export default function Router() {
     {
       path: 'acceso',
       element: (
-        <AuthGuard>
-        <DashboardLayout />
-      </AuthGuard>
+        <GuestGuard>
+          <DashboardLayout />
+        </GuestGuard>
       ),
       children: [
         { path: 'usuarios', element: <AccesoUsuarios /> },
@@ -83,9 +82,9 @@ export default function Router() {
     {
       path: 'optica',
       element: (
-        <AuthGuard>
-        <DashboardLayout />
-      </AuthGuard>
+        <GuestGuard>
+          <DashboardLayout />
+        </GuestGuard>
       ),
       children: [
         { path: 'empleados', element: <OpticaEmpleados /> },

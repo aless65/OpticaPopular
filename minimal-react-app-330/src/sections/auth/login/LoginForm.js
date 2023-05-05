@@ -1,6 +1,8 @@
+
+import axios from 'axios'
 import * as Yup from 'yup';
-import { useState } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -25,14 +27,35 @@ export default function LoginForm() {
 
   const [showPassword, setShowPassword] = useState(false);
 
+
+  const navigate = useNavigate();
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [errorMessages, setErrorMessages] = useState({});
+
+  useEffect(() => {
+    if (localStorage.getItem('usuario') !== "" && localStorage.getItem('usuario') !== null && localStorage.getItem('usuario') !== 'null') {
+      navigate('/Inicio', { replace: true });
+    }
+  }, [])
+
+  const errores = {
+    generalError: "Usuario y/o contraseña incorrecto"
+  };
+
+  const renderErrorMessage = (name) =>
+    name === errorMessages.name && (
+      <Alert severity="error">{errorMessages.message}</Alert>
+    );
+
   const LoginSchema = Yup.object().shape({
-    email: Yup.string().email('Email must be a valid email address').required('Email is required'),
-    password: Yup.string().required('Password is required'),
+    email: Yup.string().required('El nombre de usuario es obligatorio'),
+    password: Yup.string().required('La contraseña es obligatoria'),
   });
 
   const defaultValues = {
-    email: 'demo@minimals.cc',
-    password: 'demo1234',
+    email: 'admin',
+    password: '123',
     remember: true,
   };
 
@@ -50,7 +73,23 @@ export default function LoginForm() {
 
   const onSubmit = async (data) => {
     try {
-      await login(data.email, data.password);
+      if (data.email !== "" && data.password !== "") {
+        axios.get(`http://opticapopular.somee.com/api/Usuarios/Login?usuario=${data.email}&contrasena=${data.password}`)
+          .then((response) => {
+            if (response.data.code === 200) {
+              if (response.data.data[0] !== null) {
+                localStorage.setItem('usuario', response.data.data[0].empe_NombreCompleto);
+                navigate('/dashboard/app', { replace: true })
+              } else {
+                setErrorMessages({ name: "generalError", message: errors.generalError });
+              }
+            }
+          })
+          .catch((ex) => {
+            console.log(ex);
+          });
+      }
+      await login('demo@minimals.cc', 'demo1234');
     } catch (error) {
       console.error(error);
       reset();
@@ -61,15 +100,18 @@ export default function LoginForm() {
   };
 
   return (
-    <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+    <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)} >
       <Stack spacing={3}>
-        {!!errors.afterSubmit && <Alert severity="error">{errors.afterSubmit.message}</Alert>}
+        {renderErrorMessage("generalError")}
 
-        <RHFTextField name="email" label="Email address" />
+        <RHFTextField
+          name="email"
+          label="Nombre de usuario"
+        />
 
         <RHFTextField
           name="password"
-          label="Password"
+          label="Contraseña"
           type={showPassword ? 'text' : 'password'}
           InputProps={{
             endAdornment: (
@@ -84,14 +126,14 @@ export default function LoginForm() {
       </Stack>
 
       <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ my: 2 }}>
-        <RHFCheckbox name="remember" label="Remember me" />
+        <RHFCheckbox name="remember" label="Recuerdame" />
         <Link component={RouterLink} variant="subtitle2" to={PATH_AUTH.resetPassword}>
-          Forgot password?
+          ¿Olvidaste tu contraseña?
         </Link>
       </Stack>
 
-      <LoadingButton fullWidth size="large" type="submit" variant="contained" loading={isSubmitting}>
-        Login
+      <LoadingButton fullWidth size="large" type="submit" variant="contained" >
+        Iniciar sesión
       </LoadingButton>
     </FormProvider>
   );
