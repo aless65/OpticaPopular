@@ -52,8 +52,6 @@ export default function EditUserDialog({ open, onClose, usuarios, setTableData, 
 
     const usuario = useSelector((state) => state.usuario.usuario);
 
-    // const usuarioCopia = { ...usuario }
-
     const dispatch = useDispatch();
 
     const [empleadoTemporal, setEmpleadoTemporal] = useState('');
@@ -71,13 +69,13 @@ export default function EditUserDialog({ open, onClose, usuarios, setTableData, 
     }, [usuaId, dispatch, insertSuccess]);
 
     useEffect(() => {
-        console.log("usuario:", usuario);
+        // console.log("usuario:", usuario);
         if (usuario) {
-          console.log("setting empleadoTemporal to", usuario.empe_Id);
+        //   console.log("setting empleadoTemporal to", usuario.empe_Id);
           setEmpleadoTemporal(usuario.empe_Id);
-          console.log("setting rolTemporal to", usuario.role_Id);
+        //   console.log("setting rolTemporal to", usuario.role_Id);
           setRolTemporal(usuario.role_Id);
-          console.log("setting esAdminTemporal to", usuario.usua_EsAdmin);
+        //   console.log("setting esAdminTemporal to", usuario.usua_EsAdmin);
           setEsAdminTemporal(usuario.usua_EsAdmin);
         }
       }, [usuario]);
@@ -86,7 +84,6 @@ export default function EditUserDialog({ open, onClose, usuarios, setTableData, 
         fetch('http://opticapopular.somee.com/api/Empleados/Listado')
             .then(response => response.json())
             .then(data => {
-                // console.log(data);
                 const optionsData = data.data.map(item => ({
                     label: item.empe_NombreCompleto, // replace 'name' with the property name that contains the label
                     id: item.empe_Id // replace 'id' with the property name that contains the ID
@@ -138,7 +135,7 @@ export default function EditUserDialog({ open, onClose, usuarios, setTableData, 
     } = methods;
 
     useEffect(() => {
-        console.log("infinito?");
+        // console.log("infinito?");
         methods.setValue('username', defaultValues.username);
         methods.setValue('empleado', defaultValues.empleado);
         methods.setValue('rol', defaultValues.rol);
@@ -146,7 +143,7 @@ export default function EditUserDialog({ open, onClose, usuarios, setTableData, 
       }, [defaultValues]);
 
     const onSubmit = async (data) => {
-        console.log(data);
+        // console.log(data);
         try {
             const jsonData = {
                 usua_Id: usuaId,
@@ -166,7 +163,6 @@ export default function EditUserDialog({ open, onClose, usuarios, setTableData, 
             })
                 .then((response) => response.json())
                 .then((data) => {
-                    console.log(data);
                     if (data.message === "El usuario ha sido editado con éxito") {
                         setInsertSuccess(true);
                         enqueueSnackbar(data.message);
@@ -235,7 +231,7 @@ export default function EditUserDialog({ open, onClose, usuarios, setTableData, 
                                     }
                                 }}
                                 isOptionEqualToValue={(option, value) => option.id === value.id}
-                                value={optionsEmpleados.find((option) => option.id === empleadoTemporal)}
+                                value={optionsEmpleados.find((option) => option.id === empleadoTemporal) ?? null}
                             />
                         </Grid>
                         <Grid item xs={12} sx={{ pl: 1 }} sm={6}>
@@ -253,7 +249,7 @@ export default function EditUserDialog({ open, onClose, usuarios, setTableData, 
                                     }
                                 }}
                                 isOptionEqualToValue={(option, value) => option.id === value.id}
-                                value={optionsRoles.find((option) => option.id === rolTemporal)}
+                                value={optionsRoles.find((option) => option.id === rolTemporal) ?? null}
                             />
                         </Grid>
                     </Grid>

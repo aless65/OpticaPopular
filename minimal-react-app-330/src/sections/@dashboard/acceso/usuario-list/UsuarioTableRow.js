@@ -25,8 +25,6 @@ UsuarioTableRow.propTypes = {
   onDeleteRow: PropTypes.func,
 };
 
-
-
 export default function UsuarioTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRow }) {
 
   const theme = useTheme();

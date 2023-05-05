@@ -39,6 +39,7 @@ import {
 // sections
 import { RolTableRow, TableToolbar } from '../../sections/@dashboard/acceso/rol-list';
 import AddRolDialog from './AccesoRolesModales/ModalInsertRoles';
+import EditRolDialog from './AccesoRolesModales/ModalEditRoles';
 
 // ----------------------------------------------------------------------
 
@@ -82,9 +83,15 @@ export default function AccesoRoles() {
 
   const [openAddRolDialog, setOpenAddRolDialog] = useState(false);
 
+  const [openEditRolDialog, setOpenEditRolDialog] = useState(false);
+
   const [tableData, setTableData] = useState([]);
 
   const [filterName, setFilterName] = useState('');
+
+  const [roleId, setRoleId] = useState('');
+
+  const [roleNombre, setRoleNombre] = useState('');
 
   useEffect(() => {
     dispatch(getRoles());
@@ -113,8 +120,10 @@ export default function AccesoRoles() {
     setTableData(deleteRows);
   };
 
-  const handleEditRow = (id) => {
-    navigate(PATH_DASHBOARD.eCommerce.edit(paramCase(id)));
+  const handleEditRow = (id, nombre) => {
+    setRoleId(id);
+    setRoleNombre(nombre);
+    handleOpenEditRolDialog();
   };
 
   const dataFiltered = applySortFilter({
@@ -129,6 +138,14 @@ export default function AccesoRoles() {
 
   const handleCloseAddRolDialog = () => {
     setOpenAddRolDialog(false);
+  }
+
+  const handleOpenEditRolDialog = () => {
+    setOpenEditRolDialog(true)
+  }
+
+  const handleCloseEditRolDialog = () => {
+    setOpenEditRolDialog(false);
   }
 
   const denseHeight = dense ? 60 : 80;
@@ -154,6 +171,7 @@ export default function AccesoRoles() {
                 Agregar
               </Button>
               <AddRolDialog open={openAddRolDialog} onClose={handleCloseAddRolDialog} roles={roles} setTableData={setTableData} />
+              <EditRolDialog open={openEditRolDialog} onClose={handleCloseEditRolDialog} roles={roles} setTableData={setTableData} roleId={roleId} roleNombre={roleNombre} />
             </div>
           }
         />
@@ -190,7 +208,7 @@ export default function AccesoRoles() {
                           selected={selected.includes(row.role_Id)}
                           onSelectRow={() => onSelectRow(row.role_Id)}
                           onDeleteRow={() => handleDeleteRow(row.role_Id)}
-                          onEditRow={() => handleEditRow(row.role_Nombre)}
+                          onEditRow={() => handleEditRow(row.role_Id, row.role_Nombre)}
                         />
                       ) : (
                         !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
