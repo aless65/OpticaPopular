@@ -28,7 +28,7 @@ import { LoadingButton } from '@mui/lab';
 import { useForm } from 'react-hook-form';
 import { useState, useEffect } from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
-
+import { ErrorMessage } from 'formik';
 import { useSnackbar } from 'notistack';
 import { useDispatch } from '../../../redux/store';
 import { getUsuarios } from '../../../redux/slices/usuario';
@@ -164,7 +164,7 @@ export default function AddUserDialog({ open, onClose, usuarios, setTableData })
       setInsertSuccess(false);
     }
 
-  }, [dispatch, insertSuccess]);
+  }, [insertSuccess]);
 
   const handleEsAdminChange = (event) => {
     methods.setValue('esAdmin', event.target.checked);
