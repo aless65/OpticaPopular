@@ -4,6 +4,8 @@ import { HOST_API } from '../config';
 
 // ----------------------------------------------------------------------
 
+axios.defaults.baseURL = process.env.REACT_APP_API_URL
+
 const axiosInstance = axios.create({
   baseURL: HOST_API,
 });

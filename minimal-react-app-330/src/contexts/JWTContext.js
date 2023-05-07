@@ -5,11 +5,21 @@ import axios from '../utils/axios';
 import { isValidToken, setSession } from '../utils/jwt';
 
 // ----------------------------------------------------------------------
+const usuario = {
+    displayName: `${localStorage.getItem('usuario') !== null ? JSON.parse(localStorage.getItem('usuario')).empe_NombreCompleto : 'Eder'}`,
+    email: "",
+    photoURL: "https://www.svgrepo.com/show/57853/avatar.svg",
+    role: 'Not admin',
+};
+
+if(localStorage.getItem('usuario') !== null){
+    usuario.role = JSON.parse(localStorage.getItem('usuario')).usua_EsAdmin === true ? 'Admin': 'Not admin';
+}
 
 const initialState = {
   isAuthenticated: false,
   isInitialized: false,
-  user: null,
+  user: usuario,
 };
 
 const handlers = {
@@ -142,6 +152,7 @@ function AuthProvider({ children }) {
   };
 
   const logout = async () => {
+    localStorage.removeItem("usuario");
     setSession(null);
     dispatch({ type: 'LOGOUT' });
   };

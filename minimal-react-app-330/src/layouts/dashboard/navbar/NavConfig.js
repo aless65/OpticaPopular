@@ -25,6 +25,14 @@ const ICONS = {
 };
 
 const navConfig = [
+  // GENERAL
+  // ----------------------------------------------------------------------
+  {
+    subheader: 'inicio',
+    items: [
+      { title: 'app', path: PATH_DASHBOARD.general.app, icon: ICONS.dashboard },
+    ],
+  },
   // ACCESO
   //----------------------------------------------------------------------
   {
@@ -41,14 +49,6 @@ const navConfig = [
     items: [
       { title: 'empleados', path: PATH_OPTICA.empleados, icon: ICONS.analytics },
       { title: 'clientes', path: PATH_OPTICA.clientes, icon: ICONS.cart },
-    ],
-  },
-  // GENERAL
-  // ----------------------------------------------------------------------
-  {
-    subheader: 'general',
-    items: [
-      { title: 'app', path: PATH_DASHBOARD.general.app, icon: ICONS.dashboard },
     ],
   },
 ];

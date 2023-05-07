@@ -21,12 +21,9 @@ import { FormProvider, RHFTextField, RHFCheckbox } from '../../../components/hoo
 // ----------------------------------------------------------------------
 
 export default function LoginForm() {
-  const { login } = useAuth();
-
   const isMountedRef = useIsMountedRef();
 
   const [showPassword, setShowPassword] = useState(false);
-
 
   const navigate = useNavigate();
   const [email, setEmail] = useState("")
@@ -35,7 +32,7 @@ export default function LoginForm() {
 
   useEffect(() => {
     if (localStorage.getItem('usuario') !== "" && localStorage.getItem('usuario') !== null && localStorage.getItem('usuario') !== 'null') {
-      navigate('/Inicio', { replace: true });
+      navigate('/Inicio/app', { replace: true });
     }
   }, [])
 
@@ -74,22 +71,30 @@ export default function LoginForm() {
   const onSubmit = async (data) => {
     try {
       if (data.email !== "" && data.password !== "") {
-        axios.get(`http://opticapopular.somee.com/api/Usuarios/Login?usuario=${data.email}&contrasena=${data.password}`)
+        axios.get(`Usuarios/Login?usuario=${data.email}&contrasena=${data.password}`)
           .then((response) => {
             if (response.data.code === 200) {
-              if (response.data.data[0] !== null) {
-                localStorage.setItem('usuario', response.data.data[0].empe_NombreCompleto);
-                navigate('/dashboard/app', { replace: true })
+              if (response.data.data.length > 0) {
+                
+                const usuario = {
+                    usua_Id: response.data.data[0].usua_Id,
+                    usua_NombreUsuario: response.data.data[0].usua_NombreUsuario,
+                    usua_EsAdmin: response.data.data[0].usua_EsAdmin,
+                    empe_NombreCompleto: response.data.data[0].empe_NombreCompleto,
+                    role_Id: response.data.data[0].role_Id,
+                };
+                
+                localStorage.setItem('usuario', JSON.stringify(usuario));
+                navigate('/Inicio/app', { replace: true });
               } else {
-                setErrorMessages({ name: "generalError", message: errors.generalError });
+                setErrorMessages({ name: "generalError", message: errores.generalError });
               }
             }
           })
           .catch((ex) => {
             console.log(ex);
-          });
+        });
       }
-      await login('demo@minimals.cc', 'demo1234');
     } catch (error) {
       console.error(error);
       reset();

@@ -81,7 +81,7 @@ export function getRoles() {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('http://opticapopular.somee.com/api/Roles/Listado');
+      const response = await axios.get('Roles/Listado');
       dispatch(slice.actions.getRolesSuccess(response.data.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));

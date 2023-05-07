@@ -81,7 +81,7 @@ export function getEmpleados() {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('http://opticapopular.somee.com/api/Empleados/Listado');
+      const response = await axios.get('Empleados/Listado');
       dispatch(slice.actions.getEmpleadosSuccess(response.data.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));

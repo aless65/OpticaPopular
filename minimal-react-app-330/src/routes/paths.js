@@ -6,8 +6,7 @@ function path(root, sublink) {
 
 const ROOTS_OPTICA = '/optica';
 const ROOTS_ACCESO = '/acceso';
-const ROOTS_AUTH = '/auth';
-const ROOTS_DASHBOARD = '/dashboard';
+const ROOTS_DASHBOARD = '/Inicio';
 
 // ----------------------------------------------------------------------
 export const PATH_ACCESO = {
@@ -23,13 +22,12 @@ export const PATH_OPTICA = {
 };
 
 export const PATH_AUTH = {
-  root: ROOTS_AUTH,
   login: '/',
-  register: path(ROOTS_AUTH, '/register'),
-  loginUnprotected: path(ROOTS_AUTH, '/login-unprotected'),
-  registerUnprotected: path(ROOTS_AUTH, '/register-unprotected'),
-  verify: path(ROOTS_AUTH, '/verify'),
-  resetPassword: path(ROOTS_AUTH, '/reset-password'),
+  register: '/register',
+  loginUnprotected: '/login-unprotected',
+  registerUnprotected: '/register-unprotected',
+  verify: '/verify',
+  resetPassword: '/reset-password',
 };
 
 export const PATH_PAGE = {

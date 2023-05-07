@@ -81,7 +81,7 @@ export function getClientes() {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('http://opticapopular.somee.com/api/Clientes/Listado');
+      const response = await axios.get('Clientes/Listado');
       dispatch(slice.actions.getClientesSuccess(response.data.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
