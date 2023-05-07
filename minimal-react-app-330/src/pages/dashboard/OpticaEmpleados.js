@@ -20,7 +20,7 @@ import {
 import { useDispatch, useSelector } from '../../redux/store';
 import { getEmpleados } from '../../redux/slices/empleado';
 // routes
-import { PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_DASHBOARD, PATH_OPTICA } from '../../routes/paths';
 // hooks
 import useSettings from '../../hooks/useSettings';
 import useTable, { getComparator, emptyRows } from '../../hooks/useTable';
@@ -139,7 +139,7 @@ export default function OpticaEmpleados() {
               variant="contained"
               startIcon={<Iconify icon="eva:plus-fill" />}
               component={RouterLink}
-              to={PATH_DASHBOARD.general.app}
+              to={PATH_OPTICA.empleadosNew}
             >
               Agregar
             </Button>

@@ -19,6 +19,7 @@ export const PATH_ACCESO = {
 export const PATH_OPTICA = {
   root: ROOTS_OPTICA,
   empleados: path(ROOTS_OPTICA, '/empleados'),
+  empleadosNew: path(ROOTS_OPTICA, '/empleados/nuevo'),
   clientes: path(ROOTS_OPTICA, '/clientes') ,
 };
 
@@ -50,6 +51,9 @@ export const PATH_DASHBOARD = {
   general: {
     app: path(ROOTS_DASHBOARD, '/app'),
   },
+  // optica: {
+  //   empleadosNew: path(ROOTS_DASHBOARD, '/empleados/nuevo'),
+  // },
 };
 
 export const PATH_DOCS = 'https://docs-minimals.vercel.app/introduction';
