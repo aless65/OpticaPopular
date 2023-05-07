@@ -119,7 +119,7 @@ export default function UserNewEditForm({ isEdit, currentUser }) {
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-        <Card sx={{ p: 3 }}>
+        <Card sx={{ p: 3, pl: 4, pr: 4 }}>
             <Box
               sx={{
                 display: 'grid',
@@ -128,11 +128,13 @@ export default function UserNewEditForm({ isEdit, currentUser }) {
                 gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
               }}
             >
-              <RHFTextField name="name" label="Full Name" />
-              <RHFTextField name="email" label="Email Address" />
-              <RHFTextField name="phoneNumber" label="Phone Number" />
+              <RHFTextField name="nombres" label="Nombres" />
+              <RHFTextField name="apellidos" label="Apellidos" />
+              <RHFTextField name="identidad" label="Identidad" />
+              <RHFTextField type="date" name="nacimiento" label="Fecha de Nacimiento" />
+              <RHFTextField name="sexo" label="Sexo" />
 
-              <RHFSelect name="country" label="Country" placeholder="Country">
+              <RHFSelect name="estadoCivil" label="Estado Civil" placeholder="Estado Civil">
                 <option value="" />
                 {countries.map((option) => (
                   <option key={option.code} value={option.label}>
@@ -141,12 +143,25 @@ export default function UserNewEditForm({ isEdit, currentUser }) {
                 ))}
               </RHFSelect>
 
-              <RHFTextField name="state" label="State/Region" />
-              <RHFTextField name="city" label="City" />
-              <RHFTextField name="address" label="Address" />
-              <RHFTextField name="zipCode" label="Zip/Code" />
-              <RHFTextField name="company" label="Company" />
-              <RHFTextField name="role" label="Role" />
+              <RHFTextField name="telefono" label="Teléfono" />
+              <RHFTextField name="email" label="Correo electrónico" />
+              <RHFTextField name="direccion" label="Dirección" />
+              <RHFSelect name="cargo" label="Cargo" placeholder="Cargo">
+                <option value="" />
+                {countries.map((option) => (
+                  <option key={option.code} value={option.label}>
+                    {option.label}
+                  </option>
+                ))}
+              </RHFSelect>
+              <RHFSelect name="sucursal" label="Sucursal" placeholder="Sucursal">
+                <option value="" />
+                {countries.map((option) => (
+                  <option key={option.code} value={option.label}>
+                    {option.label}
+                  </option>
+                ))}
+              </RHFSelect>
             </Box>
 
             <Stack alignItems="flex-end" sx={{ mt: 3 }}>

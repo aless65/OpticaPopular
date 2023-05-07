@@ -31,7 +31,7 @@ export default function UserCreate() {
     <Page title="Empleado: Crear nuevo">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
-          heading={!isEdit ? 'Create a new user' : 'Edit user'}
+          heading={!isEdit ? 'Crear nuevo empleado' : 'Editar empleado'}
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
             { name: 'Empleados', href: PATH_DASHBOARD.root },

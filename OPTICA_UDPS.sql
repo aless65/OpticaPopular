@@ -251,6 +251,7 @@ AS
 BEGIN
 	SELECT carg_Id, carg_Nombre 
 	FROM opti.VW_tbCargos
+	WHERE carg_Estado = 1
 END
 GO
 
@@ -1810,6 +1811,7 @@ AS
 BEGIN
 	SELECT * 
 	FROM opti.VW_tbSucursales
+	WHERE sucu_Estado = 1
 END
 GO
 
@@ -2675,3 +2677,14 @@ BEGIN
 	END CATCH
 END
 GO
+
+
+---------- Estados Civiles -----------
+GO
+CREATE OR ALTER PROCEDURE gral.UDP_tbEstadosCiviles_List
+AS
+BEGIN
+	SELECT estacivi_Id, estacivi_Nombre
+	FROM [gral].[tbEstadosCiviles]
+	WHERE estacivi_Estado = 1
+END
