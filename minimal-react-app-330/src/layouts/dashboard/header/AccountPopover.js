@@ -52,6 +52,7 @@ export default function AccountPopover() {
   const handleLogout = async () => {
     try {
       localStorage.removeItem("usuario");
+      localStorage.removeItem("sucu_Id");
       navigate(PATH_AUTH.login, { replace: true });
       await logout();
     } catch (error) {

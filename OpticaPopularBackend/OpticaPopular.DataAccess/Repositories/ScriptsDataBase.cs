@@ -34,5 +34,13 @@ namespace OpticaPopular.DataAccess.Repositories
         #region Empleados
         public static string UDP_Lista_Empleados = "opti.UDP_opti_tbEmpleados_List";
         #endregion
+
+        #region Citas
+        public static string UDP_tbCitas_ListadoPorIdSucursal = "opti.UDP_tbCitas_ListadoPorIdSucursal";
+        #endregion
+
+        #region Consultorios
+        public static string UDP_tbConsultorios_ListPorIdSucursal = "opti.UDP_tbConsultorios_ListPorIdSucursal";
+        #endregion
     }
 }

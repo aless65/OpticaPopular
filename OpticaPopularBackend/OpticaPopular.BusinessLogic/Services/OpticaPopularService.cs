@@ -74,8 +74,20 @@ namespace OpticaPopular.BusinessLogic.Services
         #endregion
 
         #region Citas
+        public ServiceResult ListadoCitasPorIdSucursal (int sucu_Id)
+        {
+            var resultado = new ServiceResult();
 
-
+            try
+            {
+                var list = _citasRepository.ListPorIdSucursal(sucu_Id);
+                return resultado.Ok(list);
+            }
+            catch (Exception ex)
+            {
+                return resultado.Error(ex.Message);
+            }
+        }
 
         #endregion
 
@@ -154,8 +166,20 @@ namespace OpticaPopular.BusinessLogic.Services
         #endregion
 
         #region Consultorios
+        public ServiceResult ListadoConsultoriosPorIdSucursal(int sucu_Id)
+        {
+            var resultado = new ServiceResult();
 
-
+            try
+            {
+                var list = _consultoriosRepository.ListPorIdSucursal(sucu_Id);
+                return resultado.Ok(list);
+            }
+            catch (Exception ex)
+            {
+                return resultado.Error(ex.Message);
+            }
+        }
 
         #endregion
 

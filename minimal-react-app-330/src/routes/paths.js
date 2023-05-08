@@ -19,6 +19,7 @@ export const PATH_OPTICA = {
   root: ROOTS_OPTICA,
   empleados: path(ROOTS_OPTICA, '/empleados'),
   clientes: path(ROOTS_OPTICA, '/clientes') ,
+  citas: path(ROOTS_OPTICA, '/citas'),
 };
 
 export const PATH_AUTH = {
@@ -33,11 +34,6 @@ export const PATH_AUTH = {
 export const PATH_PAGE = {
   comingSoon: '/coming-soon',
   maintenance: '/maintenance',
-  pricing: '/pricing',
-  payment: '/payment',
-  about: '/about-us',
-  contact: '/contact-us',
-  faqs: '/faqs',
   page404: '/404',
   page500: '/500',
   components: '/components',

@@ -84,6 +84,7 @@ export default function LoginForm() {
                     role_Id: response.data.data[0].role_Id,
                 };
                 
+                localStorage.setItem('sucu_Id', response.data.data[0].sucu_Id);
                 localStorage.setItem('usuario', JSON.stringify(usuario));
                 navigate('/Inicio/app', { replace: true });
               } else {

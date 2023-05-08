@@ -7,7 +7,7 @@ GO
 --*****PROCEDIMIENTOS ALMACENADOS*****--
 ---------- USUARIOS -----------
 --Iniciar sesion
-CREATE OR ALTER PROCEDURE acce.UDP_Login 
+CREATE OR ALTER PROCEDURE acce.UDP_Login
 	@usua_Nombre NVARCHAR(100), 
 	@usua_Contrasena NVARCHAR(200)
 AS
@@ -15,8 +15,10 @@ BEGIN
 
 	DECLARE @contraEncriptada NVARCHAR(MAX) = HASHBYTES('SHA2_512', @usua_Contrasena);
 
-	SELECT [usua_Id], [usua_NombreUsuario], [role_Id], usua_EsAdmin, role_Id, empe_NombreCompleto
-	FROM acce.VW_tbUsuarios
+	SELECT [usua_Id], [usua_NombreUsuario], [role_Id], usua_EsAdmin, role_Id, empe_NombreCompleto, tb2.sucu_Id
+	FROM acce.VW_tbUsuarios tb1
+	INNER JOIN [opti].[tbEmpleados] tb2
+	ON tb1.empe_Id = tb2.empe_Id
 	WHERE [usua_Contrasena] = @contraEncriptada
 	AND [usua_NombreUsuario] = @usua_Nombre
 	AND [usua_Estado] = 1
@@ -844,7 +846,7 @@ CREATE OR ALTER VIEW opti.VW_tbProveedores
 AS
 	SELECT prov_Id, 
 	       prov_Nombre, 
-		   dire_Id,
+		   T1.dire_Id,
 		   dire_DireccionExacta,
 		   prov_CorreoElectronico, 
 		   prov_Telefono, 
@@ -2058,10 +2060,12 @@ AS
 	SELECT  cons_Id, 
 	        cons_Nombre, 
 			T1.empe_Id, 
-			T4.empe_Nombres AS cons_NombreEmpleado,
+			T4.empe_Nombres,
 			cons_Estado, 
 			usua_IdCreacion, 
 			t2.usua_NombreUsuario AS cons_NombreUsuarioCreacion, 
+			t4.sucu_Id,
+			tb5.sucu_Descripcion,
 			cons_FechaCreacion, 
 			usua_IdModificacion,
 			t3.usua_NombreUsuario AS cons_NombreUsuarioModificacion, 
@@ -2070,16 +2074,29 @@ FROM opti.tbConsultorios t1  INNER JOIN acce.tbUsuarios t2
 ON t1.usua_IdCreacion = t2.usua_Id LEFT JOIN acce.tbUsuarios t3
 ON t1.usua_IdModificacion = t3.usua_Id INNER JOIN opti.tbEmpleados t4
 ON t1.empe_Id = t4.empe_Id 
+INNER JOIN opti.tbSucursales tb5
+ON t4.sucu_Id = tb5.sucu_Id
 GO
 
 
 /*Listado de Consultorios*/
-CREATE OR ALTER PROCEDURE opti.UDP_opti_tbConsultorios_List
+CREATE OR ALTER PROCEDURE opti.UDP_tbConsultorios_ListPorIdSucursal
+	@sucu_Id	INT
 AS
 BEGIN
-	SELECT *
-	FROM opti.VW_tbConsultorios
-	WHERE cons_Estado = 1
+	IF @sucu_Id > 0 
+	BEGIN
+		SELECT *
+		FROM opti.VW_tbConsultorios tb1
+		WHERE cons_Estado = 1
+		AND sucu_Id = @sucu_Id
+	END
+	ELSE
+	BEGIN
+		SELECT *
+		FROM opti.VW_tbConsultorios tb1
+		WHERE cons_Estado = 1
+	END
 END
 GO
 
@@ -2313,6 +2330,29 @@ BEGIN
 END
 GO
 
+CREATE OR ALTER PROCEDURE opti.UDP_tbCitas_ListadoPorIdSucursal
+	@sucu_Id	INT
+AS
+BEGIN
+	SELECT 	[cita_Id], 
+			tb1.[clie_Id],
+			tb2.clie_Nombres,
+			tb2.clie_Apellidos,
+			tb1.[cons_Id],
+			tb3.cons_Nombre,
+			tb4.empe_Nombres,
+			[cita_Fecha]
+	FROM [opti].[tbCitas] tb1
+	INNER JOIN [opti].[tbClientes] tb2
+	ON tb1.clie_Id = tb2.clie_Id
+	INNER JOIN [opti].[tbConsultorios] tb3
+	ON tb1.cons_Id = tb3.cons_Id
+	INNER JOIN [opti].[tbEmpleados] tb4
+	ON tb3.empe_Id = tb4.empe_Id
+	WHERE tb4.sucu_Id = @sucu_Id
+	AND tb1.cita_Estado = 1
+END
+GO
 
 ---------- DETALLE CITAS -----------
 CREATE OR ALTER VIEW opti.VW_tbDetallesCitas
@@ -2330,20 +2370,28 @@ AS
 		   t3.usua_NombreUsuario AS deci_NombreUsuarioModificacion,
 		   deci_FechaModificacion
 FROM opti.tbDetallesCitas t1  INNER JOIN acce.tbUsuarios t2
-ON t1.usua_IdCreacion = t2.usua_Id LEFT JOIN acce.tbUsuarios t3
-ON t1.usua_IdModificacion = t3.usua_Id 
+ON t1.usua_IdCreacion = t2.usua_Id 
+LEFT JOIN acce.tbUsuarios t3
+ON t1.usua_IdModificacion = t3.usua_Id
 GO
 
-
 /*Listado de detalles citas*/
-CREATE OR ALTER PROCEDURE opti.UDP_opti_tbDetallesCitas_List
+CREATE OR ALTER PROCEDURE opti.UDP_tbDetallesCitaPorIdCita
+	@cita_Id INT
 AS
 BEGIN
 	SELECT *
-	FROM opti.VW_tbDetallesCitas
+	FROM opti.VW_tbDetallesCitas tb1
+	INNER JOIN opti.tbCitas tb2 
+	ON tb1.cita_Id = tb2.cita_Id
+	INNER JOIN opti.tbConsultorios tb3
+	ON tb2.cons_Id = tb3.cons_Id
+	INNER JOIN opti.tbEmpleados tb4
+	ON tb3.empe_Id = tb4.empe_Id
+	WHERE tb2.cita_Id = @cita_Id
+	AND [deci_Estado] = 1
 END
 GO
-
 
 /*Insertar roles*/
 CREATE OR ALTER PROCEDURE opti.UDP_opti_tbDetallesCitas_Insert
@@ -2385,7 +2433,6 @@ BEGIN
 	END CATCH
 END
 GO
-
 
 /*Editar detalle cita*/
 CREATE OR ALTER PROCEDURE opti.UDP_opti_tbDetallesCitas_Update
@@ -2675,3 +2722,4 @@ BEGIN
 	END CATCH
 END
 GO
+

@@ -62,7 +62,6 @@ const slice = createSlice({
       state.filters.priceRange = action.payload.priceRange;
       state.filters.rating = action.payload.rating;
     },
-    
   },
 });
 
