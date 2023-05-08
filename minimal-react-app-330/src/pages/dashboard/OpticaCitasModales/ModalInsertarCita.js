@@ -20,19 +20,20 @@ import {
     DialogContent,
     Typography
 } from '@mui/material';
+
+import dayjs from 'dayjs';
+
 import CloseIcon from '@mui/icons-material/Close';
-import { LoadingButton } from '@mui/lab';
-import { useForm } from 'react-hook-form';
+import { LoadingButton, DatePicker } from '@mui/lab';
+import { useForm, Controller } from 'react-hook-form';
 import { useState, useEffect } from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useSnackbar } from 'notistack';
 import { useDispatch } from '../../../redux/store';
 import Iconify from '../../../components/Iconify';
-import { FormProvider, RHFSelect, RHFTextField } from '../../../components/hook-form';
+import { FormProvider, RHFTextField } from '../../../components/hook-form';
 import useAuth from '../../../hooks/useAuth';
 import useIsMountedRef from '../../../hooks/useIsMountedRef';
-
-const today = dayjs();
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiDialogContent-root': {
@@ -73,6 +74,7 @@ BootstrapDialogTitle.propTypes = {
 };
 
 export default function ModalAgregarCita() {
+    const [valueDate, setValueDate] = React.useState(dayjs(new Date()).add(1, 'day'));
 
     const [open, setOpen] = React.useState(false);
 
@@ -97,11 +99,14 @@ export default function ModalAgregarCita() {
 
     const InsertSchema = Yup.object().shape({
         clie_Id: Yup.string().required('El cliente es requerido'),
+        cons_Id: Yup.string().required('El consultorio es requerido'),
+        cita_Fecha: Yup.string().required('El cliente es requerido'),
     });
 
     const defaultValues = {
-        clie_Id: 0,
-        cons_Id: 0,
+        clie_Id: '',
+        cons_Id: '',
+        cita_Fecha: valueDate,
     };
 
     const methods = useForm({
@@ -111,7 +116,9 @@ export default function ModalAgregarCita() {
 
     const {
         reset,
+        control,
         setError,
+        setValue,
         handleSubmit,
         formState: { errors, isSubmitting },
     } = methods;
@@ -147,11 +154,8 @@ export default function ModalAgregarCita() {
 
     const onSubmit = async (data) => {
         console.log(data.clie_Id);
-
+        
     };
-
-    const submitHandler = handleSubmit(onSubmit);
-
 
     useEffect(() => {
 
@@ -167,7 +171,7 @@ export default function ModalAgregarCita() {
             >
                 Agregar
             </Button>
-            <FormProvider methods={methods} onSubmit={submitHandler}>
+            <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
                 <BootstrapDialog
                     onClose={handleClose}
                     aria-labelledby="customized-dialog-title"
@@ -186,8 +190,9 @@ export default function ModalAgregarCita() {
                                     <Autocomplete
                                         name="clie_Id"
                                         options={optionsClientes}
+                                        error={!!errors.clie_Id}
                                         getOptionLabel={(option) => option.label}
-                                        renderInput={(params) => <TextField {...params} label="Cliente" />}
+                                        renderInput={(params) => <TextField {...params} label="Cliente" error={!!errors.clie_Id?.message !== undefined} helperText={errors.clie_Id?.message}  />}
                                         onChange={(event, value) => {
                                             if (value != null) {
                                                 methods.setValue('clie_Id', value.id);
@@ -198,6 +203,27 @@ export default function ModalAgregarCita() {
                                     />
                                 </Grid>
                                 <Grid item xs={12} sx={{ pr: 1 }} sm={6}>
+                                    <Controller
+                                        name="cita_Fecha"
+                                        control={control}
+                                        render={({ field, fieldState: { error } }) => (
+                                            <DatePicker
+                                                label="Fecha de la cita"
+                                                value={field.value || null}
+                                                minDate={new Date()}
+                                                onChange={(newValue) => {
+                                                    field.onChange(newValue);
+                                                }}
+                                                renderInput={(params) => (
+                                                    <TextField {...params} fullWidth error={!!errors.cita_Fecha} helperText={errors.cita_Fecha?.message}/>
+                                                )}
+                                            />
+                                        )}
+                                    />
+                                </Grid>
+                            </Grid>
+                            <Grid container>
+                                <Grid item xs={12} sx={{ pr: 1 }} sm={12}>
                                     <Autocomplete
                                         name="cons_Id"
                                         options={optionsConsultorios}
@@ -211,11 +237,6 @@ export default function ModalAgregarCita() {
                                         isOptionEqualToValue={(option, value) => option.id === value.id}
                                         value={optionsConsultorios.find(option => option.id === defaultValues.cons_Id)}
                                     />
-                                </Grid>
-                            </Grid>
-                            <Grid container>
-                                <Grid item xs={12} sx={{ pr: 1 }} sm={12}>
-                                    
                                 </Grid>
                             </Grid>
                         </Stack>
