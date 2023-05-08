@@ -35,12 +35,12 @@ import { FormProvider, RHFSelect, RHFSwitch, RHFTextField, RHFUploadAvatar } fro
 
 // ----------------------------------------------------------------------
 
-UserNewEditForm.propTypes = {
+EmpleadoNewEditForm.propTypes = {
   isEdit: PropTypes.bool,
   currentUser: PropTypes.object,
 };
 
-export default function UserNewEditForm({ isEdit, currentUser }) {
+export default function EmpleadoNewEditForm({ isEdit, currentEmpleado }) {
   const navigate = useNavigate();
 
   const { enqueueSnackbar } = useSnackbar();
@@ -76,22 +76,22 @@ export default function UserNewEditForm({ isEdit, currentUser }) {
 
   const defaultValues = useMemo(
     () => ({
-      nombres: currentUser?.nombres || '',
-      apellidos: currentUser?.apellidos || '',
-      identidad: currentUser?.identidad || '',
-      fechaNacimiento: currentUser?.fechaNacimiento || '',
-      sexo: currentUser?.sexo || '',
-      estadoCivil: currentUser?.estadoCivil || '',
-      telefono: currentUser?.telefono || '',
-      email: currentUser?.email || '',
-      departamento: currentUser?.departamento || '',
-      municipio: currentUser?.municipio || '',
-      direccion: currentUser?.direccion,
-      cargo: currentUser?.cargo || '',
-      sucursal: currentUser?.sucursal || '',
+      nombres: currentEmpleado?.empe_Nombres || '',
+      apellidos: currentEmpleado?.empe_Apellidos || '',
+      identidad: currentEmpleado?.empe_Identidad || '',
+      fechaNacimiento: currentEmpleado?.empe_FechaNacimiento || '',
+      sexo: currentEmpleado?.empe_Sexo || '',
+      estadoCivil: currentEmpleado?.estacivi_Id || '',
+      telefono: currentEmpleado?.empe_Telefono || '',
+      email: currentEmpleado?.empe_CorreoElectronico || '',
+      departamento: currentEmpleado?.depa_Id || '',
+      municipio: currentEmpleado?.muni_id || '',
+      direccion: currentEmpleado?.dire_DireccionExacta,
+      cargo: currentEmpleado?.carg_Id || '',
+      sucursal: currentEmpleado?.sucu_Id || '',
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [currentUser]
+    [currentEmpleado]
   );
 
   const methods = useForm({
@@ -111,14 +111,14 @@ export default function UserNewEditForm({ isEdit, currentUser }) {
   const values = watch();
 
   useEffect(() => {
-    if (isEdit && currentUser) {
+    if (isEdit && currentEmpleado) {
       reset(defaultValues);
     }
     if (!isEdit) {
       reset(defaultValues);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isEdit, currentUser]);
+  }, [isEdit, currentEmpleado]);
 
   const onSubmit = async (data) => {
     try {
@@ -267,7 +267,8 @@ export default function UserNewEditForm({ isEdit, currentUser }) {
             name="sexo"
             control={control}
             defaultValue=""
-            rules={{ required: true }}
+            rules={{ required: 'El sexo es obligatorio' }}
+            error={!!errors.sexo}
             render={({ field }) => (
               <FormControl>
                 <FormLabel component="legend">Sexo</FormLabel>
@@ -277,13 +278,17 @@ export default function UserNewEditForm({ isEdit, currentUser }) {
                 </RadioGroup>
               </FormControl>
             )}
+            renderInput={(params) => (
+              <TextField {...params} fullWidth error={!!errors.sexo} helperText={errors.sexo && errors.sexo.message} />
+            )}
           />
+
 
           <Autocomplete
             disablePortal
             name="estadoCivil"
             options={optionsEstadosCiviles}
-            error={errors.estadoCivil?.message !== undefined}
+            error={!!errors.estadoCivil}
             getOptionLabel={(option) => option.label}
             renderInput={(params) => (
               <TextField

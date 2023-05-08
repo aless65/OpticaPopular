@@ -91,14 +91,13 @@ export function getEmpleados() {
 
 // ----------------------------------------------------------------------
 
-export function getEmpleado(name) {
+export function getEmpleado(id) {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('/api/products/product', {
-        params: { name },
-      });
+      const response = await axios.get('http://opticapopular.somee.com/api/Empleados/Find?id=2');
       dispatch(slice.actions.getEmpleadoSuccess(response.data.data));
+      console.log(response.data.data);
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error));

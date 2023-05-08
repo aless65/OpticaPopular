@@ -89,6 +89,7 @@ export default function Router() {
       children: [
         { path: 'empleados', element: <OpticaEmpleados /> },
         { path: 'empleados/nuevo', element: <OpticaEmpleadosCreate /> },
+        { path: 'empleados/:name/editar', element: <OpticaEmpleadosCreate /> },
         { path: 'clientes', element: <OpticaClientes /> },
       ],
     },
@@ -122,6 +123,8 @@ const AccesoRoles = Loadable(lazy(() => import('../pages/dashboard/AccesoRoles')
 // EMPLEADOS
 const OpticaEmpleados = Loadable(lazy(() => import('../pages/dashboard/OpticaEmpleados')));
 const OpticaEmpleadosCreate = Loadable(lazy(() => import('../pages/dashboard/OpticaEmpleadosCreate')));
+
+// CLIENTES
 const OpticaClientes = Loadable(lazy(() => import('../pages/dashboard/OpticaClientes')));
 
 // DASHBOARD

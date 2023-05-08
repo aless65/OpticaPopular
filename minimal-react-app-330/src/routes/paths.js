@@ -20,6 +20,7 @@ export const PATH_OPTICA = {
   root: ROOTS_OPTICA,
   empleados: path(ROOTS_OPTICA, '/empleados'),
   empleadosNew: path(ROOTS_OPTICA, '/empleados/nuevo'),
+  empleadosEdit: (name) => path(ROOTS_OPTICA, `/empleados/${name}/editar`),
   clientes: path(ROOTS_OPTICA, '/clientes') ,
 };
 

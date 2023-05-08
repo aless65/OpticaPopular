@@ -112,7 +112,7 @@ export default function OpticaEmpleados() {
   };
 
   const handleEditRow = (id) => {
-    navigate(PATH_DASHBOARD.eCommerce.edit(paramCase(id)));
+    navigate(PATH_OPTICA.empleadosEdit(id));
   };
 
   const dataFiltered = applySortFilter({
@@ -178,7 +178,7 @@ export default function OpticaEmpleados() {
                           selected={selected.includes(row.empe_Id)}
                           onSelectRow={() => onSelectRow(row.empe_Id)}
                           onDeleteRow={() => handleDeleteRow(row.empe_Id)}
-                          onEditRow={() => handleEditRow(row.empe_NombreCompleto)}
+                          onEditRow={() => handleEditRow(row.empe_Id)}
                         />
                       ) : (
                         !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
