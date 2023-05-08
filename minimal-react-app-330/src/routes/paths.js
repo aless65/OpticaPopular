@@ -23,6 +23,7 @@ export const PATH_OPTICA = {
   clientes: path(ROOTS_OPTICA, '/clientes') ,
   citas: path(ROOTS_OPTICA, '/citas'),
   proveedores: path(ROOTS_OPTICA, '/proveedores') ,
+  marcas: path(ROOTS_OPTICA, '/marcas') ,
 };
 
 export const PATH_AUTH = {

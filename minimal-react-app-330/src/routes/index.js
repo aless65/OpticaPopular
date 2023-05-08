@@ -10,6 +10,7 @@ import GuestGuard from '../guards/GuestGuard';
 import { PATH_AFTER_LOGIN } from '../config';
 // components
 import LoadingScreen from '../components/LoadingScreen';
+import OpticaMarcas from 'src/pages/dashboard/OpticaMarcas';
 
 
 // ----------------------------------------------------------------------
@@ -82,6 +83,7 @@ export default function Router() {
                 { path: 'empleados/nuevo', element: <GuestGuard> <OpticaEmpleadosCreate /> </GuestGuard>  },
                 { path: 'empleados/:name/editar', element: <GuestGuard>  <OpticaEmpleadosCreate /> </GuestGuard> },
                 { path: 'clientes', element: <GuestGuard> <OpticaClientes /> </GuestGuard>  },
+                
                 {
                     path: 'citas',
                     element:
@@ -90,6 +92,7 @@ export default function Router() {
                         </GuestGuard>
                 },
                 { path: 'proveedores', element: <GuestGuard> <OpticaProveedores /> </GuestGuard>  },
+                { path: 'marcas', element: <GuestGuard> <OpticaMarcas /> </GuestGuard>  },
             ],
         },
         // Main Routes
@@ -127,6 +130,7 @@ const OpticaEmpleadosCreate = Loadable(lazy(() => import('../pages/dashboard/Opt
 const OpticaClientes = Loadable(lazy(() => import('../pages/dashboard/OpticaClientes')));
 const OpticaCitas = Loadable(lazy(() => import('../pages/dashboard/OpticaCitas')));
 const OpticaProveedores = Loadable(lazy(() => import('../pages/dashboard/OpticaProveedores')));
+const OpticaMarcas = Loadable(lazy(() => import('../pages/dashboard/OpticaMarcas')));
 
 // DASHBOARD
 

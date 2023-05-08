@@ -328,7 +328,80 @@ namespace OpticaPopular.BusinessLogic.Services
         #endregion
 
         #region Marcas
+        public ServiceResult ListadoMarcas()
+        {
+            var result = new ServiceResult();
+            try
+            {
+                var list = _marcasRepository.List();
+                return result.Ok(list);
+            }
+            catch (Exception e)
+            {
+                return result.Error(e.Message);
+            }
+        }
 
+
+        public ServiceResult InsertMarcas(tbMarcas item)
+        {
+            var result = new ServiceResult();
+            try
+            {
+                var insert = _marcasRepository.Insert(item);
+
+                if (insert.MessageStatus == "La Marca ha sido insertada con éxito")
+                    return result.SetMessage(insert.MessageStatus, ServiceResultType.Success);
+                else if (insert.MessageStatus == "La marca ya existe")
+                    return result.SetMessage(insert.MessageStatus, ServiceResultType.Warning);
+                else
+                    return result.SetMessage(insert.MessageStatus, ServiceResultType.Error);
+            }
+            catch (Exception e)
+            {
+                return result.Error(e.Message);
+            }
+        }
+
+        public ServiceResult UpdateMarcas(tbMarcas item)
+        {
+            var result = new ServiceResult();
+            try
+            {
+                var update = _marcasRepository.Update(item);
+
+                if (update.MessageStatus == "La marca ha sido editada con éxito")
+                    return result.SetMessage(update.MessageStatus, ServiceResultType.Success);
+                else if (update.MessageStatus == "La marca ya existe")
+                    return result.SetMessage(update.MessageStatus, ServiceResultType.Warning);
+                else
+                    return result.SetMessage(update.MessageStatus, ServiceResultType.Error);
+            }
+            catch (Exception e)
+            {
+                return result.Error(e.Message);
+            }
+        }
+
+        public ServiceResult DeleteMarcas(tbMarcas item)
+        {
+            var result = new ServiceResult();
+            try
+            {
+                var update = _marcasRepository.Delete(item);
+
+                if (update.MessageStatus == "La marca ha sido eliminada")
+                    return result.SetMessage(update.MessageStatus, ServiceResultType.Success);
+                else if (update.MessageStatus == "La marca no puede ser eliminada ya que está siendo usada")
+                    return result.SetMessage(update.MessageStatus, ServiceResultType.Warning);
+                else
+                    return result.SetMessage(update.MessageStatus, ServiceResultType.Error);
+            }
+            catch (Exception e)
+            {
+                return result.Error(e.Message);
+            }
+        }
 
 
         #endregion

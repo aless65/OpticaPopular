@@ -13,7 +13,7 @@ import proveedorReducer from './slices/proveedor';
 import calendarReducer from './slices/calendar';
 import kanbanReducer from './slices/kanban';
 import citaReducer from './slices/citas';
-
+import marcaReducer from './slices/marca';
 // ----------------------------------------------------------------------
 
 const rootPersistConfig = {
@@ -72,6 +72,13 @@ const proveedorPersistConfig = {
   whitelist: ['sortBy', 'checkout'],
 };
 
+const marcaPersistConfig = {
+  key: 'marca',
+  storage,
+  keyPrefix: 'redux-',
+  whitelist: ['sortBy', 'checkout'],
+};
+
 const rootReducer = combineReducers({
   mail: mailReducer,
   chat: chatReducer,
@@ -84,6 +91,7 @@ const rootReducer = combineReducers({
   cliente: persistReducer(clientePersistConfig, clienteReducer),
   empleado: persistReducer(empleadoPersistConfig, empleadoReducer),
   proveedor: persistReducer(proveedorPersistConfig, proveedorReducer),
+  marca: persistReducer(marcaPersistConfig, marcaReducer),
 });
 
 export { rootPersistConfig, rootReducer };
