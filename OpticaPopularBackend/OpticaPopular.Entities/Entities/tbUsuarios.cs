@@ -60,7 +60,8 @@ namespace OpticaPopular.Entities.Entities
             tbProveedoresprov_UsuModificacionNavigation = new HashSet<tbProveedores>();
             tbRolesrole_UsuCreacionNavigation = new HashSet<tbRoles>();
             tbRolesrole_UsuModificacionNavigation = new HashSet<tbRoles>();
-            tbSucursales = new HashSet<tbSucursales>();
+            tbSucursalessucu_UsuCreacionNavigation = new HashSet<tbSucursales>();
+            tbSucursalessucu_UsuModificacionNavigation = new HashSet<tbSucursales>();
         }
 
         public int usua_Id { get; set; }
@@ -129,6 +130,7 @@ namespace OpticaPopular.Entities.Entities
         public virtual ICollection<tbProveedores> tbProveedoresprov_UsuModificacionNavigation { get; set; }
         public virtual ICollection<tbRoles> tbRolesrole_UsuCreacionNavigation { get; set; }
         public virtual ICollection<tbRoles> tbRolesrole_UsuModificacionNavigation { get; set; }
-        public virtual ICollection<tbSucursales> tbSucursales { get; set; }
+        public virtual ICollection<tbSucursales> tbSucursalessucu_UsuCreacionNavigation { get; set; }
+        public virtual ICollection<tbSucursales> tbSucursalessucu_UsuModificacionNavigation { get; set; }
     }
 }

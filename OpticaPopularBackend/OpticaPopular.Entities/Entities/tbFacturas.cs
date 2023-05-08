@@ -22,8 +22,8 @@ namespace OpticaPopular.Entities.Entities
         public decimal? fact_PrecioTotal { get; set; }
         public int fact_UsuCreacion { get; set; }
         public DateTime fact_FechaCreacion { get; set; }
-        public DateTime? fact_FechaModificacion { get; set; }
         public int? fact_UsuModificacion { get; set; }
+        public DateTime? fact_FechaModificacion { get; set; }
         public bool? fact_Estado { get; set; }
 
         public virtual tbClientes clie { get; set; }

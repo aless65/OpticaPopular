@@ -1032,7 +1032,6 @@ VALUES('Optica Popular Mall Multiplaza', 7, 1),
       ('Optica Popular Mall Plaza Miraflores', 8, 1),
 	  ('Optica Popular City Mall', 9, 1),
 	  ('Optica Popular Mall Las Americas', 10,1),
-	  ('Optica Popular City Mall', 11,1)
 GO
 
 --INSERT TABLA Empleados********---

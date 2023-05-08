@@ -659,6 +659,12 @@ AS
 		   T4.estacivi_Nombre AS Empe_EstadoCivilNombre,
 		   empe_Telefono, 
 		   empe_CorreoElectronico, 
+		   t1.dire_Id,
+		   T6.dire_DireccionExacta,
+		   t6.muni_Id,
+		   T7.muni_Nombre AS sucu_MunicipioNombre, 
+		   T7.depa_Id,
+		   T1.carg_Id,
 		   T1.sucu_Id,
 		   T5.sucu_Descripcion AS Empe_SucursalNombre,
 		   empe_UsuCreacion, 
@@ -672,7 +678,9 @@ AS
 	ON T1.empe_UsuCreacion = T2.usua_Id LEFT JOIN acce.tbUsuarios T3 
 	ON T1.empe_UsuModificacion = T3.usua_Id INNER JOIN gral.tbEstadosCiviles T4
 	ON T1.estacivi_Id = T4.estacivi_Id INNER JOIN opti.tbSucursales T5
-	ON T1.sucu_Id = T5.sucu_Id
+	ON T1.sucu_Id = T5.sucu_Id INNER JOIN opti.tbDirecciones T6
+	ON T1.dire_Id = T6.dire_Id INNER JOIN gral.tbMunicipios T7
+	ON T6.muni_Id = T7.muni_id 
 GO
 
 
@@ -681,7 +689,19 @@ CREATE OR ALTER PROCEDURE opti.UDP_opti_tbEmpleados_List
 AS
 BEGIN
 	SELECT * FROM opti.VW_tbEmpleados
+	WHERE empe_Estado = 1
 END	
+GO
+
+/*Find empleados*/
+GO
+CREATE OR ALTER PROCEDURE opti.UDP_opti_tbEmpleados_Find 
+	@empe_Id	INT
+AS
+BEGIN
+	SELECT * FROM opti.VW_tbEmpleados
+	WHERE empe_Id = @empe_Id
+END
 GO
 
 
@@ -694,17 +714,26 @@ CREATE OR ALTER PROCEDURE opti.UDP_opti_tbEmpleados_Insert
 	 @empe_Sexo                    CHAR(1), 
 	 @estacivi_Id                  INT, 
 	 @empe_Telefono                NVARCHAR(15), 
-	 @empe_CorreoElectronico       NVARCHAR(200), 
+	 @empe_CorreoElectronico       NVARCHAR(200),
+	 @muni_Id					   VARCHAR(4),
+	 @dire_DireccionExacta		   NVARCHAR(350),
+	 @carg_Id                      INT,
 	 @sucu_Id                      INT, 
 	 @empe_UsuCreacion             INT
 
 AS
 BEGIN
 	BEGIN TRY
+		DECLARE @dire_Id INT
 
 		IF NOT EXISTS (SELECT empe_Identidad FROM opti.tbEmpleados
 						WHERE empe_Identidad = @empe_Identidad)
 			BEGIN
+				INSERT INTO [opti].[tbDirecciones]([muni_Id], [dire_DireccionExacta], [usua_IdCreacion])
+				VALUES(@muni_Id, @dire_DireccionExacta, @empe_UsuCreacion)
+
+				SET @dire_Id = SCOPE_IDENTITY()
+				
 				INSERT INTO opti.tbEmpleados(empe_Nombres, 
 				                             empe_Apellidos, 
 											 empe_Identidad, 
@@ -713,22 +742,31 @@ BEGIN
 											 estacivi_Id, 
 											 empe_Telefono, 
 											 empe_CorreoElectronico, 
+											 dire_Id,
+											 carg_Id,
 											 sucu_Id, 
 											 empe_UsuCreacion)
 				VALUES(@empe_Nombres,@empe_Apellidos,@empe_Identidad, @empe_FechaNacimiento,         
 	                   @empe_Sexo, @estacivi_Id, @empe_Telefono, @empe_CorreoElectronico,       
-	                   @sucu_Id, @empe_UsuCreacion)
+	                   @dire_Id, @carg_Id, @sucu_Id, @empe_UsuCreacion)
 
-				SELECT 'El Empleado ha sido ingresado con éxito'
+				SELECT 'El empleado ha sido ingresado con éxito'
 
 			END
 		ELSE IF EXISTS (SELECT empe_Identidad FROM opti.tbEmpleados
 						WHERE empe_Identidad = @empe_Identidad
 						AND empe_Estado = 1)
 
-			SELECT 'Ya existe un Empleado con este número de identidad'
+			SELECT 'Ya existe un empleado con este número de identidad'
 		ELSE
 			BEGIN
+
+			UPDATE opti.tbDirecciones
+				SET muni_Id = @muni_Id,
+				    dire_DireccionExacta = @dire_DireccionExacta,
+					dire_Estado = 1
+				WHERE dire_Id = (SELECT dire_Id FROM opti.tbEmpleados WHERE empe_Identidad = @empe_Identidad)
+
 				UPDATE opti.tbEmpleados
 				SET [empe_Estado] = 1,
 					[empe_Nombres] = @empe_Nombres, 
@@ -741,7 +779,7 @@ BEGIN
 					[empe_CorreoElectronico] = @empe_CorreoElectronico 
 				WHERE empe_Identidad = @empe_Identidad
 
-				SELECT 'El Empleado ha sido ingresado con éxito'
+				SELECT 'El empleado ha sido ingresado con éxito'
 			END
 	END TRY
 	BEGIN CATCH
@@ -761,8 +799,11 @@ CREATE OR ALTER PROCEDURE opti.UDP_opti_tbEmpleados_Update
 	 @empe_Sexo                    CHAR(1), 
 	 @estacivi_Id                  INT, 
 	 @empe_Telefono                NVARCHAR(15), 
-	 @empe_CorreoElectronico       NVARCHAR(200), 
-	 @sucu_Id                      INT, 
+	 @empe_CorreoElectronico       NVARCHAR(200),
+	 @muni_Id					   VARCHAR(4),
+	 @dire_DireccionExacta		   NVARCHAR(350),
+	 @carg_Id                      INT,
+	 @sucu_Id                      INT,  
 	 @empe_UsuModificacion         INT
 AS
 BEGIN
@@ -770,6 +811,12 @@ BEGIN
 	IF NOT EXISTS (SELECT empe_Identidad FROM opti.tbEmpleados
 						WHERE empe_Identidad = @empe_Identidad)
 		BEGIN	
+			UPDATE opti.tbDirecciones
+				SET muni_Id = @muni_Id,
+				    dire_DireccionExacta = @dire_DireccionExacta,
+					usua_IdModificacion = @empe_UsuModificacion
+				WHERE dire_Id = (SELECT dire_Id FROM opti.tbEmpleados WHERE empe_Id = @empe_Id)
+
 			UPDATE opti.tbEmpleados
 					   SET empe_Nombres = @empe_Nombres, 
 					       empe_Apellidos = @empe_Apellidos, 
@@ -783,16 +830,23 @@ BEGIN
 						   empe_UsuModificacion = @empe_UsuModificacion
 				       WHERE  empe_Id = @empe_Id
 
-			SELECT 'El Empleado ha sido editado con éxito'
+			SELECT 'El empleado ha sido editado con éxito'
 		END
 		ELSE IF EXISTS (SELECT * FROM opti.tbEmpleados
 						WHERE @empe_Identidad = empe_Identidad
 							  AND empe_Estado = 1
 							  AND empe_Id != @empe_Id)
 
-			SELECT 'Ya existe un Empleado con este número de identidad'
+			SELECT 'Ya existe un empleado con este número de identidad'
 		ELSE
 			BEGIN
+				UPDATE opti.tbDirecciones
+				SET dire_Estado = 1,
+					muni_Id = @muni_Id,
+				    dire_DireccionExacta = @dire_DireccionExacta,
+					usua_IdModificacion = @empe_UsuModificacion
+				WHERE dire_Id = (SELECT dire_Id FROM opti.tbEmpleados WHERE empe_Identidad = @empe_Identidad)
+
 				UPDATE opti.tbEmpleados
 				SET [empe_Estado] = 1,
 				    [empe_UsuCreacion] = @empe_UsuModificacion,
@@ -806,7 +860,7 @@ BEGIN
 					[empe_CorreoElectronico] = @empe_CorreoElectronico 
 				WHERE empe_Identidad = @empe_Identidad
 
-				SELECT 'El Empleado ha sido editado con éxito'
+				SELECT 'El empleado ha sido editado con éxito'
 			END
 	END TRY
 	BEGIN CATCH
@@ -824,11 +878,15 @@ BEGIN
 	
 	BEGIN TRY
 			BEGIN
+				UPDATE opti.tbDirecciones
+				SET dire_Estado = 0
+				WHERE dire_Id = (SELECT dire_Id FROM opti.tbEmpleados WHERE empe_Id = @empe_Id)
+
 				UPDATE opti.tbEmpleados 
 				SET empe_Estado = 0
 				WHERE [empe_Id] = @empe_Id
 				
-				SELECT 'El Empleado ha sido eliminado'
+				SELECT 'El empleado ha sido eliminado'
 			END
 		
 	END TRY
@@ -1787,9 +1845,10 @@ CREATE OR ALTER VIEW opti.VW_tbSucursales
 AS
 	SELECT  sucu_Id, 
 	        sucu_Descripcion, 
-			t1.muni_Id,
-			T4.muni_Nombre AS sucu_MunicipioNombre, 
-			sucu_DireccionExacta, 
+			T1.dire_Id,
+			t4.muni_Id,
+			T5.muni_Nombre AS sucu_MunicipioNombre, 
+			T4.dire_DireccionExacta, 
 			sucu_FechaCreacion, 
 			sucu_UsuCreacion, 
 			t2.usua_NombreUsuario AS sucu_NombreUsuarioCreacion,
@@ -1799,8 +1858,9 @@ AS
 			sucu_Estado
 FROM [opti].[tbSucursales] t1 INNER JOIN acce.tbUsuarios T2
 ON T1.sucu_UsuCreacion = T2.usua_Id LEFT JOIN acce.tbUsuarios T3
-ON T1.sucu_UsuModificacion = T3.usua_Id INNER JOIN gral.tbMunicipios T4
-ON T1.muni_Id = T4.muni_Id
+ON T1.sucu_UsuModificacion = T3.usua_Id INNER JOIN opti.tbDirecciones T4
+ON T1.dire_Id = T4.dire_Id INNER JOIN gral.tbMunicipios T5
+ON T4.muni_Id = T5.muni_Id
 WHERE T1.sucu_Estado = 1
 GO
 
@@ -2680,6 +2740,8 @@ GO
 
 
 ---------- Estados Civiles -----------
+
+/*Listar estados*/
 GO
 CREATE OR ALTER PROCEDURE gral.UDP_tbEstadosCiviles_List
 AS
@@ -2687,4 +2749,29 @@ BEGIN
 	SELECT estacivi_Id, estacivi_Nombre
 	FROM [gral].[tbEstadosCiviles]
 	WHERE estacivi_Estado = 1
+END
+
+
+
+---------- Municipios -----------
+GO
+CREATE OR ALTER PROCEDURE gral.UDP_gral_tbMunicipios_List 
+	@depa_Id	INT
+AS
+BEGIN
+	SELECT muni_Id, muni_Nombre
+	FROM [gral].tbMunicipios
+	WHERE muni_Estado = 1
+	AND depa_Id = @depa_Id
+END
+
+
+---------- Departamentos -----------
+GO
+CREATE OR ALTER PROCEDURE gral.UDP_gral_tbDepartamentos_List
+AS
+BEGIN
+	SELECT depa_Id, depa_Nombre
+	FROM [gral].tbDepartamentos
+	WHERE depa_Estado = 1
 END

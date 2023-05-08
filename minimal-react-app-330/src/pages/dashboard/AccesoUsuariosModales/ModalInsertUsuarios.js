@@ -136,10 +136,10 @@ export default function AddUserDialog({ open, onClose, usuarios, setTableData })
             setInsertSuccess(true);
             enqueueSnackbar(`${data.message} con éxito`);
             handleDialogClose();
-          } else if (data.message === 'Este usuario ya existe'){
+          } else if (data.message === 'Este usuario ya existe') {
             setInsertSuccess(false);
             enqueueSnackbar(data.message, { variant: 'warning' });
-          } else{
+          } else {
             setInsertSuccess(false);
             enqueueSnackbar(data.message, { variant: 'error' });
           }
@@ -202,14 +202,22 @@ export default function AddUserDialog({ open, onClose, usuarios, setTableData })
           />
 
           <Grid container>
-            <Grid item xs={12} sx={{pr: 1}} sm={6}>
+            <Grid item xs={12} sx={{ pr: 1 }} sm={6}>
               <Autocomplete
                 disablePortal
                 name="empleado"
                 options={optionsEmpleados}
-                error={errors.empleado?.message}
+                error={errors.empleado?.message !== undefined}
+                // helperText={errors.empleado?.message}
                 getOptionLabel={(option) => option.label}
-                renderInput={(params) => <TextField {...params} label="Empleado" />}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Empleado"
+                    error={errors.empleado?.message !== undefined}
+                    helperText={errors.empleado?.message}
+                  />
+                )}
                 onChange={(event, value) => {
                   if (value != null) {
                     methods.setValue('empleado', value.id);
@@ -219,14 +227,21 @@ export default function AddUserDialog({ open, onClose, usuarios, setTableData })
                 value={optionsEmpleados.find(option => option.id === defaultValues.empleado)}
               />
             </Grid>
-            <Grid item xs={12} sx={{pl: 1}} sm={6}>
+            <Grid item xs={12} sx={{ pl: 1 }} sm={6}>
               <Autocomplete
                 disablePortal
                 name="rol"
                 options={optionsRoles}
-                error={errors.rol?.message}
+                error={errors.rol?.message !== undefined}
                 getOptionLabel={(option) => option.label}
-                renderInput={(params) => <TextField {...params} label="Rol" />}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Rol"
+                    error={errors.rol?.message !== undefined}
+                    helperText={errors.rol?.message}
+                  />
+                )}
                 onChange={(event, value) => {
                   if (value != null) {
                     methods.setValue('rol', value.id);

@@ -11,7 +11,6 @@ namespace OpticaPopular.Entities.Entities
         public tbMunicipios()
         {
             tbDirecciones = new HashSet<tbDirecciones>();
-            tbSucursales = new HashSet<tbSucursales>();
         }
 
         public string muni_id { get; set; }
@@ -27,6 +26,5 @@ namespace OpticaPopular.Entities.Entities
         public virtual tbUsuarios muni_UsuCreacionNavigation { get; set; }
         public virtual tbUsuarios muni_UsuModificacionNavigation { get; set; }
         public virtual ICollection<tbDirecciones> tbDirecciones { get; set; }
-        public virtual ICollection<tbSucursales> tbSucursales { get; set; }
     }
 }

@@ -10,23 +10,31 @@ namespace OpticaPopular.Entities.Entities
     {
         public tbDirecciones()
         {
+            tbClientes = new HashSet<tbClientes>();
             tbDireccionesPorCliente = new HashSet<tbDireccionesPorCliente>();
+            tbEmpleados = new HashSet<tbEmpleados>();
             tbEnvios = new HashSet<tbEnvios>();
+            tbProveedores = new HashSet<tbProveedores>();
+            tbSucursales = new HashSet<tbSucursales>();
         }
 
         public int dire_Id { get; set; }
         public string muni_Id { get; set; }
         public string dire_DireccionExacta { get; set; }
-        public bool? clie_Estado { get; set; }
+        public bool? dire_Estado { get; set; }
         public int usua_IdCreacion { get; set; }
-        public DateTime? clie_FechaCreacion { get; set; }
+        public DateTime? dire_FechaCreacion { get; set; }
         public int? usua_IdModificacion { get; set; }
-        public DateTime? clie_FechaModificacion { get; set; }
+        public DateTime? dire_FechaModificacion { get; set; }
 
         public virtual tbMunicipios muni { get; set; }
         public virtual tbUsuarios usua_IdCreacionNavigation { get; set; }
         public virtual tbUsuarios usua_IdModificacionNavigation { get; set; }
+        public virtual ICollection<tbClientes> tbClientes { get; set; }
         public virtual ICollection<tbDireccionesPorCliente> tbDireccionesPorCliente { get; set; }
+        public virtual ICollection<tbEmpleados> tbEmpleados { get; set; }
         public virtual ICollection<tbEnvios> tbEnvios { get; set; }
+        public virtual ICollection<tbProveedores> tbProveedores { get; set; }
+        public virtual ICollection<tbSucursales> tbSucursales { get; set; }
     }
 }

@@ -138,10 +138,6 @@
          "ObjectType": 3
       },
       {
-         "Name": "[opti].[VW_tbAros]",
-         "ObjectType": 3
-      },
-      {
          "Name": "[opti].[VW_tbCargos]",
          "ObjectType": 3
       },
@@ -162,19 +158,11 @@
          "ObjectType": 3
       },
       {
-         "Name": "[opti].[VW_tbDirecciones]",
-         "ObjectType": 3
-      },
-      {
          "Name": "[opti].[VW_tbDireccionesPorClientes]",
          "ObjectType": 3
       },
       {
          "Name": "[opti].[VW_tbEmpleados]",
-         "ObjectType": 3
-      },
-      {
-         "Name": "[opti].[VW_tbEnvio]",
          "ObjectType": 3
       },
       {
@@ -187,10 +175,6 @@
       },
       {
          "Name": "[opti].[VW_tbOrdenes]",
-         "ObjectType": 3
-      },
-      {
-         "Name": "[opti].[VW_tbProveedores]",
          "ObjectType": 3
       },
       {

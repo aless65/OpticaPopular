@@ -21,5 +21,12 @@ namespace OpticaPopular.API.Controllers
             _generalService = generalService;
             _mapper = mapper;
         }
+
+        [HttpGet("Listado")]
+        public IActionResult Index()
+        {
+            var list = _generalService.ListadoEstadosCiviles();
+            return Ok(list);
+        }
     }
 }

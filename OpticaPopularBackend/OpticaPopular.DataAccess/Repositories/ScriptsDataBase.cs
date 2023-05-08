@@ -33,6 +33,30 @@ namespace OpticaPopular.DataAccess.Repositories
 
         #region Empleados
         public static string UDP_Lista_Empleados = "opti.UDP_opti_tbEmpleados_List";
+        public static string UDP_Inserta_Empleados = "opti.UDP_opti_tbEmpleados_Insert";
+        public static string UDP_Edita_Empleados = "opti.UDP_opti_tbEmpleados_Update";
+        public static string UDP_Elimina_Empleados = "opti.UDP_opti_tbEmpleados_Delete";
+        public static string UDP_Find_Empleados = "opti.UDP_opti_tbEmpleados_Find";
+        #endregion
+
+        #region Sucursales
+        public static string UDP_Lista_Sucursales = "opti.UDP_opti_tbSucursales_List";
+        #endregion
+
+        #region Cargos
+        public static string UDP_Lista_Cargos = "opti.UDP_opti_tbCargos_List";
+        #endregion
+
+        #region Estados Civiles
+        public static string UDP_Lista_EstadosCiviles = "gral.UDP_tbEstadosCiviles_List";
+        #endregion
+
+        #region Municipios
+        public static string UDP_Lista_Municipios = "gral.UDP_gral_tbMunicipios_List";
+        #endregion
+
+        #region Departamentos
+        public static string UDP_Lista_Departamentos = "gral.UDP_gral_tbDepartamentos_List";
         #endregion
     }
 }

@@ -51,9 +51,9 @@ export const PATH_DASHBOARD = {
   general: {
     app: path(ROOTS_DASHBOARD, '/app'),
   },
-  // optica: {
-  //   empleadosNew: path(ROOTS_DASHBOARD, '/empleados/nuevo'),
-  // },
+  optica: {
+    empleados: path(ROOTS_DASHBOARD, '/empleados'),
+  },
 };
 
 export const PATH_DOCS = 'https://docs-minimals.vercel.app/introduction';

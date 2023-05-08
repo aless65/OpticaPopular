@@ -11,6 +11,7 @@ namespace OpticaPopular.Entities.Entities
         public tbCitas()
         {
             tbDetallesCitas = new HashSet<tbDetallesCitas>();
+            tbFacturasDetalles = new HashSet<tbFacturasDetalles>();
         }
 
         public int cita_Id { get; set; }
@@ -28,5 +29,6 @@ namespace OpticaPopular.Entities.Entities
         public virtual tbUsuarios usua_IdCreacionNavigation { get; set; }
         public virtual tbUsuarios usua_IdModificacionNavigation { get; set; }
         public virtual ICollection<tbDetallesCitas> tbDetallesCitas { get; set; }
+        public virtual ICollection<tbFacturasDetalles> tbFacturasDetalles { get; set; }
     }
 }
