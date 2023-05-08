@@ -118,6 +118,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[opti].[tbStockArosPorSucursal]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[opti].[tbSucursales]",
          "ObjectType": 0
       },

@@ -10,7 +10,7 @@ namespace OpticaPopular.Entities.Entities
     {
         public int deor_Id { get; set; }
         public int orde_Id { get; set; }
-        public int aros_Id { get; set; }
+        public int? aros_Id { get; set; }
         public string deor_GraduacionLeft { get; set; }
         public string deor_GraduacionRight { get; set; }
         public decimal deor_Precio { get; set; }

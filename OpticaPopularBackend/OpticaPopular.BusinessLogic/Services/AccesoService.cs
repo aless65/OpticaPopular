@@ -105,6 +105,20 @@ namespace OpticaPopular.BusinessLogic.Services
             }
         }
 
+        public ServiceResult Login(string usuario, string contrasena)
+        {
+            var result = new ServiceResult();
+            try
+            {
+                var list = _usuariosRepository.Login(usuario, contrasena);
+                return result.Ok(list);
+            }
+            catch (Exception e)
+            {
+                return result.Error(e.Message);
+            }
+        }
+
         #endregion
 
         #region Pantallas

@@ -5,10 +5,9 @@ import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { alpha } from '@mui/material/styles';
 import { Box, Divider, Typography, Stack, MenuItem } from '@mui/material';
 // routes
-import { PATH_DASHBOARD, PATH_AUTH } from '../../../routes/paths';
+import { PATH_AUTH } from '../../../routes/paths';
 // hooks
 import useAuth from '../../../hooks/useAuth';
-import useIsMountedRef from '../../../hooks/useIsMountedRef';
 // components
 import MyAvatar from '../../../components/MyAvatar';
 import MenuPopover from '../../../components/MenuPopover';
@@ -23,11 +22,11 @@ const MENU_OPTIONS = [
   },
   {
     label: 'Profile',
-    linkTo: PATH_DASHBOARD.user.profile,
+    linkTo: '/',
   },
   {
     label: 'Settings',
-    linkTo: PATH_DASHBOARD.user.account,
+    linkTo: '/',
   },
 ];
 
@@ -37,8 +36,6 @@ export default function AccountPopover() {
   const navigate = useNavigate();
 
   const { user, logout } = useAuth();
-
-  const isMountedRef = useIsMountedRef();
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -54,12 +51,10 @@ export default function AccountPopover() {
 
   const handleLogout = async () => {
     try {
-      await logout();
+      localStorage.removeItem("usuario");
+      localStorage.removeItem("sucu_Id");
       navigate(PATH_AUTH.login, { replace: true });
-
-      if (isMountedRef.current) {
-        handleClose();
-      }
+      await logout();
     } catch (error) {
       console.error(error);
       enqueueSnackbar('Unable to logout!', { variant: 'error' });
@@ -124,7 +119,7 @@ export default function AccountPopover() {
         <Divider sx={{ borderStyle: 'dashed' }} />
 
         <MenuItem onClick={handleLogout} sx={{ m: 1 }}>
-          Logout
+          Cerrar sesión
         </MenuItem>
       </MenuPopover>
     </>

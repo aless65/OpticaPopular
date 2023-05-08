@@ -25,6 +25,7 @@ UsuarioTableRow.propTypes = {
   onDeleteRow: PropTypes.func,
 };
 
+
 export default function UsuarioTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRow }) {
 
   const theme = useTheme();
@@ -80,6 +81,7 @@ export default function UsuarioTableRow({ row, selected, onEditRow, onSelectRow,
                 <Iconify icon={'eva:edit-fill'} />
                 Editar
               </MenuItem>
+
               <MenuItem
                 onClick={() => {
                   onEditRow();

@@ -40,6 +40,7 @@ import {
 import { RolTableRow, TableToolbar } from '../../sections/@dashboard/acceso/rol-list';
 import AddRolDialog from './AccesoRolesModales/ModalInsertRoles';
 import EditRolDialog from './AccesoRolesModales/ModalEditRoles';
+import DeleteRolDialog from './AccesoRolesModales/ModalDeleteRoles';
 
 // ----------------------------------------------------------------------
 
@@ -85,6 +86,8 @@ export default function AccesoRoles() {
 
   const [openEditRolDialog, setOpenEditRolDialog] = useState(false);
 
+  const [openDeleteRolDialog, setOpenDeleteRolDialog] = useState(false);
+
   const [tableData, setTableData] = useState([]);
 
   const [filterName, setFilterName] = useState('');
@@ -109,9 +112,8 @@ export default function AccesoRoles() {
   };
 
   const handleDeleteRow = (id) => {
-    const deleteRow = tableData.filter((row) => row.role_Id !== id);
-    setSelected([]);
-    setTableData(deleteRow);
+    setRoleId(id);
+    handleOpenDeleteRolDialog();
   };
 
   const handleDeleteRows = (selected) => {
@@ -148,6 +150,14 @@ export default function AccesoRoles() {
     setOpenEditRolDialog(false);
   }
 
+  const handleOpenDeleteRolDialog = () => {
+    setOpenDeleteRolDialog(true)
+  }
+
+  const handleCloseDeleteRolDialog = () => {
+    setOpenDeleteRolDialog(false);
+  }
+
   const denseHeight = dense ? 60 : 80;
 
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
@@ -158,7 +168,7 @@ export default function AccesoRoles() {
         <HeaderBreadcrumbs
           heading="Listado de roles"
           links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
+            { name: 'Inicio', href: PATH_DASHBOARD.root },
             { name: 'Roles' },
           ]}
           action={
@@ -172,6 +182,7 @@ export default function AccesoRoles() {
               </Button>
               <AddRolDialog open={openAddRolDialog} onClose={handleCloseAddRolDialog} roles={roles} setTableData={setTableData} />
               <EditRolDialog open={openEditRolDialog} onClose={handleCloseEditRolDialog} roles={roles} setTableData={setTableData} roleId={roleId} roleNombre={roleNombre} />
+              <DeleteRolDialog open={openDeleteRolDialog} onClose={handleCloseDeleteRolDialog} roles={roles} setTableData={setTableData} roleId={roleId} />
             </div>
           }
         />

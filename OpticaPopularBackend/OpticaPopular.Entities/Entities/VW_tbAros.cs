@@ -17,7 +17,6 @@ namespace OpticaPopular.Entities.Entities
         public string aros_NombreProveedor { get; set; }
         public int marc_Id { get; set; }
         public string aros_NombreMarca { get; set; }
-        public int aros_Stock { get; set; }
         public int aros_UsuCreacion { get; set; }
         public string aros_NombreUsuarioCreacion { get; set; }
         public DateTime aros_FechaCreacion { get; set; }

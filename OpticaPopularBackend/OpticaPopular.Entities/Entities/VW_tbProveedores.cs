@@ -10,7 +10,8 @@ namespace OpticaPopular.Entities.Entities
     {
         public int prov_Id { get; set; }
         public string prov_Nombre { get; set; }
-        public string prov_Direccion { get; set; }
+        public int dire_Id { get; set; }
+        public string dire_DireccionExacta { get; set; }
         public string prov_CorreoElectronico { get; set; }
         public string prov_Telefono { get; set; }
         public int prov_UsuCreacion { get; set; }

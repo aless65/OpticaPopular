@@ -53,6 +53,7 @@ export default function RegisterForm() {
     try {
       await register(data.email, data.password, data.firstName, data.lastName);
       console.log(data);
+
     } catch (error) {
       console.error(error);
       reset();

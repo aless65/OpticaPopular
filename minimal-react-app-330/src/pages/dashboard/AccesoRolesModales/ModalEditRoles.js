@@ -46,11 +46,15 @@ export default function EditRolDialog({ open, onClose, roles, setTableData, role
 
   const [insertSuccess, setInsertSuccess] = useState(false);
   
-  const [rolTemporal, setRolTemporal] = useState(roleNombre);
+  const [rolTemporal, setRolTemporal] = useState('');
 
   const InsertSchema = Yup.object().shape({
     nombre: Yup.string().required('Nombre del rol requerido'),
   });
+
+  useEffect(() => {
+    setRolTemporal(roleNombre);
+  }, [roleId]);
 
   const defaultValues = {
     nombre: '',
@@ -79,8 +83,8 @@ export default function EditRolDialog({ open, onClose, roles, setTableData, role
         role_UsuModificacion: 1,
       };
 
-      fetch("http://opticapopular.somee.com/api/Roles/Insertar", {
-        method: "POST",
+      fetch("http://opticapopular.somee.com/api/Roles/Editar", {
+        method: "PUT",
         mode: "cors",
         headers: {
           "Content-Type": "application/json",
@@ -89,8 +93,8 @@ export default function EditRolDialog({ open, onClose, roles, setTableData, role
       })
         .then((response) => response.json())
         .then((data) => {
-          console.log(data);
-          if (data.message === "El rol ha sido insertado con éxito") {
+        //   console.log(data);
+          if (data.message === "El rol ha sido editado con éxito") {
             setInsertSuccess(true);
             enqueueSnackbar(data.message);
             handleDialogClose();
@@ -124,10 +128,19 @@ export default function EditRolDialog({ open, onClose, roles, setTableData, role
 
   }, [dispatch, insertSuccess]);
 
+  useEffect(() => {
+    methods.setValue('nombre', rolTemporal);
+  }, [rolTemporal])
+
+//   useEffect(() => {
+//     setRolTemporal(roleNombre);
+//   }, [roleNombre])
+
 
   const submitHandler = handleSubmit(onSubmit);
 
   const handleDialogClose = () => {
+    setRolTemporal(roleNombre);
     onClose();
     reset();
   };
@@ -140,7 +153,7 @@ export default function EditRolDialog({ open, onClose, roles, setTableData, role
         {!!errors.afterSubmit && <Alert severity="error">{errors.afterSubmit.message}</Alert>}
 
         <Stack spacing={3} sx={{ p: 3, pb: 0, pl: 5, pr: 5 }}>
-          <RHFTextField name="nombre" value={rolTemporal} label="Nombre del rol" />
+          <RHFTextField name="nombre" onChange={e => setRolTemporal(e.target.value)} value={rolTemporal} label="Nombre del rol" />
         </Stack>
         <DialogActions>
           <LoadingButton variant="contained" type="submit" loading={isSubmitting} onClick={submitHandler}>

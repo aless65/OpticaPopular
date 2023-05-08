@@ -1,11 +1,16 @@
 /* eslint-disable camelcase */
 import PropTypes from 'prop-types';
 import { useState } from 'react';
-// import { sentenceCase } from 'change-case';
-// @mui
+import { sentenceCase } from 'change-case';
 import { useTheme } from '@mui/material/styles';
 import { TableRow, Checkbox, TableCell, Typography, MenuItem } from '@mui/material';
 // utils
+import { fDate } from '../../../../utils/formatTime';
+import { fCurrency } from '../../../../utils/formatNumber';
+// components
+import Label from '../../../../components/Label';
+import Image from '../../../../components/Image';
+
 // import { fDate } from '../../../../utils/formatTime';
 // import { fCurrency } from '../../../../utils/formatNumber';
 // components
@@ -28,6 +33,9 @@ EmpleadoTableRow.propTypes = {
 
 
 export default function EmpleadoTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRow }) {
+
+
+  const theme = useTheme();
 
   // const theme = useTheme();
 

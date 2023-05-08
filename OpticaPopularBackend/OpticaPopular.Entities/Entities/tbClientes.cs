@@ -26,6 +26,7 @@ namespace OpticaPopular.Entities.Entities
         public int estacivi_Id { get; set; }
         public string clie_Telefono { get; set; }
         public string clie_CorreoElectronico { get; set; }
+        public int dire_Id { get; set; }
         public int clie_UsuCreacion { get; set; }
         public DateTime clie_FechaCreacion { get; set; }
         public int? clie_UsuModificacion { get; set; }
@@ -34,6 +35,7 @@ namespace OpticaPopular.Entities.Entities
 
         public virtual tbUsuarios clie_UsuCreacionNavigation { get; set; }
         public virtual tbUsuarios clie_UsuModificacionNavigation { get; set; }
+        public virtual tbDirecciones dire { get; set; }
         public virtual tbEstadosCiviles estacivi { get; set; }
         public virtual ICollection<tbCitas> tbCitas { get; set; }
         public virtual ICollection<tbDireccionesPorCliente> tbDireccionesPorCliente { get; set; }

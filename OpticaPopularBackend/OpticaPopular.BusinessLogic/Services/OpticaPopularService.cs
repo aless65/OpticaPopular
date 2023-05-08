@@ -62,9 +62,19 @@ namespace OpticaPopular.BusinessLogic.Services
         #endregion
 
         #region Cargos
-
-
-
+        public ServiceResult ListadoCargos()
+        {
+            var result = new ServiceResult();
+            try
+            {
+                var list = _cargosRepository.List();
+                return result.Ok(list);
+            }
+            catch (Exception e)
+            {
+                return result.Error(e.Message);
+            }
+        }
         #endregion
 
         #region Categorias
@@ -74,8 +84,20 @@ namespace OpticaPopular.BusinessLogic.Services
         #endregion
 
         #region Citas
+        public ServiceResult ListadoCitasPorIdSucursal (int sucu_Id)
+        {
+            var resultado = new ServiceResult();
 
-
+            try
+            {
+                var list = _citasRepository.ListPorIdSucursal(sucu_Id);
+                return resultado.Ok(list);
+            }
+            catch (Exception ex)
+            {
+                return resultado.Error(ex.Message);
+            }
+        }
 
         #endregion
 
@@ -154,8 +176,20 @@ namespace OpticaPopular.BusinessLogic.Services
         #endregion
 
         #region Consultorios
+        public ServiceResult ListadoConsultoriosPorIdSucursal(int sucu_Id)
+        {
+            var resultado = new ServiceResult();
 
-
+            try
+            {
+                var list = _consultoriosRepository.ListPorIdSucursal(sucu_Id);
+                return resultado.Ok(list);
+            }
+            catch (Exception ex)
+            {
+                return resultado.Error(ex.Message);
+            }
+        }
 
         #endregion
 
@@ -205,7 +239,74 @@ namespace OpticaPopular.BusinessLogic.Services
             }
         }
 
+        public ServiceResult FindEmpleadoos(int id)
+        {
+            var result = new ServiceResult();
+            try
+            {
+                var empleado = _empleadosRepository.Find(id);
+                return result.Ok(empleado);
+            }
+            catch (Exception e)
+            {
+                return result.Error(e.Message);
+            }
+        }
 
+        public ServiceResult InsertEmpleados(VW_tbEmpleados item)
+        {
+            var result = new ServiceResult();
+            try
+            {
+                var insert = _empleadosRepository.Insert(item);
+                if (insert.MessageStatus == "El empleado ha sido ingresado con éxito")
+                    return result.SetMessage(insert.MessageStatus, ServiceResultType.Success);
+                else if (insert.MessageStatus == "Ya existe un empleado con este número de identidad")
+                    return result.SetMessage(insert.MessageStatus, ServiceResultType.Warning);
+                else
+                    return result.SetMessage(insert.MessageStatus, ServiceResultType.Error);
+            }
+            catch (Exception e)
+            {
+                return result.Error(e.Message);
+            }
+        }
+
+        public ServiceResult UpdateEmpleados(VW_tbEmpleados item)
+        {
+            var result = new ServiceResult();
+            try
+            {
+                var update = _empleadosRepository.Update(item);
+                if (update.MessageStatus == "El empleado ha sido editado con éxito")
+                    return result.SetMessage(update.MessageStatus, ServiceResultType.Success);
+                else if (update.MessageStatus == "Ya existe un empleado con este número de identidad")
+                    return result.SetMessage(update.MessageStatus, ServiceResultType.Warning);
+                else
+                    return result.SetMessage(update.MessageStatus, ServiceResultType.Error);
+            }
+            catch (Exception e)
+            {
+                return result.Error(e.Message);
+            }
+        }
+
+        public ServiceResult DeleteEmpleados(VW_tbEmpleados item)
+        {
+            var result = new ServiceResult();
+            try
+            {
+                var update = _empleadosRepository.Delete(item);
+                if (update.MessageStatus == "El empleado ha sido eliminado")
+                    return result.SetMessage(update.MessageStatus, ServiceResultType.Success);
+                else
+                    return result.SetMessage(update.MessageStatus, ServiceResultType.Error);
+            }
+            catch (Exception e)
+            {
+                return result.Error(e.Message);
+            }
+        }
         #endregion
 
         #region Envios
@@ -245,15 +346,99 @@ namespace OpticaPopular.BusinessLogic.Services
         #endregion
 
         #region Proveedores
+        public ServiceResult ListadoProveedores()
+        {
+            var result = new ServiceResult();
+            try
+            {
+                var list = _proveedoresRepository.List();
+                return result.Ok(list);
+            }
+            catch (Exception e)
+            {
+                return result.Error(e.Message);
+            }
+        }
 
+
+        public ServiceResult InsertProveedores(tbProveedores item)
+        {
+            var result = new ServiceResult();
+            try
+            {
+                var insert = _proveedoresRepository.Insert(item);
+
+                if (insert.MessageStatus == "El proveedor ha sido insertada con éxito")
+                    return result.SetMessage(insert.MessageStatus, ServiceResultType.Success);
+                else if (insert.MessageStatus == "El proveedor ya existe")
+                    return result.SetMessage(insert.MessageStatus, ServiceResultType.Warning);
+                else
+                    return result.SetMessage(insert.MessageStatus, ServiceResultType.Error);
+            }
+            catch (Exception e)
+            {
+                return result.Error(e.Message);
+            }
+        }
+
+        public ServiceResult UpdateProveedores(tbProveedores item)
+        {
+            var result = new ServiceResult();
+            try
+            {
+                var update = _proveedoresRepository.Update(item);
+
+                if (update.MessageStatus == "El Proveedor ha sido editada con éxito")
+                    return result.SetMessage(update.MessageStatus, ServiceResultType.Success);
+                else if (update.MessageStatus == "EL Proveedor ya existe")
+                    return result.SetMessage(update.MessageStatus, ServiceResultType.Warning);
+                else
+                    return result.SetMessage(update.MessageStatus, ServiceResultType.Error);
+            }
+            catch (Exception e)
+            {
+                return result.Error(e.Message);
+            }
+        }
+
+        public ServiceResult DeleteProveedores(tbProveedores item)
+        {
+            var result = new ServiceResult();
+            try
+            {
+                var update = _proveedoresRepository.Delete(item);
+
+                if (update.MessageStatus == "El Proveedor ha sido eliminado")
+                    return result.SetMessage(update.MessageStatus, ServiceResultType.Success);
+                else if (update.MessageStatus == "El proveedor no puede ser eliminado ya que está siendo usado")
+                    return result.SetMessage(update.MessageStatus, ServiceResultType.Warning);
+                else
+                    return result.SetMessage(update.MessageStatus, ServiceResultType.Error);
+            }
+            catch (Exception e)
+            {
+                return result.Error(e.Message);
+            }
+        }
 
 
         #endregion
 
         #region Sucursales
 
-
-
+        public ServiceResult ListadoSucursales()
+        {
+            var result = new ServiceResult();
+            try
+            {
+                var list = _sucursalesRepository.List();
+                return result.Ok(list);
+            }
+            catch (Exception e)
+            {
+                return result.Error(e.Message);
+            }
+        }
         #endregion
 
     }
