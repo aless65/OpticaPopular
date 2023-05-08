@@ -41,6 +41,7 @@ const navConfig = [
     items: [
       { title: 'empleados', path: PATH_OPTICA.empleados, icon: ICONS.analytics },
       { title: 'clientes', path: PATH_OPTICA.clientes, icon: ICONS.cart },
+      { title: 'proveedores', path: PATH_OPTICA.proveedores, icon: ICONS.cart },
     ],
   },
   // GENERAL

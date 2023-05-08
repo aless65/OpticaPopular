@@ -20,6 +20,7 @@ export const PATH_OPTICA = {
   root: ROOTS_OPTICA,
   empleados: path(ROOTS_OPTICA, '/empleados'),
   clientes: path(ROOTS_OPTICA, '/clientes') ,
+  proveedores: path(ROOTS_OPTICA, '/proveedores') ,
 };
 
 export const PATH_AUTH = {

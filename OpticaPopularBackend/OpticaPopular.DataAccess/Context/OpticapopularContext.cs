@@ -63,6 +63,7 @@ namespace OpticaPopular.DataAccess.Context
         public virtual DbSet<tbPantallasPorRoles> tbPantallasPorRoles { get; set; }
         public virtual DbSet<tbProveedores> tbProveedores { get; set; }
         public virtual DbSet<tbRoles> tbRoles { get; set; }
+        public virtual DbSet<tbStockArosPorSucursal> tbStockArosPorSucursal { get; set; }
         public virtual DbSet<tbSucursales> tbSucursales { get; set; }
         public virtual DbSet<tbUsuarios> tbUsuarios { get; set; }
 
@@ -258,11 +259,11 @@ namespace OpticaPopular.DataAccess.Context
 
                 entity.ToView("VW_tbDirecciones", "opti");
 
-                entity.Property(e => e.clie_FechaCreacion).HasColumnType("datetime");
-
-                entity.Property(e => e.clie_FechaModificacion).HasColumnType("datetime");
-
                 entity.Property(e => e.dire_DireccionExacta).IsRequired();
+
+                entity.Property(e => e.dire_FechaCreacion).HasColumnType("datetime");
+
+                entity.Property(e => e.dire_FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.dire_UsuarioCreacion)
                     .IsRequired()
@@ -365,10 +366,6 @@ namespace OpticaPopular.DataAccess.Context
 
                 entity.ToView("VW_tbEnvio", "opti");
 
-                entity.Property(e => e.clie_FechaCreacion).HasColumnType("datetime");
-
-                entity.Property(e => e.clie_FechaModificacion).HasColumnType("datetime");
-
                 entity.Property(e => e.dire_DireccionExacta).IsRequired();
 
                 entity.Property(e => e.dire_Id)
@@ -377,9 +374,13 @@ namespace OpticaPopular.DataAccess.Context
 
                 entity.Property(e => e.envi_Fecha).HasColumnType("date");
 
+                entity.Property(e => e.envi_FechaCreacion).HasColumnType("datetime");
+
                 entity.Property(e => e.envi_FechaEntrega).HasColumnType("date");
 
                 entity.Property(e => e.envi_FechaEntregaReal).HasColumnType("date");
+
+                entity.Property(e => e.envi_FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.envi_NombreUsuarioCreacion)
                     .IsRequired()
@@ -511,13 +512,11 @@ namespace OpticaPopular.DataAccess.Context
 
                 entity.ToView("VW_tbProveedores", "opti");
 
+                entity.Property(e => e.dire_DireccionExacta).IsRequired();
+
                 entity.Property(e => e.prov_CorreoElectronico)
                     .IsRequired()
                     .HasMaxLength(200);
-
-                entity.Property(e => e.prov_Direccion)
-                    .IsRequired()
-                    .HasMaxLength(500);
 
                 entity.Property(e => e.prov_FechaCreacion).HasColumnType("datetime");
 
@@ -565,30 +564,19 @@ namespace OpticaPopular.DataAccess.Context
 
                 entity.ToView("VW_tbSucursales", "opti");
 
-                entity.Property(e => e.muni_Id)
-                    .HasMaxLength(4)
-                    .IsUnicode(false)
-                    .IsFixedLength(true);
-
                 entity.Property(e => e.sucu_Descripcion)
                     .IsRequired()
                     .HasMaxLength(200);
-
-                entity.Property(e => e.sucu_DireccionExacta)
-                    .IsRequired()
-                    .HasMaxLength(500);
 
                 entity.Property(e => e.sucu_FechaCreacion).HasColumnType("datetime");
 
                 entity.Property(e => e.sucu_FechaModificacion).HasColumnType("datetime");
 
-                entity.Property(e => e.sucu_MunicipioNombre)
-                    .IsRequired()
-                    .HasMaxLength(80);
-
                 entity.Property(e => e.sucu_NombreUsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(100);
+
+                entity.Property(e => e.sucu_direExacta).IsRequired();
             });
 
             modelBuilder.Entity<VW_tbUsuarios>(entity =>
@@ -836,6 +824,12 @@ namespace OpticaPopular.DataAccess.Context
                     .HasForeignKey(d => d.clie_UsuModificacion)
                     .HasConstraintName("FK_opti_tbClientes_acce_tbUsuarios_clie_UsuModificacion_usua_Id");
 
+                entity.HasOne(d => d.dire)
+                    .WithMany(p => p.tbClientes)
+                    .HasForeignKey(d => d.dire_Id)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_opti_tbClientes_dire_Id_opti_tbDirecciones_dire_Id");
+
                 entity.HasOne(d => d.estacivi)
                     .WithMany(p => p.tbClientes)
                     .HasForeignKey(d => d.estacivi_Id)
@@ -970,13 +964,13 @@ namespace OpticaPopular.DataAccess.Context
 
                 entity.ToTable("tbDetallesEnvios", "opti");
 
-                entity.Property(e => e.clie_FechaCreacion)
+                entity.Property(e => e.deen_Estado).HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.deen_FechaCreacion)
                     .HasColumnType("datetime")
                     .HasDefaultValueSql("(getdate())");
 
-                entity.Property(e => e.clie_FechaModificacion).HasColumnType("datetime");
-
-                entity.Property(e => e.deen_Estado).HasDefaultValueSql("((1))");
+                entity.Property(e => e.deen_FechaModificacion).HasColumnType("datetime");
 
                 entity.HasOne(d => d.envi)
                     .WithMany(p => p.tbDetallesEnvios)
@@ -1032,7 +1026,6 @@ namespace OpticaPopular.DataAccess.Context
                 entity.HasOne(d => d.aros)
                     .WithMany(p => p.tbDetallesOrdenes)
                     .HasForeignKey(d => d.aros_Id)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_opti_tbDetallesOrdenes_aros_Id_opti_tbAros_aros_Id");
 
                 entity.HasOne(d => d.orde)
@@ -1060,15 +1053,15 @@ namespace OpticaPopular.DataAccess.Context
 
                 entity.ToTable("tbDirecciones", "opti");
 
-                entity.Property(e => e.clie_Estado).HasDefaultValueSql("((1))");
+                entity.Property(e => e.dire_DireccionExacta).IsRequired();
 
-                entity.Property(e => e.clie_FechaCreacion)
+                entity.Property(e => e.dire_Estado).HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.dire_FechaCreacion)
                     .HasColumnType("datetime")
                     .HasDefaultValueSql("(getdate())");
 
-                entity.Property(e => e.clie_FechaModificacion).HasColumnType("datetime");
-
-                entity.Property(e => e.dire_DireccionExacta).IsRequired();
+                entity.Property(e => e.dire_FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.muni_Id)
                     .IsRequired()
@@ -1185,6 +1178,12 @@ namespace OpticaPopular.DataAccess.Context
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_maqu_tbEmpleados_maqu_tbCargos_carg_Id");
 
+                entity.HasOne(d => d.dire)
+                    .WithMany(p => p.tbEmpleados)
+                    .HasForeignKey(d => d.dire_Id)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_opti_tbEmpleados_dire_Id_opti_tbDirecciones_dire_Id");
+
                 entity.HasOne(d => d.empe_UsuCreacionNavigation)
                     .WithMany(p => p.tbEmpleadosempe_UsuCreacionNavigation)
                     .HasForeignKey(d => d.empe_UsuCreacion)
@@ -1216,21 +1215,21 @@ namespace OpticaPopular.DataAccess.Context
 
                 entity.ToTable("tbEnvios", "opti");
 
-                entity.Property(e => e.clie_FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasDefaultValueSql("(getdate())");
-
-                entity.Property(e => e.clie_FechaModificacion).HasColumnType("datetime");
-
                 entity.Property(e => e.envi_Estado).HasDefaultValueSql("((1))");
 
                 entity.Property(e => e.envi_Fecha)
                     .HasColumnType("date")
                     .HasDefaultValueSql("(getdate())");
 
+                entity.Property(e => e.envi_FechaCreacion)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
+
                 entity.Property(e => e.envi_FechaEntrega).HasColumnType("date");
 
                 entity.Property(e => e.envi_FechaEntregaReal).HasColumnType("date");
+
+                entity.Property(e => e.envi_FechaModificacion).HasColumnType("datetime");
 
                 entity.HasOne(d => d.clie)
                     .WithMany(p => p.tbEnvios)
@@ -1357,22 +1356,14 @@ namespace OpticaPopular.DataAccess.Context
 
                 entity.Property(e => e.factdeta_Precio).HasColumnType("decimal(18, 2)");
 
-                entity.HasOne(d => d.aros)
+                entity.HasOne(d => d.cita)
                     .WithMany(p => p.tbFacturasDetalles)
-                    .HasForeignKey(d => d.aros_Id)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_opti_tbFacturasDetalles_opti_tbAros_aros_Id");
-
-                entity.HasOne(d => d.deci)
-                    .WithMany(p => p.tbFacturasDetalles)
-                    .HasForeignKey(d => d.deci_Id)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_opti_tbFacturasDetalles_opti_tbDetallesCitas_deci_Id");
+                    .HasForeignKey(d => d.cita_Id)
+                    .HasConstraintName("FK_opti_tbFacturasDetalles_opti_tbCitas_cita_Id");
 
                 entity.HasOne(d => d.envi)
                     .WithMany(p => p.tbFacturasDetalles)
                     .HasForeignKey(d => d.envi_Id)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_opti_tbFacturasDetalles_opti_tbEnvios_envi_Id");
 
                 entity.HasOne(d => d.fact)
@@ -1638,17 +1629,13 @@ namespace OpticaPopular.DataAccess.Context
             modelBuilder.Entity<tbProveedores>(entity =>
             {
                 entity.HasKey(e => e.prov_Id)
-                    .HasName("PK_opti_tbProveedores_prov_Id");
+                    .HasName("PK_opti_tbProeedores_prov_Id");
 
                 entity.ToTable("tbProveedores", "opti");
 
                 entity.Property(e => e.prov_CorreoElectronico)
                     .IsRequired()
                     .HasMaxLength(200);
-
-                entity.Property(e => e.prov_Direccion)
-                    .IsRequired()
-                    .HasMaxLength(500);
 
                 entity.Property(e => e.prov_Estado)
                     .IsRequired()
@@ -1667,6 +1654,12 @@ namespace OpticaPopular.DataAccess.Context
                 entity.Property(e => e.prov_Telefono)
                     .IsRequired()
                     .HasMaxLength(15);
+
+                entity.HasOne(d => d.dire)
+                    .WithMany(p => p.tbProveedores)
+                    .HasForeignKey(d => d.dire_Id)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_opti_tbProveedores_dire_Id_opti_tbDirecciones_dire_Id");
 
                 entity.HasOne(d => d.prov_UsuCreacionNavigation)
                     .WithMany(p => p.tbProveedoresprov_UsuCreacionNavigation)
@@ -1713,6 +1706,45 @@ namespace OpticaPopular.DataAccess.Context
                     .HasConstraintName("FK_acce_tbRoles_acce_tbUsuarios_role_UsuModificacion_usua_Id");
             });
 
+            modelBuilder.Entity<tbStockArosPorSucursal>(entity =>
+            {
+                entity.HasKey(e => e.stsu_Id)
+                    .HasName("PK_opti_tbStockArosPorSucursal_stsu_Id");
+
+                entity.ToTable("tbStockArosPorSucursal", "opti");
+
+                entity.Property(e => e.stsu_Estado).HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.stsu_FechaCreacion)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.stsu_FechaModificacion).HasColumnType("datetime");
+
+                entity.HasOne(d => d.aros)
+                    .WithMany(p => p.tbStockArosPorSucursal)
+                    .HasForeignKey(d => d.aros_Id)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_opti_tbStockArosPorSucursal_aros_Id_opti_tbAros_aros_Id");
+
+                entity.HasOne(d => d.sucu)
+                    .WithMany(p => p.tbStockArosPorSucursal)
+                    .HasForeignKey(d => d.sucu_Id)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_opti_tbStockArosPorSucursal_sucu_Id_opti_tbSucursales_sucu_Id");
+
+                entity.HasOne(d => d.usua_IdCreacionNavigation)
+                    .WithMany(p => p.tbStockArosPorSucursalusua_IdCreacionNavigation)
+                    .HasForeignKey(d => d.usua_IdCreacion)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_opti_tbStockArosPorSucursal_usua_IdCreacion_acce_tbUsuarios_usua_Id");
+
+                entity.HasOne(d => d.usua_IdModificacionNavigation)
+                    .WithMany(p => p.tbStockArosPorSucursalusua_IdModificacionNavigation)
+                    .HasForeignKey(d => d.usua_IdModificacion)
+                    .HasConstraintName("FK_opti_tbStockArosPorSucursal_usua_IdModificacion_acce_tbUsuarios_usua_Id");
+            });
+
             modelBuilder.Entity<tbSucursales>(entity =>
             {
                 entity.HasKey(e => e.sucu_Id)
@@ -1720,18 +1752,9 @@ namespace OpticaPopular.DataAccess.Context
 
                 entity.ToTable("tbSucursales", "opti");
 
-                entity.Property(e => e.muni_Id)
-                    .HasMaxLength(4)
-                    .IsUnicode(false)
-                    .IsFixedLength(true);
-
                 entity.Property(e => e.sucu_Descripcion)
                     .IsRequired()
                     .HasMaxLength(200);
-
-                entity.Property(e => e.sucu_DireccionExacta)
-                    .IsRequired()
-                    .HasMaxLength(500);
 
                 entity.Property(e => e.sucu_Estado)
                     .IsRequired()
@@ -1743,16 +1766,22 @@ namespace OpticaPopular.DataAccess.Context
 
                 entity.Property(e => e.sucu_FechaModificacion).HasColumnType("datetime");
 
-                entity.HasOne(d => d.muni)
+                entity.HasOne(d => d.dire)
                     .WithMany(p => p.tbSucursales)
-                    .HasForeignKey(d => d.muni_Id)
-                    .HasConstraintName("FK_opti_gral_tbSucursales_muni_Id");
+                    .HasForeignKey(d => d.dire_Id)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_opti_tbSucursales_dire_Id_opti_tbDirecciones_dire_Id");
 
                 entity.HasOne(d => d.sucu_UsuCreacionNavigation)
-                    .WithMany(p => p.tbSucursales)
+                    .WithMany(p => p.tbSucursalessucu_UsuCreacionNavigation)
                     .HasForeignKey(d => d.sucu_UsuCreacion)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_opti_acce_tbSucursales_usua_Id");
+                    .HasConstraintName("FK_opti_acce_tbSucursales_sucu_UsuCreacion");
+
+                entity.HasOne(d => d.sucu_UsuModificacionNavigation)
+                    .WithMany(p => p.tbSucursalessucu_UsuModificacionNavigation)
+                    .HasForeignKey(d => d.sucu_UsuModificacion)
+                    .HasConstraintName("FK_opti_acce_tbSucursales_sucu_UsuModificacion");
             });
 
             modelBuilder.Entity<tbUsuarios>(entity =>

@@ -118,6 +118,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[opti].[tbStockArosPorSucursal]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[opti].[tbSucursales]",
          "ObjectType": 0
       },
@@ -198,7 +202,7 @@
          "ObjectType": 3
       }
    ],
-   "UiHint": "VJ7400.OpticaPopular",
+   "UiHint": "DESKTOP-6FS11M8\\MSSQLSERVER1.OpticaPopular",
    "UseBoolPropertiesWithoutDefaultSql": false,
    "UseDatabaseNames": true,
    "UseDbContextSplitting": false,

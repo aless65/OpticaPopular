@@ -844,7 +844,7 @@ CREATE OR ALTER VIEW opti.VW_tbProveedores
 AS
 	SELECT prov_Id, 
 	       prov_Nombre, 
-		   dire_Id,
+		   T1.dire_Id,
 		   dire_DireccionExacta,
 		   prov_CorreoElectronico, 
 		   prov_Telefono, 
@@ -875,7 +875,7 @@ GO
 /*Insertar Proveedor*/
 CREATE OR ALTER PROCEDURE opti.UDP_opti_tbProveedor_Insert
 	@prov_Nombre                NVARCHAR(100),
-    @prov_Direccion             NVARCHAR(500),
+    @prov_Direccion             INT,
     @prov_CorreoElectronico     NVARCHAR(200),
     @prov_Telefono              NVARCHAR(15),
     @prov_UsuCreacion           INT
@@ -885,7 +885,7 @@ BEGIN
 		IF NOT EXISTS (SELECT * FROM opti.tbProveedores 
 						WHERE prov_Nombre = @prov_Nombre)
 			BEGIN
-			INSERT INTO opti.tbProveedores(prov_Nombre,prov_Direccion,prov_CorreoElectronico,prov_Telefono,prov_UsuCreacion)
+			INSERT INTO opti.tbProveedores(prov_Nombre,[dire_Id],prov_CorreoElectronico,prov_Telefono,prov_UsuCreacion)
 			VALUES(@prov_Nombre,@prov_Direccion,@prov_CorreoElectronico,@prov_Telefono,@prov_UsuCreacion)
 			
 			SELECT 'El proveedor ha sido insertada con éxito'
@@ -926,7 +926,7 @@ BEGIN
 		BEGIN			
 			UPDATE opti.tbProveedores
 			SET 	[prov_Nombre] = @prov_Nombre,
-			        [prov_Direccion] = @prov_Direccion,
+			        [dire_Id] = @prov_Direccion,
                     [prov_CorreoElectronico] = @prov_CorreoElectronico,
                     [prov_Telefono] = @prov_Telefono,
                     [prov_UsuModificacion] = @prov_UsuModificacion,
@@ -991,7 +991,7 @@ AS
 		   T5.prov_Nombre AS aros_NombreProveedor,
 		   T1.marc_Id, 
 		   T6.marc_Nombre AS aros_NombreMarca,
-		   aros_Stock, 
+		   
 		   aros_UsuCreacion, 
 		   T2.usua_NombreUsuario AS aros_NombreUsuarioCreacion,
 		   aros_FechaCreacion, 
@@ -1024,7 +1024,6 @@ CREATE OR ALTER PROCEDURE opti.UDP_opti_tbAros_Insert
     @cate_Id                       INT,
 	@prov_Id                       INT,
     @marc_Id                       INT,
-    @aros_Stock                    INT,
     @aros_UsuCreacion              INT
 
 AS
@@ -1032,8 +1031,8 @@ BEGIN
 	BEGIN TRY
 		
 			BEGIN
-			INSERT INTO opti.tbAros(aros_Descripcion, aros_CostoUni, cate_Id, prov_Id, marc_Id, aros_Stock, aros_UsuCreacion)
-			VALUES(@aros_Descripcion, @aros_CostoUni, @cate_Id, @prov_Id, @marc_Id, @aros_Stock, @aros_UsuCreacion)
+			INSERT INTO opti.tbAros(aros_Descripcion, aros_CostoUni, cate_Id, prov_Id, marc_Id, aros_UsuCreacion)
+			VALUES(@aros_Descripcion, @aros_CostoUni, @cate_Id, @prov_Id, @marc_Id, @aros_UsuCreacion)
 			
 			SELECT 'El Aro ha sido insertada con éxito'
 			END
@@ -1065,7 +1064,7 @@ CREATE OR ALTER PROCEDURE opti.UDP_opti_tbAros_Update
 	@cate_Id                 INT, 
 	@prov_Id                 INT, 
 	@marc_Id                 INT, 
-	@aros_Stock              INT, 
+	
 	@aros_UsuModificacion    INT
 	 
 AS
@@ -1080,7 +1079,7 @@ BEGIN
 				  cate_Id = @cate_Id, 
 				  prov_Id = @prov_Id, 
 				  marc_Id = @marc_Id, 
-				  aros_Stock = @aros_Stock, 
+				  
 				  aros_FechaModificacion = GETDATE(), 
 				  aros_UsuModificacion = @aros_UsuModificacion
 			WHERE 	aros_Id = @aros_Id
@@ -1137,13 +1136,13 @@ AS
 	       T1.muni_Id, 
 		   T4.muni_Nombre AS muni_NombreMunicipio,
 		   dire_DireccionExacta, 
-		   clie_Estado, 
+		   [dire_Estado], 
 		   usua_IdCreacion, 
 		   t2.usua_NombreUsuario AS dire_UsuarioCreacion,
-		   clie_FechaCreacion, 
+		    [dire_FechaCreacion], 
 		   usua_IdModificacion, 
 		   T3.usua_NombreUsuario AS dire_UsuarioModificacion,
-		   clie_FechaModificacion
+		   [dire_FechaModificacion]
 		   FROM opti.tbDirecciones T1 INNER JOIN acce.tbUsuarios T2
 		   ON T1.usua_IdCreacion = T2.usua_Id
 		   LEFT JOIN acce.tbUsuarios T3
@@ -1170,10 +1169,10 @@ BEGIN
 			END
 		ELSE IF EXISTS (SELECT * FROM opti.tbDirecciones 
 						WHERE dire_DireccionExacta = @dire_DireccionExacta
-						AND clie_Estado = 0)
+						AND [dire_Estado] = 0)
 			BEGIN
 				UPDATE opti.tbDirecciones 
-				SET clie_Estado = 1
+				SET dire_Estado = 1
 				WHERE dire_DireccionExacta = @dire_DireccionExacta
 
 				SELECT 'La direccion ha sido insertado'
@@ -1204,22 +1203,22 @@ BEGIN
 			SET 	muni_Id  = @muni_Id,
 			        dire_DireccionExacta = @dire_DireccionExacta,
 					usua_IdModificacion = @usua_IdModificacion, 
-					clie_FechaModificacion = GETDATE()
+					[dire_FechaModificacion]  = GETDATE()
 			WHERE 	[dire_Id] = @dire_Id
 
 			SELECT 'La direccion ha sido editado'
 		END
 		ELSE IF EXISTS (SELECT * FROM opti.tbDirecciones
 						WHERE @dire_DireccionExacta = [dire_DireccionExacta]
-							  AND clie_Estado = 1
+							  AND [dire_Estado]= 1
 							  AND [dire_Id] != @dire_Id)
 
 			SELECT 'La direccion ya existe'
 		ELSE
 			UPDATE opti.tbDirecciones
-			SET clie_Estado = 1,
+			SET [dire_Estado] = 1,
 			    [usua_IdModificacion] = @usua_IdModificacion,
-				[clie_FechaModificacion] = GETDATE()
+				 [dire_FechaModificacion] = GETDATE()
 			WHERE @dire_DireccionExacta = [dire_DireccionExacta]
 
 			SELECT 'La dirreccion ha sido editado'
@@ -1238,7 +1237,7 @@ AS
 BEGIN
 	BEGIN TRY
 		UPDATE opti.tbDirecciones
-		SET clie_Estado = 0
+		SET [dire_Estado]  = 0
 		WHERE dire_Id = @dire_Id
 
 		SELECT 'La direccion ha sido eliminado'
@@ -1786,9 +1785,8 @@ CREATE OR ALTER VIEW opti.VW_tbSucursales
 AS
 	SELECT  sucu_Id, 
 	        sucu_Descripcion, 
-			t1.muni_Id,
-			T4.muni_Nombre AS sucu_MunicipioNombre, 
-			sucu_DireccionExacta, 
+			t1.dire_Id,
+			T4.dire_DireccionExacta AS sucu_direExacta, 
 			sucu_FechaCreacion, 
 			sucu_UsuCreacion, 
 			t2.usua_NombreUsuario AS sucu_NombreUsuarioCreacion,
@@ -1798,8 +1796,8 @@ AS
 			sucu_Estado
 FROM [opti].[tbSucursales] t1 INNER JOIN acce.tbUsuarios T2
 ON T1.sucu_UsuCreacion = T2.usua_Id LEFT JOIN acce.tbUsuarios T3
-ON T1.sucu_UsuModificacion = T3.usua_Id INNER JOIN gral.tbMunicipios T4
-ON T1.muni_Id = T4.muni_Id
+ON T1.sucu_UsuModificacion = T3.usua_Id INNER JOIN opti.tbDirecciones T4
+ON T1.dire_Id = T4.dire_Id
 WHERE T1.sucu_Estado = 1
 GO
 
@@ -1817,8 +1815,7 @@ GO
 /*Insertar Sucursales*/
 CREATE OR ALTER PROCEDURE opti.UDP_opti_tbSucursales_Insert
 	@sucu_Descripcion     NVARCHAR(200),
-	@muni_Id              INT,
-	@sucu_DireccionExacta NVARCHAR(500),
+	@dire_Id              INT,
     @sucu_UsuCreacion     INT
 AS
 BEGIN
@@ -1826,8 +1823,8 @@ BEGIN
 		IF NOT EXISTS (SELECT * FROM opti.tbSucursales
 						WHERE sucu_Descripcion = @sucu_Descripcion)
 			BEGIN
-			INSERT INTO opti.tbSucursales(sucu_Descripcion,muni_Id,sucu_DireccionExacta,sucu_UsuCreacion)
-			VALUES(@sucu_Descripcion,@muni_Id,@sucu_DireccionExacta,@sucu_UsuCreacion)
+			INSERT INTO opti.tbSucursales(sucu_Descripcion,[dire_Id],sucu_UsuCreacion)
+			VALUES(@sucu_Descripcion,@dire_Id,@sucu_UsuCreacion)
 			
 			SELECT 'La sucursal ha sido insertada con éxito'
 			END
@@ -1855,7 +1852,7 @@ GO
 CREATE OR ALTER PROCEDURE opti.UDP_opti_tbSucursal_Update
 	@sucu_Id                 INT,
     @sucu_Descripcion        NVARCHAR(200), 
-	@muni_Id                 INT, 
+	@dire_Id                 INT, 
 	@sucu_DireccionExacta    NVARCHAR(500),  
 	@sucu_UsuModificacion    INT
 AS
@@ -1866,8 +1863,7 @@ BEGIN
 		BEGIN			
 			UPDATE opti.tbSucursales
 			SET 	sucu_Descripcion = @sucu_Descripcion,
-					muni_Id = @muni_Id,
-					sucu_DireccionExacta = @sucu_DireccionExacta,
+					[dire_Id]= @dire_Id,
 					sucu_UsuModificacion = @sucu_UsuModificacion,
 					sucu_FechaModificacion = GETDATE()
 			WHERE 	sucu_Id = @sucu_Id
@@ -2572,10 +2568,10 @@ AS
 			t1.envi_Estado, 
 			t1.usua_IdCreacion,
 			T2.usua_NombreUsuario AS envi_NombreUsuarioCreacion, 
-			t1.clie_FechaCreacion, 
+			t1.envi_FechaCreacion, 
 			t1.usua_IdModificacion,
 			t3.usua_NombreUsuario AS envi_NombreUsuarioModificacion, 
-			t1.clie_FechaModificacion
+			t1.envi_FechaModificacion
 FROM opti.tbEnvios t1 INNER JOIN acce.tbUsuarios t2
 ON t1.usua_IdCreacion = t2.usua_Id LEFT JOIN acce.tbUsuarios t3
 ON t1.usua_IdModificacion = t3.usua_Id INNER JOIN opti.tbClientes T4
@@ -2641,7 +2637,7 @@ BEGIN
                      envi_FechaEntrega = @envi_FechaEntrega,
                      envi_FechaEntregaReal = @envi_FechaEntregaReal,
 					 usua_IdModificacion = @usua_IdModificacion , 
-                     [clie_FechaModificacion] = GETDATE()
+                     [envi_FechaModificacion] = GETDATE()
 			WHERE envi_Id = @envi_Id	
 			SELECT 'El envio ha sido editado con éxito'
 		  END
