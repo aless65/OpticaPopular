@@ -89,6 +89,7 @@ export default function Router() {
                             <OpticaCitas />
                         </GuestGuard>
                 },
+                { path: 'proveedores', element: <OpticaProveedores /> },
             ],
         },
         // Main Routes
@@ -125,6 +126,7 @@ const OpticaEmpleadosCreate = Loadable(lazy(() => import('../pages/dashboard/Opt
 // CLIENTES
 const OpticaClientes = Loadable(lazy(() => import('../pages/dashboard/OpticaClientes')));
 const OpticaCitas = Loadable(lazy(() => import('../pages/dashboard/OpticaCitas')));
+const OpticaProveedores = Loadable(lazy(() => import('../pages/dashboard/OpticaProveedores')));
 
 // DASHBOARD
 

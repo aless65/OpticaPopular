@@ -12,6 +12,7 @@ namespace OpticaPopular.Entities.Entities
         {
             tbEmpleados = new HashSet<tbEmpleados>();
             tbOrdenes = new HashSet<tbOrdenes>();
+            tbStockArosPorSucursal = new HashSet<tbStockArosPorSucursal>();
         }
 
         public int sucu_Id { get; set; }
@@ -28,5 +29,6 @@ namespace OpticaPopular.Entities.Entities
         public virtual tbUsuarios sucu_UsuModificacionNavigation { get; set; }
         public virtual ICollection<tbEmpleados> tbEmpleados { get; set; }
         public virtual ICollection<tbOrdenes> tbOrdenes { get; set; }
+        public virtual ICollection<tbStockArosPorSucursal> tbStockArosPorSucursal { get; set; }
     }
 }

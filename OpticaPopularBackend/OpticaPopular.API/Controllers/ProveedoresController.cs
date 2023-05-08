@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using OpticaPopular.API.Models;
 using OpticaPopular.BusinessLogic.Services;
+using OpticaPopular.Entities.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,5 +23,41 @@ namespace OpticaPopular.API.Controllers
             _opticaPopularService = opticaPopularService;
             _mapper = mapper;
         }
+        [HttpGet("Listado")]
+        public IActionResult Index()
+        {
+            var list = _opticaPopularService.ListadoProveedores();
+            return Ok(list);
+        }
+
+
+        [HttpPost("Insertar")]
+        public IActionResult Insert(ProveedoresViewModel proveedores)
+        {
+            var item = _mapper.Map<tbProveedores>(proveedores);
+            var insert = _opticaPopularService.InsertProveedores(item);
+
+            return Ok(insert);
+        }
+
+        [HttpPut("Editar")]
+        public IActionResult Update(ProveedoresViewModel proveedores)
+        {
+            var item = _mapper.Map<tbProveedores>(proveedores);
+            var update = _opticaPopularService.UpdateProveedores(item);
+
+            return Ok(update);
+        }
+
+        [HttpPut("Eliminar")]
+        public IActionResult Delete(ProveedoresViewModel proveedores)
+        {
+            var item = _mapper.Map<tbProveedores>(proveedores);
+            var delete = _opticaPopularService.DeleteProveedores(item);
+
+            return Ok(delete);
+        }
+
+
     }
 }

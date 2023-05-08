@@ -66,5 +66,12 @@ namespace OpticaPopular.DataAccess.Repositories
         #region Consultorios
         public static string UDP_tbConsultorios_ListPorIdSucursal = "opti.UDP_tbConsultorios_ListPorIdSucursal";
         #endregion
+
+        #region Proveedores
+        public static string UDP_Lista_Proveedores = "opti.UDP_opti_tbProveedore_List";
+        public static string UDP_Inserta_Proveedores = "opti.UDP_opti_tbProveedor_Insert";
+        public static string UDP_Edita_Proveedores = "opti.UDP_opti_tbProveedor_Update";
+        public static string UDP_Elimina_Proveedores = "opti.UDP_opti_tbProveedor_Delete";
+        #endregion
     }
 }

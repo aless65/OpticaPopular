@@ -45,6 +45,7 @@ const navConfig = [
       { title: 'empleados', path: PATH_OPTICA.empleados, icon: <PeopleAltIcon/> },
       { title: 'clientes', path: PATH_OPTICA.clientes, icon: <GroupIcon/> },
       { title: 'citas', path: PATH_OPTICA.citas, icon: <CalendarMonthIcon/> },
+      { title: 'proveedores', path: PATH_OPTICA.proveedores, icon: ICONS.cart },
     ],
   },
 ];
