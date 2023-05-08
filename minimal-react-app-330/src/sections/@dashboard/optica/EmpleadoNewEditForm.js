@@ -86,7 +86,7 @@ export default function EmpleadoNewEditForm({ isEdit, currentEmpleado }) {
       email: currentEmpleado?.empe_CorreoElectronico || '',
       departamento: currentEmpleado?.depa_Id || '',
       municipio: currentEmpleado?.muni_id || '',
-      direccion: currentEmpleado?.dire_DireccionExacta,
+      direccion: currentEmpleado?.dire_DireccionExacta || '',
       cargo: currentEmpleado?.carg_Id || '',
       sucursal: currentEmpleado?.sucu_Id || '',
     }),
@@ -266,7 +266,7 @@ export default function EmpleadoNewEditForm({ isEdit, currentEmpleado }) {
           <Controller
             name="sexo"
             control={control}
-            defaultValue=""
+            defaultValue={defaultValues?.sexo || ''}
             rules={{ required: 'El sexo es obligatorio' }}
             error={!!errors.sexo}
             render={({ field }) => (

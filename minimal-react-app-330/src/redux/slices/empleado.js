@@ -95,7 +95,8 @@ export function getEmpleado(id) {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('Empleados/Find?id=2');
+      console.log(id);
+      const response = await axios.get(`Empleados/Find?id=${id}`);
       dispatch(slice.actions.getEmpleadoSuccess(response.data.data));
       console.log(response.data.data);
     } catch (error) {

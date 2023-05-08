@@ -36,12 +36,14 @@ export default function UserCreate() {
   const isEdit = pathname.includes('editar');
 
   useEffect(() => {
-    dispatch(getEmpleado(name));
-  }, []);
+    if(isEdit){
+      dispatch(getEmpleado(parseInt(name, 10)));
+    }
+  }, [name]);
 
   // const currentEmpleado = _userList.find((user) => paramCase(user.name) === name);
 
-  const currentEmpleado = empleado;
+  const currentEmpleado = empleado || '';
 
   return (
     <Page title="Empleado: Crear nuevo">
@@ -49,10 +51,9 @@ export default function UserCreate() {
         <HeaderBreadcrumbs
           heading={!isEdit ? 'Crear nuevo empleado' : 'Editar empleado'}
           links={[
-            console.log(currentEmpleado),
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
             { name: 'Empleados', href: PATH_OPTICA.empleados },
-            { name: !isEdit ? 'Nuevo empleado' : capitalCase("pruebita lol") },
+            { name: !isEdit ? 'Nuevo empleado' : capitalCase(empleado?.empe_NombreCompleto) },
           ]}
         />
         <EmpleadoNewEditForm isEdit={isEdit} currentEmpleado={currentEmpleado} />
