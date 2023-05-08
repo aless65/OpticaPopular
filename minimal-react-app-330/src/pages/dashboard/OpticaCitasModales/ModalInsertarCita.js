@@ -32,7 +32,7 @@ import { FormProvider, RHFSelect, RHFTextField } from '../../../components/hook-
 import useAuth from '../../../hooks/useAuth';
 import useIsMountedRef from '../../../hooks/useIsMountedRef';
 
-const today = dayjs();
+// const today = dayjs();
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiDialogContent-root': {
@@ -213,11 +213,11 @@ export default function ModalAgregarCita() {
                                     />
                                 </Grid>
                             </Grid>
-                            <Grid container>
+                            {/* <Grid container>
                                 <Grid item xs={12} sx={{ pr: 1 }} sm={12}>
                                     
                                 </Grid>
-                            </Grid>
+                            </Grid> */}
                         </Stack>
                     </DialogContent>
                     <DialogActions>

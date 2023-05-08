@@ -25,7 +25,6 @@ namespace OpticaPopular.Entities.Entities
 
         [NotMapped]
         public string empe_Nombres { get; set; }
-        
         [NotMapped]
         public string sucu_Descripcion { get; set; }
 

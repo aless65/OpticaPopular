@@ -27,19 +27,14 @@ namespace OpticaPopular.Entities.Entities
 
         [NotMapped]
         public string clie_Nombres { get; set; }
-
         [NotMapped]
         public string clie_Apellidos { get; set; }
-
         [NotMapped]
         public string cons_Nombre { get; set; }
-
         [NotMapped]
         public string empe_Nombres { get; set; }
-
         [NotMapped]
         public string usua_NombreCreacion { get; set; }
-
         [NotMapped]
         public string usua_NombreModificacion { get; set; }
 

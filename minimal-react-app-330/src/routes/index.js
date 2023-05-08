@@ -47,7 +47,7 @@ export default function Router() {
 
         // Dashboard Routes
         {
-            path: 'dashboard',
+            path: 'inicio',
             element: (
                 <GuestGuard>
                     <DashboardLayout />
@@ -55,7 +55,7 @@ export default function Router() {
             ),
             children: [
                 { element: <Navigate to={PATH_AFTER_LOGIN} replace />, index: true },
-                { path: 'app', element: <GeneralApp /> },
+                { path: 'app', element: <GuestGuard> <GeneralApp /> </GuestGuard>  },
             ],
         },
         {
@@ -66,8 +66,8 @@ export default function Router() {
                 </GuestGuard>
             ),
             children: [
-                { path: 'usuarios', element: <AccesoUsuarios /> },
-                { path: 'roles', element: <AccesoRoles /> },
+                { path: 'usuarios', element: <GuestGuard> <AccesoUsuarios /> </GuestGuard>  },
+                { path: 'roles', element: <GuestGuard> <AccesoRoles /> </GuestGuard>  },
             ],
         },
         {
@@ -78,10 +78,10 @@ export default function Router() {
                 </GuestGuard>
             ),
             children: [
-                { path: 'empleados', element: <OpticaEmpleados /> },
-                { path: 'empleados/nuevo', element: <OpticaEmpleadosCreate /> },
-                { path: 'empleados/:name/editar', element: <OpticaEmpleadosCreate /> },
-                { path: 'clientes', element: <OpticaClientes /> },
+                { path: 'empleados', element: <GuestGuard> <OpticaEmpleados /> </GuestGuard>  },
+                { path: 'empleados/nuevo', element: <GuestGuard> <OpticaEmpleadosCreate /> </GuestGuard>  },
+                { path: 'empleados/:name/editar', element: <GuestGuard>  <OpticaEmpleadosCreate /> </GuestGuard> },
+                { path: 'clientes', element: <GuestGuard> <OpticaClientes /> </GuestGuard>  },
                 {
                     path: 'citas',
                     element:
@@ -89,7 +89,7 @@ export default function Router() {
                             <OpticaCitas />
                         </GuestGuard>
                 },
-                { path: 'proveedores', element: <OpticaProveedores /> },
+                { path: 'proveedores', element: <GuestGuard> <OpticaProveedores /> </GuestGuard>  },
             ],
         },
         // Main Routes

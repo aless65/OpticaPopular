@@ -11,6 +11,7 @@ namespace OpticaPopular.Entities.Entities
         public tbAros()
         {
             tbDetallesOrdenes = new HashSet<tbDetallesOrdenes>();
+            tbStockArosPorSucursal = new HashSet<tbStockArosPorSucursal>();
         }
 
         public int aros_Id { get; set; }
@@ -31,5 +32,6 @@ namespace OpticaPopular.Entities.Entities
         public virtual tbMarcas marc { get; set; }
         public virtual tbProveedores prov { get; set; }
         public virtual ICollection<tbDetallesOrdenes> tbDetallesOrdenes { get; set; }
+        public virtual ICollection<tbStockArosPorSucursal> tbStockArosPorSucursal { get; set; }
     }
 }

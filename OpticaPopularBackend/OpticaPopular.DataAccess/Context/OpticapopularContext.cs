@@ -19,18 +19,22 @@ namespace OpticaPopular.DataAccess.Context
         {
         }
 
+        public virtual DbSet<VW_tbAros> VW_tbAros { get; set; }
         public virtual DbSet<VW_tbCargos> VW_tbCargos { get; set; }
         public virtual DbSet<VW_tbCategorias> VW_tbCategorias { get; set; }
         public virtual DbSet<VW_tbClientes> VW_tbClientes { get; set; }
         public virtual DbSet<VW_tbConsultorios> VW_tbConsultorios { get; set; }
         public virtual DbSet<VW_tbDetallesCitas> VW_tbDetallesCitas { get; set; }
+        public virtual DbSet<VW_tbDirecciones> VW_tbDirecciones { get; set; }
         public virtual DbSet<VW_tbDireccionesPorClientes> VW_tbDireccionesPorClientes { get; set; }
         public virtual DbSet<VW_tbEmpleados> VW_tbEmpleados { get; set; }
+        public virtual DbSet<VW_tbEnvio> VW_tbEnvio { get; set; }
         public virtual DbSet<VW_tbMarcas> VW_tbMarcas { get; set; }
         public virtual DbSet<VW_tbMetodosPagos> VW_tbMetodosPagos { get; set; }
         public virtual DbSet<VW_tbOrdenes> VW_tbOrdenes { get; set; }
         public virtual DbSet<VW_tbPantallas> VW_tbPantallas { get; set; }
         public virtual DbSet<VW_tbPantallasPorRoles> VW_tbPantallasPorRoles { get; set; }
+        public virtual DbSet<VW_tbProveedores> VW_tbProveedores { get; set; }
         public virtual DbSet<VW_tbRoles> VW_tbRoles { get; set; }
         public virtual DbSet<VW_tbSucursales> VW_tbSucursales { get; set; }
         public virtual DbSet<VW_tbUsuarios> VW_tbUsuarios { get; set; }
@@ -59,12 +63,48 @@ namespace OpticaPopular.DataAccess.Context
         public virtual DbSet<tbPantallasPorRoles> tbPantallasPorRoles { get; set; }
         public virtual DbSet<tbProveedores> tbProveedores { get; set; }
         public virtual DbSet<tbRoles> tbRoles { get; set; }
+        public virtual DbSet<tbStockArosPorSucursal> tbStockArosPorSucursal { get; set; }
         public virtual DbSet<tbSucursales> tbSucursales { get; set; }
         public virtual DbSet<tbUsuarios> tbUsuarios { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasAnnotation("Relational:Collation", "Modern_Spanish_CI_AS");
+
+            modelBuilder.Entity<VW_tbAros>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("VW_tbAros", "opti");
+
+                entity.Property(e => e.aros_CostoUni).HasColumnType("decimal(18, 2)");
+
+                entity.Property(e => e.aros_Descripcion)
+                    .IsRequired()
+                    .HasMaxLength(300);
+
+                entity.Property(e => e.aros_FechaCreacion).HasColumnType("datetime");
+
+                entity.Property(e => e.aros_FechaModificacion).HasColumnType("datetime");
+
+                entity.Property(e => e.aros_NombreCategoria)
+                    .IsRequired()
+                    .HasMaxLength(100);
+
+                entity.Property(e => e.aros_NombreMarca)
+                    .IsRequired()
+                    .HasMaxLength(150);
+
+                entity.Property(e => e.aros_NombreProveedor)
+                    .IsRequired()
+                    .HasMaxLength(200);
+
+                entity.Property(e => e.aros_NombreUsuarioCreacion)
+                    .IsRequired()
+                    .HasMaxLength(100);
+
+                entity.Property(e => e.aros_NombreUsuarioModificacion).HasMaxLength(100);
+            });
 
             modelBuilder.Entity<VW_tbCargos>(entity =>
             {
@@ -173,15 +213,19 @@ namespace OpticaPopular.DataAccess.Context
                     .IsRequired()
                     .HasMaxLength(150);
 
-                entity.Property(e => e.cons_NombreEmpleado)
-                    .IsRequired()
-                    .HasMaxLength(100);
-
                 entity.Property(e => e.cons_NombreUsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(100);
 
                 entity.Property(e => e.cons_NombreUsuarioModificacion).HasMaxLength(100);
+
+                entity.Property(e => e.empe_Nombres)
+                    .IsRequired()
+                    .HasMaxLength(100);
+
+                entity.Property(e => e.sucu_Descripcion)
+                    .IsRequired()
+                    .HasMaxLength(200);
             });
 
             modelBuilder.Entity<VW_tbDetallesCitas>(entity =>
@@ -211,6 +255,35 @@ namespace OpticaPopular.DataAccess.Context
                     .HasMaxLength(100);
 
                 entity.Property(e => e.deci_NombreUsuarioModificacion).HasMaxLength(100);
+            });
+
+            modelBuilder.Entity<VW_tbDirecciones>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("VW_tbDirecciones", "opti");
+
+                entity.Property(e => e.dire_DireccionExacta).IsRequired();
+
+                entity.Property(e => e.dire_FechaCreacion).HasColumnType("datetime");
+
+                entity.Property(e => e.dire_FechaModificacion).HasColumnType("datetime");
+
+                entity.Property(e => e.dire_UsuarioCreacion)
+                    .IsRequired()
+                    .HasMaxLength(100);
+
+                entity.Property(e => e.dire_UsuarioModificacion).HasMaxLength(100);
+
+                entity.Property(e => e.muni_Id)
+                    .IsRequired()
+                    .HasMaxLength(4)
+                    .IsUnicode(false)
+                    .IsFixedLength(true);
+
+                entity.Property(e => e.muni_NombreMunicipio)
+                    .IsRequired()
+                    .HasMaxLength(80);
             });
 
             modelBuilder.Entity<VW_tbDireccionesPorClientes>(entity =>
@@ -307,6 +380,35 @@ namespace OpticaPopular.DataAccess.Context
                 entity.Property(e => e.sucu_MunicipioNombre)
                     .IsRequired()
                     .HasMaxLength(80);
+            });
+
+            modelBuilder.Entity<VW_tbEnvio>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("VW_tbEnvio", "opti");
+
+                entity.Property(e => e.dire_DireccionExacta).IsRequired();
+
+                entity.Property(e => e.dire_Id)
+                    .IsRequired()
+                    .HasMaxLength(300);
+
+                entity.Property(e => e.envi_Fecha).HasColumnType("date");
+
+                entity.Property(e => e.envi_FechaCreacion).HasColumnType("datetime");
+
+                entity.Property(e => e.envi_FechaEntrega).HasColumnType("date");
+
+                entity.Property(e => e.envi_FechaEntregaReal).HasColumnType("date");
+
+                entity.Property(e => e.envi_FechaModificacion).HasColumnType("datetime");
+
+                entity.Property(e => e.envi_NombreUsuarioCreacion)
+                    .IsRequired()
+                    .HasMaxLength(100);
+
+                entity.Property(e => e.envi_NombreUsuarioModificacion).HasMaxLength(100);
             });
 
             modelBuilder.Entity<VW_tbMarcas>(entity =>
@@ -424,6 +526,37 @@ namespace OpticaPopular.DataAccess.Context
                 entity.Property(e => e.pantrole_NombreRol)
                     .IsRequired()
                     .HasMaxLength(100);
+            });
+
+            modelBuilder.Entity<VW_tbProveedores>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("VW_tbProveedores", "opti");
+
+                entity.Property(e => e.dire_DireccionExacta).IsRequired();
+
+                entity.Property(e => e.prov_CorreoElectronico)
+                    .IsRequired()
+                    .HasMaxLength(200);
+
+                entity.Property(e => e.prov_FechaCreacion).HasColumnType("datetime");
+
+                entity.Property(e => e.prov_FechaModificacion).HasColumnType("datetime");
+
+                entity.Property(e => e.prov_Nombre)
+                    .IsRequired()
+                    .HasMaxLength(200);
+
+                entity.Property(e => e.prov_NombreUsuCreacion)
+                    .IsRequired()
+                    .HasMaxLength(100);
+
+                entity.Property(e => e.prov_NombreUsuModificacion).HasMaxLength(100);
+
+                entity.Property(e => e.prov_Telefono)
+                    .IsRequired()
+                    .HasMaxLength(15);
             });
 
             modelBuilder.Entity<VW_tbRoles>(entity =>
@@ -1603,6 +1736,45 @@ namespace OpticaPopular.DataAccess.Context
                     .WithMany(p => p.tbRolesrole_UsuModificacionNavigation)
                     .HasForeignKey(d => d.role_UsuModificacion)
                     .HasConstraintName("FK_acce_tbRoles_acce_tbUsuarios_role_UsuModificacion_usua_Id");
+            });
+
+            modelBuilder.Entity<tbStockArosPorSucursal>(entity =>
+            {
+                entity.HasKey(e => e.stsu_Id)
+                    .HasName("PK_opti_tbStockArosPorSucursal_stsu_Id");
+
+                entity.ToTable("tbStockArosPorSucursal", "opti");
+
+                entity.Property(e => e.stsu_Estado).HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.stsu_FechaCreacion)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.stsu_FechaModificacion).HasColumnType("datetime");
+
+                entity.HasOne(d => d.aros)
+                    .WithMany(p => p.tbStockArosPorSucursal)
+                    .HasForeignKey(d => d.aros_Id)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_opti_tbStockArosPorSucursal_aros_Id_opti_tbAros_aros_Id");
+
+                entity.HasOne(d => d.sucu)
+                    .WithMany(p => p.tbStockArosPorSucursal)
+                    .HasForeignKey(d => d.sucu_Id)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_opti_tbStockArosPorSucursal_sucu_Id_opti_tbSucursales_sucu_Id");
+
+                entity.HasOne(d => d.usua_IdCreacionNavigation)
+                    .WithMany(p => p.tbStockArosPorSucursalusua_IdCreacionNavigation)
+                    .HasForeignKey(d => d.usua_IdCreacion)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_opti_tbStockArosPorSucursal_usua_IdCreacion_acce_tbUsuarios_usua_Id");
+
+                entity.HasOne(d => d.usua_IdModificacionNavigation)
+                    .WithMany(p => p.tbStockArosPorSucursalusua_IdModificacionNavigation)
+                    .HasForeignKey(d => d.usua_IdModificacion)
+                    .HasConstraintName("FK_opti_tbStockArosPorSucursal_usua_IdModificacion_acce_tbUsuarios_usua_Id");
             });
 
             modelBuilder.Entity<tbSucursales>(entity =>
