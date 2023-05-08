@@ -213,15 +213,19 @@ namespace OpticaPopular.DataAccess.Context
                     .IsRequired()
                     .HasMaxLength(150);
 
-                entity.Property(e => e.cons_NombreEmpleado)
-                    .IsRequired()
-                    .HasMaxLength(100);
-
                 entity.Property(e => e.cons_NombreUsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(100);
 
                 entity.Property(e => e.cons_NombreUsuarioModificacion).HasMaxLength(100);
+
+                entity.Property(e => e.empe_Nombres)
+                    .IsRequired()
+                    .HasMaxLength(100);
+
+                entity.Property(e => e.sucu_Descripcion)
+                    .IsRequired()
+                    .HasMaxLength(200);
             });
 
             modelBuilder.Entity<VW_tbDetallesCitas>(entity =>
@@ -323,6 +327,14 @@ namespace OpticaPopular.DataAccess.Context
                     .IsRequired()
                     .HasMaxLength(200);
 
+                entity.Property(e => e.depa_Id)
+                    .IsRequired()
+                    .HasMaxLength(2)
+                    .IsUnicode(false)
+                    .IsFixedLength(true);
+
+                entity.Property(e => e.dire_DireccionExacta).IsRequired();
+
                 entity.Property(e => e.empe_Apellidos)
                     .IsRequired()
                     .HasMaxLength(100);
@@ -358,6 +370,16 @@ namespace OpticaPopular.DataAccess.Context
                 entity.Property(e => e.empe_Telefono)
                     .IsRequired()
                     .HasMaxLength(15);
+
+                entity.Property(e => e.muni_Id)
+                    .IsRequired()
+                    .HasMaxLength(4)
+                    .IsUnicode(false)
+                    .IsFixedLength(true);
+
+                entity.Property(e => e.sucu_MunicipioNombre)
+                    .IsRequired()
+                    .HasMaxLength(80);
             });
 
             modelBuilder.Entity<VW_tbEnvio>(entity =>
@@ -564,6 +586,14 @@ namespace OpticaPopular.DataAccess.Context
 
                 entity.ToView("VW_tbSucursales", "opti");
 
+                entity.Property(e => e.dire_DireccionExacta).IsRequired();
+
+                entity.Property(e => e.muni_Id)
+                    .IsRequired()
+                    .HasMaxLength(4)
+                    .IsUnicode(false)
+                    .IsFixedLength(true);
+
                 entity.Property(e => e.sucu_Descripcion)
                     .IsRequired()
                     .HasMaxLength(200);
@@ -572,11 +602,13 @@ namespace OpticaPopular.DataAccess.Context
 
                 entity.Property(e => e.sucu_FechaModificacion).HasColumnType("datetime");
 
+                entity.Property(e => e.sucu_MunicipioNombre)
+                    .IsRequired()
+                    .HasMaxLength(80);
+
                 entity.Property(e => e.sucu_NombreUsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(100);
-
-                entity.Property(e => e.sucu_direExacta).IsRequired();
             });
 
             modelBuilder.Entity<VW_tbUsuarios>(entity =>

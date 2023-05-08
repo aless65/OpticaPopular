@@ -11,10 +11,12 @@ namespace OpticaPopular.Entities.Entities
         public int cons_Id { get; set; }
         public string cons_Nombre { get; set; }
         public int empe_Id { get; set; }
-        public string cons_NombreEmpleado { get; set; }
+        public string empe_Nombres { get; set; }
         public bool? cons_Estado { get; set; }
         public int usua_IdCreacion { get; set; }
         public string cons_NombreUsuarioCreacion { get; set; }
+        public int sucu_Id { get; set; }
+        public string sucu_Descripcion { get; set; }
         public DateTime? cons_FechaCreacion { get; set; }
         public int? usua_IdModificacion { get; set; }
         public string cons_NombreUsuarioModificacion { get; set; }

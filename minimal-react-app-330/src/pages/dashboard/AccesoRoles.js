@@ -39,6 +39,8 @@ import {
 // sections
 import { RolTableRow, TableToolbar } from '../../sections/@dashboard/acceso/rol-list';
 import AddRolDialog from './AccesoRolesModales/ModalInsertRoles';
+import EditRolDialog from './AccesoRolesModales/ModalEditRoles';
+import DeleteRolDialog from './AccesoRolesModales/ModalDeleteRoles';
 
 // ----------------------------------------------------------------------
 
@@ -82,9 +84,17 @@ export default function AccesoRoles() {
 
   const [openAddRolDialog, setOpenAddRolDialog] = useState(false);
 
+  const [openEditRolDialog, setOpenEditRolDialog] = useState(false);
+
+  const [openDeleteRolDialog, setOpenDeleteRolDialog] = useState(false);
+
   const [tableData, setTableData] = useState([]);
 
   const [filterName, setFilterName] = useState('');
+
+  const [roleId, setRoleId] = useState('');
+
+  const [roleNombre, setRoleNombre] = useState('');
 
   useEffect(() => {
     dispatch(getRoles());
@@ -102,9 +112,8 @@ export default function AccesoRoles() {
   };
 
   const handleDeleteRow = (id) => {
-    const deleteRow = tableData.filter((row) => row.role_Id !== id);
-    setSelected([]);
-    setTableData(deleteRow);
+    setRoleId(id);
+    handleOpenDeleteRolDialog();
   };
 
   const handleDeleteRows = (selected) => {
@@ -113,8 +122,10 @@ export default function AccesoRoles() {
     setTableData(deleteRows);
   };
 
-  const handleEditRow = (id) => {
-    navigate(PATH_DASHBOARD.eCommerce.edit(paramCase(id)));
+  const handleEditRow = (id, nombre) => {
+    setRoleId(id);
+    setRoleNombre(nombre);
+    handleOpenEditRolDialog();
   };
 
   const dataFiltered = applySortFilter({
@@ -131,6 +142,22 @@ export default function AccesoRoles() {
     setOpenAddRolDialog(false);
   }
 
+  const handleOpenEditRolDialog = () => {
+    setOpenEditRolDialog(true)
+  }
+
+  const handleCloseEditRolDialog = () => {
+    setOpenEditRolDialog(false);
+  }
+
+  const handleOpenDeleteRolDialog = () => {
+    setOpenDeleteRolDialog(true)
+  }
+
+  const handleCloseDeleteRolDialog = () => {
+    setOpenDeleteRolDialog(false);
+  }
+
   const denseHeight = dense ? 60 : 80;
 
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
@@ -141,7 +168,7 @@ export default function AccesoRoles() {
         <HeaderBreadcrumbs
           heading="Listado de roles"
           links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
+            { name: 'Inicio', href: PATH_DASHBOARD.root },
             { name: 'Roles' },
           ]}
           action={
@@ -154,9 +181,12 @@ export default function AccesoRoles() {
                 Agregar
               </Button>
               <AddRolDialog open={openAddRolDialog} onClose={handleCloseAddRolDialog} roles={roles} setTableData={setTableData} />
+              <EditRolDialog open={openEditRolDialog} onClose={handleCloseEditRolDialog} roles={roles} setTableData={setTableData} roleId={roleId} roleNombre={roleNombre} />
+              <DeleteRolDialog open={openDeleteRolDialog} onClose={handleCloseDeleteRolDialog} roles={roles} setTableData={setTableData} roleId={roleId} />
             </div>
           }
         />
+
         <Card>
           <TableToolbar filterName={filterName} onFilterName={handleFilterName} />
 
@@ -189,7 +219,7 @@ export default function AccesoRoles() {
                           selected={selected.includes(row.role_Id)}
                           onSelectRow={() => onSelectRow(row.role_Id)}
                           onDeleteRow={() => handleDeleteRow(row.role_Id)}
-                          onEditRow={() => handleEditRow(row.role_Nombre)}
+                          onEditRow={() => handleEditRow(row.role_Id, row.role_Nombre)}
                         />
                       ) : (
                         !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />

@@ -74,5 +74,17 @@ namespace OpticaPopular.DataAccess.Repositories
 
             return result;
         }
+
+
+        public IEnumerable<tbConsultorios> ListPorIdSucursal(int sucu_Id)
+        {
+            using var db = new SqlConnection(OpticaPopularContext.ConnectionString);
+
+            var parametros = new DynamicParameters();
+
+            parametros.Add("@sucu_Id", sucu_Id, DbType.Int32, ParameterDirection.Input);
+
+            return db.Query<tbConsultorios>(ScriptsDataBase.UDP_tbConsultorios_ListPorIdSucursal, parametros, commandType: CommandType.StoredProcedure);
+        }
     }
 }

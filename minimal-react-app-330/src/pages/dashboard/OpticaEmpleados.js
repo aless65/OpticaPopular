@@ -20,7 +20,7 @@ import {
 import { useDispatch, useSelector } from '../../redux/store';
 import { getEmpleados } from '../../redux/slices/empleado';
 // routes
-import { PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_DASHBOARD, PATH_OPTICA } from '../../routes/paths';
 // hooks
 import useSettings from '../../hooks/useSettings';
 import useTable, { getComparator, emptyRows } from '../../hooks/useTable';
@@ -112,7 +112,7 @@ export default function OpticaEmpleados() {
   };
 
   const handleEditRow = (id) => {
-    navigate(PATH_DASHBOARD.eCommerce.edit(paramCase(id)));
+    navigate(PATH_OPTICA.empleadosEdit(id));
   };
 
   const dataFiltered = applySortFilter({
@@ -131,7 +131,7 @@ export default function OpticaEmpleados() {
         <HeaderBreadcrumbs
           heading="Listado de empleados"
           links={[
-            { name: 'Optica', href: PATH_DASHBOARD.root },
+            { name: 'Inicio', href: PATH_DASHBOARD.root },
             { name: 'Empleados' },
           ]}
           action={
@@ -139,7 +139,7 @@ export default function OpticaEmpleados() {
               variant="contained"
               startIcon={<Iconify icon="eva:plus-fill" />}
               component={RouterLink}
-              to={PATH_DASHBOARD.general.app}
+              to={PATH_OPTICA.empleadosNew}
             >
               Agregar
             </Button>
@@ -178,7 +178,7 @@ export default function OpticaEmpleados() {
                           selected={selected.includes(row.empe_Id)}
                           onSelectRow={() => onSelectRow(row.empe_Id)}
                           onDeleteRow={() => handleDeleteRow(row.empe_Id)}
-                          onEditRow={() => handleEditRow(row.empe_NombreCompleto)}
+                          onEditRow={() => handleEditRow(row.empe_Id)}
                         />
                       ) : (
                         !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />

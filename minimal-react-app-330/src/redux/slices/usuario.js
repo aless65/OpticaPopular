@@ -82,7 +82,7 @@ export function getUsuarios() {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('http://opticapopular.somee.com/api/Usuarios/Listado');
+      const response = await axios.get('Usuarios/Listado');
      
       dispatch(slice.actions.getUsuariosSuccess(response.data.data));
     } catch (error) {
@@ -97,7 +97,7 @@ export function getUsuario(id) {
   return async (dispatch) => { // add dispatch parameter
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`http://opticapopular.somee.com/api/Usuarios/Find?id=${id}`);
+      const response = await axios.get(`Usuarios/Find?id=${id}`);
 
       dispatch(slice.actions.getUsuarioSuccess(response.data.data));
     } catch (error) {

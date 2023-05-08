@@ -81,7 +81,7 @@ export function getProveedores() {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('https://localhost:44362/api/Proveedores/Listado');
+      const response = await axios.get('Proveedores/Listado');
       dispatch(slice.actions.getProveedoresSuccess(response.data.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));

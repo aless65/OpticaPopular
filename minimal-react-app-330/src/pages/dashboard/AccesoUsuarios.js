@@ -40,6 +40,7 @@ import {
 import { UsuarioTableRow, TableToolbar } from '../../sections/@dashboard/acceso/usuario-list';
 import AddUserDialog from './AccesoUsuariosModales/ModalInsertUsuarios';
 import EditUserDialog from './AccesoUsuariosModales/ModalEditUsuarios';
+import DeleteUserDialog from './AccesoUsuariosModales/ModalDeleteUsuarios';
 
 // ----------------------------------------------------------------------
 
@@ -93,6 +94,8 @@ export default function AccesoUsuarios() {
 
   const [openEditUserDialog, setOpenEditUserDialog] = useState(false);
 
+  const [openDeleteUserDialog, setOpenDeleteUserDialog] = useState(false);
+
   const [insertSuccess, setInsertSuccess] = useState(false);
 
   useEffect(() => {
@@ -111,9 +114,8 @@ export default function AccesoUsuarios() {
   };
 
   const handleDeleteRow = (id) => {
-    const deleteRow = tableData.filter((row) => row.usua_Id !== id);
-    setSelected([]);
-    setTableData(deleteRow);
+    setUsuaId(id);
+    handleOpenDeleteUserDialog();
   };
 
   const handleDeleteRows = (selected) => {
@@ -128,7 +130,7 @@ export default function AccesoUsuarios() {
 
   const handleEditRow = (id) => {
     setUsuaId(id);
-    setOpenEditUserDialog(true);
+    handleOpenEditUserDialog();
   };
 
   const dataFiltered = applySortFilter({
@@ -153,14 +155,14 @@ export default function AccesoUsuarios() {
     setOpenEditUserDialog(false);
   }
 
-  // useEffect(() => {
-  //   if (insertSuccess) {
-  //     dispatch(getUsuarios());
+  const handleOpenDeleteUserDialog = () => {
+    setOpenDeleteUserDialog(true);
+  }
 
-  //     setInsertSuccess(false);
-  //   }
-  // }, [dispatch]);
-
+  const handleCloseDeleteUserDialog = () => {
+    setOpenDeleteUserDialog(false);
+  }
+  
   const denseHeight = dense ? 60 : 80;
 
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
@@ -171,7 +173,7 @@ export default function AccesoUsuarios() {
         <HeaderBreadcrumbs
           heading="Listado de usuarios"
           links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
+            { name: 'Inicio', href: PATH_DASHBOARD.root },
             { name: 'Usuarios' },
           ]}
           action={
@@ -186,6 +188,7 @@ export default function AccesoUsuarios() {
               </Button>
               <AddUserDialog open={openAddUserDialog} onClose={handleCloseAddUserDialog} usuarios={usuarios} setTableData={setTableData} />
               <EditUserDialog open={openEditUserDialog} onClose={handleCloseEditUserDialog} usuarios={usuarios} setTableData={setTableData} usuaId={usuaId} />
+              <DeleteUserDialog open={openDeleteUserDialog} onClose={handleCloseDeleteUserDialog} usuarios={usuarios} setTableData={setTableData} usuaId={usuaId} />
             </div>
 
           }
