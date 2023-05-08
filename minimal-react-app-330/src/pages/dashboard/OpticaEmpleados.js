@@ -131,7 +131,7 @@ export default function OpticaEmpleados() {
         <HeaderBreadcrumbs
           heading="Listado de empleados"
           links={[
-            { name: 'Optica', href: PATH_DASHBOARD.root },
+            { name: 'Inicio', href: PATH_DASHBOARD.root },
             { name: 'Empleados' },
           ]}
           action={

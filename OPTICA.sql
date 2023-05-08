@@ -1367,7 +1367,7 @@ UPDATE opti.tbStockArosPorSucursal
    AND sucu_Id = 4
 GO 
 
---********************************INSERTS tbStockArosPorSucursal**************************************--
+--********************************************/INSERTS tbStockArosPorSucursal**************************************--
 
  --********INSERT TABLA Consultorio****************---
 INSERT INTO opti.tbConsultorios(cons_Nombre,empe_Id,usua_IdCreacion)
@@ -1382,3 +1382,23 @@ VALUES('Consultorio 1',1,1),
       ('Consultorio 2',9,1),
 	  ('Consultorio 3',10,1)
 GO
+
+
+--*************************************************INSERTS tbCitas*************************************************--
+INSERT INTO [opti].[tbCitas] ([clie_Id], [cons_Id], [cita_Fecha], [usua_IdCreacion])
+VALUES (1, 2, '06-23-2023', 1)
+GO
+
+INSERT INTO [opti].[tbCitas] ([clie_Id], [cons_Id], [cita_Fecha], [usua_IdCreacion])
+VALUES (2, 2, '05-08-2023', 1)
+GO
+--************************************************/INSERTS tbCitas*************************************************--
+
+--*********************************************INSERTS tbDetallesCitas*************************************************--
+INSERT INTO [opti].[tbDetallesCitas] ([cita_Id], [deci_Costo], [deci_HoraInicio], [deci_HoraFin], [usua_IdCreacion])
+VALUES (2, 450.00, '01:20', '01:40', 1)
+GO
+
+
+
+

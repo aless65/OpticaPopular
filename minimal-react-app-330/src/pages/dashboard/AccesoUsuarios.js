@@ -173,7 +173,7 @@ export default function AccesoUsuarios() {
         <HeaderBreadcrumbs
           heading="Listado de usuarios"
           links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
+            { name: 'Inicio', href: PATH_DASHBOARD.root },
             { name: 'Usuarios' },
           ]}
           action={

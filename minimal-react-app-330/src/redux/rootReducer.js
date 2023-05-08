@@ -11,6 +11,7 @@ import clienteReducer from './slices/cliente';
 import empleadoReducer from './slices/empleado';
 import calendarReducer from './slices/calendar';
 import kanbanReducer from './slices/kanban';
+import citaReducer from './slices/citas';
 
 // ----------------------------------------------------------------------
 
@@ -33,6 +34,13 @@ const usuarioPersistConfig = {
   storage,
   keyPrefix: 'redux-',
   whitelist: ['sortBy', 'checkout'],
+};
+
+const citaPersistConfig = {
+    key: 'cita',
+    storage,
+    keyPrefix: 'redux-',
+    whitelist: ['sortBy', 'checkout'],
 };
 
 const rolPersistConfig = {
@@ -63,6 +71,7 @@ const rootReducer = combineReducers({
   kanban: kanbanReducer,
   product: persistReducer(productPersistConfig, productReducer),
   usuario: persistReducer(usuarioPersistConfig, usuarioReducer),
+  cita: persistReducer(citaPersistConfig, citaReducer),
   rol: persistReducer(rolPersistConfig, rolReducer),
   cliente: persistReducer(clientePersistConfig, clienteReducer),
   empleado: persistReducer(empleadoPersistConfig, empleadoReducer),

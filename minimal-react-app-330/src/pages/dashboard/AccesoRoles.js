@@ -168,7 +168,7 @@ export default function AccesoRoles() {
         <HeaderBreadcrumbs
           heading="Listado de roles"
           links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
+            { name: 'Inicio', href: PATH_DASHBOARD.root },
             { name: 'Roles' },
           ]}
           action={

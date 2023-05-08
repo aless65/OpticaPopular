@@ -15,97 +15,95 @@ import LoadingScreen from '../components/LoadingScreen';
 // ----------------------------------------------------------------------
 
 const Loadable = (Component) => (props) => {
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  const { pathname } = useLocation();
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const { pathname } = useLocation();
 
-  return (
-    <Suspense fallback={<LoadingScreen isDashboard={pathname.includes('/dashboard')} />}>
-      <Component {...props} />
-    </Suspense>
-  );
+    return (
+        <Suspense fallback={<LoadingScreen isDashboard={pathname.includes('/dashboard')} />}>
+            <Component {...props} />
+        </Suspense>
+    );
 };
 
 export default function Router() {
-  return useRoutes([
-    {
-      path: '/',
-      children: [
+    return useRoutes([
         {
-          path: '/',
-          element: (
-            <GuestGuard>
-              <Login />
-            </GuestGuard>
-          ),
-          index: true
+            path: '/',
+            children: [
+                {
+                    element: <Login />,
+                    index: true
+                },
+                {
+                    path: 'register',
+                    element: <Register />,
+                },
+                { path: 'login-unprotected', element: <Login /> },
+                { path: 'register-unprotected', element: <Register /> },
+                { path: 'reset-password', element: <ResetPassword /> },
+                { path: 'verify', element: <VerifyCode /> },
+            ],
         },
-        {
-          path: 'register',
-          element: (
-            <GuestGuard>
-              <Register />
-            </GuestGuard>
-          ),
-        },
-        { path: 'login-unprotected', element: <Login /> },
-        { path: 'register-unprotected', element: <Register /> },
-        { path: 'reset-password', element: <ResetPassword /> },
-        { path: 'verify', element: <VerifyCode /> },
-      ],
-    },
 
-    // Dashboard Routes
-    {
-      path: 'dashboard',
-      element: (
-        <GuestGuard>
-          <DashboardLayout />
-        </GuestGuard>
-      ),
-      children: [
-        { element: <Navigate to={PATH_AFTER_LOGIN} replace />, index: true },
-        { path: 'app', element: <GeneralApp /> },
-      ],
-    },
-    {
-      path: 'acceso',
-      element: (
-        <GuestGuard>
-          <DashboardLayout />
-        </GuestGuard>
-      ),
-      children: [
-        { path: 'usuarios', element: <AccesoUsuarios /> },
-        { path: 'roles', element: <AccesoRoles /> },
-      ],
-    },
-    {
-      path: 'optica',
-      element: (
-        <GuestGuard>
-          <DashboardLayout />
-        </GuestGuard>
-      ),
-      children: [
-        { path: 'empleados', element: <OpticaEmpleados /> },
-        { path: 'empleados/nuevo', element: <OpticaEmpleadosCreate /> },
-        { path: 'empleados/:name/editar', element: <OpticaEmpleadosCreate /> },
-        { path: 'clientes', element: <OpticaClientes /> },
-      ],
-    },
-    // Main Routes
-    {
-      path: '*',
-      element: <LogoOnlyLayout />,
-      children: [
-        { path: '500', element: <Page500 /> },
-        { path: '404', element: <NotFound /> },
-        { path: '*', element: <Navigate to="/404" replace /> },
-      ],
-    },
-    { path: '*', element: <Navigate to="/404" replace /> },
-  ]);
+        // Dashboard Routes
+        {
+            path: 'dashboard',
+            element: (
+                <GuestGuard>
+                    <DashboardLayout />
+                </GuestGuard>
+            ),
+            children: [
+                { element: <Navigate to={PATH_AFTER_LOGIN} replace />, index: true },
+                { path: 'app', element: <GeneralApp /> },
+            ],
+        },
+        {
+            path: 'acceso',
+            element: (
+                <GuestGuard>
+                    <DashboardLayout />
+                </GuestGuard>
+            ),
+            children: [
+                { path: 'usuarios', element: <AccesoUsuarios /> },
+                { path: 'roles', element: <AccesoRoles /> },
+            ],
+        },
+        {
+            path: 'optica',
+            element: (
+                <GuestGuard>
+                    <DashboardLayout />
+                </GuestGuard>
+            ),
+            children: [
+                { path: 'empleados', element: <OpticaEmpleados /> },
+                { path: 'empleados/nuevo', element: <OpticaEmpleadosCreate /> },
+                { path: 'empleados/:name/editar', element: <OpticaEmpleadosCreate /> },
+                { path: 'clientes', element: <OpticaClientes /> },
+                {
+                    path: 'citas',
+                    element:
+                        <GuestGuard>
+                            <OpticaCitas />
+                        </GuestGuard>
+                },
+            ],
+        },
+        // Main Routes
+        {
+            path: '*',
+            element: <LogoOnlyLayout />,
+            children: [
+                { path: '500', element: <Page500 /> },
+                { path: '404', element: <NotFound /> },
+                { path: '*', element: <Navigate to="/404" replace /> },
+            ]
+        }
+    ])
 }
+
 
 // AUTHENTICATION
 const Login = Loadable(lazy(() => import('../pages/auth/Login')));
@@ -126,6 +124,7 @@ const OpticaEmpleadosCreate = Loadable(lazy(() => import('../pages/dashboard/Opt
 
 // CLIENTES
 const OpticaClientes = Loadable(lazy(() => import('../pages/dashboard/OpticaClientes')));
+const OpticaCitas = Loadable(lazy(() => import('../pages/dashboard/OpticaCitas')));
 
 // DASHBOARD
 

@@ -58,5 +58,13 @@ namespace OpticaPopular.DataAccess.Repositories
         #region Departamentos
         public static string UDP_Lista_Departamentos = "gral.UDP_gral_tbDepartamentos_List";
         #endregion
+
+        #region Citas
+        public static string UDP_tbCitas_ListadoPorIdSucursal = "opti.UDP_tbCitas_ListadoPorIdSucursal";
+        #endregion
+
+        #region Consultorios
+        public static string UDP_tbConsultorios_ListPorIdSucursal = "opti.UDP_tbConsultorios_ListPorIdSucursal";
+        #endregion
     }
 }

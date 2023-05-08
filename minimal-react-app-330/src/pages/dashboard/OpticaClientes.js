@@ -132,7 +132,7 @@ export default function OpticaClientes() {
         <HeaderBreadcrumbs
           heading="Listado de clientes"
           links={[
-            { name: 'Optica', href: PATH_DASHBOARD.root },
+            { name: 'Inicio', href: PATH_DASHBOARD.root },
             { name: 'Clientes' },
           ]}
           action={

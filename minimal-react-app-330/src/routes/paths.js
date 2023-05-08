@@ -6,8 +6,7 @@ function path(root, sublink) {
 
 const ROOTS_OPTICA = '/optica';
 const ROOTS_ACCESO = '/acceso';
-const ROOTS_AUTH = '/auth';
-const ROOTS_DASHBOARD = '/dashboard';
+const ROOTS_DASHBOARD = '/Inicio';
 
 // ----------------------------------------------------------------------
 export const PATH_ACCESO = {
@@ -22,26 +21,21 @@ export const PATH_OPTICA = {
   empleadosNew: path(ROOTS_OPTICA, '/empleados/nuevo'),
   empleadosEdit: (name) => path(ROOTS_OPTICA, `/empleados/${name}/editar`),
   clientes: path(ROOTS_OPTICA, '/clientes') ,
+  citas: path(ROOTS_OPTICA, '/citas'),
 };
 
 export const PATH_AUTH = {
-  root: ROOTS_AUTH,
   login: '/',
-  register: path(ROOTS_AUTH, '/register'),
-  loginUnprotected: path(ROOTS_AUTH, '/login-unprotected'),
-  registerUnprotected: path(ROOTS_AUTH, '/register-unprotected'),
-  verify: path(ROOTS_AUTH, '/verify'),
-  resetPassword: path(ROOTS_AUTH, '/reset-password'),
+  register: '/register',
+  loginUnprotected: '/login-unprotected',
+  registerUnprotected: '/register-unprotected',
+  verify: '/verify',
+  resetPassword: '/reset-password',
 };
 
 export const PATH_PAGE = {
   comingSoon: '/coming-soon',
   maintenance: '/maintenance',
-  pricing: '/pricing',
-  payment: '/payment',
-  about: '/about-us',
-  contact: '/contact-us',
-  faqs: '/faqs',
   page404: '/404',
   page500: '/500',
   components: '/components',

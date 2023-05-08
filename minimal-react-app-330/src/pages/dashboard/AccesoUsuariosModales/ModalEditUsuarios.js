@@ -28,7 +28,7 @@ import { LoadingButton } from '@mui/lab';
 import { useForm } from 'react-hook-form';
 import { useState, useEffect } from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { ErrorMessage } from 'formik';
+
 import { useSnackbar } from 'notistack';
 import { useDispatch, useSelector } from '../../../redux/store';
 import { getUsuarios, getUsuario } from '../../../redux/slices/usuario';
