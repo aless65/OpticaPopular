@@ -41,6 +41,9 @@ namespace OpticaPopular.DataAccess.Repositories
 
         #region Sucursales
         public static string UDP_Lista_Sucursales = "opti.UDP_opti_tbSucursales_List";
+
+
+
         #endregion
 
         #region Cargos
