@@ -1986,6 +1986,7 @@ AS
 		   T4.role_Nombre AS pantrole_NombreRol,
 		   T1.pant_Id,
 		   t5.pant_Nombre AS pantrole_NombrePantalla, 
+		   T5.pant_Menu AS pantrole_NombreMenu,
 		   pantrole_UsuCreacion, 
 		   pantrole_FechaCreacion, 
 		   pantrole_UsuModificacion, 
@@ -1999,9 +2000,19 @@ ON T1.pant_Id = T5.pant_Id
 WHERE T1.pantrole_Estado = 1
 GO
 
+/*Listado de Pantallas*/
+CREATE OR ALTER PROCEDURE acce.UDP_acce_tbPantallas_List
+AS
+BEGIN
+	SELECT pant_Id, pant_Nombre, pant_Menu
+	FROM [acce].[tbPantallas]
+	WHERE [pant_Estado] = 1
+	GROUP BY pant_Menu, pant_Id, pant_Nombre
+END
+GO
 
 /*Listado de Pantallas por rol*/
-CREATE OR ALTER PROCEDURE acce.UDP_acce_tbPantallasPorRoles_List
+CREATE OR ALTER PROCEDURE acce.UDP_acce_tbPantallasPorRoles_List 
 	@role_Id	INT
 AS
 BEGIN
@@ -2013,7 +2024,7 @@ GO
 
 
 /*Insertar pantallas por roles*/
-CREATE OR ALTER PROCEDURE acce.UDP_acce_tbPantallasPorRoles_Insert
+CREATE OR ALTER PROCEDURE acce.UDP_acce_tbPantallasPorRoles_Insert 
 	@role_Id               INT, 
 	@pant_Id               INT, 
 	@pantrole_UsuCreacion  INT
@@ -2026,7 +2037,7 @@ BEGIN
 			INSERT INTO acce.tbPantallasPorRoles(role_Id,pant_Id,pantrole_UsuCreacion)
 			VALUES(@role_Id,@pant_Id,@pantrole_UsuCreacion)
 			
-			SELECT 'La pantalla ha sido insertada con éxito'
+			SELECT 'Operación realizada con éxito'
 			END
 		ELSE IF EXISTS (SELECT * FROM acce.tbPantallasPorRoles 
 						WHERE pant_Id = @pant_Id AND role_Id = @role_Id
@@ -2036,10 +2047,10 @@ BEGIN
 				SET [pantrole_Estado] = 1
 				WHERE pant_Id = @pant_Id AND role_Id = @role_Id
 
-				SELECT 'La pantalla ha sido insertada con éxito'
+				SELECT 'Operación realizada con éxito'
 			END
 		ELSE
-			SELECT 'La pantalla ya existe'
+			SELECT 'La pantalla x rol ya existe'
 	END TRY
 	BEGIN CATCH
 		SELECT 'Ha ocurrido un error'
@@ -2091,7 +2102,7 @@ END
 GO
 
 
-/*Eliminar categoria*/
+/*Eliminar pantalla por rol*/
 CREATE OR ALTER PROCEDURE acce.UDP_acce_tbPantallaPorRoles_Delete 
 	@pantrole_Id	INT
 AS

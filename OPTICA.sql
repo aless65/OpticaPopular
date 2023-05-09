@@ -48,8 +48,8 @@ CREATE TABLE acce.tbPantallas(
 GO
 
 INSERT INTO acce.tbPantallas(pant_Nombre, pant_Url, pant_Menu, pant_HtmlId, pant_UsuCreacion)
-VALUES ('Usuarios', '/Usuario/Listado', 'Seguridad', 'usuariosItem', 1),
-       ('Rol', '/Rol/Listado', 'Seguridad', 'rolItem', 1),
+VALUES ('Usuarios', '/Usuario/Listado', 'Acceso', 'usuariosItem', 1),
+       ('Roles', '/Rol/Listado', 'Acceso', 'rolItem', 1),
        ('Empleados', '/Empleados/Listado', 'Optica', 'empleadosItem', 1),
 	   ('Clientes', '/Clientes/Listado', 'Optica', 'clientesItem', 1),
 	   ('Proveedores', '/Proveedores/Listado', 'Optica', 'proveedoresItem', 1),
@@ -123,9 +123,9 @@ ADD CONSTRAINT FK_acce_tbRoles_acce_tbUsuarios_role_UsuCreacion_usua_Id 	FOREIGN
 GO
 
 INSERT INTO acce.tbRoles(role_Nombre, role_UsuCreacion)
-VALUES ('Ventas', 1),
-	   ('Inventario', 1),
-	   ('Gerencia', 1)
+VALUES ('Gerencia', 1),
+	   ('Ventas', 1),
+	   ('Inventario', 1)
 GO
 
 --********* ALTERAR TABLA USUARIOS **************--
@@ -832,7 +832,7 @@ GO
 INSERT gral.tbMunicipios(muni_id, muni_Nombre, depa_Id, muni_UsuCreacion)
 VALUES('0101','La Ceiba ','01', 1),
       ('0102','El Porvenir','01', 1), 
-	  ('0103','Jutiapa','01', 1),
+	  ('0103','Esparta','01', 1),
 	  ('0104','Jutiapa','01', 1),
 	  ('0105','La Masica','01', 1),
 	  ('0201','Trujillo','02', 1),

@@ -69,13 +69,9 @@ export default function EditUserDialog({ open, onClose, usuarios, setTableData, 
     }, [usuaId, dispatch, insertSuccess]);
 
     useEffect(() => {
-        // console.log("usuario:", usuario);
         if (usuario) {
-        //   console.log("setting empleadoTemporal to", usuario.empe_Id);
           setEmpleadoTemporal(usuario.empe_Id);
-        //   console.log("setting rolTemporal to", usuario.role_Id);
           setRolTemporal(usuario.role_Id);
-        //   console.log("setting esAdminTemporal to", usuario.usua_EsAdmin);
           setEsAdminTemporal(usuario.usua_EsAdmin);
         }
       }, [usuario]);
@@ -135,7 +131,6 @@ export default function EditUserDialog({ open, onClose, usuarios, setTableData, 
     } = methods;
 
     useEffect(() => {
-        // console.log("infinito?");
         methods.setValue('username', defaultValues.username);
         methods.setValue('empleado', defaultValues.empleado);
         methods.setValue('rol', defaultValues.rol);

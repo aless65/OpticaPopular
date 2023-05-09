@@ -43,7 +43,7 @@ export default function UserCreate() {
 
   // const currentEmpleado = _userList.find((user) => paramCase(user.name) === name);
 
-  const currentEmpleado = empleado || '';
+  const currentEmpleado = isEdit ? empleado : null;
 
   return (
     <Page title="Empleado: Crear nuevo">

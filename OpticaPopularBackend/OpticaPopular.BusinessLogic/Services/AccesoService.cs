@@ -123,7 +123,19 @@ namespace OpticaPopular.BusinessLogic.Services
 
         #region Pantallas
 
-
+        public ServiceResult ListadoPantallas()
+        {
+            var result = new ServiceResult();
+            try
+            {
+                var list = _pantallasRepository.List();
+                return result.Ok(list);
+            }
+            catch (Exception e)
+            {
+                return result.Error(e.Message);
+            }
+        }
 
         #endregion
 

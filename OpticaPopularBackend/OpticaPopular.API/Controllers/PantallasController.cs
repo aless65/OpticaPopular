@@ -21,5 +21,12 @@ namespace OpticaPopular.API.Controllers
             _accesoService = accesoService;
             _mapper = mapper;
         }
+
+        [HttpGet("Listado")]
+        public IActionResult Index()
+        {
+            var list = _accesoService.ListadoPantallas();
+            return Ok(list);
+        }
     }
 }

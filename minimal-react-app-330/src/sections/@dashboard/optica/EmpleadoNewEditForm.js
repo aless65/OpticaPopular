@@ -23,6 +23,7 @@ import {
   RadioGroup,
   FormLabel,
   styled,
+  Button
 } from '@mui/material';
 // utils
 import { fData } from '../../../utils/formatNumber';
@@ -66,6 +67,8 @@ export default function EmpleadoNewEditForm({ isEdit, currentEmpleado }) {
   const [optionsMunicipios, setOptionsMunicipios] = useState([]);
 
   const GENDER_OPTION = ['Masculino', 'Femenino'];
+
+  // const [estadoCivilTemporal, setEstadoCivilTemporal] = useState(currentEmpleado?.estacivi_Id || '');
 
   const NewUserSchema = Yup.object().shape({
     nombres: Yup.string().required('Nombres requeridos'),
@@ -132,16 +135,20 @@ export default function EmpleadoNewEditForm({ isEdit, currentEmpleado }) {
 
   const onSubmit = async (data) => {
     try {
-      console.log(data);
       const dateStr = data.fechaNacimiento;
       const date = new Date(dateStr);
-      const formattedDate = date.toLocaleDateString('en-GB');
+      const year = date.getFullYear();
+      const month = date.getMonth() + 1; // add 1 to month to get 1-based month number
+      const day = date.getDate();
+      const formattedDate = `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
+
 
       const jsonData = {
+        empe_Id: currentEmpleado?.empe_Id,
         empe_Nombres: data.nombres,
         empe_Apellidos: data.apellidos,
         empe_Identidad: data.identidad,
-        fecha_nacimiento: formattedDate,
+        empe_FechaNacimiento: formattedDate,
         empe_Sexo: data.sexo,
         estacivi_Id: data.estadoCivil,
         empe_Telefono: data.telefono,
@@ -151,29 +158,54 @@ export default function EmpleadoNewEditForm({ isEdit, currentEmpleado }) {
         carg_Id: data.cargo,
         sucu_Id: data.sucursal,
         empe_UsuCreacion: 1,
+        empe_UsuModificacion: 1,
       };
 
-      fetch("http://opticapopular.somee.com/api/Empleados/Insertar", {
-        method: "POST",
-        mode: "cors",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(jsonData),
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          console.log(data);
-          if (data.message === "El empleado ha sido ingresado con éxito") {
-            navigate(PATH_OPTICA.empleados);
-            enqueueSnackbar(data.message);
-          } else if (data.message === 'Ya existe un empleado con este número de identidad') {
-            enqueueSnackbar(data.message, { variant: 'warning' });
-          } else {
-            enqueueSnackbar(data.message, { variant: 'error' });
-          }
+      if (isEdit) {
+        fetch("http://opticapopular.somee.com/api/Empleados/Editar", {
+          method: "PUT",
+          mode: "cors",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(jsonData),
         })
-        .catch((error) => console.error(error));
+          .then((response) => response.json())
+          .then((data) => {
+            console.log(data);
+            if (data.message === "El empleado ha sido editado con éxito") {
+              navigate(PATH_OPTICA.empleados);
+              enqueueSnackbar(data.message);
+            } else if (data.message === 'Ya existe un empleado con este número de identidad') {
+              enqueueSnackbar(data.message, { variant: 'warning' });
+            } else {
+              enqueueSnackbar(data.message, { variant: 'error' });
+            }
+          })
+          .catch((error) => console.error(error));
+      } else {
+        fetch("http://opticapopular.somee.com/api/Empleados/Insertar", {
+          method: "POST",
+          mode: "cors",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(jsonData),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            console.log(data);
+            if (data.message === "El empleado ha sido ingresado con éxito") {
+              navigate(PATH_OPTICA.empleados);
+              enqueueSnackbar(data.message);
+            } else if (data.message === 'Ya existe un empleado con este número de identidad') {
+              enqueueSnackbar(data.message, { variant: 'warning' });
+            } else {
+              enqueueSnackbar(data.message, { variant: 'error' });
+            }
+          })
+          .catch((error) => console.error(error));
+      }
     } catch (error) {
       console.error(error);
     }
@@ -224,6 +256,8 @@ export default function EmpleadoNewEditForm({ isEdit, currentEmpleado }) {
         setOptionsSucursales(optionsData);
       })
       .catch(error => console.error(error));
+
+    setDepaId(currentEmpleado?.depa_Id);
   }, [currentEmpleado]);
 
   useEffect(() => {
@@ -237,11 +271,28 @@ export default function EmpleadoNewEditForm({ isEdit, currentEmpleado }) {
         setOptionsMunicipios(optionsData);
       })
       .catch(error => console.error(error));
-      
-    // methods.setValue('municipio', null || '');
-    
-    // methods.setValue('municipio', currentEmpleado?.muni_id);
-  }, [depaId, currentEmpleado])
+
+    methods.setValue('municipio', null || '');
+    defaultValues.municipio = null;
+
+  }, [depaId])
+
+  useEffect(() => {
+    fetch(`http://opticapopular.somee.com/api/Municipios/ListadoDdl?id=${currentEmpleado?.depa_Id}`)
+      .then(response => response.json())
+      .then(data => {
+        const optionsData = data.data.map(item => ({
+          label: item.muni_Nombre, // replace 'name' with the property name that contains the label
+          id: item.muni_id // replace 'id' with the property name that contains the ID
+        }));
+        setOptionsMunicipios(optionsData);
+        defaultValues.municipio = currentEmpleado?.muni_Id;
+        methods.setValue('municipio', currentEmpleado?.muni_Id);
+      })
+      .catch(error => console.error(error));
+
+  }, [currentEmpleado])
+
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
@@ -304,6 +355,12 @@ export default function EmpleadoNewEditForm({ isEdit, currentEmpleado }) {
             onChange={(event, value) => {
               if (value != null) {
                 methods.setValue('estadoCivil', value.id);
+                // setEstadoCivilTemporal(value.id);
+                defaultValues.estadoCivil = value.id;
+                // console.log(defaultValues.estadoCivil);
+              } else {
+                methods.setValue('estadoCivil', '');
+                defaultValues.estadoCivil = '';
               }
             }}
             isOptionEqualToValue={(option, value) => option.id === value.id}
@@ -330,7 +387,12 @@ export default function EmpleadoNewEditForm({ isEdit, currentEmpleado }) {
             onChange={(event, value) => {
               if (value != null) {
                 methods.setValue('departamento', value.id);
+                defaultValues.departamento = value.id;
                 setDepaId(value.id);
+              } else {
+                methods.setValue('departamento', '');
+                defaultValues.departamento = '';
+                setDepaId('');
               }
             }}
             isOptionEqualToValue={(option, value) => option.id === value.id}
@@ -353,8 +415,11 @@ export default function EmpleadoNewEditForm({ isEdit, currentEmpleado }) {
             )}
             onChange={(event, value) => {
               if (value != null) {
-                console.log(value.id);
                 methods.setValue('municipio', value.id);
+                defaultValues.municipio = value.id;
+              } else {
+                methods.setValue('municipio', '');
+                defaultValues.municipio = '';
               }
             }}
             isOptionEqualToValue={(option, value) => option.id === value.id}
@@ -380,6 +445,10 @@ export default function EmpleadoNewEditForm({ isEdit, currentEmpleado }) {
             onChange={(event, value) => {
               if (value != null) {
                 methods.setValue('cargo', value.id);
+                defaultValues.cargo = value.id;
+              } else {
+                methods.setValue('cargo', '');
+                defaultValues.cargo = '';
               }
             }}
             isOptionEqualToValue={(option, value) => option.id === value.id}
@@ -403,6 +472,10 @@ export default function EmpleadoNewEditForm({ isEdit, currentEmpleado }) {
             onChange={(event, value) => {
               if (value != null) {
                 methods.setValue('sucursal', value.id);
+                defaultValues.sucursal = value.id;
+              } else {
+                methods.setValue('sucursal', '');
+                defaultValues.sucursal = '';
               }
             }}
             isOptionEqualToValue={(option, value) => option.id === value.id}
@@ -410,7 +483,8 @@ export default function EmpleadoNewEditForm({ isEdit, currentEmpleado }) {
           />
         </Box>
 
-        <Stack alignItems="flex-end" sx={{ mt: 3 }}>
+        <Stack direction="row" justifyContent="flex-end" sx={{ mt: 3 }}>
+          <Button to={PATH_OPTICA.empleados}>Cancelar</Button>
           <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
             {!isEdit ? 'Crear empleado' : 'Guardar cambios'}
           </LoadingButton>
