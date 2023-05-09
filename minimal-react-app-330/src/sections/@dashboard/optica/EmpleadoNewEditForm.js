@@ -21,7 +21,8 @@ import {
   TextField,
   Radio,
   RadioGroup,
-  FormLabel
+  FormLabel,
+  styled,
 } from '@mui/material';
 // utils
 import { fData } from '../../../utils/formatNumber';
@@ -31,7 +32,7 @@ import { PATH_DASHBOARD, PATH_OPTICA } from '../../../routes/paths';
 import { countries } from '../../../_mock';
 // components
 import Label from '../../../components/Label';
-import { FormProvider, RHFSelect, RHFSwitch, RHFTextField, RHFUploadAvatar } from '../../../components/hook-form';
+import { FormProvider, RHFSelect, RHFSwitch, RHFTextField, RHFRadioGroup } from '../../../components/hook-form';
 
 // ----------------------------------------------------------------------
 
@@ -39,6 +40,13 @@ EmpleadoNewEditForm.propTypes = {
   isEdit: PropTypes.bool,
   currentUser: PropTypes.object,
 };
+
+const LabelStyle = styled(Typography)(({ theme }) => ({
+  ...theme.typography.subtitle2,
+  color: theme.palette.text.secondary,
+  marginBottom: theme.spacing(1),
+}));
+
 
 export default function EmpleadoNewEditForm({ isEdit, currentEmpleado }) {
   const navigate = useNavigate();
@@ -56,6 +64,8 @@ export default function EmpleadoNewEditForm({ isEdit, currentEmpleado }) {
   const [depaId, setDepaId] = useState('');
 
   const [optionsMunicipios, setOptionsMunicipios] = useState([]);
+
+  const GENDER_OPTION = ['Masculino', 'Femenino'];
 
   const NewUserSchema = Yup.object().shape({
     nombres: Yup.string().required('Nombres requeridos'),
@@ -214,7 +224,7 @@ export default function EmpleadoNewEditForm({ isEdit, currentEmpleado }) {
         setOptionsSucursales(optionsData);
       })
       .catch(error => console.error(error));
-  }, []);
+  }, [currentEmpleado]);
 
   useEffect(() => {
     fetch(`http://opticapopular.somee.com/api/Municipios/ListadoDdl?id=${depaId}`)
@@ -227,9 +237,11 @@ export default function EmpleadoNewEditForm({ isEdit, currentEmpleado }) {
         setOptionsMunicipios(optionsData);
       })
       .catch(error => console.error(error));
-
+      
     // methods.setValue('municipio', null || '');
-  }, [depaId])
+    
+    // methods.setValue('municipio', currentEmpleado?.muni_id);
+  }, [depaId, currentEmpleado])
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
@@ -263,25 +275,16 @@ export default function EmpleadoNewEditForm({ isEdit, currentEmpleado }) {
             )}
           />
 
-          <Controller
-            name="sexo"
-            control={control}
-            defaultValue={defaultValues?.sexo || ''}
-            rules={{ required: 'El sexo es obligatorio' }}
-            error={!!errors.sexo}
-            render={({ field }) => (
-              <FormControl>
-                <FormLabel component="legend">Sexo</FormLabel>
-                <RadioGroup {...field} row>
-                  <FormControlLabel value="masculino" control={<Radio />} label="Masculino" />
-                  <FormControlLabel value="femenino" control={<Radio />} label="Femenino" />
-                </RadioGroup>
-              </FormControl>
-            )}
-            renderInput={(params) => (
-              <TextField {...params} fullWidth error={!!errors.sexo} helperText={errors.sexo && errors.sexo.message} />
-            )}
-          />
+          <div>
+            <LabelStyle>Sexo</LabelStyle>
+            <RHFRadioGroup
+              name="sexo"
+              options={GENDER_OPTION}
+              sx={{
+                '& .MuiFormControlLabel-root': { mr: 4 },
+              }}
+            />
+          </div>
 
 
           <Autocomplete
@@ -294,7 +297,7 @@ export default function EmpleadoNewEditForm({ isEdit, currentEmpleado }) {
               <TextField
                 {...params}
                 label="Estado Civil"
-                error={errors.estadoCivil?.message !== undefined}
+                error={!!errors.estadoCivil}
                 helperText={errors.estadoCivil?.message}
               />
             )}
@@ -304,7 +307,7 @@ export default function EmpleadoNewEditForm({ isEdit, currentEmpleado }) {
               }
             }}
             isOptionEqualToValue={(option, value) => option.id === value.id}
-            value={optionsEstadosCiviles.find(option => option.id === defaultValues.estadoCivil)}
+            value={optionsEstadosCiviles.find(option => option.id === defaultValues.estadoCivil) ?? null}
           />
 
           <RHFTextField name="telefono" label="Teléfono" />
@@ -314,13 +317,13 @@ export default function EmpleadoNewEditForm({ isEdit, currentEmpleado }) {
             disablePortal
             name="departamento"
             options={optionsDepartamentos}
-            error={errors.departamento?.message !== undefined}
+            error={!!errors.departamento}
             getOptionLabel={(option) => option.label}
             renderInput={(params) => (
               <TextField
                 {...params}
                 label="Departamento"
-                error={errors.departamento?.message !== undefined}
+                error={!!errors.departamento}
                 helperText={errors.departamento?.message}
               />
             )}
@@ -331,20 +334,20 @@ export default function EmpleadoNewEditForm({ isEdit, currentEmpleado }) {
               }
             }}
             isOptionEqualToValue={(option, value) => option.id === value.id}
-            value={optionsDepartamentos.find(option => option.id === defaultValues.departamento)}
+            value={optionsDepartamentos.find(option => option.id === defaultValues.departamento) ?? null}
           />
 
           <Autocomplete
             disablePortal
             name="municipio"
             options={optionsMunicipios}
-            error={errors.municipio?.message !== undefined}
+            error={!!errors.municipio}
             getOptionLabel={(option) => option.label}
             renderInput={(params) => (
               <TextField
                 {...params}
                 label="Municipio"
-                error={errors.municipio?.message !== undefined}
+                error={!!errors.municipio}
                 helperText={errors.municipio?.message}
               />
             )}
@@ -355,7 +358,7 @@ export default function EmpleadoNewEditForm({ isEdit, currentEmpleado }) {
               }
             }}
             isOptionEqualToValue={(option, value) => option.id === value.id}
-            value={optionsMunicipios.find(option => option.id === defaultValues.municipio)}
+            value={optionsMunicipios.find(option => option.id === defaultValues.municipio) ?? null}
           />
 
           <RHFTextField name="direccion" label="Dirección Exacta" />
@@ -364,13 +367,13 @@ export default function EmpleadoNewEditForm({ isEdit, currentEmpleado }) {
             disablePortal
             name="cargo"
             options={optionsCargos}
-            error={errors.cargo?.message !== undefined}
+            error={!!errors.cargo}
             getOptionLabel={(option) => option.label}
             renderInput={(params) => (
               <TextField
                 {...params}
                 label="Cargo"
-                error={errors.cargo?.message !== undefined}
+                error={!!errors.cargo}
                 helperText={errors.cargo?.message}
               />
             )}
@@ -380,20 +383,20 @@ export default function EmpleadoNewEditForm({ isEdit, currentEmpleado }) {
               }
             }}
             isOptionEqualToValue={(option, value) => option.id === value.id}
-            value={optionsCargos.find(option => option.id === defaultValues.cargo)}
+            value={optionsCargos.find(option => option.id === defaultValues.cargo) ?? null}
           />
 
           <Autocomplete
             disablePortal
             name="sucursal"
             options={optionsSucursales}
-            error={errors.sucursal?.message !== undefined}
+            error={!!errors.sucursal}
             getOptionLabel={(option) => option.label}
             renderInput={(params) => (
               <TextField
                 {...params}
                 label="Sucursal"
-                error={errors.sucursal?.message !== undefined}
+                error={!!errors.sucursal}
                 helperText={errors.sucursal?.message}
               />
             )}
@@ -403,7 +406,7 @@ export default function EmpleadoNewEditForm({ isEdit, currentEmpleado }) {
               }
             }}
             isOptionEqualToValue={(option, value) => option.id === value.id}
-            value={optionsSucursales.find(option => option.id === defaultValues.sucursal)}
+            value={optionsSucursales.find(option => option.id === defaultValues.sucursal) ?? null}
           />
         </Box>
 

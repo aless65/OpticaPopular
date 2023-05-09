@@ -38,6 +38,7 @@ import {
 } from '../../components/table';
 // sections
 import { EmpleadoTableRow, TableToolbar } from '../../sections/@dashboard/optica/empleado-list';
+import DeleteEmpleadoDialog from './OpticaEmpleadosModales/ModalDeleteEmpleados';
 
 // ----------------------------------------------------------------------
 
@@ -82,6 +83,10 @@ export default function OpticaEmpleados() {
 
   const [tableData, setTableData] = useState([]);
 
+  const [empeId, setEmpeId] = useState('');
+
+  const [openDeleteEmpleadoDialog, setOpenDeleteEmpleadoDialog] = useState(false);
+
   const [filterName, setFilterName] = useState('');
 
   useEffect(() => {
@@ -100,9 +105,8 @@ export default function OpticaEmpleados() {
   };
 
   const handleDeleteRow = (id) => {
-    const deleteRow = tableData.filter((row) => row.empe_Id !== id);
-    setSelected([]);
-    setTableData(deleteRow);
+    setEmpeId(id);
+    handleOpenDeleteEmpleadoDialog();
   };
 
   const handleDeleteRows = (selected) => {
@@ -121,6 +125,14 @@ export default function OpticaEmpleados() {
     filterName,
   });
 
+  const handleOpenDeleteEmpleadoDialog = () => {
+    setOpenDeleteEmpleadoDialog(true);
+  }
+
+  const handleCloseDeleteEmpleadoDialog = () => {
+    setOpenDeleteEmpleadoDialog(false);
+  }
+
   const denseHeight = dense ? 60 : 80;
 
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
@@ -135,14 +147,18 @@ export default function OpticaEmpleados() {
             { name: 'Empleados' },
           ]}
           action={
-            <Button
-              variant="contained"
-              startIcon={<Iconify icon="eva:plus-fill" />}
-              component={RouterLink}
-              to={PATH_OPTICA.empleadosNew}
-            >
-              Agregar
-            </Button>
+            <div>
+              <Button
+                variant="contained"
+                startIcon={<Iconify icon="eva:plus-fill" />}
+                component={RouterLink}
+                to={PATH_OPTICA.empleadosNew}
+              >
+                Agregar
+              </Button>
+              <DeleteEmpleadoDialog open={openDeleteEmpleadoDialog} onClose={handleCloseDeleteEmpleadoDialog} empleados={empleados} setTableData={setTableData} empeId={empeId} />
+
+            </div>
           }
         />
 
@@ -242,10 +258,10 @@ function applySortFilter({ tableData, comparator, filterName }) {
     tableData = tableData.filter((item) =>
       item.empe_NombreCompleto.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 ||
       item.empe_SucursalNombre.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 ||
-      item.empe_Sexo.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 
+      item.empe_Sexo.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
     );
   }
-  
+
 
   return tableData;
 }

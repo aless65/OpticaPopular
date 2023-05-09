@@ -37,7 +37,7 @@ export default function UserCreate() {
 
   useEffect(() => {
     if(isEdit){
-      dispatch(getEmpleado(parseInt(name, 10)));
+      dispatch(getEmpleado(name));
     }
   }, [name]);
 
@@ -53,7 +53,7 @@ export default function UserCreate() {
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
             { name: 'Empleados', href: PATH_OPTICA.empleados },
-            { name: !isEdit ? 'Nuevo empleado' : capitalCase(empleado?.empe_NombreCompleto) },
+            { name: !isEdit ? 'Nuevo empleado' : 'Editar empleado'  },
           ]}
         />
         <EmpleadoNewEditForm isEdit={isEdit} currentEmpleado={currentEmpleado} />
