@@ -11,8 +11,8 @@ import { dispatch } from '../store';
 const initialState = {
   isLoading: false,
   error: null,
-  marcas: [],
-  marca: null,
+  categorias: [],
+  categoria: null,
   sortBy: null,
   filters: {
     gender: [],
@@ -24,7 +24,7 @@ const initialState = {
 };
 
 const slice = createSlice({
-  name: 'marca',
+  name: 'categoria',
   initialState,
   reducers: {
     // START LOADING
@@ -38,24 +38,24 @@ const slice = createSlice({
       state.error = action.payload;
     },
 
-    // GET MARCAS
-    getMarcasSuccess(state, action) {
+    // GET CATEGORIAS
+    getCategoriasSuccess(state, action) {
       state.isLoading = false;
-      state.marcas = action.payload;
+      state.categorias = action.payload;
     },
 
-    // GET MARCA
-    getMarcaSuccess(state, action) {
+    // GET CATEGORIA
+    getCategoriaSuccess(state, action) {
       state.isLoading = false;
-      state.marca = action.payload;
+      state.categoria = action.payload;
     },
 
-    //  SORT & FILTER MARCAS
-    sortByMarcas(state, action) {
+    //  SORT & FILTER CATEGORIAS
+    sortByCategorias(state, action) {
       state.sortBy = action.payload;
     },
 
-    filterMarcas(state, action) {
+    filterCategorias(state, action) {
       state.filters.gender = action.payload.gender;
       state.filters.category = action.payload.category;
       state.filters.colors = action.payload.colors;
@@ -70,18 +70,18 @@ export default slice.reducer;
 
 // Actions
 export const {
-    sortByMarcas,
-    filterMarcas    ,
+    sortByCategorias,
+    filterCategorias,
 } = slice.actions;
 
 // ----------------------------------------------------------------------
 
-export function getMarcas() {
+export function getCategorias() {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('https://localhost:44362/api/Marcas/Listado');
-      dispatch(slice.actions.getMarcasSuccess(response.data.data));
+      const response = await axios.get('https://localhost:44362/api/Categorias/Listado');
+      dispatch(slice.actions.getCategoriasSuccess(response.data.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }
@@ -90,7 +90,7 @@ export function getMarcas() {
 
 // ----------------------------------------------------------------------
 
-export function getMarca(name) {
+export function getCategoria(name) {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {

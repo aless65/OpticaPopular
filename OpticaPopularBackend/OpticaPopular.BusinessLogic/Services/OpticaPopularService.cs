@@ -78,7 +78,80 @@ namespace OpticaPopular.BusinessLogic.Services
         #endregion
 
         #region Categorias
+        public ServiceResult ListadoCategorias()
+        {
+            var result = new ServiceResult();
+            try
+            {
+                var list = _categoriasRepository.List();
+                return result.Ok(list);
+            }
+            catch (Exception e)
+            {
+                return result.Error(e.Message);
+            }
+        }
 
+
+        public ServiceResult InsertCategorias(tbCategorias item)
+        {
+            var result = new ServiceResult();
+            try
+            {
+                var insert = _categoriasRepository.Insert(item);
+
+                if (insert.MessageStatus == "La categoría ha sido insertada con éxito")
+                    return result.SetMessage(insert.MessageStatus, ServiceResultType.Success);
+                else if (insert.MessageStatus == "La categoría ya existe")
+                    return result.SetMessage(insert.MessageStatus, ServiceResultType.Warning);
+                else
+                    return result.SetMessage(insert.MessageStatus, ServiceResultType.Error);
+            }
+            catch (Exception e)
+            {
+                return result.Error(e.Message);
+            }
+        }
+
+        public ServiceResult UpdateCaregorias(tbCategorias item)
+        {
+            var result = new ServiceResult();
+            try
+            {
+                var update = _categoriasRepository.Update(item);
+
+                if (update.MessageStatus == "La categoría ha sido editada con éxito")
+                    return result.SetMessage(update.MessageStatus, ServiceResultType.Success);
+                else if (update.MessageStatus == "La categoría ya existe")
+                    return result.SetMessage(update.MessageStatus, ServiceResultType.Warning);
+                else
+                    return result.SetMessage(update.MessageStatus, ServiceResultType.Error);
+            }
+            catch (Exception e)
+            {
+                return result.Error(e.Message);
+            }
+        }
+
+        public ServiceResult DeleteCategorias(tbCategorias item)
+        {
+            var result = new ServiceResult();
+            try
+            {
+                var update = _categoriasRepository.Delete(item);
+
+                if (update.MessageStatus == "La categoría ha sido eliminada")
+                    return result.SetMessage(update.MessageStatus, ServiceResultType.Success);
+                else if (update.MessageStatus == "La categoría no puede ser eliminada ya que está siendo usada")
+                    return result.SetMessage(update.MessageStatus, ServiceResultType.Warning);
+                else
+                    return result.SetMessage(update.MessageStatus, ServiceResultType.Error);
+            }
+            catch (Exception e)
+            {
+                return result.Error(e.Message);
+            }
+        }
 
 
         #endregion

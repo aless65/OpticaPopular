@@ -87,5 +87,12 @@ namespace OpticaPopular.DataAccess.Repositories
         public static string UDP_Edita_Marcas = "opti.UDP_opti_tbMarcas_Update";
         public static string UDP_Elimina_Marcas = "opti.UDP_opti_tbMarcas_Delete";
         #endregion
+
+        #region Categorias
+        public static string UDP_Lista_Categorias = "opti.UDP_opti_VW_tbCategorias";
+        public static string UDP_Inserta_Categorias = "opti.UDP_opti_tbCategorias_Insert";
+        public static string UDP_Edita_Categorias = "opti.UDP_opti_tbCategorias_Update";
+        public static string UDP_Elimina_Categorias = "opti.UDP_opti_tbCategorias_Delete";
+        #endregion
     }
 }

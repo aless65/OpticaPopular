@@ -42,6 +42,7 @@ import { MarcasTableRow, TableToolbar } from '../../sections/@dashboard/optica/m
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
+  { id: 'marc_Id', label: 'Nombre', align: 'left' },
   { id: 'marc_Nombre', label: 'Nombre', align: 'left' },
   { id: '' },
 ];
@@ -67,7 +68,7 @@ export default function OpticaMarcas() {
     onChangePage,
     onChangeRowsPerPage,
   } = useTable({
-    defaultOrderBy: 'marc_Nombre',
+    defaultOrderBy: 'marc_Id',
   });
 
   const { themeStretch } = useSettings();
@@ -87,10 +88,10 @@ export default function OpticaMarcas() {
   }, [dispatch]);
 
   useEffect(() => {
-    if (clientes.length) {
+    if (marcas.length) {
       setTableData(marcas);
     }
-  }, [clientes]);
+  }, [marcas]);
 
   const handleFilterName = (filterName) => {
     setFilterName(filterName);
@@ -171,7 +172,7 @@ export default function OpticaMarcas() {
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row, index) =>
                       row ? (
-                        <ClienteTableRow
+                        <MarcasTableRow
                           key={row.marc_Id}
                           row={row}
                           selected={selected.includes(row.marc_Id)}
@@ -232,6 +233,7 @@ function applySortFilter({ tableData, comparator, filterName }) {
 
   if (filterName) {
     tableData = tableData.filter((item) =>
+      item.marc_Id.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 ||
       item.marc_Nombre.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 
     );
   }

@@ -18,7 +18,7 @@ import {
 } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
-import { getConsultorios } from '../../redux/slices/consultorio';
+import { getCategorias } from '../../redux/slices/categoria';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // hooks
@@ -37,19 +37,21 @@ import {
   TableSelectedActions,
 } from '../../components/table';
 // sections
-import { ConsultorioTableRow, TableToolbar } from '../../sections/@dashboard/optica/consultorio-list';
-
+import { CategoriaTableRow, TableToolbar } from '../../sections/@dashboard/optica/categoria-list';
+import AddCategoriaDialog from './OpticaCategoriasModales/ModalInsertCategorias'; 
+import EditCategoriaDialog from './OpticaCategoriasModales/ModalEditCategorias';
+import DeleteCategoriaDialog from './OpticaCategoriasModales/ModalDeleteCategorias';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'cons_Nombre', label: 'Nombre', align: 'left' },
-  { id: 'cons_NombreEmpleado', label: 'Empleado', align: 'left' },
+  { id: 'cate_Id', label: 'ID', align: 'left' },
+  { id: 'cate_Nombre', label: 'Nombre', align: 'left' },
   { id: '' },
 ];
 
 // ----------------------------------------------------------------------
 
-export default function OpticaConsultorios() { 
+export default function OpticaCategorias() {
   const {
     dense,
     page,
@@ -68,7 +70,7 @@ export default function OpticaConsultorios() {
     onChangePage,
     onChangeRowsPerPage,
   } = useTable({
-    defaultOrderBy: 'cons_Nombre',
+    defaultOrderBy: 'cate_Id',
   });
 
   const { themeStretch } = useSettings();
@@ -77,21 +79,52 @@ export default function OpticaConsultorios() {
 
   const dispatch = useDispatch();
 
-  const { consultorios, isLoading } = useSelector((state) => state.consultorio);
+  const { categorias, isLoading } = useSelector((state) => state.categoria);
 
   const [tableData, setTableData] = useState([]);
 
   const [filterName, setFilterName] = useState('');
 
+  const [categoriaId, setcategoriaId] = useState('');
+  const [categoriaNombre, setcategoriaNombre] = useState('');
+
+  const [openAddCategoriaDialog, setOpenAddCategoriaDialog] = useState(false);
+  const [openEditCategoriaDialog, setOpenEditCategoriaDialog] = useState(false);
+  const [openDeleteCategoriaDialog, setOpenDeleteCategoriaDialog] = useState(false);
+
+  const handleOpenAddCategoriaDialog = () => {
+    setOpenAddCategoriaDialog(true)
+  }
+
+  const handleCloseAddCategoriaDialog = () => {
+    setOpenAddCategoriaDialog(false);
+  }
+
+  const handleOpenEditCategoriaDialog = () => {
+    setOpenEditCategoriaDialog(true);
+  }
+
+  const handleCloseEditCategoriaDialog = () => {
+    setOpenEditCategoriaDialog(false);
+  }
+
+  const handleOpenDeleteCategoriaDialog = () => {
+    setOpenDeleteCategoriaDialog(true);
+  }
+
+  const handleCloseDeleteCategoriaDialog = () => {
+    setOpenDeleteCategoriaDialog(false);
+  }
+
   useEffect(() => {
-    dispatch(getConsultorios());
+    dispatch(getCategorias());
   }, [dispatch]);
 
   useEffect(() => {
-    if (consultorios.length) {
-      setTableData(consultorios);
+    if (categorias.length) {
+      setTableData(categorias);
     }
-  }, [consultorios]);
+  }, [categorias]);
 
   const handleFilterName = (filterName) => {
     setFilterName(filterName);
@@ -99,20 +132,23 @@ export default function OpticaConsultorios() {
   };
 
   const handleDeleteRow = (id) => {
-    const deleteRow = tableData.filter((row) => row.cons_Id !== id);
-    setSelected([]);
-    setTableData(deleteRow);
+    setcategoriaId(id);
+    handleOpenDeleteCategoriaDialog();
   };
 
   const handleDeleteRows = (selected) => {
-    const deleteRows = tableData.filter((row) => !selected.includes(row.cons_Id));
+    const deleteRows = tableData.filter((row) => !selected.includes(row.cate_Id));
     setSelected([]);
     setTableData(deleteRows);
   };
 
-  const handleEditRow = (id) => {
-    navigate(PATH_DASHBOARD.eCommerce.edit(paramCase(id)));
+  const handleEditRow = (id, nombre) => {
+    setcategoriaId(id);
+    setcategoriaNombre(nombre);
+    handleOpenEditCategoriaDialog();
   };
+
+
 
   const dataFiltered = applySortFilter({
     tableData,
@@ -125,23 +161,29 @@ export default function OpticaConsultorios() {
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
 
   return (
-    <Page title="Consultorios">
+    <Page title="Categorias">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
-          heading="Listado de consultorios"
+          heading="Listado de Categorias"
           links={[
-            { name: 'Optica', href: PATH_DASHBOARD.root },
-            { name: 'Consultorios' },
+            { name: 'Inicio', href: PATH_DASHBOARD.root },
+            { name: 'categorias' },
           ]}
           action={
-            <Button
-              variant="contained"
-              startIcon={<Iconify icon="eva:plus-fill" />}
-              component={RouterLink}
-              to={PATH_DASHBOARD.general.app}
-            >
-              Agregar
-            </Button>
+            <div>
+              <Button
+                variant="contained"
+                startIcon={<Iconify icon="eva:plus-fill" />}
+                onClick={handleOpenAddCategoriaDialog}
+
+              >
+                Agregar
+              </Button>
+              <AddCategoriaDialog open={openAddCategoriaDialog} onClose={handleCloseAddCategoriaDialog} categorias={categorias} setTableData={setTableData} />
+              <EditCategoriaDialog open={openEditCategoriaDialog} onClose={handleCloseEditCategoriaDialog} categorias={categorias} setTableData={setTableData} categoriaId={categoriaId} categoriaNombre={categoriaNombre} />
+              <DeleteCategoriaDialog open={openDeleteCategoriaDialog} onClose={handleCloseDeleteCategoriaDialog} categorias={categorias} setTableData={setTableData} categoriaId={categoriaId} />
+            </div>
+
           }
         />
 
@@ -162,7 +204,7 @@ export default function OpticaConsultorios() {
                   onSelectAllRows={(checked) =>
                     onSelectAllRows(
                       checked,
-                      tableData.map((row) => row.clie_Id)
+                      tableData.map((row) => row.cate_Id)
                     )
                   }
                 />
@@ -172,13 +214,13 @@ export default function OpticaConsultorios() {
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row, index) =>
                       row ? (
-                        <ConsultorioTableRow
-                          key={row.cons_Id}
+                        <CategoriaTableRow
+                          key={row.cate_Id}
                           row={row}
-                          selected={selected.includes(row.cons_Id)}
-                          onSelectRow={() => onSelectRow(row.cons_Id)}
-                          onDeleteRow={() => handleDeleteRow(row.cons_Id)}
-                          onEditRow={() => handleEditRow(row.cons_Nombre)}
+                          selected={selected.includes(row.cate_Id)}
+                          onSelectRow={() => onSelectRow(row.cate_Id)}
+                          onDeleteRow={() => handleDeleteRow(row.cate_Id)}
+                          onEditRow={() => handleEditRow(row.cate_Id, row.cate_Nombre)}
                         />
                       ) : (
                         !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
@@ -229,19 +271,12 @@ function applySortFilter({ tableData, comparator, filterName }) {
 
   tableData = stabilizedThis.map((el) => el[0]);
 
-  // if (filterName) {
-  //   tableData = tableData.filter((item) => 
-  //     Object.values(item).some(
-  //       (value) => 
-  //         value && value.toString().toLowerCase().indexOf(filterName.toLowerCase()) !== -1
-  //     )
-  //   );
-  // }
+ 
 
   if (filterName) {
     tableData = tableData.filter((item) =>
-      item.cons_Nombre.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 ||
-      item.cons_NombreEmpleado.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
+      item.cate_Id.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 ||
+      item.cate_Nombre.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 
       
     );
   }

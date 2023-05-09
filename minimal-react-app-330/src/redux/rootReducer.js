@@ -14,6 +14,9 @@ import calendarReducer from './slices/calendar';
 import kanbanReducer from './slices/kanban';
 import citaReducer from './slices/citas';
 import marcaReducer from './slices/marca';
+import categoriaReducer from './slices/categoria';
+import sucursalReducer from './slices/sucursal';
+import consultorioReducer from './slices/consultorio';
 // ----------------------------------------------------------------------
 
 const rootPersistConfig = {
@@ -79,6 +82,27 @@ const marcaPersistConfig = {
   whitelist: ['sortBy', 'checkout'],
 };
 
+const categoriaPersistConfig = {
+  key: 'categoria',
+  storage,
+  keyPrefix: 'redux-',
+  whitelist: ['sortBy', 'checkout'],
+};
+
+const sucursalPersistConfig = {
+  key: 'sucursal',
+  storage,
+  keyPrefix: 'redux-',
+  whitelist: ['sortBy', 'checkout'],
+};
+
+const consultorioPersistConfig = {
+  key: 'consultorio',
+  storage,
+  keyPrefix: 'redux-',
+  whitelist: ['sortBy', 'checkout'],
+};
+
 const rootReducer = combineReducers({
   mail: mailReducer,
   chat: chatReducer,
@@ -92,6 +116,9 @@ const rootReducer = combineReducers({
   empleado: persistReducer(empleadoPersistConfig, empleadoReducer),
   proveedor: persistReducer(proveedorPersistConfig, proveedorReducer),
   marca: persistReducer(marcaPersistConfig, marcaReducer),
+  categoria: persistReducer(categoriaPersistConfig, categoriaReducer),
+  sucursal: persistReducer(sucursalPersistConfig, sucursalReducer),
+  consultorio: persistReducer(consultorioPersistConfig, consultorioReducer),
 });
 
 export { rootPersistConfig, rootReducer };

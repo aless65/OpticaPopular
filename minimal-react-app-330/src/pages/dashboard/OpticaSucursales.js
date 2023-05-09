@@ -18,7 +18,7 @@ import {
 } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
-import { getConsultorios } from '../../redux/slices/consultorio';
+import { getSucursales } from '../../redux/slices/sucursal';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // hooks
@@ -37,19 +37,22 @@ import {
   TableSelectedActions,
 } from '../../components/table';
 // sections
-import { ConsultorioTableRow, TableToolbar } from '../../sections/@dashboard/optica/consultorio-list';
+import { SucursalTableRow, TableToolbar } from '../../sections/@dashboard/optica/sucursal-list';
+import AddRolDialog from './AccesoRolesModales/ModalInsertRoles';
+import EditRolDialog from './AccesoRolesModales/ModalEditRoles';
+import DeleteRolDialog from './AccesoRolesModales/ModalDeleteRoles';
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'cons_Nombre', label: 'Nombre', align: 'left' },
-  { id: 'cons_NombreEmpleado', label: 'Empleado', align: 'left' },
+  { id: 'sucu_Id', label: 'ID', align: 'left' },
+  { id: 'sucu_Descripcion', label: 'Nombre', align: 'left' },
   { id: '' },
 ];
 
 // ----------------------------------------------------------------------
 
-export default function OpticaConsultorios() { 
+export default function OpticaSucursales() {
   const {
     dense,
     page,
@@ -68,7 +71,7 @@ export default function OpticaConsultorios() {
     onChangePage,
     onChangeRowsPerPage,
   } = useTable({
-    defaultOrderBy: 'cons_Nombre',
+    defaultOrderBy: 'sucu_Id',
   });
 
   const { themeStretch } = useSettings();
@@ -77,21 +80,31 @@ export default function OpticaConsultorios() {
 
   const dispatch = useDispatch();
 
-  const { consultorios, isLoading } = useSelector((state) => state.consultorio);
+  const { sucursales, isLoading } = useSelector((state) => state.sucursal);
+
+  const [openAddRolDialog, setOpenAddRolDialog] = useState(false);
+
+  const [openEditRolDialog, setOpenEditRolDialog] = useState(false);
+
+  const [openDeleteRolDialog, setOpenDeleteRolDialog] = useState(false);
 
   const [tableData, setTableData] = useState([]);
 
   const [filterName, setFilterName] = useState('');
 
+  const [sucursalId, setsucursalId] = useState('');
+
+  const [sucursalNombre, setsucursalNombre] = useState('');
+
   useEffect(() => {
-    dispatch(getConsultorios());
+    dispatch(getSucursales());
   }, [dispatch]);
 
   useEffect(() => {
-    if (consultorios.length) {
-      setTableData(consultorios);
+    if (sucursales.length) {
+      setTableData(sucursales);
     }
-  }, [consultorios]);
+  }, [sucursales]);
 
   const handleFilterName = (filterName) => {
     setFilterName(filterName);
@@ -99,19 +112,20 @@ export default function OpticaConsultorios() {
   };
 
   const handleDeleteRow = (id) => {
-    const deleteRow = tableData.filter((row) => row.cons_Id !== id);
-    setSelected([]);
-    setTableData(deleteRow);
+    setsucursalId(id);
+    handleOpenDeleteRolDialog();
   };
 
   const handleDeleteRows = (selected) => {
-    const deleteRows = tableData.filter((row) => !selected.includes(row.cons_Id));
+    const deleteRows = tableData.filter((row) => !selected.includes(row.sucu_Id));
     setSelected([]);
     setTableData(deleteRows);
   };
 
-  const handleEditRow = (id) => {
-    navigate(PATH_DASHBOARD.eCommerce.edit(paramCase(id)));
+  const handleEditRow = (id, nombre) => {
+    setsucursalId(id);
+    setsucursalNombre(nombre);
+    handleOpenEditRolDialog();
   };
 
   const dataFiltered = applySortFilter({
@@ -120,37 +134,64 @@ export default function OpticaConsultorios() {
     filterName,
   });
 
+  const handleOpenAddRolDialog = () => {
+    setOpenAddRolDialog(true)
+  }
+
+  const handleCloseAddRolDialog = () => {
+    setOpenAddRolDialog(false);
+  }
+
+  const handleOpenEditRolDialog = () => {
+    setOpenEditRolDialog(true)
+  }
+
+  const handleCloseEditRolDialog = () => {
+    setOpenEditRolDialog(false);
+  }
+
+  const handleOpenDeleteRolDialog = () => {
+    setOpenDeleteRolDialog(true)
+  }
+
+  const handleCloseDeleteRolDialog = () => {
+    setOpenDeleteRolDialog(false);
+  }
+
   const denseHeight = dense ? 60 : 80;
 
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
 
   return (
-    <Page title="Consultorios">
+    <Page title="Sucursales">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
-          heading="Listado de consultorios"
+          heading="Listado de sucursales"
           links={[
-            { name: 'Optica', href: PATH_DASHBOARD.root },
-            { name: 'Consultorios' },
+            { name: 'Inicio', href: PATH_DASHBOARD.root },
+            { name: 'Sucursales' },
           ]}
           action={
-            <Button
-              variant="contained"
-              startIcon={<Iconify icon="eva:plus-fill" />}
-              component={RouterLink}
-              to={PATH_DASHBOARD.general.app}
-            >
-              Agregar
-            </Button>
+            <div>
+              <Button
+                variant="contained"
+                startIcon={<Iconify icon="eva:plus-fill" />}
+                onClick={handleOpenAddRolDialog}
+              >
+                Agregar
+              </Button>
+              <AddRolDialog open={openAddRolDialog} onClose={handleCloseAddRolDialog} sucursales={sucursales} setTableData={setTableData} />
+              <EditRolDialog open={openEditRolDialog} onClose={handleCloseEditRolDialog} sucursales={sucursales} setTableData={setTableData} sucursalId={sucursalId} sucursalNombre={sucursalNombre} />
+              <DeleteRolDialog open={openDeleteRolDialog} onClose={handleCloseDeleteRolDialog} sucursales={sucursales} setTableData={setTableData} roleId={sucursalId} />
+            </div>
           }
         />
 
         <Card>
-        <TableToolbar filterName={filterName} onFilterName={handleFilterName} />
+          <TableToolbar filterName={filterName} onFilterName={handleFilterName} />
 
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800 }}>
-
               <Table size={dense ? 'small' : 'medium'}>
                 <TableHeadCustom
                   order={order}
@@ -162,7 +203,7 @@ export default function OpticaConsultorios() {
                   onSelectAllRows={(checked) =>
                     onSelectAllRows(
                       checked,
-                      tableData.map((row) => row.clie_Id)
+                      tableData.map((row) => row.sucu_Id)
                     )
                   }
                 />
@@ -172,13 +213,13 @@ export default function OpticaConsultorios() {
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row, index) =>
                       row ? (
-                        <ConsultorioTableRow
-                          key={row.cons_Id}
+                        <SucursalTableRow
+                          key={row.sucu_Id}
                           row={row}
-                          selected={selected.includes(row.cons_Id)}
-                          onSelectRow={() => onSelectRow(row.cons_Id)}
-                          onDeleteRow={() => handleDeleteRow(row.cons_Id)}
-                          onEditRow={() => handleEditRow(row.cons_Nombre)}
+                          selected={selected.includes(row.sucu_Id)}
+                          onSelectRow={() => onSelectRow(row.sucu_Id)}
+                          onDeleteRow={() => handleDeleteRow(row.sucu_Id)}
+                          onEditRow={() => handleEditRow(row.sucu_Id, row.sucu_Descripcion)}
                         />
                       ) : (
                         !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
@@ -229,23 +270,15 @@ function applySortFilter({ tableData, comparator, filterName }) {
 
   tableData = stabilizedThis.map((el) => el[0]);
 
-  // if (filterName) {
-  //   tableData = tableData.filter((item) => 
-  //     Object.values(item).some(
-  //       (value) => 
-  //         value && value.toString().toLowerCase().indexOf(filterName.toLowerCase()) !== -1
-  //     )
-  //   );
-  // }
+
 
   if (filterName) {
     tableData = tableData.filter((item) =>
-      item.cons_Nombre.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 ||
-      item.cons_NombreEmpleado.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
-      
+      item.sucu_Id.toString().indexOf(filterName.toLowerCase()) !== -1 ||
+      item.sucu_Descripcion.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
     );
   }
-  
+
 
   return tableData;
 }

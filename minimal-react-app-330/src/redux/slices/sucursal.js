@@ -11,8 +11,8 @@ import { dispatch } from '../store';
 const initialState = {
   isLoading: false,
   error: null,
-  marcas: [],
-  marca: null,
+  sucursales: [],
+  sucursal: null,
   sortBy: null,
   filters: {
     gender: [],
@@ -24,7 +24,7 @@ const initialState = {
 };
 
 const slice = createSlice({
-  name: 'marca',
+  name: 'sucursal',
   initialState,
   reducers: {
     // START LOADING
@@ -38,30 +38,31 @@ const slice = createSlice({
       state.error = action.payload;
     },
 
-    // GET MARCAS
-    getMarcasSuccess(state, action) {
+    // GET SUCURSALES
+    getSucursalesSuccess(state, action) {
       state.isLoading = false;
-      state.marcas = action.payload;
+      state.sucursales = action.payload;
     },
 
-    // GET MARCA
-    getMarcaSuccess(state, action) {
+    // GET SUCURSALES
+    getSucursalSuccess(state, action) {
       state.isLoading = false;
-      state.marca = action.payload;
+      state.sucursal = action.payload;
     },
 
-    //  SORT & FILTER MARCAS
-    sortByMarcas(state, action) {
+    //  SORT & FILTER SUCURSALES
+    sortBySucursales(state, action) {
       state.sortBy = action.payload;
     },
 
-    filterMarcas(state, action) {
+    filterSucursales(state, action) {
       state.filters.gender = action.payload.gender;
       state.filters.category = action.payload.category;
       state.filters.colors = action.payload.colors;
       state.filters.priceRange = action.payload.priceRange;
       state.filters.rating = action.payload.rating;
     },
+    
   },
 });
 
@@ -70,18 +71,18 @@ export default slice.reducer;
 
 // Actions
 export const {
-    sortByMarcas,
-    filterMarcas    ,
+  sortBySucursales,
+  filterSucursales,
 } = slice.actions;
 
 // ----------------------------------------------------------------------
 
-export function getMarcas() {
+export function getSucursales() {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('https://localhost:44362/api/Marcas/Listado');
-      dispatch(slice.actions.getMarcasSuccess(response.data.data));
+      const response = await axios.get('https://localhost:44362/api/Sucursales/Listado');
+      dispatch(slice.actions.getSucursalesSuccess(response.data.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }
@@ -90,14 +91,14 @@ export function getMarcas() {
 
 // ----------------------------------------------------------------------
 
-export function getMarca(name) {
+export function getSucursal(name) {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get('/api/products/product', {
         params: { name },
       });
-      dispatch(slice.actions.getClienteSuccess(response.data.data));
+      dispatch(slice.actions.getSucursalSuccess(response.data.data));
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error));

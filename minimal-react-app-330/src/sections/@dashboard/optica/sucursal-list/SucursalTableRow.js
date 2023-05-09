@@ -17,7 +17,7 @@ import { TableMoreMenu } from '../../../../components/table';
 
 // ----------------------------------------------------------------------
 
-MarcasTableRow.propTypes = {
+SucursalTableRow.propTypes = {
   row: PropTypes.object,
   selected: PropTypes.bool,
   onEditRow: PropTypes.func,
@@ -27,12 +27,11 @@ MarcasTableRow.propTypes = {
 
 
 
-export default function MarcasTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRow }) {
+export default function SucursalTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRow }) {
 
   const theme = useTheme();
 
-  const { marc_Id } = row;
-  const { marc_Nombre } = row;
+  const { sucu_Id, sucu_Descripcion } = row;
   
   const [openMenu, setOpenMenuActions] = useState(null);
 
@@ -46,10 +45,10 @@ export default function MarcasTableRow({ row, selected, onEditRow, onSelectRow, 
 
   return (
     <TableRow hover selected={selected}>
-     
-      <TableCell>{(marc_Id)}</TableCell>
-      <TableCell>{(marc_Nombre)}</TableCell>
-      
+  
+      <TableCell>{(sucu_Id)}</TableCell>
+
+      <TableCell>{(sucu_Descripcion)}</TableCell>
 
       <TableCell align="right" onClick={onSelectRow}>
         <TableMoreMenu

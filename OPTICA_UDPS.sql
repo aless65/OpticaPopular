@@ -375,7 +375,7 @@ BEGIN
 						WHERE cate_Nombre = @cate_Nombre
 						AND cate_Estado = 0)
 			BEGIN
-				UPDATE [maqu].[tbCategorias]
+				UPDATE [opti].[tbCategorias]
 				SET cate_Estado = 1
 				WHERE cate_Nombre = @cate_Nombre
 

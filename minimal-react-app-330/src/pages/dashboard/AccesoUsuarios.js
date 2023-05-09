@@ -87,7 +87,7 @@ export default function AccesoUsuarios() {
   const [tableData, setTableData] = useState([]);
 
   const [filterName, setFilterName] = useState('');
-
+    
   const [usuaId, setUsuaId] = useState('');
 
   const [openAddUserDialog, setOpenAddUserDialog] = useState(false);
