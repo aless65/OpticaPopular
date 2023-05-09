@@ -38,7 +38,8 @@ import {
 } from '../../components/table';
 // sections
 import { CitasTableRow, TableToolbar } from '../../sections/@dashboard/optica/citas-list';
-import ModalAgregarCita  from './OpticaCitasModales/ModalInsertarCita';
+import ModalAgregarCita from './OpticaCitasModales/ModalInsertarCita';
+import ModalEditarCita from './OpticaCitasModales/ModalEditarCita';
 
 // ----------------------------------------------------------------------
 
@@ -49,7 +50,8 @@ const TABLE_HEAD = [
     { id: 'cons_Nombre', label: 'Consultorio', align: 'left' },
     { id: 'empe_Nombres', label: 'Nombre empleado', align: 'left' },
     { id: 'cita_Fecha', label: 'Fecha cita', align: 'left' },
-    { id: '' },
+    { id: 'sucu_Id', label: 'Id sucursal', align: 'left' },
+    { id: '', label: 'Acciones', align: 'left' },
 ];
 
 // ----------------------------------------------------------------------
@@ -84,11 +86,31 @@ export default function OpticaCitas() {
 
     const { citas, isLoading } = useSelector((state) => state.cita);
 
+    const [citaId, setCitaId ] = useState('');
+
     const [tableData, setTableData] = useState([]);
 
     const [openAddCitaDialog, setOpenAddCitaDialog] = useState(false);
 
+    const [openEditCitaDialog, setOpenEditCitaDialog] = useState(false);
+
     const [filterName, setFilterName] = useState('');
+
+    const handleOpenAddCitaDialog = () => {
+        setOpenAddCitaDialog(true)
+    }
+
+    const handleCloseAddCitaDialog = () => {
+        setOpenAddCitaDialog(false);
+    }
+
+    const handleOpenEditCitaDialog = () => {
+        setOpenEditCitaDialog(true)
+    }
+
+    const handleCloseEditCitaDialog = () => {
+        setOpenEditCitaDialog(false);
+    }
 
     useEffect(() => {
         dispatch(getCitas());
@@ -118,7 +140,8 @@ export default function OpticaCitas() {
     };
 
     const handleEditRow = (id) => {
-        navigate(PATH_DASHBOARD.eCommerce.edit(paramCase(id)));
+        setCitaId(id);
+        handleOpenEditCitaDialog();
     };
 
     const dataFiltered = applySortFilter({
@@ -142,7 +165,15 @@ export default function OpticaCitas() {
                     ]}
                     action={
                         <div>
-                            <ModalAgregarCita />
+                            <Button
+                                variant="contained"
+                                startIcon={<Iconify icon="eva:plus-fill" />}
+                                onClick={handleOpenAddCitaDialog}
+                            >
+                                Agregar
+                            </Button>
+                            <ModalAgregarCita open={openAddCitaDialog} onClose={handleCloseAddCitaDialog} citas={citas} setTableData={setTableData} />
+                            <ModalEditarCita open={openEditCitaDialog} onClose={handleCloseEditCitaDialog} citas={citas} setTableData={setTableData} cita_Id={citaId}/>
                         </div>
                     }
                 />
@@ -237,7 +268,8 @@ function applySortFilter({ tableData, comparator, filterName }) {
             item.clie_Apellidos.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 ||
             item.cons_Nombre.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 ||
             item.empe_Nombres.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 ||
-            item.cita_Fecha.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
+            item.cita_Fecha.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 ||
+            item.sucu_Id.toString().indexOf(filterName.toLowerCase()) !== -1
         );
     }
 

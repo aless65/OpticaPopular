@@ -2,20 +2,11 @@
 import Moment from 'moment';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
-import { sentenceCase } from 'change-case';
 // @mui
-import { useTheme } from '@mui/material/styles';
-import { TableRow, Checkbox, TableCell, Typography, MenuItem } from '@mui/material';
-// utils
-import { fDate } from '../../../../utils/formatTime';
-import { fCurrency } from '../../../../utils/formatNumber';
+import { TableRow, TableCell, MenuItem } from '@mui/material';
 // components
-import Label from '../../../../components/Label';
-import Image from '../../../../components/Image';
 import Iconify from '../../../../components/Iconify';
 import { TableMoreMenu } from '../../../../components/table';
-
-//
 
 // ----------------------------------------------------------------------
 
@@ -30,9 +21,8 @@ CitasTableRow.propTypes = {
 
 export default function CitasTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRow }) {
   Moment.locale('en');
-  const theme = useTheme();
 
-  const { cita_Id, clie_Nombres, clie_Apellidos, cons_Nombre, empe_Nombres, cita_Fecha } = row;
+  const { cita_Id, clie_Nombres, clie_Apellidos, cons_Nombre, empe_Nombres, cita_Fecha, sucu_Id } = row;
   
   const [openMenu, setOpenMenuActions] = useState(null);
 
@@ -58,6 +48,9 @@ export default function CitasTableRow({ row, selected, onEditRow, onSelectRow, o
       <TableCell>{(empe_Nombres)}</TableCell>
 
       <TableCell>{(Moment(cita_Fecha).format('DD-MM-YYYY'))}</TableCell>
+
+      <TableCell>{(sucu_Id)}</TableCell>
+      
       <TableCell align="right" onClick={onSelectRow}>
         <TableMoreMenu
           open={openMenu}

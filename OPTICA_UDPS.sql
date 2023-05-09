@@ -2330,29 +2330,90 @@ BEGIN
 END
 GO
 
+
+--****************************************************UDPS tbCitas****************************************************--
+
 CREATE OR ALTER PROCEDURE opti.UDP_tbCitas_ListadoPorIdSucursal
 	@sucu_Id	INT
 AS
 BEGIN
-	SELECT 	[cita_Id], 
-			tb1.[clie_Id],
-			tb2.clie_Nombres,
-			tb2.clie_Apellidos,
-			tb1.[cons_Id],
-			tb3.cons_Nombre,
-			tb4.empe_Nombres,
-			[cita_Fecha]
-	FROM [opti].[tbCitas] tb1
-	INNER JOIN [opti].[tbClientes] tb2
-	ON tb1.clie_Id = tb2.clie_Id
-	INNER JOIN [opti].[tbConsultorios] tb3
-	ON tb1.cons_Id = tb3.cons_Id
-	INNER JOIN [opti].[tbEmpleados] tb4
-	ON tb3.empe_Id = tb4.empe_Id
-	WHERE tb4.sucu_Id = @sucu_Id
-	AND tb1.cita_Estado = 1
+	IF @sucu_Id > 0
+	BEGIN
+		SELECT 	[cita_Id], 
+				tb1.[clie_Id],
+				tb2.clie_Nombres,
+				tb2.clie_Apellidos,
+				tb1.[cons_Id],
+				tb3.cons_Nombre,
+				tb4.empe_Nombres,
+				[cita_Fecha],
+				sucu_Id
+		FROM [opti].[tbCitas] tb1
+		INNER JOIN [opti].[tbClientes] tb2
+		ON tb1.clie_Id = tb2.clie_Id
+		INNER JOIN [opti].[tbConsultorios] tb3
+		ON tb1.cons_Id = tb3.cons_Id
+		INNER JOIN [opti].[tbEmpleados] tb4
+		ON tb3.empe_Id = tb4.empe_Id
+		WHERE tb4.sucu_Id = @sucu_Id
+		AND tb1.cita_Estado = 1
+	END
+	ELSE
+	BEGIN
+		SELECT 	[cita_Id], 
+				tb1.[clie_Id],
+				tb2.clie_Nombres,
+				tb2.clie_Apellidos,
+				tb1.[cons_Id],
+				tb3.cons_Nombre,
+				tb4.empe_Nombres,
+				[cita_Fecha],
+				sucu_Id
+		FROM [opti].[tbCitas] tb1
+		INNER JOIN [opti].[tbClientes] tb2
+		ON tb1.clie_Id = tb2.clie_Id
+		INNER JOIN [opti].[tbConsultorios] tb3
+		ON tb1.cons_Id = tb3.cons_Id
+		INNER JOIN [opti].[tbEmpleados] tb4
+		ON tb3.empe_Id = tb4.empe_Id
+		AND tb1.cita_Estado = 1
+	END
 END
 GO
+
+CREATE OR ALTER PROCEDURE opti.UDP_tbCitas_InsertarNuevaCita
+	@clie_Id	INT,
+	@cons_Id	INT,
+	@cita_Fecha	 DATE,
+	@usua_IdCreacion INT
+AS
+BEGIN
+	BEGIN TRY
+		INSERT INTO [opti].[tbCitas] ([clie_Id], [cons_Id], [cita_Fecha], [usua_IdCreacion])
+		VALUES (@clie_Id, @cons_Id, @cita_Fecha, @usua_IdCreacion)
+
+		SELECT 1
+	END TRY
+	BEGIN CATCH 
+		SELECT 0
+	END CATCH
+END
+GO
+
+CREATE OR ALTER PROCEDURE opti.UDP_tbCitas_BuscarCitaPorId
+	@cita_Id	INT
+AS
+BEGIN
+	SELECT [cita_Id],
+		   [clie_Id],
+		   [cons_Id],
+		   [cita_Fecha]
+	 FROM [opti].[tbCitas]
+	 WHERE [cita_Id] = @cita_Id
+END
+GO
+
+--***************************************************/UDPS tbCitas****************************************************--
 
 ---------- DETALLE CITAS -----------
 CREATE OR ALTER VIEW opti.VW_tbDetallesCitas
@@ -2393,7 +2454,7 @@ BEGIN
 END
 GO
 
-/*Insertar roles*/
+/*Insertar citas*/
 CREATE OR ALTER PROCEDURE opti.UDP_opti_tbDetallesCitas_Insert
 	 @cita_Id            INT, 
 	 @deci_Costo         DECIMAL(18,2), 

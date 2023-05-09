@@ -1,6 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit';
-import sum from 'lodash/sum';
-import uniqBy from 'lodash/uniqBy';
 // utils
 import axios from '../../utils/axios';
 //
@@ -21,6 +19,7 @@ const initialState = {
     cons_Nombre: '',
     empe_Nombres: '',
     cita_Fecha: '',
+    sucu_Id: ''
   },
 };
 
@@ -63,6 +62,7 @@ const slice = createSlice({
       state.filters.cons_Nombre = action.payload.cons_Nombre;
       state.filters.empe_Nombres = action.payload.empe_Nombres;
       state.filters.cita_Fecha = action.payload.cita_Fecha;
+      state.filters.sucu_Id = action.payload.sucu_Id;
     },
   },
 });
@@ -82,7 +82,7 @@ export function getCitas() {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`citas/ListadoCitasPorIdSucursal/${localStorage.getItem('sucu_Id')}`);
+      const response = await axios.get(`citas/ListadoCitasPorIdSucursal/${JSON.parse(localStorage.getItem('usuario')).usua_EsAdmin === true ? 0 : localStorage.getItem('sucu_Id')}`);
       dispatch(slice.actions.getcitasSuccess(response.data.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
@@ -92,13 +92,11 @@ export function getCitas() {
 
 // ----------------------------------------------------------------------
 
-export function getcita(name) {
+export function getcita(Id) {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('/api/products/product', {
-        params: { name },
-      });
+      const response = await axios.get(`Citas/BuscarCitaPorId/${Id}`);
       dispatch(slice.actions.getcitaSuccess(response.data.data));
     } catch (error) {
       console.error(error);

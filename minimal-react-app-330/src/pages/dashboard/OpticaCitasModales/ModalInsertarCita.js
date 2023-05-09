@@ -1,82 +1,31 @@
 import axios from 'axios';
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import * as Yup from 'yup';
 import {
-    styled,
     Stack,
     Button,
     Dialog,
+    TextField,
     DialogTitle,
     DialogActions,
-    TextField,
     Alert,
-    IconButton,
-    InputAdornment,
     Autocomplete,
-    Checkbox,
-    FormControlLabel,
-    Grid,
-    DialogContent,
-    Typography
+    Grid
 } from '@mui/material';
-
-import dayjs from 'dayjs';
-
-import CloseIcon from '@mui/icons-material/Close';
 import { LoadingButton, DatePicker } from '@mui/lab';
+import dayjs from 'dayjs';
 import { useForm, Controller } from 'react-hook-form';
 import { useState, useEffect } from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useSnackbar } from 'notistack';
 import { useDispatch } from '../../../redux/store';
-import Iconify from '../../../components/Iconify';
-import { FormProvider, RHFTextField } from '../../../components/hook-form';
-import useAuth from '../../../hooks/useAuth';
+import { getCitas } from '../../../redux/slices/citas';
+import { FormProvider } from '../../../components/hook-form';
 import useIsMountedRef from '../../../hooks/useIsMountedRef';
 
-const BootstrapDialog = styled(Dialog)(({ theme }) => ({
-    '& .MuiDialogContent-root': {
-        padding: theme.spacing(2),
-    },
-    '& .MuiDialogActions-root': {
-        padding: theme.spacing(1),
-    },
-}));
+export default function ModalAgregarCita({ open, onClose, citas, setTableData }) {
 
-function BootstrapDialogTitle(props) {
-    const { children, onClose, ...other } = props;
-
-    return (
-        <DialogTitle sx={{ m: 0, p: 2 }} {...other}>
-            {children}
-            {onClose ? (
-                <IconButton
-                    aria-label="close"
-                    onClick={onClose}
-                    sx={{
-                        position: 'absolute',
-                        right: 8,
-                        top: 8,
-                        color: (theme) => theme.palette.grey[500],
-                    }}
-                >
-                    <CloseIcon />
-                </IconButton>
-            ) : null}
-        </DialogTitle>
-    );
-}
-
-BootstrapDialogTitle.propTypes = {
-    children: PropTypes.node,
-    onClose: PropTypes.func.isRequired,
-};
-
-export default function ModalAgregarCita() {
     const [valueDate, setValueDate] = React.useState(dayjs(new Date()).add(1, 'day'));
-
-    const [open, setOpen] = React.useState(false);
 
     const isMountedRef = useIsMountedRef();
 
@@ -87,41 +36,6 @@ export default function ModalAgregarCita() {
     const [optionsClientes, setOptionsClientes] = useState([]);
 
     const [optionsConsultorios, setOptionsConsultorios] = useState([]);
-
-    const handleClickOpen = () => {
-        setOpen(true);
-    };
-
-    const handleClose = () => {
-        setOpen(false);
-        reset();
-    };
-
-    const InsertSchema = Yup.object().shape({
-        clie_Id: Yup.string().required('El cliente es requerido'),
-        cons_Id: Yup.string().required('El consultorio es requerido'),
-        cita_Fecha: Yup.string().required('El cliente es requerido'),
-    });
-
-    const defaultValues = {
-        clie_Id: '',
-        cons_Id: '',
-        cita_Fecha: valueDate,
-    };
-
-    const methods = useForm({
-        resolver: yupResolver(InsertSchema),
-        defaultValues,
-    });
-
-    const {
-        reset,
-        control,
-        setError,
-        setValue,
-        handleSubmit,
-        formState: { errors, isSubmitting },
-    } = methods;
 
     const dispatch = useDispatch();
 
@@ -136,9 +50,7 @@ export default function ModalAgregarCita() {
                 setOptionsClientes(optionsData);
             })
             .catch(error => console.error(error));
-    }, []);
 
-    useEffect(() => {
         axios.get('Consultorios/ListadoConsultoriosPorIdSucursal/0')
             .then((response) => {
                 const optionsData = response.data.data.map(item => ({
@@ -151,103 +63,182 @@ export default function ModalAgregarCita() {
             .catch(error => console.error(error));
     }, []);
 
+    const InsertSchema = Yup.object().shape({
+        clie_Id: Yup.string().required('El cliente es requerido'),
+        cons_Id: Yup.string().required('El consultorio es requerido'),
+        cita_Fecha: Yup.string().required('La fecha de la cita es requerida').nullable(),
+    });
+
+    const defaultValues = {
+        clie_Id: '',
+        cons_Id: '',
+        cita_Fecha: `${valueDate}`,
+    };
+
+    const methods = useForm({
+        resolver: yupResolver(InsertSchema),
+        defaultValues,
+    });
+
+    const {
+        reset,
+        setError,
+        handleSubmit,
+        formState: { errors, isSubmitting },
+    } = methods;
 
     const onSubmit = async (data) => {
-        console.log(data.clie_Id);
-        
+        const dateFecha = new Date(data.cita_Fecha);
+        const formattedDate = dateFecha.toISOString();
+        console.log(formattedDate);
+
+        axios.post('Citas/Insert', {
+            cita_Id: 0,
+            clie_Id: data.clie_Id,
+            cons_Id: data.cons_Id,
+            cita_Fecha: formattedDate,
+            usua_IdCreacion: JSON.parse(localStorage.getItem('usuario')).usua_Id,
+            cita_FechaCreacion: '2023-05-09T04:57:01.245Z',
+            usua_IdModificacion: 0,
+            cita_FechaModificacion: '2023-05-09T04:57:01.245Z',
+            clie_Nombres: 'string',
+            clie_Apellidos: 'string',
+            cons_Nombre: 'string',
+            empe_Nombres: 'string',
+            usua_NombreCreacion: 'string',
+            usua_NombreModificacion: 'string',
+            sucu_Id: 0
+        }, {
+            headers: {
+                "Content-Type": "application/json",
+            },
+        })
+            .then((response) => {
+                if (response.data.code === 200) {
+                    if (response.data.data.codeStatus > 0) {
+                        setInsertSuccess(true);
+                        enqueueSnackbar('Cita agregada con éxito', { variant: 'success' });
+                    } else {
+                        setInsertSuccess(false);
+                        enqueueSnackbar('Ocurrio un error al intentar agregar la cita', { variant: 'error' });
+                    }
+                }else{
+                    enqueueSnackbar('Ocurrio un error al intentar agregar la cita', { variant: 'error' });   
+                }
+                handleDialogClose();
+            })
+            .catch((error) => {
+                enqueueSnackbar(`Ocurrio un error al intentar agregar la cita`, { variant: 'error' });   
+                console.log(error);
+            });
+    };
+
+    const submitHandler = handleSubmit(onSubmit);
+
+    const handleDialogClose = () => {
+        onClose();
+        reset();
     };
 
     useEffect(() => {
-
-
-    }, [dispatch, insertSuccess]);
+        if (insertSuccess === true) {
+          dispatch(getCitas());
+    
+          setTableData(citas);
+    
+          setInsertSuccess(false);
+        }
+    
+      }, [insertSuccess]);
 
     return (
         <div>
-            <Button
-                variant="contained"
-                startIcon={<Iconify icon="eva:plus-fill" />}
-                onClick={handleClickOpen}
-            >
-                Agregar
-            </Button>
-            <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-                <BootstrapDialog
-                    onClose={handleClose}
-                    aria-labelledby="customized-dialog-title"
-                    open={open}
-                    fullWidth maxWidth="md"
-                >
-                    <BootstrapDialogTitle id="customized-dialog-title" onClose={handleClose}>
-                        Insertar cita
-                    </BootstrapDialogTitle>
-                    <DialogContent dividers>
-                        {!!errors.afterSubmit && <Alert severity="error">{errors.afterSubmit.message}</Alert>}
+            <FormProvider methods={methods}>
+                <Dialog open={open} fullWidth maxWidth="sm" onClose={handleDialogClose} citas={citas} >
+                    <DialogTitle>Insertar cita</DialogTitle>
 
-                        <Stack spacing={3} sx={{ p: 3, pb: 0, pl: 5, pr: 5 }}>
-                            <Grid container>
-                                <Grid item xs={12} sx={{ pr: 1 }} sm={6}>
-                                    <Autocomplete
-                                        name="clie_Id"
-                                        options={optionsClientes}
-                                        error={!!errors.clie_Id}
-                                        getOptionLabel={(option) => option.label}
-                                        renderInput={(params) => <TextField {...params} label="Cliente" error={!!errors.clie_Id?.message !== undefined} helperText={errors.clie_Id?.message}  />}
-                                        onChange={(event, value) => {
-                                            if (value != null) {
-                                                methods.setValue('clie_Id', value.id);
-                                            }
-                                        }}
-                                        isOptionEqualToValue={(option, value) => option.id === value.id}
-                                        value={optionsClientes.find(option => option.id === defaultValues.clie_Id)}
-                                    />
-                                </Grid>
-                                <Grid item xs={12} sx={{ pr: 1 }} sm={6}>
-                                    <Controller
-                                        name="cita_Fecha"
-                                        control={control}
-                                        render={({ field, fieldState: { error } }) => (
-                                            <DatePicker
-                                                label="Fecha de la cita"
-                                                value={field.value || null}
-                                                minDate={new Date()}
-                                                onChange={(newValue) => {
-                                                    field.onChange(newValue);
-                                                }}
-                                                renderInput={(params) => (
-                                                    <TextField {...params} fullWidth error={!!errors.cita_Fecha} helperText={errors.cita_Fecha?.message}/>
-                                                )}
-                                            />
-                                        )}
-                                    />
-                                </Grid>
+                    {!!errors.afterSubmit && <Alert severity="error">{errors.afterSubmit.message}</Alert>}
+
+                    <Stack spacing={3} sx={{ p: 3, pb: 0, pl: 5, pr: 5 }}>
+                        <Grid container>
+                            <Grid item xs={12} sx={{ pr: 1 }} sm={6}>
+                                <Autocomplete
+                                    name="clie_Id"
+                                    options={optionsClientes}
+                                    error={errors.clie_Id?.message !== undefined}
+                                    getOptionLabel={(option) => option.label}
+                                    renderInput={(params) => (
+                                        <TextField
+                                            {...params}
+                                            label="Cliente"
+                                            error={errors.clie_Id?.message !== undefined}
+                                            helperText={errors.clie_Id?.message}
+                                        />)}
+                                    onChange={(event, value) => {
+                                        if (value != null) {
+                                            methods.setValue('clie_Id', value.id);
+                                        }
+                                    }}
+                                    isOptionEqualToValue={(option, value) => option.id === value.id}
+                                    value={optionsClientes.find(option => option.id === defaultValues.clie_Id)}
+                                />
                             </Grid>
-                            <Grid container>
-                                <Grid item xs={12} sx={{ pr: 1 }} sm={12}>
-                                    <Autocomplete
-                                        name="cons_Id"
-                                        options={optionsConsultorios}
-                                        getOptionLabel={(option) => option.label}
-                                        renderInput={(params) => <TextField {...params} label="Consultorio" />}
-                                        onChange={(event, value) => {
-                                            if (value != null) {
-                                                methods.setValue('cons_Id', value.id);
-                                            }
-                                        }}
-                                        isOptionEqualToValue={(option, value) => option.id === value.id}
-                                        value={optionsConsultorios.find(option => option.id === defaultValues.cons_Id)}
-                                    />
-                                </Grid>
+                            <Grid item xs={12} sx={{ pr: 1 }} sm={6}>
+                                <Controller
+                                    name="cita_Fecha"
+                                    render={({ field, fieldState: { error } }) => (
+                                        <DatePicker
+                                            label="Fecha de la cita"
+                                            value={field.value || null}
+                                            minDate={new Date()}
+                                            error={errors.cita_Fecha?.message !== undefined}
+                                            onChange={(newValue) => {
+                                                field.onChange(newValue);
+                                            }}
+                                            renderInput={(params) => (
+                                                <TextField 
+                                                    {...params} fullWidth   
+                                                    error={errors.cita_Fecha?.message !== undefined}
+                                                    helperText={errors.cita_Fecha?.message} 
+                                                />
+                                            )}
+                                        />
+                                    )}
+                                />
                             </Grid>
-                        </Stack>
-                    </DialogContent>
+                        </Grid>
+                        <Grid container>
+                            <Grid item xs={12} sx={{ pr: 1 }} sm={12}>
+                                <Autocomplete
+                                    name="cons_Id"
+                                    options={optionsConsultorios}
+                                    error={errors.cons_Id?.message !== undefined}
+                                    getOptionLabel={(option) => option.label}
+                                    renderInput={(params) => 
+                                        <TextField 
+                                            {...params} 
+                                            label="Consultorio" 
+                                            error={errors.cons_Id?.message !== undefined}
+                                            helperText={errors.cons_Id?.message} 
+                                        />}
+                                    onChange={(event, value) => {
+                                        if (value != null) {
+                                            methods.setValue('cons_Id', value.id);
+                                        }
+                                    }}
+                                    isOptionEqualToValue={(option, value) => option.id === value.id}
+                                    value={optionsConsultorios.find(option => option.id === defaultValues.cons_Id)}
+                                />
+                            </Grid>
+                        </Grid>
+                    </Stack>
                     <DialogActions>
-                        <LoadingButton variant="contained" type="submit" >
+                        <LoadingButton variant="contained" type="submit" loading={isSubmitting} onClick={submitHandler}>
                             Ingresar
                         </LoadingButton>
-                        <Button onClick={handleClose}>Cancelar</Button>
+                        <Button onClick={handleDialogClose}>Cancelar</Button>
                     </DialogActions>
-                </BootstrapDialog>
+                </Dialog>
             </FormProvider>
         </div>
     );

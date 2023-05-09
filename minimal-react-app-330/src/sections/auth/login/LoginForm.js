@@ -26,8 +26,7 @@ export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
 
   const navigate = useNavigate();
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
+
   const [errorMessages, setErrorMessages] = useState({});
 
   useEffect(() => {

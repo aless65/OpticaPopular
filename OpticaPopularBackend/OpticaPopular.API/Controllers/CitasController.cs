@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using OpticaPopular.API.Models;
 using OpticaPopular.BusinessLogic.Services;
+using OpticaPopular.Entities.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,6 +32,22 @@ namespace OpticaPopular.API.Controllers
             lista.Data = _mapper.Map<IEnumerable<CitasViewModel>>(lista.Data);
 
             return Ok(lista);
+        }
+
+        [HttpPost("Insert")]
+        public IActionResult Insert(CitasViewModel citasViewModel)
+        {
+            var item = _mapper.Map<tbCitas>(citasViewModel);
+            var respuesta = _opticaPopularService.InsertarCita(item);
+            return Ok(respuesta);
+        }
+
+        [HttpGet("BuscarCitaPorId/{cita_Id}")]
+        public IActionResult BuscarCitaPorId(int cita_Id)
+        {
+            var item = _opticaPopularService.BuscarCitaPorId(cita_Id);
+            item.Data = _mapper.Map<CitasViewModel>(item.Data);
+            return Ok(item);
         }
     }
 }

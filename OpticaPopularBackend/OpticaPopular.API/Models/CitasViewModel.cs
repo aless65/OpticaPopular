@@ -16,6 +16,8 @@ namespace OpticaPopular.API.Models
         public int? usua_IdModificacion { get; set; }
         public DateTime? cita_FechaModificacion { get; set; }
 
+        public int sucu_Id { get; set; }
+
         public string clie_Nombres { get; set; }
 
         public string clie_Apellidos { get; set; }
