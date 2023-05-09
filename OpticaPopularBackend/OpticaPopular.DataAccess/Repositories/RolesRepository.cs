@@ -46,6 +46,8 @@ namespace OpticaPopular.DataAccess.Repositories
 
             var resultado = db.QueryFirst<string>(ScriptsDataBase.UDP_Inserta_Roles, parametros, commandType: CommandType.StoredProcedure);
 
+            if(int.TryParse(resultado, int num))
+
             result.MessageStatus = resultado;
 
             return result;

@@ -12,5 +12,6 @@ namespace OpticaPopular.API.Models
         public int role_UsuCreacion { get; set; }
         public int? role_UsuModificacion { get; set; }
         public bool? role_Estado { get; set; }
+        public int[] role_Pantallas { get; set; }
     }
 }

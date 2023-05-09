@@ -77,7 +77,8 @@ export default function AddRolDialog({ open, onClose, roles, setTableData }) {
 
   const onSubmit = async (data) => {
     try {
-      data.pantallas = selectedValuesRef.current;
+      const selectedIds = selectedValuesRef.current.map(value => value.id);
+      data.pantallas = selectedIds;
 
       const jsonData = {
         role_Nombre: data.nombre,

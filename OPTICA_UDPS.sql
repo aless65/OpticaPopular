@@ -2007,7 +2007,7 @@ BEGIN
 	SELECT pant_Id, pant_Nombre, pant_Menu
 	FROM [acce].[tbPantallas]
 	WHERE [pant_Estado] = 1
-	GROUP BY pant_Menu, pant_Id, pant_Nombre
+	GROUP BY pant_Menu, pant_Nombre, pant_Id
 END
 GO
 
@@ -2316,7 +2316,7 @@ BEGIN
 			INSERT INTO [acce].[tbRoles](role_Nombre, role_UsuCreacion)
 			VALUES(@role_Nombre, @role_UsuCreacion)
 			
-			SELECT 'El rol ha sido insertado con éxito'
+			SELECT SCOPE_IDENTITY()
 			END
 		ELSE IF EXISTS (SELECT * FROM  [acce].[tbRoles]
 						WHERE role_Nombre = @role_Nombre
@@ -2326,7 +2326,7 @@ BEGIN
 				SET [role_Estado] = 1
 				WHERE [role_Nombre] = @role_Nombre
 
-				SELECT 'El rol ha sido insertado con éxito'
+				SELECT SCOPE_IDENTITY()
 			END
 		ELSE
 			SELECT 'El rol ya existe'
