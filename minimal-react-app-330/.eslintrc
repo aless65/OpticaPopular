@@ -5,7 +5,9 @@
     "node": true
   },
   "extends": [
+    "eslint:recommended",
     "airbnb",
+    "plugin:@typescript-eslint/recommended",
     "plugin:jsx-a11y/recommended",
     "plugin:react-hooks/recommended",
     "prettier"
@@ -33,7 +35,7 @@
     "react/prop-types": 1,
     "consistent-return": 1,
     "no-param-reassign": 0,
-    "no-use-before-define": 0,
+    "no-use-before-define": ["error", { "variables": false }],
     "no-underscore-dangle": 0,
     "react/button-has-type": 1,
     "react/no-children-prop": 0,
@@ -57,6 +59,7 @@
     "react/no-unstable-nested-components": 0,
     "react/function-component-definition": 0,
     "react/jsx-no-constructed-context-values": 0,
+    "camelcase": [2, {"properties": "never"}],
     "no-unused-vars": [
       1,
       {

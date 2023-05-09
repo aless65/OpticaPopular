@@ -14,7 +14,23 @@ namespace OpticaPopular.DataAccess.Repositories
     {
         public RequestStatus Delete(tbCitas item)
         {
-            throw new NotImplementedException();
+            using var db = new SqlConnection(OpticaPopularContext.ConnectionString);
+
+            var parametros = new DynamicParameters();
+
+            parametros.Add("@cita_Id", item.cita_Id, DbType.Int32, ParameterDirection.Input);
+            parametros.Add("@usua_IdModificacion", item.usua_IdModificacion, DbType.Int32, ParameterDirection.Input);
+
+            var resultado = db.QueryFirst<int>(ScriptsDataBase.UDP_tbCitas_EliminarCita, parametros, commandType: CommandType.StoredProcedure);
+
+            RequestStatus request = new()
+            {
+                CodeStatus = resultado,
+                MessageStatus = "Estado delete"
+            };
+
+            return request;
+
         }
 
         public tbCitas Find(int? id)
@@ -57,7 +73,25 @@ namespace OpticaPopular.DataAccess.Repositories
 
         public RequestStatus Update(tbCitas item)
         {
-            throw new NotImplementedException();
+            using var db = new SqlConnection(OpticaPopularContext.ConnectionString);
+
+            var parametros = new DynamicParameters();
+
+            parametros.Add("@cita_Id", item.cita_Id, DbType.Int32, ParameterDirection.Input);
+            parametros.Add("@clie_Id", item.clie_Id, DbType.Int32, ParameterDirection.Input);
+            parametros.Add("@cons_Id", item.cons_Id, DbType.Int32, ParameterDirection.Input);
+            parametros.Add("@cita_Fecha", item.cita_Fecha, DbType.Date, ParameterDirection.Input);
+            parametros.Add("@usua_IdModificacion", item.usua_IdModificacion, DbType.Int32, ParameterDirection.Input);
+
+            var resultado = db.QueryFirst<int>(ScriptsDataBase.UDP_tbCitas_EditarCita, parametros, commandType: CommandType.StoredProcedure);
+
+            RequestStatus request = new()
+            {
+                CodeStatus = resultado,
+                MessageStatus = "Estado update"
+            };
+
+            return request;
         }
 
         public IEnumerable<tbCitas> ListPorIdSucursal(int sucu_Id)

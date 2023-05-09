@@ -16,6 +16,8 @@ namespace OpticaPopular.Entities.Entities
         public string role_Nombre { get; set; }
         public int? empe_Id { get; set; }
         public string empe_NombreCompleto { get; set; }
+        public string empe_CorreoElectronico { get; set; }
+
         public int? usua_UsuCreacion { get; set; }
         public string usua_UsuCreacion_Nombre { get; set; }
         public DateTime usua_FechaCreacion { get; set; }

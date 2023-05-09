@@ -78,6 +78,10 @@ namespace OpticaPopular.Entities.Entities
 
         [NotMapped]
         public int sucu_Id { get; set; }
+
+        [NotMapped]
+        public string empe_CorreoElectronico { get; set; }
+
         public virtual tbEmpleados empe { get; set; }
         public virtual tbRoles role { get; set; }
         public virtual tbUsuarios usua_UsuCreacionNavigation { get; set; }

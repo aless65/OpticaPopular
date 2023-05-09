@@ -42,12 +42,34 @@ namespace OpticaPopular.API.Controllers
             return Ok(respuesta);
         }
 
+        [HttpPost("Editar")]
+        public IActionResult Update(CitasViewModel citasViewModel)
+        {
+            var item = _mapper.Map<tbCitas>(citasViewModel);
+            var respuesta = _opticaPopularService.EditarCita(item);
+            return Ok(respuesta);
+        }
+
         [HttpGet("BuscarCitaPorId/{cita_Id}")]
         public IActionResult BuscarCitaPorId(int cita_Id)
         {
             var item = _opticaPopularService.BuscarCitaPorId(cita_Id);
             item.Data = _mapper.Map<CitasViewModel>(item.Data);
             return Ok(item);
+        }
+
+        [HttpPost("Eliminar")]
+        public IActionResult Delete(int cita_Id, int usua_IdModificacion )
+        {
+            CitasViewModel citasViewModel = new()
+            {
+                cita_Id = cita_Id,
+                usua_IdModificacion = usua_IdModificacion
+            };
+
+            var item = _mapper.Map<tbCitas>(citasViewModel);
+            var respuesta = _opticaPopularService.EliminarCita(item);
+            return Ok(respuesta);
         }
     }
 }

@@ -44,6 +44,7 @@ import ModalEditarCita from './OpticaCitasModales/ModalEditarCita';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
+    { id: '' },
     { id: 'cita_Id', label: 'Id', align: 'left' },
     { id: 'clie_Nombres', label: 'Nombres cliente', align: 'left' },
     { id: 'clie_Apellidos', label: 'Apellidos cliente', align: 'left' },
@@ -64,12 +65,10 @@ export default function OpticaCitas() {
         orderBy,
         rowsPerPage,
         setPage,
-        //
         selected,
         setSelected,
         onSelectRow,
         onSelectAllRows,
-        //
         onSort,
         onChangeDense,
         onChangePage,
@@ -86,13 +85,15 @@ export default function OpticaCitas() {
 
     const { citas, isLoading } = useSelector((state) => state.cita);
 
-    const [citaId, setCitaId ] = useState('');
+    const [citaIdEditar, setCitaIdEditar ] = useState('');
 
     const [tableData, setTableData] = useState([]);
 
     const [openAddCitaDialog, setOpenAddCitaDialog] = useState(false);
 
     const [openEditCitaDialog, setOpenEditCitaDialog] = useState(false);
+
+    const [openDeleteDialog, setOpenDeleteDialog]= useState(false);
 
     const [filterName, setFilterName] = useState('');
 
@@ -110,6 +111,14 @@ export default function OpticaCitas() {
 
     const handleCloseEditCitaDialog = () => {
         setOpenEditCitaDialog(false);
+    }
+
+    const handleOpenDeleteCitaDialog = () => {
+        setOpenDeleteDialog(true)
+    }
+
+    const handleCloseDeleteCitaDialog = () => {
+        setOpenDeleteDialog(false);
     }
 
     useEffect(() => {
@@ -139,8 +148,8 @@ export default function OpticaCitas() {
         setTableData(deleteRows);
     };
 
-    const handleEditRow = (id) => {
-        setCitaId(id);
+    const handleDeleteRow = (Id) => {
+        setCitaIdEditar(Id);
         handleOpenEditCitaDialog();
     };
 
@@ -173,7 +182,7 @@ export default function OpticaCitas() {
                                 Agregar
                             </Button>
                             <ModalAgregarCita open={openAddCitaDialog} onClose={handleCloseAddCitaDialog} citas={citas} setTableData={setTableData} />
-                            <ModalEditarCita open={openEditCitaDialog} onClose={handleCloseEditCitaDialog} citas={citas} setTableData={setTableData} cita_Id={citaId}/>
+                            <ModalEditarCita open={openEditCitaDialog} onClose={handleCloseEditCitaDialog} citas={citas} setTableData={setTableData} citaId={citaIdEditar}/>
                         </div>
                     }
                 />

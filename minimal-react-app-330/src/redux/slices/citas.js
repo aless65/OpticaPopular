@@ -50,7 +50,7 @@ const slice = createSlice({
       state.cita = action.payload;
     },
 
-    //  SORT & FILTER citaS
+    //  SORT & FILTER cita
     sortByCitas(state, action) {
       state.sortBy = action.payload;
     },

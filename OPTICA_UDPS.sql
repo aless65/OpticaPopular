@@ -15,7 +15,7 @@ BEGIN
 
 	DECLARE @contraEncriptada NVARCHAR(MAX) = HASHBYTES('SHA2_512', @usua_Contrasena);
 
-	SELECT [usua_Id], [usua_NombreUsuario], [role_Id], usua_EsAdmin, role_Id, empe_NombreCompleto, tb2.sucu_Id
+	SELECT [usua_Id], [usua_NombreUsuario], [role_Id], usua_EsAdmin, role_Id, empe_NombreCompleto, tb2.sucu_Id, tb2.empe_CorreoElectronico
 	FROM acce.VW_tbUsuarios tb1
 	INNER JOIN [opti].[tbEmpleados] tb2
 	ON tb1.empe_Id = tb2.empe_Id
@@ -53,7 +53,8 @@ AS
 		   t5.usua_NombreUsuario AS usua_UsuModificacion_Nombre, 
 		   t1.usua_FechaModificacion,
 		   t1.usua_Estado,
-		   sucu_Id 
+		   sucu_Id,
+		   t3.empe_CorreoElectronico
 		   FROM acce.tbUsuarios t1 LEFT JOIN acce.tbRoles t2
 		   ON t1.role_Id = t2.role_Id
 		   LEFT JOIN opti.tbEmpleados t3
@@ -2339,7 +2340,7 @@ AS
 BEGIN
 	IF @sucu_Id > 0
 	BEGIN
-		SELECT 	[cita_Id], 
+		SELECT 	tb1.[cita_Id], 
 				tb1.[clie_Id],
 				tb2.clie_Nombres,
 				tb2.clie_Apellidos,
@@ -2347,7 +2348,11 @@ BEGIN
 				tb3.cons_Nombre,
 				tb4.empe_Nombres,
 				[cita_Fecha],
-				sucu_Id
+				sucu_Id,
+				[deci_Id],
+				[deci_Costo],
+				[deci_HoraInicio],
+				[deci_HoraFin]
 		FROM [opti].[tbCitas] tb1
 		INNER JOIN [opti].[tbClientes] tb2
 		ON tb1.clie_Id = tb2.clie_Id
@@ -2355,12 +2360,14 @@ BEGIN
 		ON tb1.cons_Id = tb3.cons_Id
 		INNER JOIN [opti].[tbEmpleados] tb4
 		ON tb3.empe_Id = tb4.empe_Id
+		LEFT JOIN [opti].[tbDetallesCitas] tb5
+		ON tb1.cita_Id = tb5.cita_Id
 		WHERE tb4.sucu_Id = @sucu_Id
 		AND tb1.cita_Estado = 1
 	END
 	ELSE
 	BEGIN
-		SELECT 	[cita_Id], 
+		SELECT 	tb1.[cita_Id], 
 				tb1.[clie_Id],
 				tb2.clie_Nombres,
 				tb2.clie_Apellidos,
@@ -2368,7 +2375,11 @@ BEGIN
 				tb3.cons_Nombre,
 				tb4.empe_Nombres,
 				[cita_Fecha],
-				sucu_Id
+				sucu_Id,
+				[deci_Id],
+				[deci_Costo],
+				[deci_HoraInicio],
+				[deci_HoraFin]
 		FROM [opti].[tbCitas] tb1
 		INNER JOIN [opti].[tbClientes] tb2
 		ON tb1.clie_Id = tb2.clie_Id
@@ -2376,21 +2387,49 @@ BEGIN
 		ON tb1.cons_Id = tb3.cons_Id
 		INNER JOIN [opti].[tbEmpleados] tb4
 		ON tb3.empe_Id = tb4.empe_Id
-		AND tb1.cita_Estado = 1
+		LEFT JOIN [opti].[tbDetallesCitas] tb5
+		ON tb1.cita_Id = tb5.cita_Id
+		WHERE tb1.cita_Estado = 1
 	END
 END
 GO
 
 CREATE OR ALTER PROCEDURE opti.UDP_tbCitas_InsertarNuevaCita
-	@clie_Id	INT,
-	@cons_Id	INT,
-	@cita_Fecha	 DATE,
-	@usua_IdCreacion INT
+	@clie_Id			INT,
+	@cons_Id			INT,
+	@cita_Fecha			DATE,
+	@usua_IdCreacion	INT
 AS
 BEGIN
 	BEGIN TRY
 		INSERT INTO [opti].[tbCitas] ([clie_Id], [cons_Id], [cita_Fecha], [usua_IdCreacion])
 		VALUES (@clie_Id, @cons_Id, @cita_Fecha, @usua_IdCreacion)
+
+		SELECT 1
+	END TRY
+	BEGIN CATCH 
+		SELECT 0
+	END CATCH
+END
+GO
+
+CREATE OR ALTER PROCEDURE opti.UDP_tbCitas_EditarCita
+	@cita_Id				INT,
+	@clie_Id				INT,
+	@cons_Id				INT,
+	@cita_Fecha				DATE,
+	@usua_IdModificacion	INT	
+AS
+BEGIN
+	BEGIN TRY
+		 UPDATE [opti].[tbCitas]
+			SET [clie_Id] = @clie_Id,
+				[cons_Id] = @cons_Id,
+				[cita_Fecha] = @cita_Fecha,
+				[usua_IdModificacion] = @usua_IdModificacion,
+				[cita_FechaModificacion] = GETDATE()
+		  WHERE [cita_Id] = @cita_Id
+			AND [cita_Estado] = 1
 
 		SELECT 1
 	END TRY
@@ -2410,6 +2449,26 @@ BEGIN
 		   [cita_Fecha]
 	 FROM [opti].[tbCitas]
 	 WHERE [cita_Id] = @cita_Id
+	 AND [cita_Estado] = 1
+END
+GO
+
+CREATE OR ALTER PROCEDURE opti.UDP_tbCitas_EliminarCita
+	@cita_Id				INT,
+	@usua_IdModificacion	INT	
+AS
+BEGIN
+	BEGIN TRY
+		UPDATE [opti].[tbCitas]
+		   SET [cita_Estado] = 0,
+			   [usua_IdModificacion] = @usua_IdModificacion
+		 WHERE [cita_Id] = @cita_Id
+
+		SELECT 1
+	END TRY
+	BEGIN CATCH
+		SELECT 0
+	END CATCH
 END
 GO
 

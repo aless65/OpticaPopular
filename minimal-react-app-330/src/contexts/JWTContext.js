@@ -14,6 +14,7 @@ const usuario = {
 
 if(localStorage.getItem('usuario') !== null){
     usuario.role = JSON.parse(localStorage.getItem('usuario')).usua_EsAdmin === true ? 'Admin': 'Not admin';
+    usuario.email = `${JSON.parse(localStorage.getItem('usuario')).empe_CorreoElectronico}`; 
 }
 
 const initialState = {

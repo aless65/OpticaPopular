@@ -45,6 +45,18 @@ namespace OpticaPopular.Entities.Entities
         [NotMapped]
         public int sucu_Id { get; set; }
 
+        [NotMapped]
+        public int deci_Id { get; set; }
+
+        [NotMapped]
+        public decimal deci_Costo { get; set; }
+
+        [NotMapped]
+        public string deci_HoraInicio { get; set; }
+
+        [NotMapped]
+        public string deci_HoraFin { get; set; }
+
         public virtual tbClientes clie { get; set; }
         public virtual tbConsultorios cons { get; set; }
         public virtual tbUsuarios usua_IdCreacionNavigation { get; set; }

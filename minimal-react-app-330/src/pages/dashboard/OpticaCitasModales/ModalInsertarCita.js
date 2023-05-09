@@ -107,7 +107,11 @@ export default function ModalAgregarCita({ open, onClose, citas, setTableData })
             empe_Nombres: 'string',
             usua_NombreCreacion: 'string',
             usua_NombreModificacion: 'string',
-            sucu_Id: 0
+            sucu_Id: 0,
+            deci_Id: 0,
+            deci_Costo: 0,
+            deci_HoraInicio: '00:00',
+            deci_HoraFin: '00:00'
         }, {
             headers: {
                 "Content-Type": "application/json",
@@ -148,13 +152,12 @@ export default function ModalAgregarCita({ open, onClose, citas, setTableData })
     
           setInsertSuccess(false);
         }
-    
-      }, [insertSuccess]);
+    }, [insertSuccess]);
 
     return (
         <div>
             <FormProvider methods={methods}>
-                <Dialog open={open} fullWidth maxWidth="sm" onClose={handleDialogClose} citas={citas} >
+                <Dialog open={open} fullWidth maxWidth="sm" onClose={handleDialogClose} >
                     <DialogTitle>Insertar cita</DialogTitle>
 
                     {!!errors.afterSubmit && <Alert severity="error">{errors.afterSubmit.message}</Alert>}

@@ -1,30 +1,47 @@
-/* eslint-disable camelcase */
+import * as React from 'react';
 import Moment from 'moment';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
+import { sentenceCase } from 'change-case';
 // @mui
-import { TableRow, TableCell, MenuItem } from '@mui/material';
+import { MenuItem } from '@mui/material';
+import Box from '@mui/material/Box';
+import Collapse from '@mui/material/Collapse';
+import IconButton from '@mui/material/IconButton';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Typography from '@mui/material/Typography';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 // components
 import Iconify from '../../../../components/Iconify';
-import { TableMoreMenu } from '../../../../components/table';
+import { TableMoreMenu, TableNoData } from '../../../../components/table';
 
 // ----------------------------------------------------------------------
 
-CitasTableRow.propTypes = {
-  row: PropTypes.object,
-  selected: PropTypes.bool,
-  onEditRow: PropTypes.func,
-  onSelectRow: PropTypes.func,
-  onDeleteRow: PropTypes.func,
-};
-
-
 export default function CitasTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRow }) {
+
+  CitasTableRow.propTypes = {
+    row: PropTypes.object,
+    selected: PropTypes.bool,
+    onEditRow: PropTypes.func,
+    onSelectRow: PropTypes.func,
+    onDeleteRow: PropTypes.func,
+  };
+
   Moment.locale('en');
 
-  const { cita_Id, clie_Nombres, clie_Apellidos, cons_Nombre, empe_Nombres, cita_Fecha, sucu_Id } = row;
+  const { cita_Id, clie_Nombres, clie_Apellidos, cons_Nombre, empe_Nombres, cita_Fecha, sucu_Id, deci_Id, deci_Costo, deci_HoraInicio, deci_HoraFin } = row;
   
   const [openMenu, setOpenMenuActions] = useState(null);
+
+  const [open, setOpen] = React.useState(false);
+
+  const [tableEmpty, setTableEmpty] = useState(false);
 
   const handleOpenMenu = (event) => {
     setOpenMenuActions(event.currentTarget);
@@ -34,22 +51,41 @@ export default function CitasTableRow({ row, selected, onEditRow, onSelectRow, o
     setOpenMenuActions(null);
   };
 
+  React.useEffect(() => {
+    if(row.deci_Id === 0){
+      setTableEmpty(true);
+    }else{
+      setTableEmpty(false);
+    }
+  })
+
   return (
+    <>
     <TableRow hover selected={selected}>
-     
-      <TableCell>{(cita_Id)}</TableCell>
-
-      <TableCell>{(clie_Nombres)}</TableCell>
-
-      <TableCell>{(clie_Apellidos)}</TableCell>
       
-      <TableCell>{(cons_Nombre )}</TableCell>
+      <TableCell>
+          <IconButton
+            aria-label="expand row"
+            size="small"
+            onClick={() => setOpen(!open)}
+          >
+            {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+          </IconButton>
+        </TableCell>
 
-      <TableCell>{(empe_Nombres)}</TableCell>
+      <TableCell>{(row.cita_Id)}</TableCell>
 
-      <TableCell>{(Moment(cita_Fecha).format('DD-MM-YYYY'))}</TableCell>
+      <TableCell>{(row.clie_Nombres)}</TableCell>
 
-      <TableCell>{(sucu_Id)}</TableCell>
+      <TableCell>{(row.clie_Apellidos)}</TableCell>
+      
+      <TableCell>{(row.cons_Nombre )}</TableCell>
+
+      <TableCell>{(row.empe_Nombres)}</TableCell>
+
+      <TableCell>{(Moment(row.cita_Fecha).format('DD-MM-YYYY'))}</TableCell>
+
+      <TableCell>{(row.sucu_Id)}</TableCell>
       
       <TableCell align="right" onClick={onSelectRow}>
         <TableMoreMenu
@@ -82,5 +118,46 @@ export default function CitasTableRow({ row, selected, onEditRow, onSelectRow, o
         />
       </TableCell>
     </TableRow>
+
+    <TableRow>
+    <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={9}>
+      <Collapse in={open} timeout="auto" unmountOnExit>
+        <Box sx={{ margin: 1 }}>
+          <Typography variant="h6" gutterBottom component="div">
+            Detalle cita
+          </Typography>
+          <Table size="small" aria-label="purchases">
+            <TableHead>
+              <TableRow>
+                <TableCell>Id</TableCell>
+                <TableCell>Costo</TableCell>
+                <TableCell>Hora Inicio</TableCell>
+                <TableCell>Hora Fin</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+            <TableRow key={row.deci_Id}>
+                  <TableCell component="th" scope="row">
+                    {row.deci_Id === 0 ? '' : row.deci_Id}
+                  </TableCell>
+                  <TableCell component="th" scope="row">
+                    {row.deci_Costo === 0 ? '' : row.deci_Costo}
+                  </TableCell>
+                  <TableCell component="th" scope="row">
+                    {row.deci_HoraInicio}
+                  </TableCell>
+                  <TableCell component="th" scope="row">
+                    {row.deci_HoraFin}
+                  </TableCell>
+                </TableRow>
+
+                <TableNoData isNotFound={tableEmpty} />
+            </TableBody>
+          </Table>
+        </Box>
+      </Collapse>
+    </TableCell>
+  </TableRow>
+  </>
   );
 }

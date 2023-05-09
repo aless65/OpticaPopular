@@ -81,6 +81,7 @@ export default function LoginForm() {
                     usua_EsAdmin: response.data.data[0].usua_EsAdmin,
                     empe_NombreCompleto: response.data.data[0].empe_NombreCompleto,
                     role_Id: response.data.data[0].role_Id,
+                    empe_CorreoElectronico: response.data.data[0].empe_CorreoElectronico,
                 };
                 
                 localStorage.setItem('sucu_Id', response.data.data[0].sucu_Id);

@@ -30,6 +30,13 @@ namespace OpticaPopular.API.Models
 
         public string usua_NombreModificacion { get; set; }
 
+        public int deci_Id { get; set; }
+
+        public decimal deci_Costo { get; set; }
+
+        public string deci_HoraInicio { get; set; }
+
+        public string deci_HoraFin { get; set; }
 
     }
 }
