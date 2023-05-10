@@ -264,6 +264,21 @@ namespace OpticaPopular.BusinessLogic.Services
             }
         }
 
+        public ServiceResult ListadoConsultorios2()
+        {
+            var resultado = new ServiceResult();
+
+            try
+            {
+                var list = _consultoriosRepository.List2();
+                return resultado.Ok(list);
+            }
+            catch (Exception ex)
+            {
+                return resultado.Error(ex.Message);
+            }
+        }
+
         #endregion
 
         #region DetallesCitas

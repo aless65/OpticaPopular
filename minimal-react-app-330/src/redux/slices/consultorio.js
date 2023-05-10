@@ -41,13 +41,13 @@ const slice = createSlice({
     // GET CONSULTORIOS
     getConsultoriosSuccess(state, action) {
       state.isLoading = false;
-      state.clientes = action.payload;
+      state.consultorios = action.payload;
     },
 
     // GET CONSULTORIO
     getConsultorioSuccess(state, action) {
       state.isLoading = false;
-      state.cliente = action.payload;
+      state.consultorio = action.payload;
     },
 
     //  SORT & FILTER CONSULTORIOS
@@ -81,8 +81,9 @@ export function getConsultorios() {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('https://localhost:44362/api/Consultorios/Listado');
+      const response = await axios.get('https://localhost:44362/api/Consultorios/ListadoConsultoriosPorIdSucursal/0');
       dispatch(slice.actions.getConsultoriosSuccess(response.data.data));
+      console.log(response.data.data);
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }

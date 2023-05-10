@@ -57,6 +57,13 @@ namespace OpticaPopular.DataAccess.Repositories
             return db.Query<VW_tbConsultorios>(ScriptsDataBase.UDP_Lista_Consultorios, null, commandType: CommandType.StoredProcedure);
         }
 
+        public IEnumerable<VW_tbConsultorios> List2()
+        {
+            using var db = new SqlConnection(OpticaPopularContext.ConnectionString);
+            return db.Query<VW_tbConsultorios>(ScriptsDataBase.UDP_Lista2_Consultorios, null, commandType: CommandType.StoredProcedure);
+        }
+
+
         public RequestStatus Update(tbConsultorios item)
         {
             RequestStatus result = new RequestStatus();

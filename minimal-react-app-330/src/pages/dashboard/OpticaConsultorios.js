@@ -42,8 +42,9 @@ import { ConsultorioTableRow, TableToolbar } from '../../sections/@dashboard/opt
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
+  { id: 'cons_Id', label: 'ID', align: 'left' },
   { id: 'cons_Nombre', label: 'Nombre', align: 'left' },
-  { id: 'cons_NombreEmpleado', label: 'Empleado', align: 'left' },
+  { id: 'empe_Nombres', label: 'Empleado', align: 'left' },
   { id: '' },
 ];
 
@@ -68,7 +69,7 @@ export default function OpticaConsultorios() {
     onChangePage,
     onChangeRowsPerPage,
   } = useTable({
-    defaultOrderBy: 'cons_Nombre',
+    defaultOrderBy: 'cons_Id',
   });
 
   const { themeStretch } = useSettings();
@@ -162,7 +163,7 @@ export default function OpticaConsultorios() {
                   onSelectAllRows={(checked) =>
                     onSelectAllRows(
                       checked,
-                      tableData.map((row) => row.clie_Id)
+                      tableData.map((row) => row.cons_Id)
                     )
                   }
                 />
@@ -229,20 +230,13 @@ function applySortFilter({ tableData, comparator, filterName }) {
 
   tableData = stabilizedThis.map((el) => el[0]);
 
-  // if (filterName) {
-  //   tableData = tableData.filter((item) => 
-  //     Object.values(item).some(
-  //       (value) => 
-  //         value && value.toString().toLowerCase().indexOf(filterName.toLowerCase()) !== -1
-  //     )
-  //   );
-  // }
+ 
 
   if (filterName) {
     tableData = tableData.filter((item) =>
+      item.cons_Id.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 ||
       item.cons_Nombre.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 ||
-      item.cons_NombreEmpleado.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
-      
+      item.empe_Nombres.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
     );
   }
   

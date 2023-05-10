@@ -82,6 +82,8 @@ namespace OpticaPopular.DataAccess.Repositories
         public static string UDP_Inserta_Consultorios = "opti.UDP_opti_tbConsultorios_Insert";
         public static string UDP_Edita_Consultorios = "opti.UDP_opti_tbConsultorios_Update";
         public static string UDP_Elimina_Consultorios = "opti.UDP_opti_tbConsultorio_Delete";
+        public static string UDP_Lista2_Consultorios = "opti.UDP_ConsultoriosListado";
+
         #endregion
 
         #region Marcas

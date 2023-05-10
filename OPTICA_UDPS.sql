@@ -2137,6 +2137,64 @@ INNER JOIN opti.tbSucursales tb5
 ON t4.sucu_Id = tb5.sucu_Id
 GO
 
+--
+CREATE OR ALTER VIEW opti.VW_tbConsultoriosList
+AS
+    SELECT DISTINCT cons_Id, cons_Nombre, cons_Estado, usua_IdCreacion, t2.usua_NombreUsuario AS cons_NombreUsuarioCreacion, usua_IdModificacion, t3.usua_NombreUsuario AS cons_NombreUsuarioModificacion, cons_FechaCreacion, cons_FechaModificacion, t4.sucu_Id, tb5.sucu_Descripcion
+    FROM opti.tbConsultorios t1  
+    INNER JOIN acce.tbUsuarios t2 ON t1.usua_IdCreacion = t2.usua_Id 
+    LEFT JOIN acce.tbUsuarios t3 ON t1.usua_IdModificacion = t3.usua_Id 
+    RIGHT JOIN opti.tbEmpleados t4 ON t1.empe_Id = t4.empe_Id 
+    INNER JOIN opti.tbSucursales tb5 ON t4.sucu_Id = tb5.sucu_Id
+GO
+
+
+CREATE OR ALTER PROCEDURE opti.UDP_ConsultoriosListado
+AS
+BEGIN
+    SELECT cons_Id,
+           cons_Nombre, 
+           cons_Estado, 
+           usua_IdCreacion, 
+           empe_Id,
+           empe_Nombres,
+           cons_NombreUsuarioCreacion, 
+           usua_IdModificacion, 
+           cons_NombreUsuarioModificacion, 
+           cons_FechaCreacion, 
+           cons_FechaModificacion, 
+           sucu_Id, 
+           sucu_Descripcion
+    FROM (
+        SELECT t1.cons_Id,
+               t1.cons_Nombre, 
+               t1.cons_Estado, 
+               t1.usua_IdCreacion, 
+               t4.empe_Id,
+               (t4.empe_Nombres+' '+ t4.empe_Apellidos) as empe_Nombres,
+               t2.usua_NombreUsuario AS cons_NombreUsuarioCreacion, 
+               t1.usua_IdModificacion, 
+               t3.usua_NombreUsuario AS cons_NombreUsuarioModificacion, 
+               t1.cons_FechaCreacion, 
+               t1.cons_FechaModificacion, 
+               t4.sucu_Id, 
+               tb5.sucu_Descripcion,
+               ROW_NUMBER() OVER(PARTITION BY t1.cons_Id ORDER BY t4.empe_Id) AS RowNum
+        FROM opti.tbConsultorios t1  
+        INNER JOIN acce.tbUsuarios t2 ON t1.usua_IdCreacion = t2.usua_Id 
+        LEFT JOIN acce.tbUsuarios t3 ON t1.usua_IdModificacion = t3.usua_Id 
+        RIGHT JOIN opti.tbEmpleados t4 ON t1.empe_Id = t4.empe_Id 
+        INNER JOIN opti.tbSucursales tb5 ON t4.sucu_Id = tb5.sucu_Id
+    ) AS ConsultoriosEmpleados
+    WHERE RowNum = 1 
+END
+
+go
+
+EXEC opti.UDP_ConsultoriosListado
+
+
+
 
 /*Listado de Consultorios*/
 CREATE OR ALTER PROCEDURE opti.UDP_tbConsultorios_ListPorIdSucursal

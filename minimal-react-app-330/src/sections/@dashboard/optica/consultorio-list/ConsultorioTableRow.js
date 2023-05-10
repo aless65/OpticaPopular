@@ -31,7 +31,7 @@ export default function ConsultorioTableRow({ row, selected, onEditRow, onSelect
 
   const theme = useTheme();
 
-  const { cons_Nombre, cons_NombreEmpleado } = row;
+  const {cons_Id, cons_Nombre, empe_Nombres } = row;
   
   const [openMenu, setOpenMenuActions] = useState(null);
 
@@ -45,10 +45,10 @@ export default function ConsultorioTableRow({ row, selected, onEditRow, onSelect
 
   return (
     <TableRow hover selected={selected}>
-     
-      <TableCell>{(cons_Nombre)}</TableCell>
 
-      <TableCell>{(cons_NombreEmpleado)}</TableCell>
+     <TableCell>{(cons_Id)}</TableCell>
+      <TableCell>{(cons_Nombre)}</TableCell>
+      <TableCell>{(empe_Nombres)}</TableCell>
 
       <TableCell align="right" onClick={onSelectRow}>
         <TableMoreMenu

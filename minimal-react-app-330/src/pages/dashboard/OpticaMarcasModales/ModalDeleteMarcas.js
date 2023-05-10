@@ -33,11 +33,12 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { ErrorMessage } from 'formik';
 import { useSnackbar } from 'notistack';
 import { useDispatch, useSelector } from '../../../redux/store';
-import { getCategorias, getCategoria } from '../../../redux/slices/categoria';
+import { getMarca, getMarcas } from '../../../redux/slices/marca';
 import Iconify from '../../../components/Iconify';
 import { FormProvider, RHFTextField } from '../../../components/hook-form';
 import useAuth from '../../../hooks/useAuth';
 import useIsMountedRef from '../../../hooks/useIsMountedRef';
+
 
 
 export default function DeleteMarcaDialog({ open, onClose, marcas, setTableData, marcaId }) {
@@ -89,8 +90,8 @@ export default function DeleteMarcaDialog({ open, onClose, marcas, setTableData,
     useEffect(() => {
 
         if (deleteSuccess === true) {
-            dispatch(getCategorias());
-            setTableData(categorias);
+            dispatch(getMarcas());
+            setTableData(marcas);
             setDeleteSuccess(false);
         }
 

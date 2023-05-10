@@ -38,7 +38,9 @@ import {
 } from '../../components/table';
 // sections
 import { MarcasTableRow, TableToolbar } from '../../sections/@dashboard/optica/marcas-list';
-
+import AddMarcaDialog from './OpticaMarcasModales/ModalInsertMarcas'; 
+import EditMarcaDialog from './OpticaMarcasModales/ModalEditMarcas';
+import DeleteMarcaDialog from './OpticaMarcasModales/ModalDeleteMarcas';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
@@ -83,6 +85,38 @@ export default function OpticaMarcas() {
 
   const [filterName, setFilterName] = useState('');
 
+  const [marcaId, setmarcaId] = useState('');
+  const [marcaNombre, setmarcaNombre] = useState('');
+
+  const [openAddMarcaDialog, setOpenAddMarcaDialog] = useState(false);
+  const [openEditMarcaDialog, setOpenEditMarcaDialog] = useState(false);
+  const [openDeleteMarcaDialog, setOpenDeleteMarcaDialog] = useState(false);
+
+
+  const handleOpenAddMarcaDialog = () => {
+    setOpenAddMarcaDialog(true)
+  }
+
+  const handleCloseAddMarcaDialog = () => {
+    setOpenAddMarcaDialog(false);
+  }
+
+  const handleOpenEditMarcaDialog = () => {
+    setOpenEditMarcaDialog(true);
+  }
+
+  const handleCloseEditMarcaDialog = () => {
+    setOpenEditMarcaDialog(false);
+  }
+
+  const handleOpenDeleteMarcaDialog = () => {
+    setOpenDeleteMarcaDialog(true);
+  }
+
+  const handleCloseDeleteMarcaDialog = () => {
+    setOpenDeleteMarcaDialog(false);
+  }
+
   useEffect(() => {
     dispatch(getMarcas());
   }, [dispatch]);
@@ -98,10 +132,10 @@ export default function OpticaMarcas() {
     setPage(0);
   };
 
+
   const handleDeleteRow = (id) => {
-    const deleteRow = tableData.filter((row) => row.marc_Id !== id);
-    setSelected([]);
-    setTableData(deleteRow);
+    setmarcaId(id);
+    handleOpenDeleteMarcaDialog();
   };
 
   const handleDeleteRows = (selected) => {
@@ -110,9 +144,16 @@ export default function OpticaMarcas() {
     setTableData(deleteRows);
   };
 
-  const handleEditRow = (id) => {
-    navigate(PATH_DASHBOARD.eCommerce.edit(paramCase(id)));
+  const handleEditRow = (id, nombre) => {
+    setmarcaId(id);
+    setmarcaNombre(nombre);
+    handleOpenEditMarcaDialog();
   };
+
+
+ 
+
+
 
   const dataFiltered = applySortFilter({
     tableData,
@@ -134,14 +175,20 @@ export default function OpticaMarcas() {
             { name: 'Marcas' },
           ]}
           action={
-            <Button
-              variant="contained"
-              startIcon={<Iconify icon="eva:plus-fill" />}
-              component={RouterLink}
-              to={PATH_DASHBOARD.general.app}
-            >
-              Agregar
-            </Button>
+            <div>
+              <Button
+                variant="contained"
+                startIcon={<Iconify icon="eva:plus-fill" />}
+                onClick={handleOpenAddMarcaDialog}
+
+              >
+                Agregar
+              </Button>
+              <AddMarcaDialog open={openAddMarcaDialog} onClose={handleCloseAddMarcaDialog} marcas={marcas} setTableData={setTableData} />
+              <EditMarcaDialog open={openEditMarcaDialog} onClose={handleCloseEditMarcaDialog} marcas={marcas} setTableData={setTableData} marcaId={marcaId} marcaNombre={marcaNombre} />
+              <DeleteMarcaDialog open={openDeleteMarcaDialog} onClose={handleCloseDeleteMarcaDialog} marcas={marcas} setTableData={setTableData} marcaId={marcaId} />
+            </div>
+
           }
         />
 
@@ -178,7 +225,7 @@ export default function OpticaMarcas() {
                           selected={selected.includes(row.marc_Id)}
                           onSelectRow={() => onSelectRow(row.marc_Id)}
                           onDeleteRow={() => handleDeleteRow(row.marc_Id)}
-                          onEditRow={() => handleEditRow(row.marc_Nombre)}
+                          onEditRow={() => handleEditRow(row.marc_Id,row.marc_Nombre,)}
                         />
                       ) : (
                         !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />

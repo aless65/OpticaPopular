@@ -35,7 +35,7 @@ import {
   TableEmptyRows,
   TableHeadCustom,
   TableSelectedActions,
-} from '../../components/table';
+} from '../../components/table'; 
 // sections
 import { CategoriaTableRow, TableToolbar } from '../../sections/@dashboard/optica/categoria-list';
 import AddCategoriaDialog from './OpticaCategoriasModales/ModalInsertCategorias'; 

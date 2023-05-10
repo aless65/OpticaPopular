@@ -38,7 +38,7 @@ import useAuth from '../../../hooks/useAuth';
 import useIsMountedRef from '../../../hooks/useIsMountedRef';
 
 
-export default function EditMarcaDialog({ open, onClose, marcas, setTableData, marcaId, marcaNombre }) {
+export default function EditRolCategoriaDialog({ open, onClose, marcas, setTableData, marcaId, marcaNombre }) {
 
   const isMountedRef = useIsMountedRef();
 
@@ -46,15 +46,24 @@ export default function EditMarcaDialog({ open, onClose, marcas, setTableData, m
 
   const [insertSuccess, setInsertSuccess] = useState(false);
   
-  const [MarcaTemporal, setMarcaTemporal] = useState('');
+  const [marcaTemporal, setmarcaTemporal] = useState(marcaNombre || '');
+
 
   const InsertSchema = Yup.object().shape({
     nombre: Yup.string().required('Nombre de la marca requerido'),
   });
 
+//  useEffect(() => {
+//    setmarcaTemporal(marcaNombre);
+//  }, [marcaId]);
+
   useEffect(() => {
-    setMarcaTemporal(marcaNombre);
-  }, [marcaId]);
+    if (marcaNombre) {
+      setmarcaTemporal(marcaNombre);
+    }
+  }, [marcaId, marcaNombre]);
+  
+
 
   const defaultValues = {
     nombre: '',
@@ -76,12 +85,16 @@ export default function EditMarcaDialog({ open, onClose, marcas, setTableData, m
   const dispatch = useDispatch();
 
   const onSubmit = async (data) => {
+    
     try {
+      console.log(data)
       const jsonData = {
         marc_Id: marcaId,
         marc_Nombre: data.nombre,
         usua_IdModificacion: 1,
       };
+
+      console.log(jsonData)
 
       fetch("https://localhost:44362/api/Marcas/Editar", {
         method: "PUT",
@@ -132,15 +145,13 @@ export default function EditMarcaDialog({ open, onClose, marcas, setTableData, m
     methods.setValue('nombre', marcaTemporal);
   }, [marcaTemporal])
 
-//   useEffect(() => {
-//     setRolTemporal(roleNombre);
-//   }, [roleNombre])
+
 
 
   const submitHandler = handleSubmit(onSubmit);
 
   const handleDialogClose = () => {
-    setMarcaTemporal(marcaNombre);
+    setmarcaTemporal(marcaNombre);
     onClose();
     reset();
   };
@@ -148,7 +159,7 @@ export default function EditMarcaDialog({ open, onClose, marcas, setTableData, m
   return (
     <FormProvider methods={methods}>
       <Dialog open={open} fullWidth maxWidth="sm" onClose={handleDialogClose} marcas={marcas} >
-        <DialogTitle>Editar marca</DialogTitle>
+        <DialogTitle>Editar marcas</DialogTitle>
 
         {!!errors.afterSubmit && <Alert severity="error">{errors.afterSubmit.message}</Alert>}
 
