@@ -159,8 +159,16 @@ export default function ModalAgregarCita({ open, onClose, citas, setTableData })
     return (
         <div>
             <FormProvider methods={methods}>
-                <Dialog open={open} fullWidth maxWidth="sm" onClose={handleDialogClose} >
-                    <DialogTitle>Insertar cita</DialogTitle>
+                <Dialog 
+                    open={open} 
+                    fullWidth 
+                    maxWidth="sm" 
+                    onClose={handleDialogClose} 
+                    aria-labelledby="alert-dialog-title"
+                    >
+                    <DialogTitle component="h2" id="alert-dialog-title">
+                        Insertar cita
+                    </DialogTitle>
                     <br/>
                     <Divider />
                     {!!errors.afterSubmit && <Alert severity="error">{errors.afterSubmit.message}</Alert>}

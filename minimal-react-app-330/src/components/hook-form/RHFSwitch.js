@@ -6,10 +6,6 @@ import { Switch, FormControlLabel } from '@mui/material';
 
 // ----------------------------------------------------------------------
 
-RHFSwitch.propTypes = {
-  name: PropTypes.string,
-};
-
 export default function RHFSwitch({ name, ...other }) {
   const { control } = useFormContext();
 
@@ -22,3 +18,7 @@ export default function RHFSwitch({ name, ...other }) {
     />
   );
 }
+
+RHFSwitch.propTypes = {
+  name: PropTypes.string,
+};

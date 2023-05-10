@@ -2606,7 +2606,7 @@ GO
 CREATE OR ALTER VIEW opti.VW_tbDetallesCitas
 AS
 	SELECT deci_Id,
-	       t1.cita_Id, 
+	       t1.cita_Id,
 		   deci_Costo, 
 		   deci_HoraInicio, 
 		   deci_HoraFin, 
@@ -2617,10 +2617,10 @@ AS
 		   t1.usua_IdModificacion, 
 		   t3.usua_NombreUsuario AS deci_NombreUsuarioModificacion,
 		   deci_FechaModificacion
-FROM opti.tbDetallesCitas t1  INNER JOIN acce.tbUsuarios t2
-ON t1.usua_IdCreacion = t2.usua_Id 
-LEFT JOIN acce.tbUsuarios t3
-ON t1.usua_IdModificacion = t3.usua_Id
+	FROM opti.tbDetallesCitas t1  INNER JOIN acce.tbUsuarios t2
+	ON t1.usua_IdCreacion = t2.usua_Id 
+	LEFT JOIN acce.tbUsuarios t3
+	ON t1.usua_IdModificacion = t3.usua_Id
 GO
 
 /*Listado de detalles citas*/
@@ -2628,16 +2628,18 @@ CREATE OR ALTER PROCEDURE opti.UDP_tbDetallesCitaPorIdCita
 	@cita_Id INT
 AS
 BEGIN
-	SELECT *
-	FROM opti.VW_tbDetallesCitas tb1
-	INNER JOIN opti.tbCitas tb2 
-	ON tb1.cita_Id = tb2.cita_Id
-	INNER JOIN opti.tbConsultorios tb3
-	ON tb2.cons_Id = tb3.cons_Id
-	INNER JOIN opti.tbEmpleados tb4
-	ON tb3.empe_Id = tb4.empe_Id
-	WHERE tb2.cita_Id = @cita_Id
-	AND [deci_Estado] = 1
+		SELECT *
+		FROM opti.VW_tbDetallesCitas tb1
+		INNER JOIN opti.tbCitas tb2 
+		ON tb1.cita_Id = tb2.cita_Id
+		INNER JOIN opti.tbConsultorios tb3
+		ON tb2.cons_Id = tb3.cons_Id
+		INNER JOIN opti.tbEmpleados tb4
+		ON tb3.empe_Id = tb4.empe_Id
+		INNER JOIN opti.tbSucursales tb5
+		ON tb4.sucu_Id = tb5.sucu_Id
+		WHERE tb2.cita_Id = @cita_Id
+		AND [deci_Estado] = 1
 END
 GO
 

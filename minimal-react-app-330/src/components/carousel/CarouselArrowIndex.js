@@ -28,14 +28,6 @@ const ArrowStyle = styled(IconButton)(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-CarouselArrowIndex.propTypes = {
-  customIcon: PropTypes.oneOfType([PropTypes.element, PropTypes.string]),
-  index: PropTypes.number,
-  onNext: PropTypes.func,
-  onPrevious: PropTypes.func,
-  total: PropTypes.number,
-};
-
 export default function CarouselArrowIndex({ index, total, onNext, onPrevious, customIcon, ...other }) {
   const theme = useTheme();
   const isRTL = theme.direction === 'rtl';
@@ -56,6 +48,15 @@ export default function CarouselArrowIndex({ index, total, onNext, onPrevious, c
     </RootStyle>
   );
 }
+
+CarouselArrowIndex.propTypes = {
+  customIcon: PropTypes.oneOfType([PropTypes.element, PropTypes.string]),
+  index: PropTypes.number,
+  onNext: PropTypes.func,
+  onPrevious: PropTypes.func,
+  total: PropTypes.number,
+};
+
 
 // ----------------------------------------------------------------------
 

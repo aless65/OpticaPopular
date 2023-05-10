@@ -1,3 +1,4 @@
+import axios from 'axios';
 import * as React from 'react';
 import { paramCase } from 'change-case';
 import { useState, useEffect } from 'react';
@@ -43,6 +44,7 @@ import { CitasTableRow, TableToolbar } from '../../sections/@dashboard/optica/ci
 import ModalAgregarCita from './OpticaCitasModales/ModalInsertarCita';
 import ModalEditarCita from './OpticaCitasModales/ModalEditarCita';
 import ModalEliminarCita from './OpticaCitasModales/ModalEliminarCita';
+import ModalAgregarDetalleCita from './OpticaDetallesCitasModales/ModalInsertarDetallesCitas';
 
 // ----------------------------------------------------------------------
 
@@ -113,6 +115,8 @@ export default function OpticaCitas() {
 
     const [citaIdEditar, setCitaIdEditar ] = useState('');
 
+    const [citaIdAddDetalleCita, setcitaIdAddDetalleCita ] = useState('');
+
     const [citaIdEliminar, setCitaIdEliminar ] = useState('');
 
     const [tableData, setTableData] = useState([]);
@@ -122,6 +126,8 @@ export default function OpticaCitas() {
     const [openEditCitaDialog, setOpenEditCitaDialog] = useState(false);
 
     const [openDeleteCitaDialog, setOpenDeleteCitaDialog]= useState(false);
+
+    const [openAddDetalleCitaDialog, setOpenAddDetalleCitaDialog] = useState(false);
 
     const [filterName, setFilterName] = useState('');
 
@@ -152,15 +158,19 @@ export default function OpticaCitas() {
     }
 
     const handleOpenDeleteCitaDialog = () => {
-        if(cita.deci_Id > 0){
-            setOpenDeleteCitaDialog(true);
-        }else{
-            enqueueSnackbar(`No se puede eliminar la cita por que ya ha sido completada`, { variant: 'error' }); 
-        }
+        setOpenDeleteCitaDialog(true);
     }
 
     const handleCloseDeleteCitaDialog = () => {
         setOpenDeleteCitaDialog(false);
+    }
+
+    const handleOpenAddDetalleCitaDialog = () => {
+        setOpenAddDetalleCitaDialog(true);
+    }
+
+    const handleCloseAddDetalleCitaDialog = () => {
+        setOpenAddDetalleCitaDialog(false);
     }
 
     useEffect(() => {
@@ -183,16 +193,28 @@ export default function OpticaCitas() {
         handleOpenEditCitaDialog();
     };
 
-    const handleDeleteRow = (Id) => {
-        setCitaIdEliminar(Id);
-        handleOpenDeleteCitaDialog();
-        dispatch(getcita(Id));
-    };
+    const handleDetailsRow = (Id) => {
+        handleOpenAddDetalleCitaDialog();
+    }
 
-    const handleDeleteRows = (selected) => {
-        const deleteRows = tableData.filter((row) => !selected.includes(row.cita_Id));
-        setSelected([]);
-        setTableData(deleteRows);
+    const handleDeleteRow = (Id) => {
+        axios.get(`DetallesCitas/BuscarDetalleCitaPorIdCita/${Id}`)
+            .then((response) => {
+                if (response.data.code === 200) {
+                    if (response.data.data.deci_Id > 0) {
+                        enqueueSnackbar(`No se puede eliminar la cita por que ya ha fue completada`, { variant: 'error' }); 
+                    } else {
+                        setCitaIdEliminar(Id);
+                        handleOpenDeleteCitaDialog();
+                    }
+                }else if (response.data.code === 500 && response.data.message === "Sequence contains no elements"){
+                    setCitaIdEliminar(Id);
+                    handleOpenDeleteCitaDialog();
+                }
+            })
+            .catch((error) => {
+                console.log(error);
+            });
     };
 
     const dataFiltered = applySortFilter({
@@ -226,6 +248,7 @@ export default function OpticaCitas() {
                             <ModalAgregarCita open={openAddCitaDialog} onClose={handleCloseAddCitaDialog} citas={citas} setTableData={setTableData} />
                             <ModalEditarCita open={openEditCitaDialog} onClose={handleCloseEditCitaDialog} citas={citas} setTableData={setTableData} cita={cita} />
                             <ModalEliminarCita open={openDeleteCitaDialog} onClose={handleCloseDeleteCitaDialog} citas={citas} setTableData={setTableData} citaId={citaIdEliminar} />
+                            <ModalAgregarDetalleCita open={openAddDetalleCitaDialog} onClose={handleCloseAddDetalleCitaDialog} citas={citas} setTableData={setTableData} citaId={citaIdAddDetalleCita} />
                         </div>
                     }
                 />
@@ -263,7 +286,7 @@ export default function OpticaCitas() {
                                                     onSelectRow={() => onSelectRow(row.cita_Id)}
                                                     onDeleteRow={() => handleDeleteRow(row.cita_Id)}
                                                     onEditRow={() => handleEditRow(row.cita_Id)}
-                                                />
+                                                    onDetailsRow={() => handleDetailsRow(row.cita_Id)}                                                />
                                             ) : (
                                                 !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
                                             )

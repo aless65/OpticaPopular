@@ -9,10 +9,6 @@ import componentsOverride from '../theme/overrides';
 
 // ----------------------------------------------------------------------
 
-ThemeColorPresets.propTypes = {
-  children: PropTypes.node,
-};
-
 export default function ThemeColorPresets({ children }) {
   const defaultTheme = useTheme();
   const { setColor } = useSettings();
@@ -37,3 +33,7 @@ export default function ThemeColorPresets({ children }) {
 
   return <ThemeProvider theme={theme}>{children}</ThemeProvider>;
 }
+
+ThemeColorPresets.propTypes = {
+  children: PropTypes.node,
+};

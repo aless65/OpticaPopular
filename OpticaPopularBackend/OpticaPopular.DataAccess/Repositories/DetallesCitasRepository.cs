@@ -1,6 +1,9 @@
-﻿using OpticaPopular.Entities.Entities;
+﻿using Dapper;
+using Microsoft.Data.SqlClient;
+using OpticaPopular.Entities.Entities;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,7 +19,13 @@ namespace OpticaPopular.DataAccess.Repositories
 
         public tbDetallesCitas Find(int? id)
         {
-            throw new NotImplementedException();
+            using var db = new SqlConnection(OpticaPopularContext.ConnectionString);
+
+            var parametros = new DynamicParameters();
+
+            parametros.Add("@cita_Id", id, DbType.Int32, ParameterDirection.Input);
+
+            return db.QueryFirst<tbDetallesCitas>(ScriptsDataBase.UDP_tbDetallesCitaPorIdCita, parametros, commandType: CommandType.StoredProcedure);
         }
 
         public RequestStatus Insert(tbDetallesCitas item)
@@ -33,5 +42,7 @@ namespace OpticaPopular.DataAccess.Repositories
         {
             throw new NotImplementedException();
         }
+
+
     }
 }

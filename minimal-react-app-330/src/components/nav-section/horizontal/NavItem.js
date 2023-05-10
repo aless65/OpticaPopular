@@ -94,13 +94,6 @@ NavItemSub.propTypes = {
 
 // ----------------------------------------------------------------------
 
-NavItemContent.propTypes = {
-  children: PropTypes.array,
-  icon: PropTypes.any,
-  subItem: PropTypes.bool,
-  title: PropTypes.string,
-};
-
 function NavItemContent({ icon, title, children, subItem }) {
   return (
     <>
@@ -131,3 +124,10 @@ function NavItemContent({ icon, title, children, subItem }) {
     </>
   );
 }
+
+NavItemContent.propTypes = {
+  children: PropTypes.array,
+  icon: PropTypes.any,
+  subItem: PropTypes.bool,
+  title: PropTypes.string,
+};

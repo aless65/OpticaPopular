@@ -68,10 +68,6 @@ export const formats = [
   'video',
 ];
 
-EditorToolbar.propTypes = {
-  id: PropTypes.string.isRequired,
-  isSimple: PropTypes.bool,
-};
 
 export default function EditorToolbar({ id, isSimple, ...other }) {
   return (
@@ -174,3 +170,8 @@ export default function EditorToolbar({ id, isSimple, ...other }) {
     </EditorToolbarStyle>
   );
 }
+
+EditorToolbar.propTypes = {
+  id: PropTypes.string.isRequired,
+  isSimple: PropTypes.bool,
+};

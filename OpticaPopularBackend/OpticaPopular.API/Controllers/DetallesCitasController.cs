@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using OpticaPopular.API.Models;
 using OpticaPopular.BusinessLogic.Services;
 using System;
 using System.Collections.Generic;
@@ -19,6 +20,14 @@ namespace OpticaPopular.API.Controllers
         {
             _opticaPopularService = opticaPopularService;
             _mapper = mapper;
+        }
+
+        [HttpGet("BuscarDetalleCitaPorIdCita/{cita_Id}")]
+        public IActionResult BuscarDetalleCitaPorIdCita(int cita_Id)
+        {
+            var item = _opticaPopularService.BuscarDetalleCitaPorIdCita(cita_Id);
+            item.Data = _mapper.Map<DetallesCitasViewModel>(item.Data);
+            return Ok(item);
         }
     }
 }

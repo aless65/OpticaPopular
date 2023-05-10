@@ -9,11 +9,6 @@ import { varContainer } from '.';
 
 // ----------------------------------------------------------------------
 
-MotionViewport.propTypes = {
-  children: PropTypes.node.isRequired,
-  disableAnimatedMobile: PropTypes.bool,
-};
-
 export default function MotionViewport({ children, disableAnimatedMobile = true, ...other }) {
   const isDesktop = useResponsive('up', 'sm');
 
@@ -34,3 +29,8 @@ export default function MotionViewport({ children, disableAnimatedMobile = true,
     </Box>
   );
 }
+
+MotionViewport.propTypes = {
+  children: PropTypes.node.isRequired,
+  disableAnimatedMobile: PropTypes.bool,
+};

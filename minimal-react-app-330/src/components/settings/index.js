@@ -155,10 +155,6 @@ export default function Settings() {
 
 // ----------------------------------------------------------------------
 
-BoxMask.propTypes = {
-  value: PropTypes.string,
-};
-
 export function BoxMask({ value }) {
   return (
     <FormControlLabel
@@ -176,3 +172,7 @@ export function BoxMask({ value }) {
     />
   );
 }
+
+BoxMask.propTypes = {
+  value: PropTypes.string,
+};

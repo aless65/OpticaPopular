@@ -29,13 +29,6 @@ const getFileData = (file) => {
 
 // ----------------------------------------------------------------------
 
-MultiFilePreview.propTypes = {
-  files: PropTypes.array,
-  showPreview: PropTypes.bool,
-  onRemove: PropTypes.func,
-  onRemoveAll: PropTypes.func,
-};
-
 export default function MultiFilePreview({ showPreview = false, files, onRemove, onRemoveAll }) {
   const hasFile = files.length > 0;
 
@@ -130,3 +123,10 @@ export default function MultiFilePreview({ showPreview = false, files, onRemove,
     </>
   );
 }
+
+MultiFilePreview.propTypes = {
+  files: PropTypes.array,
+  showPreview: PropTypes.bool,
+  onRemove: PropTypes.func,
+  onRemoveAll: PropTypes.func,
+};

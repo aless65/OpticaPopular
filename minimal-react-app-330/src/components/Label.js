@@ -63,11 +63,6 @@ const RootStyle = styled('span')(({ theme, ownerState }) => {
 
 // ----------------------------------------------------------------------
 
-Label.propTypes = {
-  children: PropTypes.node,
-  color: PropTypes.oneOf(['default', 'primary', 'secondary', 'info', 'success', 'warning', 'error']),
-  variant: PropTypes.oneOf(['filled', 'outlined', 'ghost']),
-};
 
 export default function Label({ color = 'default', variant = 'ghost', children, ...other }) {
   return (
@@ -76,3 +71,9 @@ export default function Label({ color = 'default', variant = 'ghost', children, 
     </RootStyle>
   );
 }
+
+Label.propTypes = {
+  children: PropTypes.node,
+  color: PropTypes.oneOf(['default', 'primary', 'secondary', 'info', 'success', 'warning', 'error']),
+  variant: PropTypes.oneOf(['filled', 'outlined', 'ghost']),
+};

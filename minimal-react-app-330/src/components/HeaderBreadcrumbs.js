@@ -7,14 +7,6 @@ import Breadcrumbs from './Breadcrumbs';
 
 // ----------------------------------------------------------------------
 
-HeaderBreadcrumbs.propTypes = {
-  links: PropTypes.array,
-  action: PropTypes.node,
-  heading: PropTypes.string.isRequired,
-  moreLink: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
-  sx: PropTypes.object,
-};
-
 export default function HeaderBreadcrumbs({ links, action, heading, moreLink = '' || [], sx, ...other }) {
   return (
     <Box sx={{ mb: 5, ...sx }}>
@@ -53,3 +45,11 @@ export default function HeaderBreadcrumbs({ links, action, heading, moreLink = '
     </Box>
   );
 }
+
+HeaderBreadcrumbs.propTypes = {
+  links: PropTypes.array,
+  action: PropTypes.node,
+  heading: PropTypes.string.isRequired,
+  moreLink: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
+  sx: PropTypes.object,
+};

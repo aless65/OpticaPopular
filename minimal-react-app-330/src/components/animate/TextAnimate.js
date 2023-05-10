@@ -7,12 +7,6 @@ import { varFade } from './variants';
 
 // ----------------------------------------------------------------------
 
-TextAnimate.propTypes = {
-  text: PropTypes.string.isRequired,
-  variants: PropTypes.object,
-  sx: PropTypes.object
-};
-
 export default function TextAnimate({ text, variants, sx, ...other }) {
   return (
     <Box
@@ -33,3 +27,9 @@ export default function TextAnimate({ text, variants, sx, ...other }) {
     </Box>
   );
 }
+
+TextAnimate.propTypes = {
+  text: PropTypes.string.isRequired,
+  variants: PropTypes.object,
+  sx: PropTypes.object
+};

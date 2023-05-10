@@ -57,13 +57,6 @@ const PlaceholderStyle = styled('div')(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-UploadAvatar.propTypes = {
-  error: PropTypes.bool,
-  file: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
-  helperText: PropTypes.node,
-  sx: PropTypes.object,
-};
-
 export default function UploadAvatar({ error, file, helperText, sx, ...other }) {
   const { getRootProps, getInputProps, isDragActive, isDragReject, fileRejections } = useDropzone({
     multiple: false,
@@ -116,3 +109,11 @@ export default function UploadAvatar({ error, file, helperText, sx, ...other }) 
     </>
   );
 }
+
+UploadAvatar.propTypes = {
+  error: PropTypes.bool,
+  file: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
+  helperText: PropTypes.node,
+  sx: PropTypes.object,
+};
+

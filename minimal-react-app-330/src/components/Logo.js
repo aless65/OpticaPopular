@@ -6,11 +6,6 @@ import { Box } from '@mui/material';
 
 // ----------------------------------------------------------------------
 
-Logo.propTypes = {
-  disabledLink: PropTypes.bool,
-  sx: PropTypes.object,
-};
-
 export default function Logo({ disabledLink = false, sx }) {
   const theme = useTheme();
   const PRIMARY_LIGHT = theme.palette.primary.light;
@@ -58,3 +53,8 @@ export default function Logo({ disabledLink = false, sx }) {
 
   return <RouterLink to="/">{logo}</RouterLink>;
 }
+
+Logo.propTypes = {
+  disabledLink: PropTypes.bool,
+  sx: PropTypes.object,
+};

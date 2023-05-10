@@ -18,17 +18,6 @@ const visuallyHidden = {
 
 // ----------------------------------------------------------------------
 
-TableHeadCustom.propTypes = {
-  onSort: PropTypes.func,
-  orderBy: PropTypes.string,
-  headLabel: PropTypes.array,
-  rowCount: PropTypes.number,
-  numSelected: PropTypes.number,
-  onSelectAllRows: PropTypes.func,
-  order: PropTypes.oneOf(['asc', 'desc']),
-  sx: PropTypes.object,
-};
-
 export default function TableHeadCustom({
   order,
   orderBy,
@@ -72,3 +61,14 @@ export default function TableHeadCustom({
     </TableHead>
   );
 }
+
+TableHeadCustom.propTypes = {
+  onSort: PropTypes.func,
+  orderBy: PropTypes.string,
+  headLabel: PropTypes.array,
+  rowCount: PropTypes.number,
+  numSelected: PropTypes.number,
+  onSelectAllRows: PropTypes.func,
+  order: PropTypes.oneOf(['asc', 'desc']),
+  sx: PropTypes.object,
+};

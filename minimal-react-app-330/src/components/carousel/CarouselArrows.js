@@ -38,14 +38,6 @@ const ArrowStyle = styled(IconButtonAnimate, {
 
 // ----------------------------------------------------------------------
 
-CarouselArrows.propTypes = {
-  children: PropTypes.node,
-  customIcon: PropTypes.oneOfType([PropTypes.element, PropTypes.string]),
-  filled: PropTypes.bool,
-  onNext: PropTypes.func,
-  onPrevious: PropTypes.func,
-};
-
 export default function CarouselArrows({
   filled = false,
   customIcon, // Set icon right
@@ -95,6 +87,15 @@ export default function CarouselArrows({
     </Stack>
   );
 }
+
+
+CarouselArrows.propTypes = {
+  children: PropTypes.node,
+  customIcon: PropTypes.oneOfType([PropTypes.element, PropTypes.string]),
+  filled: PropTypes.bool,
+  onNext: PropTypes.func,
+  onPrevious: PropTypes.func,
+};
 
 // ----------------------------------------------------------------------
 

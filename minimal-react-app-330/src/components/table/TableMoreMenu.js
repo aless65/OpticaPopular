@@ -7,13 +7,6 @@ import MenuPopover from '../MenuPopover';
 
 // ----------------------------------------------------------------------
 
-TableMoreMenu.propTypes = {
-  actions: PropTypes.node,
-  open: PropTypes.object,
-  onClose: PropTypes.func,
-  onOpen: PropTypes.func,
-};
-
 export default function TableMoreMenu({ actions, open, onClose, onOpen }) {
   return (
     <>
@@ -44,3 +37,10 @@ export default function TableMoreMenu({ actions, open, onClose, onOpen }) {
     </>
   );
 }
+
+TableMoreMenu.propTypes = {
+  actions: PropTypes.node,
+  open: PropTypes.object,
+  onClose: PropTypes.func,
+  onOpen: PropTypes.func,
+};

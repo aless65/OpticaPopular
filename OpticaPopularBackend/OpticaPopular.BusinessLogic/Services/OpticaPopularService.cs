@@ -220,7 +220,6 @@ namespace OpticaPopular.BusinessLogic.Services
             }
         }
 
-
         public ServiceResult BuscarCitaPorId(int cita_Id)
         {
             var resultado = new ServiceResult();
@@ -345,9 +344,22 @@ namespace OpticaPopular.BusinessLogic.Services
 
         #endregion
 
-        #region DetallesCitas
+        #region Detalles Citas
+        public ServiceResult BuscarDetalleCitaPorIdCita(int cita_Id)
+        {
+            var resultado = new ServiceResult();
 
+            try
+            {
+                var respuesta = _detallesCitasRepository.Find(cita_Id);
+                return resultado.Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
 
+                return resultado.Error(ex.Message);
+            }
+        }
 
         #endregion
 

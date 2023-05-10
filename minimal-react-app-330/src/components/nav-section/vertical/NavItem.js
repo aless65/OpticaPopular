@@ -9,20 +9,6 @@ import { isExternalLink } from '..';
 
 // ----------------------------------------------------------------------
 
-NavItemRoot.propTypes = {
-  active: PropTypes.bool,
-  open: PropTypes.bool,
-  isCollapse: PropTypes.bool,
-  onOpen: PropTypes.func,
-  item: PropTypes.shape({
-    children: PropTypes.array,
-    icon: PropTypes.any,
-    info: PropTypes.any,
-    path: PropTypes.string,
-    title: PropTypes.string,
-  }),
-};
-
 export function NavItemRoot({ item, isCollapse, open = false, active, onOpen }) {
   const { title, path, icon, info, children } = item;
 
@@ -58,19 +44,21 @@ export function NavItemRoot({ item, isCollapse, open = false, active, onOpen }) 
   );
 }
 
-// ----------------------------------------------------------------------
-
-NavItemSub.propTypes = {
+NavItemRoot.propTypes = {
   active: PropTypes.bool,
   open: PropTypes.bool,
+  isCollapse: PropTypes.bool,
   onOpen: PropTypes.func,
   item: PropTypes.shape({
     children: PropTypes.array,
+    icon: PropTypes.any,
     info: PropTypes.any,
     path: PropTypes.string,
     title: PropTypes.string,
   }),
 };
+
+// ----------------------------------------------------------------------
 
 export function NavItemSub({ item, open = false, active = false, onOpen }) {
   const { title, path, info, children } = item;
@@ -103,11 +91,19 @@ export function NavItemSub({ item, open = false, active = false, onOpen }) {
   );
 }
 
-// ----------------------------------------------------------------------
-
-DotIcon.propTypes = {
+NavItemSub.propTypes = {
   active: PropTypes.bool,
+  open: PropTypes.bool,
+  onOpen: PropTypes.func,
+  item: PropTypes.shape({
+    children: PropTypes.array,
+    info: PropTypes.any,
+    path: PropTypes.string,
+    title: PropTypes.string,
+  }),
 };
+
+// ----------------------------------------------------------------------
 
 export function DotIcon({ active }) {
   return (
@@ -133,11 +129,11 @@ export function DotIcon({ active }) {
   );
 }
 
-// ----------------------------------------------------------------------
-
-ArrowIcon.propTypes = {
-  open: PropTypes.bool,
+DotIcon.propTypes = {
+  active: PropTypes.bool,
 };
+
+// ----------------------------------------------------------------------
 
 export function ArrowIcon({ open }) {
   return (
@@ -147,3 +143,7 @@ export function ArrowIcon({ open }) {
     />
   );
 }
+
+ArrowIcon.propTypes = {
+  open: PropTypes.bool,
+};

@@ -6,10 +6,6 @@ import { TextField } from '@mui/material';
 
 // ----------------------------------------------------------------------
 
-RHFTextField.propTypes = {
-  name: PropTypes.string,
-};
-
 export default function RHFTextField({ name, ...other }) {
   const { control } = useFormContext();
 
@@ -23,3 +19,8 @@ export default function RHFTextField({ name, ...other }) {
     />
   );
 }
+
+
+RHFTextField.propTypes = {
+  name: PropTypes.string,
+};

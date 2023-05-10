@@ -100,13 +100,6 @@ function LightboxModalStyles() {
   );
 }
 
-LightboxModal.propTypes = {
-  images: PropTypes.array.isRequired,
-  photoIndex: PropTypes.number,
-  setPhotoIndex: PropTypes.func,
-  isOpen: PropTypes.bool,
-};
-
 export default function LightboxModal({ images, photoIndex, setPhotoIndex, isOpen, ...other }) {
   useEffect(() => {
     if (isOpen) {
@@ -145,3 +138,10 @@ export default function LightboxModal({ images, photoIndex, setPhotoIndex, isOpe
     </>
   );
 }
+
+LightboxModal.propTypes = {
+  images: PropTypes.array.isRequired,
+  photoIndex: PropTypes.number,
+  setPhotoIndex: PropTypes.func,
+  isOpen: PropTypes.bool,
+};

@@ -69,12 +69,6 @@ const varLarge = {
   tap: { scale: 0.99 }
 };
 
-AnimateWrap.propTypes = {
-  children: PropTypes.node.isRequired,
-  size: PropTypes.oneOf(['small', 'medium', 'large']),
-  sxWrap: PropTypes.object
-};
-
 function AnimateWrap({ size, children, sxWrap }) {
   const isSmall = size === 'small';
   const isLarge = size === 'large';
@@ -94,3 +88,9 @@ function AnimateWrap({ size, children, sxWrap }) {
     </Box>
   );
 }
+
+AnimateWrap.propTypes = {
+  children: PropTypes.node.isRequired,
+  size: PropTypes.oneOf(['small', 'medium', 'large']),
+  sxWrap: PropTypes.object
+};

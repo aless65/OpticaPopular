@@ -67,13 +67,6 @@ const PickerStyle = styled('div')(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-EmojiPicker.propTypes = {
-  disabled: PropTypes.bool,
-  value: PropTypes.string,
-  setValue: PropTypes.func,
-  alignRight: PropTypes.bool,
-};
-
 export default function EmojiPicker({ disabled, value, setValue, alignRight = false, ...other }) {
   const theme = useTheme();
   const [emojiPickerState, SetEmojiPicker] = useState(false);
@@ -119,3 +112,10 @@ export default function EmojiPicker({ disabled, value, setValue, alignRight = fa
     </ClickAwayListener>
   );
 }
+
+EmojiPicker.propTypes = {
+  disabled: PropTypes.bool,
+  value: PropTypes.string,
+  setValue: PropTypes.func,
+  alignRight: PropTypes.bool,
+};

@@ -7,10 +7,6 @@ import { fData } from '../../utils/formatNumber';
 
 // ----------------------------------------------------------------------
 
-RejectionFiles.propTypes = {
-  fileRejections: PropTypes.array,
-};
-
 export default function RejectionFiles({ fileRejections }) {
   return (
     <Paper
@@ -43,3 +39,7 @@ export default function RejectionFiles({ fileRejections }) {
     </Paper>
   );
 }
+
+RejectionFiles.propTypes = {
+  fileRejections: PropTypes.array,
+};

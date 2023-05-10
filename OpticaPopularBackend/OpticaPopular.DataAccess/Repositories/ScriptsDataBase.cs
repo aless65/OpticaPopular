@@ -78,11 +78,15 @@ namespace OpticaPopular.DataAccess.Repositories
         public static string UDP_tbCitas_EliminarCita = "opti.UDP_tbCitas_EliminarCita";
         #endregion
 
+        #region Detalles Cita
+        public static string UDP_tbDetallesCitaPorIdCita = "opti.UDP_tbDetallesCitaPorIdCita";
+        #endregion
+
         #region Consultorios
         public static string UDP_tbConsultorios_ListPorIdSucursal = "opti.UDP_tbConsultorios_ListPorIdSucursal";
         #endregion
 
-        #region
+        #region Ordenes
         public static string UDP_Lista_Ordenes = "opti.UDP_opti_tbOrdenes_List";
         public static string UDP_Find_Ordenes = "opti.UDP_opti_tbOrdenes_Find";
         public static string UDP_Inserta_Ordenes = "opti.UDP_opti_tbOrdenes_Insert";

@@ -158,8 +158,16 @@ export default function ModalEditarCita({ open, onClose, citas, setTableData, ci
     return (
         <div>
             <FormProvider methods={methods}>
-                <Dialog open={open} fullWidth maxWidth="sm" onClose={handleDialogClose} >
-                    <DialogTitle>Editar cita</DialogTitle>
+                <Dialog 
+                    open={open} 
+                    fullWidth 
+                    maxWidth="sm" 
+                    onClose={handleDialogClose} 
+                    aria-labelledby="alert-dialog-title"
+                    >
+                   <DialogTitle component="h2" id="alert-dialog-title">
+                        Editar cita
+                    </DialogTitle>
                     <br/>
                     <Divider />
                     {!!errors.afterSubmit && <Alert severity="error">{errors.afterSubmit.message}</Alert>}

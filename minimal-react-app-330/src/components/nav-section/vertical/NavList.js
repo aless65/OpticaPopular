@@ -9,11 +9,6 @@ import { getActive } from '..';
 
 // ----------------------------------------------------------------------
 
-NavListRoot.propTypes = {
-  isCollapse: PropTypes.bool,
-  list: PropTypes.object,
-};
-
 export function NavListRoot({ list, isCollapse }) {
   const { pathname } = useLocation();
 
@@ -44,11 +39,12 @@ export function NavListRoot({ list, isCollapse }) {
   return <NavItemRoot item={list} active={active} isCollapse={isCollapse} />;
 }
 
-// ----------------------------------------------------------------------
-
-NavListSub.propTypes = {
+NavListRoot.propTypes = {
+  isCollapse: PropTypes.bool,
   list: PropTypes.object,
 };
+
+// ----------------------------------------------------------------------
 
 function NavListSub({ list }) {
   const { pathname } = useLocation();
@@ -77,3 +73,7 @@ function NavListSub({ list }) {
 
   return <NavItemSub item={list} active={active} />;
 }
+
+NavListSub.propTypes = {
+  list: PropTypes.object,
+};

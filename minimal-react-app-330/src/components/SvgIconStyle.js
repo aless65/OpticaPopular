@@ -3,11 +3,6 @@ import { Box } from '@mui/material';
 
 // ----------------------------------------------------------------------
 
-SvgIconStyle.propTypes = {
-  src: PropTypes.string.isRequired,
-  sx: PropTypes.object,
-};
-
 export default function SvgIconStyle({ src, sx }) {
   return (
     <Box
@@ -24,3 +19,8 @@ export default function SvgIconStyle({ src, sx }) {
     />
   );
 }
+
+SvgIconStyle.propTypes = {
+  src: PropTypes.string.isRequired,
+  sx: PropTypes.object,
+};
