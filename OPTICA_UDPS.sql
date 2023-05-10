@@ -2209,6 +2209,7 @@ EXEC opti.UDP_ConsultoriosListado
 
 
 /*Listado de Consultorios*/
+GO
 CREATE OR ALTER PROCEDURE opti.UDP_tbConsultorios_ListPorIdSucursal
 	@sucu_Id	INT
 AS
@@ -2770,6 +2771,19 @@ BEGIN
 END
 GO
 
+/*Listado de Ordenes x sucursal*/
+CREATE OR ALTER PROCEDURE opti.UDP_opti_tbOrdenes_ListXSucu
+	@sucu_Id	INT
+AS
+BEGIN
+	SELECT *
+	FROM opti.VW_tbOrdenes
+	WHERE orde_Estado = 1
+	AND sucu_Id = @sucu_Id
+END
+GO
+
+/*Find ordenes*/
 CREATE OR ALTER PROCEDURE opti.UDP_opti_tbOrdenes_Find 
 	@orde_Id	INT
 AS

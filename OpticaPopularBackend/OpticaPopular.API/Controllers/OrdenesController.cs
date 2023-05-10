@@ -29,6 +29,13 @@ namespace OpticaPopular.API.Controllers
             return Ok(list);
         }
 
+        [HttpGet("ListadoXSucursales")]
+        public IActionResult IndexPorSucursales(int id)
+        {
+            var list = _opticaPopularService.ListadoOrdenesXSucursales(id);
+            return Ok(list);
+        }
+
         [HttpGet("Find")]
         public IActionResult Find(int id)
         {

@@ -81,7 +81,7 @@ export function getSucursales() {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('https://localhost:44362/api/Sucursales/Listado');
+      const response = await axios.get('Sucursales/Listado');
       dispatch(slice.actions.getSucursalesSuccess(response.data.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));

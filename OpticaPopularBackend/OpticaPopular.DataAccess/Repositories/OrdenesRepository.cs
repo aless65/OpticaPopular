@@ -34,6 +34,16 @@ namespace OpticaPopular.DataAccess.Repositories
             throw new NotImplementedException();
         }
 
+        public IEnumerable<VW_tbOrdenes> ListXSucursales(int id)
+        {
+            using var db = new SqlConnection(OpticaPopularContext.ConnectionString);
+
+            var parameters = new DynamicParameters();
+            parameters.Add("@sucu_Id", id, DbType.Int32, ParameterDirection.Input);
+
+            return db.Query<VW_tbOrdenes>(ScriptsDataBase.UDP_Lista_OrdenesPorSucursal, parameters, commandType: CommandType.StoredProcedure);
+        }
+
         public IEnumerable<VW_tbOrdenes> List()
         {
             using var db = new SqlConnection(OpticaPopularContext.ConnectionString);

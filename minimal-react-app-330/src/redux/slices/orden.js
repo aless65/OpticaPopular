@@ -9,22 +9,23 @@ import { dispatch } from '../store';
 const initialState = {
   isLoading: false,
   error: null,
-  citas: [],
-  cita: null,
+  ordenes: [],
+  orden: null,
   sortBy: null,
   filters: {
-    cita_Id: 0,
-    clie_Nombres: '',
-    clie_Apellidos: '',
-    cons_Nombre: '',
-    empe_Nombres: '',
-    cita_Fecha: '',
-    sucu_Id: ''
+    orde_Id: 0,
+    clie_Id: '',
+    clie_NombreCompleto: '',
+    orde_Fecha: '',
+    orde_FechaEntrega: '',
+    orde_FechaEntregaReal: '',
+    sucu_Id: '',
+    sucu_Descripcion: ''
   },
 };
 
 const slice = createSlice({
-  name: 'cita',
+  name: 'orden',
   initialState,
   reducers: {
     // START LOADING
@@ -39,30 +40,31 @@ const slice = createSlice({
     },
 
     // GET citas
-    getcitasSuccess(state, action) {
+    getOrdenesSuccess(state, action) {
       state.isLoading = false;
       state.citas = action.payload;
     },
 
     // GET cita
-    getcitaSuccess(state, action) {
+    getOrdenSuccess(state, action) {
       state.isLoading = false;
       state.cita = action.payload;
     },
 
     //  SORT & FILTER cita
-    sortByCitas(state, action) {
+    sortByOrdenes(state, action) {
       state.sortBy = action.payload;
     },
 
-    filterCitas(state, action) {
-      state.filters.cita_Id = action.payload.cita_Id;
-      state.filters.clie_Nombres = action.payload.clie_Nombres;
-      state.filters.clie_Apellidos = action.payload.clie_Apellidos;
-      state.filters.cons_Nombre = action.payload.cons_Nombre;
-      state.filters.empe_Nombres = action.payload.empe_Nombres;
-      state.filters.cita_Fecha = action.payload.cita_Fecha;
+    filterOrdenes(state, action) {
+      state.filters.orde_Id = action.payload.orde_Id;
+      state.filters.clie_Id = action.payload.clie_Id;
+      state.filters.clie_NombreCompleto = action.payload.clie_NombreCompleto;
+      state.filters.orde_Fecha = action.payload.orde_Fecha;
+      state.filters.orde_FechaEntrega = action.payload.orde_FechaEntrega;
+      state.filters.orde_FechaEntregaReal = action.payload.orde_FechaEntregaReal;
       state.filters.sucu_Id = action.payload.sucu_Id;
+      state.filters.sucu_Descripcion = action.payload.sucu_Descripcion;
     },
   },
 });
@@ -72,18 +74,26 @@ export default slice.reducer;
 
 // Actions
 export const {
-    sortByCitas,
-    filterCitas,
+  sortByOrdenes,
+  filterOrdenes,
 } = slice.actions;
 
 // ----------------------------------------------------------------------
 
-export function getCitas() {
+export function getOrdenes() {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`Citas/ListadoCitasPorIdSucursal/${JSON.parse(localStorage.getItem('usuario')).usua_EsAdmin === true ? 0 : localStorage.getItem('sucu_Id')}`);
-      dispatch(slice.actions.getcitasSuccess(response.data.data));
+      // let endpoint = '';
+      if (localStorage.getItem('usuario').usua_EsAdmin === true) {
+        const response = await axios.get(`Ordenes/Listado`);
+        console.log(response.data.data);
+        dispatch(slice.actions.getOrdenesSuccess(response.data.data));
+      } else {
+        const response = await axios.get(`Ordenes/ListadoXSucursales?id=${localStorage.getItem("sucu_Id")}`);
+        console.log(response.data.data);
+        dispatch(slice.actions.getOrdenesSuccess(response.data.data));
+      }
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }
@@ -92,7 +102,7 @@ export function getCitas() {
 
 // ----------------------------------------------------------------------
 
-export function getcita(Id) {
+export function getOrden(Id) {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {

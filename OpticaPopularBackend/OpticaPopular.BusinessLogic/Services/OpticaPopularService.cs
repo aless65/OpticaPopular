@@ -579,6 +579,20 @@ namespace OpticaPopular.BusinessLogic.Services
             }
         }
 
+        public ServiceResult ListadoOrdenesXSucursales(int id)
+        {
+            var result = new ServiceResult();
+            try
+            {
+                var list = _ordenesRepository.ListXSucursales(id);
+                return result.Ok(list);
+            }
+            catch (Exception e)
+            {
+                return result.Error(e.Message);
+            }
+        }
+
         public ServiceResult FindOrdenes(int id)
         {
             var result = new ServiceResult();

@@ -82,13 +82,13 @@ namespace OpticaPopular.DataAccess.Repositories
         public static string UDP_tbConsultorios_ListPorIdSucursal = "opti.UDP_tbConsultorios_ListPorIdSucursal";
         #endregion
 
-        #region
+        #region Órdenes
         public static string UDP_Lista_Ordenes = "opti.UDP_opti_tbOrdenes_List";
         public static string UDP_Find_Ordenes = "opti.UDP_opti_tbOrdenes_Find";
         public static string UDP_Inserta_Ordenes = "opti.UDP_opti_tbOrdenes_Insert";
         public static string UDP_Edita_Ordenes = "opti.UDP_opti_tbOrdenes_Update";
         public static string UDP_Elimina_Ordenes = "opti.UDP_opti_tbOrdenes_Delete";
-
+        public static string UDP_Lista_OrdenesPorSucursal = "opti.UDP_opti_tbOrdenes_ListXSucu";
 
         public static string UDP_Lista_DetallesOrdenes = "opti.UDP_opti_tbDetallesOrdenes_List";
         #endregion

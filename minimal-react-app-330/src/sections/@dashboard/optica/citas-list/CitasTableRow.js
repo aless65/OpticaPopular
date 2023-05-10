@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import * as React from 'react';
 import Moment from 'moment';
 import PropTypes from 'prop-types';
