@@ -83,11 +83,15 @@ export default function EditRolDialog({ open, onClose, roles, setTableData, role
 
   const onSubmit = async (data) => {
     try {
+      const selectedIds = selectedValues.map(value => value.id);
       const jsonData = {
         role_Id: roleId,
         role_Nombre: data.nombre,
         role_UsuModificacion: 1,
+        role_Pantallas: selectedIds,
       };
+
+      console.log(jsonData);
 
       fetch("http://opticapopular.somee.com/api/Roles/Editar", {
         method: "PUT",
@@ -170,15 +174,28 @@ export default function EditRolDialog({ open, onClose, roles, setTableData, role
   });
 
   useEffect(() => {
-    fetch(`http://opticapopular.somee.com/api/Pantallas/ListadoXRoles?id=${roleId}`)
-      .then(response => response.json())
-      .then(data => {
-        console.log(data);
-        const selectedValuesFromApi = data;
-        setSelectedValues(selectedValuesFromApi);
-      })
-      .catch(error => console.error(error));
+    if (roleId) {
+      fetch(`http://opticapopular.somee.com/api/Pantallas/ListadoXRoles?id=${roleId}`)
+        .then(response => response.json())
+        .then(data => {
+          const optionsSelected = data.data.map(item => ({
+            label: item.pantrole_NombrePantalla,
+            id: item.pant_Id
+          }));
+          setSelectedValues(optionsSelected);
+        })
+        .catch(error => console.error(error));
+
+    }
   }, [roleId])
+
+  // useEffect(() => {
+  //   console.log(selectedValues); 
+  //   const optionsSelected = selectedValues.map(item => ({
+  //     label: 
+  //   }));
+
+  // }, [selectedValues]);
 
   return (
     <FormProvider methods={methods}>
@@ -205,7 +222,8 @@ export default function EditRolDialog({ open, onClose, roles, setTableData, role
             )}
             renderInput={(params) => <TextField {...params} label="Pantallas" placeholder="Pantallas" />}
             onChange={(event, value) => {
-              selectedValuesRef.current = value;
+              // selectedValuesRef.current = value;
+              setSelectedValues(value);
             }}
             isOptionEqualToValue={(option, value) => option.id === value.id}
             value={selectedValues}

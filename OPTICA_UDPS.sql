@@ -2104,14 +2104,14 @@ GO
 
 /*Eliminar pantalla por rol*/
 CREATE OR ALTER PROCEDURE acce.UDP_acce_tbPantallaPorRoles_Delete 
-	@pantrole_Id	INT
+	@role_Id	INT
 AS
 BEGIN
 	BEGIN TRY
 			BEGIN
-				UPDATE [acce].[tbPantallasPorRoles]
-				SET pantrole_Estado = 0
-				WHERE pantrole_Id = @pantrole_Id
+				DELETE
+				FROM [acce].[tbPantallasPorRoles]
+				WHERE role_Id = @role_Id 
 
 				SELECT 'La pantalla ha sido eliminada'
 			END
@@ -2329,10 +2329,10 @@ BEGIN
 				SELECT (SELECT role_Id FROM [acce].[tbRoles] WHERE [role_Nombre] = @role_Nombre) AS CodeStatus, 'El rol ha sido insertado con éxito' AS MessageStatus
 			END
 		ELSE
-			SELECT 'El rol ya existe'
+			SELECT 'El rol ya existe' AS MessageStatus
 	END TRY
 	BEGIN CATCH
-		SELECT 'Ha ocurrido un error'
+		SELECT 'Ha ocurrido un error' AS MessageStatus
 	END CATCH
 END
 GO

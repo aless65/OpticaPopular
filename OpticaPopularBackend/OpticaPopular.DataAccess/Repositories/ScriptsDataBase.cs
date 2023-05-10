@@ -25,6 +25,7 @@ namespace OpticaPopular.DataAccess.Repositories
 
         public static string UDP_Lista_RolesXPantalla = "acce.UDP_acce_tbPantallasPorRoles_List";
         public static string UDP_Inserta_RolesXPantalla = "acce.UDP_acce_tbPantallasPorRoles_Insert";
+        public static string UDP_Elimina_RolesXPantalla = "acce.UDP_acce_tbPantallaPorRoles_Delete";
         #endregion
 
         #region Pantallas

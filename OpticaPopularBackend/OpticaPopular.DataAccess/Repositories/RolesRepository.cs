@@ -22,9 +22,15 @@ namespace OpticaPopular.DataAccess.Repositories
 
             parametros.Add("role_Id", item.role_Id, DbType.Int32, ParameterDirection.Input);
 
-            var resultado = db.QueryFirst<string>(ScriptsDataBase.UDP_Elimina_Roles, parametros, commandType: CommandType.StoredProcedure);
+            result.MessageStatus = db.QueryFirst<string>(ScriptsDataBase.UDP_Elimina_Roles, parametros, commandType: CommandType.StoredProcedure);
 
-            result.MessageStatus = resultado;
+            if (result.MessageStatus == "El rol ha sido eliminado")
+            {
+                var parametrosDelete = new DynamicParameters();
+                parametrosDelete.Add("@role_Id", item.role_Id, DbType.Int32, ParameterDirection.Input);
+
+                db.Query(ScriptsDataBase.UDP_Elimina_Roles, parametrosDelete, commandType: CommandType.StoredProcedure);
+            }
 
             return result;
         }
@@ -85,9 +91,31 @@ namespace OpticaPopular.DataAccess.Repositories
             parametros.Add("@role_Nombre", item.role_Nombre, DbType.String, ParameterDirection.Input);
             parametros.Add("@role_UsuModificacion", item.role_UsuModificacion, DbType.Int32, ParameterDirection.Input);
 
-            var resultado = db.QueryFirst<string>(ScriptsDataBase.UDP_Edita_Roles, parametros, commandType: CommandType.StoredProcedure);
+            result.MessageStatus = db.QueryFirst<string>(ScriptsDataBase.UDP_Edita_Roles, parametros, commandType: CommandType.StoredProcedure);
 
-            result.MessageStatus = resultado;
+            if(result.MessageStatus == "El rol ha sido editado con éxito")
+            {
+                var parametrosDelete = new DynamicParameters();
+                parametrosDelete.Add("@role_Id", item.role_Id, DbType.Int32, ParameterDirection.Input);
+
+                db.Query(ScriptsDataBase.UDP_Elimina_Roles, parametrosDelete, commandType: CommandType.StoredProcedure);
+
+                foreach (var pantalla in item.role_Pantallas)
+                {
+                    var parametros2 = new DynamicParameters();
+                    parametros2.Add("@role_Id", item.role_Id, DbType.Int32, ParameterDirection.Input);
+                    parametros2.Add("@pant_Id", pantalla, DbType.Int32, ParameterDirection.Input);
+                    parametros2.Add("@pantrole_UsuCreacion", item.role_UsuCreacion, DbType.Int32, ParameterDirection.Input);
+
+                    var respuesta = db.QueryFirst<string>(ScriptsDataBase.UDP_Inserta_RolesXPantalla, parametros2, commandType: CommandType.StoredProcedure);
+
+                    if (respuesta != "Operación realizada con éxito")
+                    {
+                        result.MessageStatus = "Ha ocurrido un error en la asignación de pantallas";
+                        break;
+                    }
+                }
+            }
 
             return result;
         }
