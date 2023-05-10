@@ -10,7 +10,7 @@ import {
   Switch,
   Tooltip,
   TableBody,
-  Container,
+  Container, 
   IconButton,
   TableContainer,
   TablePagination,
@@ -91,6 +91,34 @@ export default function OpticaCategorias() {
   const [openAddCategoriaDialog, setOpenAddCategoriaDialog] = useState(false);
   const [openEditCategoriaDialog, setOpenEditCategoriaDialog] = useState(false);
   const [openDeleteCategoriaDialog, setOpenDeleteCategoriaDialog] = useState(false);
+
+  
+// ----------------------------------------------------------------------
+
+function applySortFilter({ tableData, comparator, filterName }) {
+  const stabilizedThis = tableData.map((el, index) => [el, index]);
+
+  stabilizedThis.sort((a, b) => {
+    const order = comparator(a[0], b[0]);
+    if (order !== 0) return order;
+    return a[1] - b[1];
+  });
+
+  tableData = stabilizedThis.map((el) => el[0]);
+
+ 
+
+  if (filterName) {
+    tableData = tableData.filter((item) =>
+      item.cate_Id.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 ||
+      item.cate_Nombre.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 
+      
+    );
+  }
+  
+
+  return tableData;
+}
 
   const handleOpenAddCategoriaDialog = () => {
     setOpenAddCategoriaDialog(true)
@@ -258,29 +286,3 @@ export default function OpticaCategorias() {
   );
 }
 
-// ----------------------------------------------------------------------
-
-function applySortFilter({ tableData, comparator, filterName }) {
-  const stabilizedThis = tableData.map((el, index) => [el, index]);
-
-  stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) return order;
-    return a[1] - b[1];
-  });
-
-  tableData = stabilizedThis.map((el) => el[0]);
-
- 
-
-  if (filterName) {
-    tableData = tableData.filter((item) =>
-      item.cate_Id.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 ||
-      item.cate_Nombre.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 
-      
-    );
-  }
-  
-
-  return tableData;
-}

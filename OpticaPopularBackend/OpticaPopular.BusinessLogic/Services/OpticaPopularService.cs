@@ -343,41 +343,101 @@ namespace OpticaPopular.BusinessLogic.Services
             }
         }
 
-        #endregion
+        public ServiceResult InsertConsultorios(tbConsultorios item)
+        {
+            var result = new ServiceResult();
+            try
+            {
+                var insert = _consultoriosRepository.Insert(item);
 
-        #region DetallesCitas
+                if (insert.MessageStatus == "El Consultorio ha sido insertado con éxito")
+                    return result.SetMessage(insert.MessageStatus, ServiceResultType.Success);
+                else if (insert.MessageStatus == "El Consultorio ya existe")
+                    return result.SetMessage(insert.MessageStatus, ServiceResultType.Warning);
+                else
+                    return result.SetMessage(insert.MessageStatus, ServiceResultType.Error);
+            }
+            catch (Exception e)
+            {
+                return result.Error(e.Message);
+            }
+        }
+
+        public ServiceResult UpdateConsultorios(tbConsultorios item)
+        {
+            var result = new ServiceResult();
+            try
+            {
+                var update = _consultoriosRepository.Update(item);
+
+                if (update.MessageStatus == "El Consultorio ha sido editado con éxito")
+                    return result.SetMessage(update.MessageStatus, ServiceResultType.Success);
+                else if (update.MessageStatus == "El consultorio ya existe")
+                    return result.SetMessage(update.MessageStatus, ServiceResultType.Warning);
+                else
+                    return result.SetMessage(update.MessageStatus, ServiceResultType.Error);
+            }
+            catch (Exception e)
+            {
+                return result.Error(e.Message);
+            }
+        }
+
+        public ServiceResult DeleteConsultorios(tbConsultorios item)
+        {
+            var result = new ServiceResult();
+            try
+            {
+                var update = _consultoriosRepository.Delete(item);
+
+                if (update.MessageStatus == "El consultorio ha sido eliminado")
+                    return result.SetMessage(update.MessageStatus, ServiceResultType.Success);
+                else if (update.MessageStatus == "El consultorio no puede ser eliminado ya que está siendo usado")
+                    return result.SetMessage(update.MessageStatus, ServiceResultType.Warning);
+                else
+                    return result.SetMessage(update.MessageStatus, ServiceResultType.Error);
+            }
+            catch (Exception e)
+            {
+                return result.Error(e.Message);
+            }
+
+        }
+            #endregion
+
+            #region DetallesCitas
 
 
 
-        #endregion
+            #endregion
 
-        #region DetallesEnvios
-
-
-
-        #endregion
-
-        #region DetallesOrdenes
+            #region DetallesEnvios
 
 
 
-        #endregion
+            #endregion
 
-        #region Direcciones
-
-
-
-        #endregion
-
-        #region Direcciones Por Cliente
+            #region DetallesOrdenes
 
 
 
-        #endregion
+            #endregion
 
-        #region Empleados
+            #region Direcciones
 
-        public ServiceResult ListadoEmpleados()
+
+
+            #endregion
+
+            #region Direcciones Por Cliente
+
+
+
+            #endregion
+
+            #region Empleados
+
+            public ServiceResult ListadoEmpleados()
         {
             var result = new ServiceResult();
             try
