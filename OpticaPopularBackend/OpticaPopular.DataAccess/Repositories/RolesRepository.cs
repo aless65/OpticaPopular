@@ -44,11 +44,26 @@ namespace OpticaPopular.DataAccess.Repositories
             parametros.Add("@role_Nombre", item.role_Nombre, DbType.String, ParameterDirection.Input);
             parametros.Add("@role_UsuCreacion", item.role_UsuCreacion, DbType.Int32, ParameterDirection.Input);
 
-            var resultado = db.QueryFirst<string>(ScriptsDataBase.UDP_Inserta_Roles, parametros, commandType: CommandType.StoredProcedure);
+            result = db.QueryFirst<RequestStatus>(ScriptsDataBase.UDP_Inserta_Roles, parametros, commandType: CommandType.StoredProcedure);
 
-            if(int.TryParse(resultado, int num))
+            if(result.MessageStatus == "El rol ha sido insertado con éxito")
+            {
+                foreach (var pantalla in item.role_Pantallas)
+                {
+                    var parametros2 = new DynamicParameters();
+                    parametros2.Add("@role_Id", result.CodeStatus, DbType.Int32, ParameterDirection.Input);
+                    parametros2.Add("@pant_Id", pantalla, DbType.Int32, ParameterDirection.Input);
+                    parametros2.Add("@pantrole_UsuCreacion", item.role_UsuCreacion, DbType.Int32, ParameterDirection.Input);
 
-            result.MessageStatus = resultado;
+                    var respuesta = db.QueryFirst<string>(ScriptsDataBase.UDP_Inserta_RolesXPantalla, parametros2, commandType: CommandType.StoredProcedure);
+
+                    if(respuesta != "Operación realizada con éxito")
+                    {
+                        result.MessageStatus = "Ha ocurrido un error en la asignación de pantallas";
+                        break;
+                    }
+                }
+            }
 
             return result;
         }

@@ -2304,7 +2304,7 @@ GO
 
 
 /*Insertar roles*/
-CREATE OR ALTER PROCEDURE acce.UDP_acce_tbRoles_Insert
+CREATE OR ALTER PROCEDURE acce.UDP_acce_tbRoles_Insert 
 	@role_Nombre         NVARCHAR(100),
 	@role_UsuCreacion    INT
 AS
@@ -2316,7 +2316,7 @@ BEGIN
 			INSERT INTO [acce].[tbRoles](role_Nombre, role_UsuCreacion)
 			VALUES(@role_Nombre, @role_UsuCreacion)
 			
-			SELECT SCOPE_IDENTITY()
+			SELECT SCOPE_IDENTITY() AS CodeStatus, 'El rol ha sido insertado con éxito' AS MessageStatus
 			END
 		ELSE IF EXISTS (SELECT * FROM  [acce].[tbRoles]
 						WHERE role_Nombre = @role_Nombre
@@ -2326,7 +2326,7 @@ BEGIN
 				SET [role_Estado] = 1
 				WHERE [role_Nombre] = @role_Nombre
 
-				SELECT SCOPE_IDENTITY()
+				SELECT (SELECT role_Id FROM [acce].[tbRoles] WHERE [role_Nombre] = @role_Nombre) AS CodeStatus, 'El rol ha sido insertado con éxito' AS MessageStatus
 			END
 		ELSE
 			SELECT 'El rol ya existe'

@@ -26,7 +26,7 @@ import {
 import { LoadingButton } from '@mui/lab';
 
 import { useForm } from 'react-hook-form';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { ErrorMessage } from 'formik';
 import { useSnackbar } from 'notistack';
@@ -45,8 +45,14 @@ export default function EditRolDialog({ open, onClose, roles, setTableData, role
   const { enqueueSnackbar } = useSnackbar();
 
   const [insertSuccess, setInsertSuccess] = useState(false);
-  
+
   const [rolTemporal, setRolTemporal] = useState('');
+
+  const [optionsPantallas, setOptionsPantallas] = useState([]);
+
+  const [selectedValues, setSelectedValues] = useState([]);
+
+  const selectedValuesRef = useRef([]);
 
   const InsertSchema = Yup.object().shape({
     nombre: Yup.string().required('Nombre del rol requerido'),
@@ -93,15 +99,15 @@ export default function EditRolDialog({ open, onClose, roles, setTableData, role
       })
         .then((response) => response.json())
         .then((data) => {
-        //   console.log(data);
+          //   console.log(data);
           if (data.message === "El rol ha sido editado con éxito") {
             setInsertSuccess(true);
             enqueueSnackbar(data.message);
             handleDialogClose();
-          } else if (data.message === 'El rol ya existe'){
+          } else if (data.message === 'El rol ya existe') {
             setInsertSuccess(false);
             enqueueSnackbar(data.message, { variant: 'warning' });
-          } else{
+          } else {
             setInsertSuccess(false);
             enqueueSnackbar(data.message, { variant: 'error' });
           }
@@ -132,11 +138,6 @@ export default function EditRolDialog({ open, onClose, roles, setTableData, role
     methods.setValue('nombre', rolTemporal);
   }, [rolTemporal])
 
-//   useEffect(() => {
-//     setRolTemporal(roleNombre);
-//   }, [roleNombre])
-
-
   const submitHandler = handleSubmit(onSubmit);
 
   const handleDialogClose = () => {
@@ -144,6 +145,40 @@ export default function EditRolDialog({ open, onClose, roles, setTableData, role
     onClose();
     reset();
   };
+
+  useEffect(() => {
+    fetch('http://opticapopular.somee.com/api/Pantallas/Listado')
+      .then(response => response.json())
+      .then(data => {
+        // console.log(data);
+        const optionsData = data.data.map(item => ({
+          label: item.pant_Nombre, // replace 'name' with the property name that contains the label
+          id: item.pant_Id,
+          menu: item.pant_Menu // replace 'id' with the property name that contains the ID
+        }));
+        setOptionsPantallas(optionsData);
+      })
+      .catch(error => console.error(error));
+  }, [])
+
+  const options = optionsPantallas.map((option) => {
+    const menuName = option.menu.toUpperCase();
+    return {
+      menuName: /[0-9]/.test(menuName) ? '0-9' : menuName,
+      ...option,
+    };
+  });
+
+  useEffect(() => {
+    fetch(`http://opticapopular.somee.com/api/Pantallas/ListadoXRoles?id=${roleId}`)
+      .then(response => response.json())
+      .then(data => {
+        console.log(data);
+        const selectedValuesFromApi = data;
+        setSelectedValues(selectedValuesFromApi);
+      })
+      .catch(error => console.error(error));
+  }, [roleId])
 
   return (
     <FormProvider methods={methods}>
@@ -154,6 +189,27 @@ export default function EditRolDialog({ open, onClose, roles, setTableData, role
 
         <Stack spacing={3} sx={{ p: 3, pb: 0, pl: 5, pr: 5 }}>
           <RHFTextField name="nombre" onChange={e => setRolTemporal(e.target.value)} value={rolTemporal} label="Nombre del rol" />
+
+          <Autocomplete
+            multiple
+            id="checkboxes-tags-demo"
+            options={options.sort((a, b) => -b.menuName.localeCompare(a.menuName))}
+            groupBy={(option) => option.menuName}
+            disableCloseOnSelect
+            getOptionLabel={(option) => option.label}
+            renderOption={(props, option, { selected }) => (
+              <li {...props}>
+                <Checkbox checked={selected} />
+                {option.label}
+              </li>
+            )}
+            renderInput={(params) => <TextField {...params} label="Pantallas" placeholder="Pantallas" />}
+            onChange={(event, value) => {
+              selectedValuesRef.current = value;
+            }}
+            isOptionEqualToValue={(option, value) => option.id === value.id}
+            value={selectedValues}
+          />
         </Stack>
         <DialogActions>
           <LoadingButton variant="contained" type="submit" loading={isSubmitting} onClick={submitHandler}>

@@ -137,6 +137,21 @@ namespace OpticaPopular.BusinessLogic.Services
             }
         }
 
+        public ServiceResult ListadoPantallasXRoles(int id)
+        {
+            var result = new ServiceResult();
+            try
+            {
+                var list = _pantallasRepository.ListXRol(id);
+                return result.Ok(list);
+            }
+            catch (Exception e)
+            {
+                return result.Error(e.Message);
+            }
+        }
+
+
         #endregion
 
         #region Roles

@@ -17,7 +17,8 @@ namespace OpticaPopular.Entities.Entities
         public int? role_UsuModificacion { get; set; }
         public string role_NombreUsuarioModificacion { get; set; }
         public DateTime? role_FechaModificacion { get; set; }
-        public bool role_Estado { get; set; }
-        
+
+        [NotMapped]
+        public int[] role_Pantallas { get; set; }
     }
 }
