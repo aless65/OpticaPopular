@@ -160,8 +160,7 @@ export default function AddConsultorioDialog({ open, onClose, consultorio, setTa
       <Dialog open={open} fullWidth maxWidth="sm" onClose={handleDialogClose} consultorio={consultorio} >
         <DialogTitle>Insertar consultorio</DialogTitle>
 
-        {errors.afterSubmit && <Alert severity="error">{errors.afterSubmit.message}</Alert>}
-
+        {!!errors.afterSubmit && <Alert severity="error">{errors.afterSubmit.message}</Alert>}
 
         <Stack spacing={3} sx={{ p: 3, pb: 0, pl: 5, pr: 5 }}>
           <RHFTextField name="consulNombre" label="Nombre del consultorio" />
