@@ -2,6 +2,8 @@ import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import GroupIcon from '@mui/icons-material/Group';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import ShoppingBasketIcon from '@mui/icons-material/ShoppingBasket';
+import BusinessIcon from '@mui/icons-material/Business';
 
 // routes
 import { PATH_ACCESO, PATH_DASHBOARD, PATH_OPTICA } from '../../../routes/paths';
@@ -45,7 +47,8 @@ const navConfig = [
       { title: 'empleados', path: PATH_OPTICA.empleados, icon: <PeopleAltIcon/> },
       { title: 'clientes', path: PATH_OPTICA.clientes, icon: <GroupIcon/> },
       { title: 'citas', path: PATH_OPTICA.citas, icon: <CalendarMonthIcon/> },
-      { title: 'proveedores', path: PATH_OPTICA.proveedores, icon: ICONS.cart },
+      { title: 'proveedores', path: PATH_OPTICA.proveedores, icon: <BusinessIcon/> },
+      { title: 'ordenes', path: PATH_OPTICA.ordenes, icon: <ShoppingBasketIcon/> },
     ],
   },
 ];

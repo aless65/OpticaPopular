@@ -2563,12 +2563,12 @@ CREATE OR ALTER VIEW opti.VW_tbOrdenes
 AS
 	SELECT  orde_Id,
 	        T1.clie_Id,
-			T4.clie_Nombres
+			(T4.clie_Nombres + ' ' + T4.clie_Apellidos) AS clie_NombreCompleto,
 		    orde_Fecha, 
 			orde_FechaEntrega, 
 			orde_FechaEntregaReal, 
 			T1.sucu_Id,
-			T5.sucu_Descripcion 
+			T5.sucu_Descripcion, 
 			orde_Estado, 
 			usua_IdCreacion, 
 			orde_FechaCreacion, 
@@ -2582,14 +2582,27 @@ ON T1.sucu_Id = T5.sucu_Id
 GO
 
 
-/*Listado deOrdenes*/
+/*Listado de Ordenes*/
 CREATE OR ALTER PROCEDURE opti.UDP_opti_tbOrdenes_List
 AS
 BEGIN
 	SELECT *
 	FROM opti.VW_tbOrdenes
+	WHERE orde_Estado = 1
 END
 GO
+
+CREATE OR ALTER PROCEDURE opti.UDP_opti_tbOrdenes_Find 
+	@orde_Id	INT
+AS
+BEGIN
+	SELECT *
+	FROM opti.VW_tbOrdenes
+	WHERE orde_Estado = 1
+	AND orde_Id = @orde_Id
+END
+GO
+
 
 
 /*Insertar Ordenes*/
@@ -2618,6 +2631,10 @@ BEGIN
 END
 GO
 
+--EXEC opti.UDP_opti_tbOrdenes_Insert 1, '2023-05-10', '2023-06-10', NULL, 1, 1
+--EXEC opti.UDP_opti_tbOrdenes_Insert 4, '2023-05-11', '2023-06-09', NULL, 3, 1
+--EXEC opti.UDP_opti_tbOrdenes_Insert 2, '2023-06-01', '2023-06-30', NULL, 3, 1
+
 
 /*Editar Ordenes*/
 CREATE OR ALTER PROCEDURE opti.UDP_opti_tbOrdenes_Update
@@ -2641,7 +2658,7 @@ BEGIN
 					usua_IdModificacion = usua_IdModificacion,
                     orde_FechaModificacion = GETDATE()
 			WHERE 	orde_Id  = @orde_Id 
-			SELECT 'La Orden ha sido editada con éxito'
+			SELECT 'La orden ha sido editada con éxito'
 		  END
 	END TRY
 	BEGIN CATCH
@@ -2663,7 +2680,7 @@ BEGIN
 				SET [orde_Estado] = 0
 				WHERE orde_Id = @orde_Id 
 
-				SELECT 'La Orden ha sido eliminada'
+				SELECT 'La orden ha sido eliminada'
 			END
 		ELSE
 			SELECT 'La orden no puede ser eliminada ya que está siendo usada'
@@ -2674,6 +2691,48 @@ BEGIN
 END
 GO
 
+---------- Ordenes detalles -----------
+
+/*Vista ordenes detalles*/
+
+CREATE OR ALTER VIEW opti.VW_tbDetallesOrdenes
+AS
+	SELECT deor_Id, 
+		   orde_Id, 
+		   T1.aros_Id, 
+		   T2.aros_Descripcion,
+		   deor_GraduacionLeft, 
+		   deor_GraduacionRight, 
+		   deor_Precio, 
+		   deor_Cantidad, 
+		   deor_Total, 
+		   deor_Estado, 
+		   usua_IdCreacion, 
+		   t3.usua_NombreUsuario AS usua_NombreUsuaCreacion,
+		   orde_FechaCreacion, 
+		   usua_IdModificacion, 
+		   T4.usua_NombreUsuario AS usua_NombreUsuaModificacion, 
+		   orde_FechaModificacion
+	FROM [opti].[tbDetallesOrdenes] T1 INNER JOIN opti.tbAros T2
+	ON T1.aros_Id = T2.aros_Id INNER JOIN acce.tbUsuarios T3
+	ON T1.usua_IdCreacion = T3.usua_Id LEFT JOIN acce.tbUsuarios T4
+	ON T1.usua_IdModificacion = T4.usua_Id
+GO
+
+
+CREATE OR ALTER PROCEDURE opti.UDP_opti_tbDetallesOrdenes_List
+	@orde_Id	INT
+AS
+BEGIN
+	SELECT * 
+	FROM opti.VW_tbDetallesOrdenes
+	WHERE orde_Id = @orde_Id
+END
+GO
+
+--INSERT INTO opti.tbDetallesOrdenes(orde_Id, aros_Id, deor_GraduacionLeft, deor_GraduacionRight, deor_Precio, deor_Cantidad, deor_Total, usua_IdCreacion)
+--VALUES(1, 2, 0.25, 0.50, 2000.00, 1, 2500.00, 1),
+--      (3, 8, 1.15, 0.65, 4800.00, 1, 5000.00, 1)
 
 ---------- Envios -----------
 CREATE OR ALTER VIEW opti.VW_tbEnvio

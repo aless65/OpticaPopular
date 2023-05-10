@@ -21,5 +21,26 @@ namespace OpticaPopular.API.Controllers
             _opticaPopularService = opticaPopularService;
             _mapper = mapper;
         }
+
+        [HttpGet("Listado")]
+        public IActionResult Index()
+        {
+            var list = _opticaPopularService.ListadoOrdenes();
+            return Ok(list);
+        }
+
+        [HttpGet("Find")]
+        public IActionResult Find(int id)
+        {
+            var list = _opticaPopularService.FindOrdenes(id);
+            return Ok(list);
+        }
+
+        [HttpGet("ListadoDetalles")]
+        public IActionResult IndexDetalles(int id)
+        {
+            var list = _opticaPopularService.ListadoDetallesOrdenes(id);
+            return Ok(list);
+        }
     }
 }

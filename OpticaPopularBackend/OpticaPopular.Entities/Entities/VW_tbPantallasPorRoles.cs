@@ -13,6 +13,7 @@ namespace OpticaPopular.Entities.Entities
         public string pantrole_NombreRol { get; set; }
         public int pant_Id { get; set; }
         public string pantrole_NombrePantalla { get; set; }
+        public string pantrole_NombreMenu { get; set; }
         public int pantrole_UsuCreacion { get; set; }
         public DateTime pantrole_FechaCreacion { get; set; }
         public int? pantrole_UsuModificacion { get; set; }

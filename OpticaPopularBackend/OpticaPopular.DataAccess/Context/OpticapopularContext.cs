@@ -25,6 +25,7 @@ namespace OpticaPopular.DataAccess.Context
         public virtual DbSet<VW_tbClientes> VW_tbClientes { get; set; }
         public virtual DbSet<VW_tbConsultorios> VW_tbConsultorios { get; set; }
         public virtual DbSet<VW_tbDetallesCitas> VW_tbDetallesCitas { get; set; }
+        public virtual DbSet<VW_tbDetallesOrdenes> VW_tbDetallesOrdenes { get; set; }
         public virtual DbSet<VW_tbDirecciones> VW_tbDirecciones { get; set; }
         public virtual DbSet<VW_tbDireccionesPorClientes> VW_tbDireccionesPorClientes { get; set; }
         public virtual DbSet<VW_tbEmpleados> VW_tbEmpleados { get; set; }
@@ -257,6 +258,39 @@ namespace OpticaPopular.DataAccess.Context
                 entity.Property(e => e.deci_NombreUsuarioModificacion).HasMaxLength(100);
             });
 
+            modelBuilder.Entity<VW_tbDetallesOrdenes>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("VW_tbDetallesOrdenes", "opti");
+
+                entity.Property(e => e.aros_Descripcion)
+                    .IsRequired()
+                    .HasMaxLength(300);
+
+                entity.Property(e => e.deor_GraduacionLeft)
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.deor_GraduacionRight)
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.deor_Precio).HasColumnType("decimal(18, 2)");
+
+                entity.Property(e => e.deor_Total).HasColumnType("decimal(18, 2)");
+
+                entity.Property(e => e.orde_FechaCreacion).HasColumnType("datetime");
+
+                entity.Property(e => e.orde_FechaModificacion).HasColumnType("datetime");
+
+                entity.Property(e => e.usua_NombreUsuaCreacion)
+                    .IsRequired()
+                    .HasMaxLength(100);
+
+                entity.Property(e => e.usua_NombreUsuaModificacion).HasMaxLength(100);
+            });
+
             modelBuilder.Entity<VW_tbDirecciones>(entity =>
             {
                 entity.HasNoKey();
@@ -459,13 +493,11 @@ namespace OpticaPopular.DataAccess.Context
 
                 entity.ToView("VW_tbOrdenes", "opti");
 
-                entity.Property(e => e.orde_Estado)
+                entity.Property(e => e.clie_NombreCompleto)
                     .IsRequired()
-                    .HasMaxLength(200);
+                    .HasMaxLength(601);
 
-                entity.Property(e => e.orde_Fecha)
-                    .IsRequired()
-                    .HasMaxLength(300);
+                entity.Property(e => e.orde_Fecha).HasColumnType("date");
 
                 entity.Property(e => e.orde_FechaCreacion).HasColumnType("datetime");
 
@@ -474,6 +506,10 @@ namespace OpticaPopular.DataAccess.Context
                 entity.Property(e => e.orde_FechaEntregaReal).HasColumnType("date");
 
                 entity.Property(e => e.orde_FechaModificacion).HasColumnType("datetime");
+
+                entity.Property(e => e.sucu_Descripcion)
+                    .IsRequired()
+                    .HasMaxLength(200);
             });
 
             modelBuilder.Entity<VW_tbPantallas>(entity =>
@@ -518,6 +554,10 @@ namespace OpticaPopular.DataAccess.Context
                 entity.Property(e => e.pantrole_FechaCreacion).HasColumnType("datetime");
 
                 entity.Property(e => e.pantrole_FechaModificacion).HasColumnType("datetime");
+
+                entity.Property(e => e.pantrole_NombreMenu)
+                    .IsRequired()
+                    .HasMaxLength(300);
 
                 entity.Property(e => e.pantrole_NombrePantalla)
                     .IsRequired()

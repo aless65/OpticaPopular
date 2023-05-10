@@ -166,6 +166,10 @@
          "ObjectType": 3
       },
       {
+         "Name": "[opti].[VW_tbDetallesOrdenes]",
+         "ObjectType": 3
+      },
+      {
          "Name": "[opti].[VW_tbDirecciones]",
          "ObjectType": 3
       },

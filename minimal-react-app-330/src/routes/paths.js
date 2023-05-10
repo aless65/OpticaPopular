@@ -22,7 +22,8 @@ export const PATH_OPTICA = {
   empleadosEdit: (name) => path(ROOTS_OPTICA, `/empleados/${name}/editar`),
   clientes: path(ROOTS_OPTICA, '/clientes') ,
   citas: path(ROOTS_OPTICA, '/citas'),
-  proveedores: path(ROOTS_OPTICA, '/proveedores') ,
+  proveedores: path(ROOTS_OPTICA, '/proveedores'),
+  ordenes: path(ROOTS_OPTICA, '/ordenes'),
 };
 
 export const PATH_AUTH = {
