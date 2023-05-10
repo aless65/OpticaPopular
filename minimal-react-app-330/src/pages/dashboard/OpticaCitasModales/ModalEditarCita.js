@@ -10,7 +10,9 @@ import {
     DialogActions,
     Alert,
     Autocomplete,
-    Grid
+    Grid,
+    DialogContent,
+    Divider
 } from '@mui/material';
 import { LoadingButton, DatePicker } from '@mui/lab';
 import dayjs from 'dayjs';
@@ -23,7 +25,7 @@ import { getCitas, getcita } from '../../../redux/slices/citas';
 import { FormProvider } from '../../../components/hook-form';
 import useIsMountedRef from '../../../hooks/useIsMountedRef';
 
-export default function ModalEditarCita({ open, onClose, citas, setTableData, citaId }) {
+export default function ModalEditarCita({ open, onClose, citas, setTableData, cita }) {
 
     const dispatch = useDispatch();
 
@@ -31,45 +33,24 @@ export default function ModalEditarCita({ open, onClose, citas, setTableData, ci
 
     const { enqueueSnackbar } = useSnackbar();
 
-    const cita  = useSelector((state) => state.cita.cita);
-
     const [insertSuccess, setInsertSuccess] = useState(false);
 
     const [optionsClientes, setOptionsClientes] = useState([]);
 
     const [optionsConsultorios, setOptionsConsultorios] = useState([]);
 
-    const [clieIdTemp, setClieIdTemp] = useState('');
-
-    const [consIdTemp, setConsIdTemp] = useState('');
-
-    const [citaFechaTemp, setCitaFechaTemp] = useState(dayjs());
-
-    useEffect(() => {
-        if (citaId) {
-            dispatch(getcita(citaId));
-        }
-    }, [citaId, dispatch, insertSuccess]);
+    const [fechaTemp, setFechaTemp] = useState(dayjs(cita?.cita_Fecha));
 
     const InsertSchema = Yup.object().shape({
         clie_Id: Yup.string().required('El cliente es requerido'),
         cons_Id: Yup.string().required('El consultorio es requerido'),
         cita_Fecha: Yup.string().required('La fecha de la cita es requerida').nullable(),
     });
-
-    useEffect(() => {
-        if(cita){
-            console.log(cita);
-            setClieIdTemp(cita.clie_Id);
-            setConsIdTemp(cita.cons_Id);
-            setCitaFechaTemp(dayjs(new Date(cita.cita_Fecha)).format("YYYY-MM-DD"));
-        }
-    }, [cita])
-    
+  
     const defaultValues = {
-        clie_Id: clieIdTemp,
-        cons_Id: consIdTemp,
-        cita_Fecha: citaFechaTemp,
+        clie_Id: cita?.clie_Id,
+        cons_Id: cita?.cons_Id,
+        cita_Fecha: fechaTemp,
     }; 
 
     useEffect(() => {
@@ -94,7 +75,6 @@ export default function ModalEditarCita({ open, onClose, citas, setTableData, ci
                 setOptionsConsultorios(optionsData);
             })
             .catch(error => console.error(error));
-
     }, []);
 
     const methods = useForm({
@@ -113,7 +93,7 @@ export default function ModalEditarCita({ open, onClose, citas, setTableData, ci
         const dateFecha = new Date(data.cita_Fecha);
         const formattedDate = dateFecha.toISOString();
         axios.post('Citas/Editar', {
-            cita_Id: citaId,
+            cita_Id: cita.cita_Id,
             clie_Id: data.clie_Id,
             cons_Id: data.cons_Id,
             cita_Fecha: formattedDate,
@@ -180,9 +160,10 @@ export default function ModalEditarCita({ open, onClose, citas, setTableData, ci
             <FormProvider methods={methods}>
                 <Dialog open={open} fullWidth maxWidth="sm" onClose={handleDialogClose} >
                     <DialogTitle>Editar cita</DialogTitle>
-
+                    <br/>
+                    <Divider />
                     {!!errors.afterSubmit && <Alert severity="error">{errors.afterSubmit.message}</Alert>}
-
+                    <DialogContent >
                     <Stack spacing={3} sx={{ p: 3, pb: 0, pl: 5, pr: 5 }}>
                         <Grid container>
                             <Grid item xs={12} sx={{ pr: 1 }} sm={6}>
@@ -213,7 +194,7 @@ export default function ModalEditarCita({ open, onClose, citas, setTableData, ci
                                     render={({ field, fieldState: { error } }) => (
                                     <DatePicker
                                         label="Fecha de la cita"
-                                        value={field.value || null}
+                                        value={field.value ?? null}
                                         minDate={new Date()}
                                         error={errors.cita_Fecha?.message !== undefined}
                                         onChange={(newValue) => {
@@ -256,6 +237,8 @@ export default function ModalEditarCita({ open, onClose, citas, setTableData, ci
                             </Grid>
                         </Grid>
                     </Stack>
+                    </DialogContent>
+                    <Divider/>
                     <DialogActions>
                         <LoadingButton variant="contained" type="submit" loading={isSubmitting} onClick={submitHandler}>
                             Editar

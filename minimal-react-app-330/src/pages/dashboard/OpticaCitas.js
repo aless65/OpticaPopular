@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { paramCase } from 'change-case';
 import { useState, useEffect } from 'react';
 import { useNavigate, Link as RouterLink } from 'react-router-dom';
@@ -16,9 +17,10 @@ import {
     TablePagination,
     FormControlLabel,
 } from '@mui/material';
+import { useSnackbar } from 'notistack';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
-import { getCitas } from '../../redux/slices/citas';
+import { getCitas, getcita } from '../../redux/slices/citas';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // hooks
@@ -40,8 +42,34 @@ import {
 import { CitasTableRow, TableToolbar } from '../../sections/@dashboard/optica/citas-list';
 import ModalAgregarCita from './OpticaCitasModales/ModalInsertarCita';
 import ModalEditarCita from './OpticaCitasModales/ModalEditarCita';
+import ModalEliminarCita from './OpticaCitasModales/ModalEliminarCita';
 
 // ----------------------------------------------------------------------
+
+function applySortFilter({ tableData, comparator, filterName }) {
+    const stabilizedThis = tableData.map((el, index) => [el, index]);
+
+    stabilizedThis.sort((a, b) => {
+        const order = comparator(a[0], b[0]);
+        if (order !== 0) return order;
+        return a[1] - b[1];
+    });
+
+    tableData = stabilizedThis.map((el) => el[0]);
+
+    if (filterName) {
+        tableData = tableData.filter((item) =>
+            item.cita_Id.toString().indexOf(filterName.toLowerCase()) !== -1 ||
+            item.clie_Nombres.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 ||
+            item.clie_Apellidos.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 ||
+            item.cons_Nombre.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 ||
+            item.empe_Nombres.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 ||
+            item.cita_Fecha.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 ||
+            item.sucu_Id.toString().indexOf(filterName.toLowerCase()) !== -1
+        );
+    }
+    return tableData;
+}
 
 const TABLE_HEAD = [
     { id: '' },
@@ -54,8 +82,6 @@ const TABLE_HEAD = [
     { id: 'sucu_Id', label: 'Id sucursal', align: 'left' },
     { id: '', label: 'Acciones', align: 'left' },
 ];
-
-// ----------------------------------------------------------------------
 
 export default function OpticaCitas() {
     const {
@@ -87,15 +113,27 @@ export default function OpticaCitas() {
 
     const [citaIdEditar, setCitaIdEditar ] = useState('');
 
+    const [citaIdEliminar, setCitaIdEliminar ] = useState('');
+
     const [tableData, setTableData] = useState([]);
 
     const [openAddCitaDialog, setOpenAddCitaDialog] = useState(false);
 
     const [openEditCitaDialog, setOpenEditCitaDialog] = useState(false);
 
-    const [openDeleteDialog, setOpenDeleteDialog]= useState(false);
+    const [openDeleteCitaDialog, setOpenDeleteCitaDialog]= useState(false);
 
     const [filterName, setFilterName] = useState('');
+
+    const { enqueueSnackbar } = useSnackbar();
+
+    const cita  = useSelector((state) => state.cita.cita);
+
+    useEffect(() => {
+        if (citaIdEditar) {
+            dispatch(getcita(citaIdEditar));
+        }
+    }, [citaIdEditar, dispatch]);
 
     const handleOpenAddCitaDialog = () => {
         setOpenAddCitaDialog(true)
@@ -106,7 +144,7 @@ export default function OpticaCitas() {
     }
 
     const handleOpenEditCitaDialog = () => {
-        setOpenEditCitaDialog(true)
+        setOpenEditCitaDialog(true);
     }
 
     const handleCloseEditCitaDialog = () => {
@@ -114,11 +152,15 @@ export default function OpticaCitas() {
     }
 
     const handleOpenDeleteCitaDialog = () => {
-        setOpenDeleteDialog(true)
+        if(cita.deci_Id > 0){
+            setOpenDeleteCitaDialog(true);
+        }else{
+            enqueueSnackbar(`No se puede eliminar la cita por que ya ha sido completada`, { variant: 'error' }); 
+        }
     }
 
     const handleCloseDeleteCitaDialog = () => {
-        setOpenDeleteDialog(false);
+        setOpenDeleteCitaDialog(false);
     }
 
     useEffect(() => {
@@ -136,10 +178,15 @@ export default function OpticaCitas() {
         setPage(0);
     };
 
-    const handleDeleteRow = (id) => {
-        const deleteRow = tableData.filter((row) => row.cita_Id !== id);
-        setSelected([]);
-        setTableData(deleteRow);
+    const handleEditRow = (Id) => {
+        setCitaIdEditar(Id);
+        handleOpenEditCitaDialog();
+    };
+
+    const handleDeleteRow = (Id) => {
+        setCitaIdEliminar(Id);
+        handleOpenDeleteCitaDialog();
+        dispatch(getcita(Id));
     };
 
     const handleDeleteRows = (selected) => {
@@ -148,17 +195,12 @@ export default function OpticaCitas() {
         setTableData(deleteRows);
     };
 
-    const handleDeleteRow = (Id) => {
-        setCitaIdEditar(Id);
-        handleOpenEditCitaDialog();
-    };
-
     const dataFiltered = applySortFilter({
         tableData,
         comparator: getComparator(order, orderBy),
         filterName,
     });
-
+    
     const denseHeight = dense ? 60 : 80;
 
     const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
@@ -182,7 +224,8 @@ export default function OpticaCitas() {
                                 Agregar
                             </Button>
                             <ModalAgregarCita open={openAddCitaDialog} onClose={handleCloseAddCitaDialog} citas={citas} setTableData={setTableData} />
-                            <ModalEditarCita open={openEditCitaDialog} onClose={handleCloseEditCitaDialog} citas={citas} setTableData={setTableData} citaId={citaIdEditar}/>
+                            <ModalEditarCita open={openEditCitaDialog} onClose={handleCloseEditCitaDialog} citas={citas} setTableData={setTableData} cita={cita} />
+                            <ModalEliminarCita open={openDeleteCitaDialog} onClose={handleCloseDeleteCitaDialog} citas={citas} setTableData={setTableData} citaId={citaIdEliminar} />
                         </div>
                     }
                 />
@@ -257,30 +300,3 @@ export default function OpticaCitas() {
     );
 }
 
-// ----------------------------------------------------------------------
-
-function applySortFilter({ tableData, comparator, filterName }) {
-    const stabilizedThis = tableData.map((el, index) => [el, index]);
-
-    stabilizedThis.sort((a, b) => {
-        const order = comparator(a[0], b[0]);
-        if (order !== 0) return order;
-        return a[1] - b[1];
-    });
-
-    tableData = stabilizedThis.map((el) => el[0]);
-
-    if (filterName) {
-        tableData = tableData.filter((item) =>
-            item.cita_Id.toString().indexOf(filterName.toLowerCase()) !== -1 ||
-            item.clie_Nombres.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 ||
-            item.clie_Apellidos.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 ||
-            item.cons_Nombre.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 ||
-            item.empe_Nombres.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 ||
-            item.cita_Fecha.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 ||
-            item.sucu_Id.toString().indexOf(filterName.toLowerCase()) !== -1
-        );
-    }
-
-    return tableData;
-}

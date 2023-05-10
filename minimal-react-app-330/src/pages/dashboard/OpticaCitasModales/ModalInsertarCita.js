@@ -10,7 +10,9 @@ import {
     DialogActions,
     Alert,
     Autocomplete,
-    Grid
+    Grid,
+    DialogContent,
+    Divider
 } from '@mui/material';
 import { LoadingButton, DatePicker } from '@mui/lab';
 import dayjs from 'dayjs';
@@ -19,7 +21,7 @@ import { useState, useEffect } from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useSnackbar } from 'notistack';
 import { useDispatch } from '../../../redux/store';
-import { getCitas } from '../../../redux/slices/citas';
+import { getCitas, getcita } from '../../../redux/slices/citas';
 import { FormProvider } from '../../../components/hook-form';
 import useIsMountedRef from '../../../hooks/useIsMountedRef';
 
@@ -159,9 +161,10 @@ export default function ModalAgregarCita({ open, onClose, citas, setTableData })
             <FormProvider methods={methods}>
                 <Dialog open={open} fullWidth maxWidth="sm" onClose={handleDialogClose} >
                     <DialogTitle>Insertar cita</DialogTitle>
-
+                    <br/>
+                    <Divider />
                     {!!errors.afterSubmit && <Alert severity="error">{errors.afterSubmit.message}</Alert>}
-
+                    <DialogContent>
                     <Stack spacing={3} sx={{ p: 3, pb: 0, pl: 5, pr: 5 }}>
                         <Grid container>
                             <Grid item xs={12} sx={{ pr: 1 }} sm={6}>
@@ -235,6 +238,8 @@ export default function ModalAgregarCita({ open, onClose, citas, setTableData })
                             </Grid>
                         </Grid>
                     </Stack>
+                    </DialogContent>
+                    <Divider/>
                     <DialogActions>
                         <LoadingButton variant="contained" type="submit" loading={isSubmitting} onClick={submitHandler}>
                             Ingresar
