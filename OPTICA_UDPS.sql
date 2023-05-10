@@ -2383,7 +2383,7 @@ CREATE OR ALTER PROCEDURE acce.UDP_acce_tbRoles_Delete
 AS
 BEGIN
 	BEGIN TRY
-		IF NOT EXISTS (SELECT * FROM [acce].[tbPantallasPorRoles] WHERE [role_Id] = @role_Id)
+		IF NOT EXISTS (SELECT * FROM [acce].tbUsuarios WHERE [role_Id] = @role_Id AND usua_Estado = 1)
 			BEGIN
 				UPDATE [acce].[tbRoles]
 				SET role_Estado = 0

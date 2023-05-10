@@ -63,7 +63,8 @@ export default function EditRolDialog({ open, onClose, roles, setTableData, role
   }, [roleId]);
 
   const defaultValues = {
-    nombre: '',
+    nombre: roleNombre || '',
+    pantallas: [],
   };
 
   const methods = useForm({
@@ -84,11 +85,13 @@ export default function EditRolDialog({ open, onClose, roles, setTableData, role
   const onSubmit = async (data) => {
     try {
       const selectedIds = selectedValues.map(value => value.id);
+      data.pantallas = selectedIds;
+
       const jsonData = {
         role_Id: roleId,
         role_Nombre: data.nombre,
         role_UsuModificacion: 1,
-        role_Pantallas: selectedIds,
+        role_Pantallas: data.pantallas,
       };
 
       console.log(jsonData);
@@ -145,9 +148,7 @@ export default function EditRolDialog({ open, onClose, roles, setTableData, role
   const submitHandler = handleSubmit(onSubmit);
 
   const handleDialogClose = () => {
-    setRolTemporal(roleNombre);
     onClose();
-    reset();
   };
 
   useEffect(() => {
@@ -224,6 +225,7 @@ export default function EditRolDialog({ open, onClose, roles, setTableData, role
             onChange={(event, value) => {
               // selectedValuesRef.current = value;
               setSelectedValues(value);
+              console.log(defaultValues.nombre);
             }}
             isOptionEqualToValue={(option, value) => option.id === value.id}
             value={selectedValues}

@@ -71,6 +71,10 @@ export default function DeleteRolDialog({ open, onClose, roles, setTableData, ro
                         setDeleteSuccess(true);
                         enqueueSnackbar(data.message);
                         handleDialogClose();
+                    } else if((data.message === "El rol no puede ser eliminado ya que está siendo usado")){
+                        setDeleteSuccess(true);
+                        enqueueSnackbar(`${data.message} en otro registro`, { variant: 'warning'});
+                        handleDialogClose();
                     } else {
                         setDeleteSuccess(false);
                         enqueueSnackbar(data.message, { variant: 'error' });

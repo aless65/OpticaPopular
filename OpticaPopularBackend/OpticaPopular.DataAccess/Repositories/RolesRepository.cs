@@ -29,7 +29,7 @@ namespace OpticaPopular.DataAccess.Repositories
                 var parametrosDelete = new DynamicParameters();
                 parametrosDelete.Add("@role_Id", item.role_Id, DbType.Int32, ParameterDirection.Input);
 
-                db.Query(ScriptsDataBase.UDP_Elimina_Roles, parametrosDelete, commandType: CommandType.StoredProcedure);
+                db.Query(ScriptsDataBase.UDP_Elimina_RolesXPantalla, parametrosDelete, commandType: CommandType.StoredProcedure);
             }
 
             return result;
@@ -98,14 +98,14 @@ namespace OpticaPopular.DataAccess.Repositories
                 var parametrosDelete = new DynamicParameters();
                 parametrosDelete.Add("@role_Id", item.role_Id, DbType.Int32, ParameterDirection.Input);
 
-                db.Query(ScriptsDataBase.UDP_Elimina_Roles, parametrosDelete, commandType: CommandType.StoredProcedure);
+                db.Query(ScriptsDataBase.UDP_Elimina_RolesXPantalla, parametrosDelete, commandType: CommandType.StoredProcedure);
 
                 foreach (var pantalla in item.role_Pantallas)
                 {
                     var parametros2 = new DynamicParameters();
                     parametros2.Add("@role_Id", item.role_Id, DbType.Int32, ParameterDirection.Input);
                     parametros2.Add("@pant_Id", pantalla, DbType.Int32, ParameterDirection.Input);
-                    parametros2.Add("@pantrole_UsuCreacion", item.role_UsuCreacion, DbType.Int32, ParameterDirection.Input);
+                    parametros2.Add("@pantrole_UsuCreacion", item.role_UsuModificacion, DbType.Int32, ParameterDirection.Input);
 
                     var respuesta = db.QueryFirst<string>(ScriptsDataBase.UDP_Inserta_RolesXPantalla, parametros2, commandType: CommandType.StoredProcedure);
 
