@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "PDvdMv47l5G12ccRZulkWmL5qK08sW0/irX1yxYCQnWirTc3iHUJTKROPu8Acy1NkKgmtW59QoBmwthpYXgjPA==",
+  "dgSpecHash": "7j1EYYib2mjRGRI/EmbrwLKVXrXGVDp6bL9UFtg3I1iXe9DY+XHD8o+CcMIY5nMolNxzV6LUFzUsh3Rr64SVQA==",
   "success": true,
-  "projectFilePath": "C:\\Users\\LAB01\\Documents\\GitHub\\OpticaPopular\\OpticaPopularBackend\\OpticaPopular.API\\OpticaPopular.API.csproj",
+  "projectFilePath": "C:\\Users\\LAB01\\Documents\\OpticaPopular\\OpticaPopularBackend\\OpticaPopular.API\\OpticaPopular.API.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\LAB01\\.nuget\\packages\\automapper\\11.0.0\\automapper.11.0.0.nupkg.sha512",
     "C:\\Users\\LAB01\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\7.0.0\\automapper.extensions.microsoft.dependencyinjection.7.0.0.nupkg.sha512",

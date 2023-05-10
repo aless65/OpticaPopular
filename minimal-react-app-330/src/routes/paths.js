@@ -22,8 +22,12 @@ export const PATH_OPTICA = {
   empleadosEdit: (name) => path(ROOTS_OPTICA, `/empleados/${name}/editar`),
   clientes: path(ROOTS_OPTICA, '/clientes') ,
   citas: path(ROOTS_OPTICA, '/citas'),
-  proveedores: path(ROOTS_OPTICA, '/proveedores'),
   ordenes: path(ROOTS_OPTICA, '/ordenes'),
+  proveedores: path(ROOTS_OPTICA, '/proveedores') ,
+  marcas: path(ROOTS_OPTICA, '/marcas') ,
+  categorias: path(ROOTS_OPTICA, '/categorias') ,
+  sucursales: path(ROOTS_OPTICA, '/sucursales') ,
+  consultorios: path(ROOTS_OPTICA, '/consultorios') ,
 };
 
 export const PATH_AUTH = {
@@ -50,6 +54,7 @@ export const PATH_DASHBOARD = {
   },
   optica: {
     empleados: path(ROOTS_DASHBOARD, '/empleados'),
+  
   },
 };
 

@@ -1375,12 +1375,12 @@ VALUES('Consultorio 1',1,1),
       ('Consultorio 2',2,1),
 	  ('Consultorio 3',3,1),
 	  ('Consultorio 4',4,1),
-	  ('Consultorio 1',5,1),
-      ('Consultorio 2',6,1),
-	  ('Consultorio 3',7,1),
-	  ('Consultorio 1',8,1),
-      ('Consultorio 2',9,1),
-	  ('Consultorio 3',10,1)
+	  ('Consultorio 5',5,1),
+      ('Consultorio 6',6,1),
+	  ('Consultorio 7',7,1),
+	  ('Consultorio 8',8,1),
+      ('Consultorio 9',9,1),
+	  ('Consultorio 10',10,1)
 GO
 
 

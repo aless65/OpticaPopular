@@ -32,5 +32,15 @@ namespace OpticaPopular.API.Controllers
 
             return Ok(lista);
         }
+
+        [HttpGet("ListadoConsultorios2")]
+        public IActionResult List()
+        {
+            var lista = _opticaPopularService.ListadoConsultorios2();
+
+            lista.Data = _mapper.Map<IEnumerable<ConsultoriosViewModel>>(lista.Data);
+
+            return Ok(lista);
+        }
     }
 }

@@ -49,6 +49,9 @@ namespace OpticaPopular.DataAccess.Repositories
 
         #region Sucursales
         public static string UDP_Lista_Sucursales = "opti.UDP_opti_tbSucursales_List";
+
+
+
         #endregion
 
         #region Cargos
@@ -91,6 +94,29 @@ namespace OpticaPopular.DataAccess.Repositories
         public static string UDP_Inserta_Proveedores = "opti.UDP_opti_tbProveedor_Insert";
         public static string UDP_Edita_Proveedores = "opti.UDP_opti_tbProveedor_Update";
         public static string UDP_Elimina_Proveedores = "opti.UDP_opti_tbProveedor_Delete";
+        #endregion
+
+        #region Consultorios
+        public static string UDP_Lista_Consultorios = "opti.UDP_opti_tbConsultorios_List";
+        public static string UDP_Inserta_Consultorios = "opti.UDP_opti_tbConsultorios_Insert";
+        public static string UDP_Edita_Consultorios = "opti.UDP_opti_tbConsultorios_Update";
+        public static string UDP_Elimina_Consultorios = "opti.UDP_opti_tbConsultorio_Delete";
+        public static string UDP_Lista2_Consultorios = "opti.UDP_ConsultoriosListado";
+
+        #endregion
+
+        #region Marcas
+        public static string UDP_Lista_Marcas = "opti.UDP_opti_tbMarca_List";
+        public static string UDP_Inserta_Marcas = "opti.UDP_opti_tbMarcas_Insert";
+        public static string UDP_Edita_Marcas = "opti.UDP_opti_tbMarcas_Update";
+        public static string UDP_Elimina_Marcas = "opti.UDP_opti_tbMarcas_Delete";
+        #endregion
+
+        #region Categorias
+        public static string UDP_Lista_Categorias = "opti.UDP_opti_VW_tbCategorias";
+        public static string UDP_Inserta_Categorias = "opti.UDP_opti_tbCategorias_Insert";
+        public static string UDP_Edita_Categorias = "opti.UDP_opti_tbCategorias_Update";
+        public static string UDP_Elimina_Categorias = "opti.UDP_opti_tbCategorias_Delete";
         #endregion
     }
 }

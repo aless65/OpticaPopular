@@ -49,6 +49,10 @@ const navConfig = [
       { title: 'citas', path: PATH_OPTICA.citas, icon: <CalendarMonthIcon/> },
       { title: 'proveedores', path: PATH_OPTICA.proveedores, icon: <BusinessIcon/> },
       { title: 'ordenes', path: PATH_OPTICA.ordenes, icon: <ShoppingBasketIcon/> },
+      { title: 'marcas', path: PATH_OPTICA.marcas, icon: ICONS.cart },
+      { title: 'categorias', path: PATH_OPTICA.categorias, icon: ICONS.cart },
+      { title: 'sucursales', path: PATH_OPTICA.sucursales, icon: ICONS.cart },
+      { title: 'consultorios', path: PATH_OPTICA.consultorios, icon: ICONS.cart },
     ],
   },
 ];

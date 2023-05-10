@@ -12,6 +12,8 @@ import { PATH_AFTER_LOGIN } from '../config';
 import LoadingScreen from '../components/LoadingScreen';
 
 
+
+
 // ----------------------------------------------------------------------
 
 const Loadable = (Component) => (props) => {
@@ -82,6 +84,7 @@ export default function Router() {
                 { path: 'empleados/nuevo', element: <GuestGuard> <OpticaEmpleadosCreate /> </GuestGuard>  },
                 { path: 'empleados/:name/editar', element: <GuestGuard>  <OpticaEmpleadosCreate /> </GuestGuard> },
                 { path: 'clientes', element: <GuestGuard> <OpticaClientes /> </GuestGuard>  },
+                
                 {
                     path: 'citas',
                     element:
@@ -91,6 +94,10 @@ export default function Router() {
                 },
                 { path: 'proveedores', element: <GuestGuard> <OpticaProveedores /> </GuestGuard>  },
                 { path: 'ordenes', element: <GuestGuard> <OpticaOrdenes /> </GuestGuard>  },
+                { path: 'marcas', element: <GuestGuard> <OpticaMarcas /> </GuestGuard>  },
+                { path: 'categorias', element: <GuestGuard> <OpticaCategoria /> </GuestGuard>  },
+                { path: 'sucursales', element: <GuestGuard> <OpticaSucursales /> </GuestGuard>  },
+                { path: 'consultorios', element: <GuestGuard> <OpticaConsultorios /> </GuestGuard>  },
             ],
         },
         // Main Routes
@@ -132,6 +139,10 @@ const OpticaProveedores = Loadable(lazy(() => import('../pages/dashboard/OpticaP
 // ORDENES
 const OpticaOrdenes = Loadable(lazy(() => import('../pages/dashboard/OpticaOrdenes')));
 
+const OpticaMarcas = Loadable(lazy(() => import('../pages/dashboard/OpticaMarcas')));
+const OpticaCategoria = Loadable(lazy(() => import('../pages/dashboard/OpticaCategorias')));
+const OpticaSucursales = Loadable(lazy(() => import('../pages/dashboard/OpticaSucursales')));
+const OpticaConsultorios = Loadable(lazy(() => import('../pages/dashboard/OpticaConsultorios')));
 // DASHBOARD
 
 // GENERAL
