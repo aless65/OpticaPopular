@@ -6,14 +6,15 @@ import { isValidToken, setSession } from '../utils/jwt';
 
 // ----------------------------------------------------------------------
 const usuario = {
-    displayName: `${localStorage.getItem('usuario') !== null ? JSON.parse(localStorage.getItem('usuario')).empe_NombreCompleto : 'Eder'}`,
-    email: "",
+    displayName: `${localStorage.getItem('usuario') !== null ? JSON.parse(localStorage.getItem('usuario')).empe_NombreCompleto : 'Eder Sánchez'}`,
+    email: "eder@mail.com",
     photoURL: "https://www.svgrepo.com/show/57853/avatar.svg",
     role: 'Not admin',
 };
 
 if(localStorage.getItem('usuario') !== null){
     usuario.role = JSON.parse(localStorage.getItem('usuario')).usua_EsAdmin === true ? 'Admin': 'Not admin';
+    usuario.email = `${JSON.parse(localStorage.getItem('usuario')).empe_CorreoElectronico}`; 
 }
 
 const initialState = {

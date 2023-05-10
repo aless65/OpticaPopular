@@ -22,6 +22,8 @@ namespace OpticaPopular.API.Models
 
         public int sucu_Id { get; set; }
 
+        public string empe_CorreoElectronico { get; set; }
+
         public int? usua_UsuCreacion { get; set; }
         public int? usua_UsuModificacion { get; set; }
     }

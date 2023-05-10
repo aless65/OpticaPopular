@@ -72,6 +72,10 @@ namespace OpticaPopular.DataAccess.Repositories
 
         #region Citas
         public static string UDP_tbCitas_ListadoPorIdSucursal = "opti.UDP_tbCitas_ListadoPorIdSucursal";
+        public static string UDP_tbCitas_InsertarNuevaCita = "opti.UDP_tbCitas_InsertarNuevaCita";
+        public static string UDP_tbCitas_BuscarCitaPorId = "opti.UDP_tbCitas_BuscarCitaPorId";
+        public static string UDP_tbCitas_EditarCita = "opti.UDP_tbCitas_EditarCita";
+        public static string UDP_tbCitas_EliminarCita = "opti.UDP_tbCitas_EliminarCita";
         #endregion
 
         #region Consultorios

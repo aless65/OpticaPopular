@@ -172,6 +172,70 @@ namespace OpticaPopular.BusinessLogic.Services
             }
         }
 
+        public ServiceResult InsertarCita(tbCitas item)
+        {
+            var resultado = new ServiceResult();
+
+            try
+            {
+                var respuesta = _citasRepository.Insert(item);
+                return resultado.Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+
+                return resultado.Error(ex.Message);
+            }
+        }
+
+        public ServiceResult EditarCita(tbCitas item)
+        {
+            var resultado = new ServiceResult();
+
+            try
+            {
+                var respuesta = _citasRepository.Update(item);
+                return resultado.Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+
+                return resultado.Error(ex.Message);
+            }
+        }
+
+        public ServiceResult EliminarCita(tbCitas item)
+        {
+            var resultado = new ServiceResult();
+
+            try
+            {
+                var respuesta = _citasRepository.Delete(item);
+                return resultado.Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+
+                return resultado.Error(ex.Message);
+            }
+        }
+
+
+        public ServiceResult BuscarCitaPorId(int cita_Id)
+        {
+            var resultado = new ServiceResult();
+
+            try
+            {
+                var respuesta = _citasRepository.Find(cita_Id);
+                return resultado.Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+
+                return resultado.Error(ex.Message);
+            }
+        }
         #endregion
 
         #region Clientes

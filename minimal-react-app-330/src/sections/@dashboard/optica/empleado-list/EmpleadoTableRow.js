@@ -10,18 +10,10 @@ import { fCurrency } from '../../../../utils/formatNumber';
 // components
 import Label from '../../../../components/Label';
 import Image from '../../../../components/Image';
-
-// import { fDate } from '../../../../utils/formatTime';
-// import { fCurrency } from '../../../../utils/formatNumber';
-// components
-// import Label from '../../../../components/Label';
-// import Image from '../../../../components/Image';
 import Iconify from '../../../../components/Iconify';
 import { TableMoreMenu } from '../../../../components/table';
-//
 
 // ----------------------------------------------------------------------
-
 EmpleadoTableRow.propTypes = {
   row: PropTypes.object,
   selected: PropTypes.bool,
@@ -30,14 +22,9 @@ EmpleadoTableRow.propTypes = {
   onDeleteRow: PropTypes.func,
 };
 
-
-
 export default function EmpleadoTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRow }) {
 
-
-  const theme = useTheme();
-
-  // const theme = useTheme();
+   const theme = useTheme();
 
   const { empe_NombreCompleto, empe_SucursalNombre, empe_Sexo } = row;
   
