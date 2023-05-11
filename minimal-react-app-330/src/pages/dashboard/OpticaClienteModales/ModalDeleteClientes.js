@@ -40,7 +40,7 @@ import useAuth from '../../../hooks/useAuth';
 import useIsMountedRef from '../../../hooks/useIsMountedRef';
 
 
-export default function DeleteEmpleadoDialog({ open, onClose, clientes, setTableData, clienteId }) {
+export default function DeleteClienteDialog({ open, onClose, clientes, setTableData, clienteId }) {
 
     const isMountedRef = useIsMountedRef();
 

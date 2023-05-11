@@ -39,7 +39,7 @@ import {
 } from '../../components/table';
 // sections
 import { ClienteTableRow, TableToolbar } from '../../sections/@dashboard/optica/cliente-list';
-import DeleteEmpleadoDialog from './OpticaClienteModales/ModalDeleteClientes';
+import DeleteClienteDialog from './OpticaClienteModales/ModalDeleteClientes';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
@@ -87,7 +87,8 @@ export default function OpticaClientes() {
   const [clienteId, setClienteId] = useState('');
 
   const [filterName, setFilterName] = useState('');
-  const [openDeleteEmpleadoDialog, setOpenDeleteEmpleadoDialog] = useState(false);
+
+  const [openDeleteClienteDialog, setOpenDeleteClienteDialog] = useState(false);
 
 // ----------------------------------------------------------------------
 
@@ -123,10 +124,7 @@ function applySortFilter({ tableData, comparator, filterName }) {
   return tableData;
 }
 
-const handleDeleteRow = (id) => {
-  setClienteId(id);
-  handleOpenDeleteEmpleadoDialog();
-};
+
 
   useEffect(() => {
     dispatch(getClientes());
@@ -144,9 +142,8 @@ const handleDeleteRow = (id) => {
   };
 
   const handleDeleteRow = (id) => {
-    const deleteRow = tableData.filter((row) => row.clie_Id !== id);
-    setSelected([]);
-    setTableData(deleteRow);
+    setClienteId(id);
+    handleOpenDeleteClienteDialog();
   };
 
   const handleDeleteRows = (selected) => {
@@ -154,14 +151,6 @@ const handleDeleteRow = (id) => {
     setSelected([]);
     setTableData(deleteRows);
   };
-
-  const handleOpenDeleteEmpleadoDialog = () => {
-    setOpenDeleteEmpleadoDialog(true);
-  }
-
-  const handleCloseDeleteEmpleadoDialog = () => {
-    setOpenDeleteEmpleadoDialog(false);
-  }
 
   const handleEditRow = (id) => {
     navigate(PATH_OPTICA.clientesEdit(id));
@@ -172,6 +161,17 @@ const handleDeleteRow = (id) => {
     comparator: getComparator(order, orderBy),
     filterName,
   });
+
+
+  const handleOpenDeleteClienteDialog = () => {
+    setOpenDeleteClienteDialog(true);
+  }
+
+  const handleCloseDeleteClienteDialog = () => {
+    setOpenDeleteClienteDialog(false);
+  }
+
+
 
   const denseHeight = dense ? 60 : 80;
 
@@ -197,7 +197,7 @@ const handleDeleteRow = (id) => {
               Agregar
 
             </Button>
-            <DeleteEmpleadoDialog open={openDeleteEmpleadoDialog} onClose={handleCloseDeleteEmpleadoDialog} clientes={clientes} setTableData={setTableData} clienteId={clienteId} />
+            <DeleteClienteDialog open={openDeleteClienteDialog} onClose={handleCloseDeleteClienteDialog} clientes={clientes} setTableData={setTableData} clienteId={clienteId} />
             </div>
           }
         />

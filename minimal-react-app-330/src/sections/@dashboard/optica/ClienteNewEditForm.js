@@ -173,7 +173,7 @@ export default function ClienteNewEditForm({ isEdit, currentCliente }) {
           })
           .catch((error) => console.error(error));
       } else {
-        fetch("http://opticapopular.somee.com/api/Clientes/Insertar", {
+        fetch("https://localhost:44362/api/Clientes/Insertar", {
           method: "POST",
           mode: "cors",
           headers: {
@@ -185,7 +185,7 @@ export default function ClienteNewEditForm({ isEdit, currentCliente }) {
           .then((data) => {
             console.log(data);
             console.log("insertar");
-            if (data.message === "El cliente ha sido editado con éxito") {
+            if (data.message === "El cliente ha sido ingresado con éxito") {
               navigate(PATH_OPTICA.clientes);
               enqueueSnackbar(data.message);
             } else if (data.message === 'Ya existe un cliente con este número de identidad') {
