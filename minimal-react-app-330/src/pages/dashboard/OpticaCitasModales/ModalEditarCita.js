@@ -66,7 +66,7 @@ export default function ModalEditarCita({ open, onClose, citas, setTableData, ci
     } = methods;
 
     useEffect(() => {
-        axios.get('Clientes/Listado')
+            axios.get('Clientes/Listado')
             .then((response) => {
                 const optionsData = response.data.data.map(item => ({
                     label: `${item.clie_Nombres + [' '] + item.clie_Apellidos}`,
@@ -77,7 +77,7 @@ export default function ModalEditarCita({ open, onClose, citas, setTableData, ci
             })
             .catch(error => console.error(error));
 
-        axios.get('Consultorios/ListadoConsultoriosPorIdSucursal/0')
+            axios.get('Consultorios/ListadoConsultoriosPorIdSucursal/0')
             .then((response) => {
                 const optionsData = response.data.data.map(item => ({
                     label: `${item.sucu_Descripcion + [' - '] + item.cons_Nombre + [' - '] + item.empe_Nombres}`,
@@ -87,14 +87,22 @@ export default function ModalEditarCita({ open, onClose, citas, setTableData, ci
                 setOptionsConsultorios(optionsData);
             })
             .catch(error => console.error(error));
+
         if(cita){
             setFechaTemp(cita.cita_Fecha);
         }
         methods.setValue('clie_Id', defaultValues.clie_Id);
         methods.setValue('cita_Fecha', defaultValues.cita_Fecha);
         methods.setValue('cons_Id', defaultValues.cons_Id);
-    }, [cita, methods]);
 
+        if (insertSuccess === true) {
+            dispatch(getCitas());
+      
+            setTableData(citas);
+      
+            setInsertSuccess(false);
+        }
+    }, [cita, methods, insertSuccess]);
 
     const onSubmit = async (data) => {
         const dateFecha = new Date(data.cita_Fecha);
@@ -150,17 +158,6 @@ export default function ModalEditarCita({ open, onClose, citas, setTableData, ci
         onClose();
         reset();
     };
-
-    useEffect(() => {
-        if (insertSuccess === true) {
-          dispatch(getCitas());
-    
-          setTableData(citas);
-    
-          setInsertSuccess(false);
-        }
-    
-      }, [insertSuccess]);
 
     return (
         <div>

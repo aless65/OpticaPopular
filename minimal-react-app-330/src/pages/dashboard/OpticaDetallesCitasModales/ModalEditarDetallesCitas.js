@@ -91,10 +91,7 @@ export default function ModalEditarDetalleCita({ open, onClose, citas, setTableD
                 }
              })
         }
-        methods.setValue('deci_Costo', defaultValues.deci_Costo);
-        methods.setValue('deci_HoraInicio', defaultValues.deci_HoraInicio);
-        methods.setValue('deci_HoraFin', defaultValues.deci_HoraFin);
-
+      
         if (insertSuccess === true) {
             dispatch(getCitas());
       
@@ -102,7 +99,13 @@ export default function ModalEditarDetalleCita({ open, onClose, citas, setTableD
       
             setInsertSuccess(false);
           }
-    }, [citaId, methods, insertSuccess]);
+    }, [citaId, insertSuccess]);
+
+    useEffect(() => {
+        methods.setValue('deci_Costo', defaultValues.deci_Costo);
+        methods.setValue('deci_HoraInicio', defaultValues.deci_HoraInicio);
+        methods.setValue('deci_HoraFin', defaultValues.deci_HoraFin);
+    }, [methods])
 
     const mostrarAlerta = () => {
         setMostrarAlerta(true);
@@ -220,11 +223,20 @@ export default function ModalEditarDetalleCita({ open, onClose, citas, setTableD
                         {mostrarAlertaError && renderErrorMessage("generalError")}
                         <Grid container>
                             <Grid item xs={12} sx={{ pr: 1 }} sm={12}>
-                                <RHFTextField
-                                    name="deci_Costo"
-                                    label="Precio de la cita"
-                                    value={deci_CostoTemp || ''}
-                                    />
+                                <Controller
+                                     name="deci_Costo"
+                                     render={({ field }) => (
+                                         <RHFTextField
+                                             name="deci_Costo"
+                                             label="Precio de la cita"
+                                             value={field.value || deci_CostoTemp || ''}
+                                             onChange={(newValue) => {
+                                                field.onChange(newValue);
+                                                setdeci_CostoTemp('');
+                                             }}
+                                         />
+                                     )}
+                                />
                             </Grid>
                         </Grid>
                         <Grid container>
