@@ -39,7 +39,7 @@ import {
 } from '../../components/table';
 // sections
 import { ClienteTableRow, TableToolbar } from '../../sections/@dashboard/optica/cliente-list';
-
+import DeleteEmpleadoDialog from './OpticaClienteModales/ModalDeleteClientes';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
@@ -84,7 +84,10 @@ export default function OpticaClientes() {
 
   const [tableData, setTableData] = useState([]);
 
+  const [clienteId, setClienteId] = useState('');
+
   const [filterName, setFilterName] = useState('');
+  const [openDeleteEmpleadoDialog, setOpenDeleteEmpleadoDialog] = useState(false);
 
 // ----------------------------------------------------------------------
 
@@ -120,6 +123,11 @@ function applySortFilter({ tableData, comparator, filterName }) {
   return tableData;
 }
 
+const handleDeleteRow = (id) => {
+  setClienteId(id);
+  handleOpenDeleteEmpleadoDialog();
+};
+
   useEffect(() => {
     dispatch(getClientes());
   }, [dispatch]);
@@ -147,6 +155,13 @@ function applySortFilter({ tableData, comparator, filterName }) {
     setTableData(deleteRows);
   };
 
+  const handleOpenDeleteEmpleadoDialog = () => {
+    setOpenDeleteEmpleadoDialog(true);
+  }
+
+  const handleCloseDeleteEmpleadoDialog = () => {
+    setOpenDeleteEmpleadoDialog(false);
+  }
 
   const handleEditRow = (id) => {
     navigate(PATH_OPTICA.clientesEdit(id));
@@ -172,6 +187,7 @@ function applySortFilter({ tableData, comparator, filterName }) {
             { name: 'Clientes' },
           ]}
           action={
+            <div>
             <Button
               variant="contained"
               startIcon={<Iconify icon="eva:plus-fill" />}
@@ -179,7 +195,10 @@ function applySortFilter({ tableData, comparator, filterName }) {
               to={PATH_OPTICA.clientesNew}
             >
               Agregar
+
             </Button>
+            <DeleteEmpleadoDialog open={openDeleteEmpleadoDialog} onClose={handleCloseDeleteEmpleadoDialog} clientes={clientes} setTableData={setTableData} clienteId={clienteId} />
+            </div>
           }
         />
 
