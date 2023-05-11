@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using OpticaPopular.API.Models;
 using OpticaPopular.BusinessLogic.Services;
+using OpticaPopular.Entities.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,6 +24,13 @@ namespace OpticaPopular.API.Controllers
             _mapper = mapper;
         }
 
+        [HttpGet("Listado")]
+        public IActionResult Index()
+        {
+            var list = _opticaPopularService.ListadoConsultorios();
+            return Ok(list);
+        }
+
         [HttpGet("ListadoConsultoriosPorIdSucursal/{sucu_Id}")]
         public IActionResult CarritoPorIdUsuario(int sucu_Id)
         {
@@ -33,14 +41,35 @@ namespace OpticaPopular.API.Controllers
             return Ok(lista);
         }
 
-        [HttpGet("ListadoConsultorios2")]
-        public IActionResult List()
+
+        [HttpPost("Insertar")]
+        public IActionResult Insert(ConsultoriosViewModel consultorios)
         {
-            var lista = _opticaPopularService.ListadoConsultorios2();
+            var item = _mapper.Map<tbConsultorios>(consultorios);
+            var insert = _opticaPopularService.InsertConsultorios(item);
 
-            lista.Data = _mapper.Map<IEnumerable<ConsultoriosViewModel>>(lista.Data);
-
-            return Ok(lista);
+            return Ok(insert);
         }
+
+        [HttpPut("Editar")]
+        public IActionResult Update(ConsultoriosViewModel consultorios)
+        {
+            var item = _mapper.Map<tbConsultorios>(consultorios);
+            var update = _opticaPopularService.UpdateConsultorios(item);
+
+            return Ok(update);
+        }
+
+
+        [HttpPut("Eliminar")]
+        public IActionResult Delete(ConsultoriosViewModel consultorios)
+        {
+            var item = _mapper.Map<tbConsultorios>(consultorios);
+            var delete = _opticaPopularService.DeleteConsultorios(item);
+
+            return Ok(delete);
+        }
+
+
     }
 }

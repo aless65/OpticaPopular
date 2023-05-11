@@ -79,12 +79,6 @@ namespace OpticaPopular.Entities.Entities
         public DateTime? usua_FechaModificacion { get; set; }
         public bool? usua_Estado { get; set; }
 
-        [NotMapped]
-        public int sucu_Id { get; set; }
-
-        [NotMapped]
-        public string empe_CorreoElectronico { get; set; }
-
         public virtual tbEmpleados empe { get; set; }
         public virtual tbRoles role { get; set; }
         public virtual tbUsuarios usua_UsuCreacionNavigation { get; set; }

@@ -327,24 +327,82 @@ namespace OpticaPopular.BusinessLogic.Services
             }
         }
 
-        public ServiceResult ListadoConsultorios2()
+        public ServiceResult ListadoConsultorios()
         {
-            var resultado = new ServiceResult();
-
+            var result = new ServiceResult();
             try
             {
-                var list = _consultoriosRepository.List2();
-                return resultado.Ok(list);
+                var list = _consultoriosRepository.List();
+                return result.Ok(list);
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                return resultado.Error(ex.Message);
+                return result.Error(e.Message);
             }
         }
 
+        public ServiceResult InsertConsultorios(tbConsultorios item)
+        {
+            var result = new ServiceResult();
+            try
+            {
+                var insert = _consultoriosRepository.Insert(item);
+                if (insert.MessageStatus == "El Consultorio ha sido insertado con éxito")
+                    return result.SetMessage(insert.MessageStatus, ServiceResultType.Success);
+                else if (insert.MessageStatus == "El Consultorio ya existe")
+                    return result.SetMessage(insert.MessageStatus, ServiceResultType.Warning);
+                else
+                    return result.SetMessage(insert.MessageStatus, ServiceResultType.Error);
+            }
+            catch (Exception e)
+            {
+                return result.Error(e.Message);
+            }
+        }
+
+        public ServiceResult UpdateConsultorios(tbConsultorios item)
+        {
+            var result = new ServiceResult();
+            try
+            {
+                var update = _consultoriosRepository.Update(item);
+
+                if (update.MessageStatus == "El Consultorio ha sido editado con éxito")
+                    return result.SetMessage(update.MessageStatus, ServiceResultType.Success);
+                else if (update.MessageStatus == "El consultorio ya existe")
+                    return result.SetMessage(update.MessageStatus, ServiceResultType.Warning);
+                else
+                    return result.SetMessage(update.MessageStatus, ServiceResultType.Error);
+            }
+            catch (Exception e)
+            {
+                return result.Error(e.Message);
+            }
+        }
+
+        public ServiceResult DeleteConsultorios(tbConsultorios item)
+        {
+            var result = new ServiceResult();
+            try
+            {
+                var update = _consultoriosRepository.Delete(item);
+
+                if (update.MessageStatus == "El consultorio ha sido eliminado")
+                    return result.SetMessage(update.MessageStatus, ServiceResultType.Success);
+                else if (update.MessageStatus == "El consultorio no puede ser eliminado ya que está siendo usado")
+                    return result.SetMessage(update.MessageStatus, ServiceResultType.Warning);
+                else
+                    return result.SetMessage(update.MessageStatus, ServiceResultType.Error);
+            }
+            catch (Exception e)
+            {
+                return result.Error(e.Message);
+            }
+
+        }
         #endregion
 
-        #region Detalles Citas
+        #region DetallesCitas
         public ServiceResult BuscarDetalleCitaPorIdCita(int cita_Id)
         {
             var resultado = new ServiceResult();
@@ -394,33 +452,33 @@ namespace OpticaPopular.BusinessLogic.Services
         }
         #endregion
 
-        #region DetallesEnvios
+            #region DetallesEnvios
 
 
 
-        #endregion
+            #endregion
 
-        #region DetallesOrdenes
-
-
-
-        #endregion
-
-        #region Direcciones
+            #region DetallesOrdenes
 
 
 
-        #endregion
+            #endregion
 
-        #region Direcciones Por Cliente
+            #region Direcciones
 
 
 
-        #endregion
+            #endregion
 
-        #region Empleados
+            #region Direcciones Por Cliente
 
-        public ServiceResult ListadoEmpleados()
+
+
+            #endregion
+
+            #region Empleados
+
+            public ServiceResult ListadoEmpleados()
         {
             var result = new ServiceResult();
             try

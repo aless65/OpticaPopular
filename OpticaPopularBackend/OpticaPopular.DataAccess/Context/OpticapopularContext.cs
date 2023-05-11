@@ -24,6 +24,7 @@ namespace OpticaPopular.DataAccess.Context
         public virtual DbSet<VW_tbCategorias> VW_tbCategorias { get; set; }
         public virtual DbSet<VW_tbClientes> VW_tbClientes { get; set; }
         public virtual DbSet<VW_tbConsultorios> VW_tbConsultorios { get; set; }
+        public virtual DbSet<VW_tbConsultoriosList> VW_tbConsultoriosList { get; set; }
         public virtual DbSet<VW_tbDetallesCitas> VW_tbDetallesCitas { get; set; }
         public virtual DbSet<VW_tbDetallesOrdenes> VW_tbDetallesOrdenes { get; set; }
         public virtual DbSet<VW_tbDirecciones> VW_tbDirecciones { get; set; }
@@ -198,6 +199,24 @@ namespace OpticaPopular.DataAccess.Context
                 entity.Property(e => e.clie_Telefono)
                     .IsRequired()
                     .HasMaxLength(15);
+
+                entity.Property(e => e.depa_Id)
+                    .IsRequired()
+                    .HasMaxLength(2)
+                    .IsUnicode(false)
+                    .IsFixedLength(true);
+
+                entity.Property(e => e.dire_DireccionExacta).IsRequired();
+
+                entity.Property(e => e.muni_Id)
+                    .IsRequired()
+                    .HasMaxLength(4)
+                    .IsUnicode(false)
+                    .IsFixedLength(true);
+
+                entity.Property(e => e.sucu_MunicipioNombre)
+                    .IsRequired()
+                    .HasMaxLength(80);
             });
 
             modelBuilder.Entity<VW_tbConsultorios>(entity =>
@@ -223,6 +242,27 @@ namespace OpticaPopular.DataAccess.Context
                 entity.Property(e => e.empe_Nombres)
                     .IsRequired()
                     .HasMaxLength(100);
+
+                entity.Property(e => e.sucu_Descripcion)
+                    .IsRequired()
+                    .HasMaxLength(200);
+            });
+
+            modelBuilder.Entity<VW_tbConsultoriosList>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("VW_tbConsultoriosList", "opti");
+
+                entity.Property(e => e.cons_FechaCreacion).HasColumnType("datetime");
+
+                entity.Property(e => e.cons_FechaModificacion).HasColumnType("datetime");
+
+                entity.Property(e => e.cons_Nombre).HasMaxLength(150);
+
+                entity.Property(e => e.cons_NombreUsuarioCreacion).HasMaxLength(100);
+
+                entity.Property(e => e.cons_NombreUsuarioModificacion).HasMaxLength(100);
 
                 entity.Property(e => e.sucu_Descripcion)
                     .IsRequired()
@@ -656,6 +696,8 @@ namespace OpticaPopular.DataAccess.Context
                 entity.HasNoKey();
 
                 entity.ToView("VW_tbUsuarios", "acce");
+
+                entity.Property(e => e.empe_CorreoElectronico).HasMaxLength(200);
 
                 entity.Property(e => e.empe_NombreCompleto).HasMaxLength(201);
 

@@ -20,7 +20,8 @@ import {
 import { useDispatch, useSelector } from '../../redux/store';
 import { getClientes } from '../../redux/slices/cliente';
 // routes
-import { PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_DASHBOARD, PATH_OPTICA  } from '../../routes/paths';
+
 // hooks
 import useSettings from '../../hooks/useSettings';
 import useTable, { getComparator, emptyRows } from '../../hooks/useTable';
@@ -85,6 +86,40 @@ export default function OpticaClientes() {
 
   const [filterName, setFilterName] = useState('');
 
+// ----------------------------------------------------------------------
+
+function applySortFilter({ tableData, comparator, filterName }) {
+  const stabilizedThis = tableData.map((el, index) => [el, index]);
+
+  stabilizedThis.sort((a, b) => {
+    const order = comparator(a[0], b[0]);
+    if (order !== 0) return order;
+    return a[1] - b[1];
+  });
+
+  tableData = stabilizedThis.map((el) => el[0]);
+
+  // if (filterName) {
+  //   tableData = tableData.filter((item) => 
+  //     Object.values(item).some(
+  //       (value) => 
+  //         value && value.toString().toLowerCase().indexOf(filterName.toLowerCase()) !== -1
+  //     )
+  //   );
+  // }
+
+  if (filterName) {
+    tableData = tableData.filter((item) =>
+      item.clie_NombreCompleto.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 ||
+      item.clie_Identidad.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 ||
+      item.clie_Sexo.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 
+    );
+  }
+  
+
+  return tableData;
+}
+
   useEffect(() => {
     dispatch(getClientes());
   }, [dispatch]);
@@ -112,8 +147,9 @@ export default function OpticaClientes() {
     setTableData(deleteRows);
   };
 
+
   const handleEditRow = (id) => {
-    navigate(PATH_DASHBOARD.eCommerce.edit(paramCase(id)));
+    navigate(PATH_OPTICA.clientesEdit(id));
   };
 
   const dataFiltered = applySortFilter({
@@ -140,7 +176,7 @@ export default function OpticaClientes() {
               variant="contained"
               startIcon={<Iconify icon="eva:plus-fill" />}
               component={RouterLink}
-              to={PATH_DASHBOARD.general.app}
+              to={PATH_OPTICA.clientesNew}
             >
               Agregar
             </Button>
@@ -218,36 +254,4 @@ export default function OpticaClientes() {
   );
 }
 
-// ----------------------------------------------------------------------
 
-function applySortFilter({ tableData, comparator, filterName }) {
-  const stabilizedThis = tableData.map((el, index) => [el, index]);
-
-  stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) return order;
-    return a[1] - b[1];
-  });
-
-  tableData = stabilizedThis.map((el) => el[0]);
-
-  // if (filterName) {
-  //   tableData = tableData.filter((item) => 
-  //     Object.values(item).some(
-  //       (value) => 
-  //         value && value.toString().toLowerCase().indexOf(filterName.toLowerCase()) !== -1
-  //     )
-  //   );
-  // }
-
-  if (filterName) {
-    tableData = tableData.filter((item) =>
-      item.clie_NombreCompleto.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 ||
-      item.clie_Identidad.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 ||
-      item.clie_Sexo.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 
-    );
-  }
-  
-
-  return tableData;
-}

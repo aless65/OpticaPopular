@@ -38,6 +38,9 @@ import {
 } from '../../components/table';
 // sections
 import { ConsultorioTableRow, TableToolbar } from '../../sections/@dashboard/optica/consultorio-list';
+import AddConsultorioDialog from './OpticaConsultorioModales/ModalInsertConsultorios';
+import EditUserDialog from './OpticaConsultorioModales/ModalEditConsultorios';
+import DeleteUserDialog from './OpticaConsultorioModales/ModalDeleteConsultorios';
 
 // ----------------------------------------------------------------------
 
@@ -45,12 +48,12 @@ const TABLE_HEAD = [
   { id: 'cons_Id', label: 'ID', align: 'left' },
   { id: 'cons_Nombre', label: 'Nombre', align: 'left' },
   { id: 'empe_Nombres', label: 'Empleado', align: 'left' },
-  { id: '' },
+  { id: '', label: 'Acciones', align: 'right' },
 ];
 
 // ----------------------------------------------------------------------
 
-export default function OpticaConsultorios() { 
+export default function OpticaConsultorio() {
   const {
     dense,
     page,
@@ -83,10 +86,51 @@ export default function OpticaConsultorios() {
   const [tableData, setTableData] = useState([]);
 
   const [filterName, setFilterName] = useState('');
+    
+  const [consultorioId, setConsultorioId] = useState(''); 
+
+  const [consultorioNombre, setConsultorioNombre] = useState(''); 
+
+  const [consultorioEmpleado, setConsultorioEmpleado] = useState(''); 
+
+  const [openAddUserDialog, setOpenAddUserDialog] = useState(false);
+
+  const [openEditUserDialog, setOpenEditUserDialog] = useState(false);
+
+  const [openDeleteUserDialog, setOpenDeleteUserDialog] = useState(false);
+
+  const [insertSuccess, setInsertSuccess] = useState(false);
+  
+// ----------------------------------------------------------------------
+
+function applySortFilter({ tableData, comparator, filterName }) {
+  const stabilizedThis = tableData.map((el, index) => [el, index]);
+
+  stabilizedThis.sort((a, b) => {
+    const order = comparator(a[0], b[0]);
+    if (order !== 0) return order;
+    return a[1] - b[1];
+  });
+
+  tableData = stabilizedThis.map((el) => el[0]);
+
+ 
+
+  if (filterName) {
+    tableData = tableData.filter((item) =>
+      item.cons_Id.indexOf(filterName.toLowerCase()) !== -1 ||
+      item.cons_Nombre.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 ||
+      item.empe_Nombres.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
+    );
+  }
+
+
+  return tableData;
+}
 
   useEffect(() => {
     dispatch(getConsultorios());
-  }, [dispatch]);
+  }, [dispatch]); 
 
   useEffect(() => {
     if (consultorios.length) {
@@ -100,10 +144,14 @@ export default function OpticaConsultorios() {
   };
 
   const handleDeleteRow = (id) => {
-    const deleteRow = tableData.filter((row) => row.cons_Id !== id);
-    setSelected([]);
-    setTableData(deleteRow);
+    setConsultorioId(id);
+    handleOpenDeleteUserDialog();
   };
+  const dataFiltered = applySortFilter({
+    tableData,
+    comparator: getComparator(order, orderBy),
+    filterName,
+  });
 
   const handleDeleteRows = (selected) => {
     const deleteRows = tableData.filter((row) => !selected.includes(row.cons_Id));
@@ -111,16 +159,42 @@ export default function OpticaConsultorios() {
     setTableData(deleteRows);
   };
 
-  const handleEditRow = (id) => {
-    navigate(PATH_DASHBOARD.eCommerce.edit(paramCase(id)));
+  // useEffect(() => {
+  //   console.log(usuaId);
+  // }, [usuaId]);
+
+  const handleEditRow = (id,Nombre) => {
+    setConsultorioId(id);
+    setConsultorioNombre(Nombre);
+    handleOpenEditUserDialog();
   };
 
-  const dataFiltered = applySortFilter({
-    tableData,
-    comparator: getComparator(order, orderBy),
-    filterName,
-  });
 
+
+  const handleOpenAddUserDialog = () => {
+    setOpenAddUserDialog(true)
+  }
+
+  const handleCloseAddUserDialog = () => {
+    setOpenAddUserDialog(false);
+  }
+
+  const handleOpenEditUserDialog = () => {
+    setOpenEditUserDialog(true);
+  }
+
+  const handleCloseEditUserDialog = () => {
+    setOpenEditUserDialog(false);
+  }
+
+  const handleOpenDeleteUserDialog = () => {
+    setOpenDeleteUserDialog(true);
+  }
+
+  const handleCloseDeleteUserDialog = () => {
+    setOpenDeleteUserDialog(false);
+  }
+  
   const denseHeight = dense ? 60 : 80;
 
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
@@ -131,27 +205,32 @@ export default function OpticaConsultorios() {
         <HeaderBreadcrumbs
           heading="Listado de consultorios"
           links={[
-            { name: 'Optica', href: PATH_DASHBOARD.root },
-            { name: 'Consultorios' },
+            { name: 'Inicio', href: PATH_DASHBOARD.root },
+            { name: 'consultorios' },
           ]}
           action={
-            <Button
-              variant="contained"
-              startIcon={<Iconify icon="eva:plus-fill" />}
-              component={RouterLink}
-              to={PATH_DASHBOARD.general.app}
-            >
-              Agregar
-            </Button>
+            <div>
+              <Button
+                variant="contained"
+                startIcon={<Iconify icon="eva:plus-fill" />}
+                onClick={handleOpenAddUserDialog}
+
+              >
+                Agregar
+              </Button>
+              <AddConsultorioDialog open={openAddUserDialog} onClose={handleCloseAddUserDialog} consultorios={consultorios} setTableData={setTableData} />
+              <EditUserDialog open={openEditUserDialog} onClose={handleCloseEditUserDialog} consultorios={consultorios} setTableData={setTableData} consultorioId={consultorioId} consultorioNombre={consultorioNombre} consultorioEmpleado={consultorioEmpleado} />
+              <DeleteUserDialog open={openDeleteUserDialog} onClose={handleCloseDeleteUserDialog} consultorios={consultorios} setTableData={setTableData} consultorioId={consultorioId} />
+            </div>
+
           }
         />
 
         <Card>
-        <TableToolbar filterName={filterName} onFilterName={handleFilterName} />
+          <TableToolbar filterName={filterName} onFilterName={handleFilterName} />
 
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800 }}>
-
               <Table size={dense ? 'small' : 'medium'}>
                 <TableHeadCustom
                   order={order}
@@ -179,7 +258,7 @@ export default function OpticaConsultorios() {
                           selected={selected.includes(row.cons_Id)}
                           onSelectRow={() => onSelectRow(row.cons_Id)}
                           onDeleteRow={() => handleDeleteRow(row.cons_Id)}
-                          onEditRow={() => handleEditRow(row.cons_Nombre)}
+                          onEditRow={() => handleEditRow(row.cons_Id, row.cons_Nombre, row.empe_Id )}
                         />
                       ) : (
                         !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
@@ -206,7 +285,7 @@ export default function OpticaConsultorios() {
             />
 
             <FormControlLabel
-              control={<Switch checked={dense} onChange={onChangeDense} />}
+              control={<Switch checked={dense} onChange={onChangeDense}  />}
               label="Denso"
               sx={{ px: 3, py: 1.5, top: 0, position: { md: 'absolute' } }}
             />
@@ -215,31 +294,4 @@ export default function OpticaConsultorios() {
       </Container>
     </Page>
   );
-}
-
-// ----------------------------------------------------------------------
-
-function applySortFilter({ tableData, comparator, filterName }) {
-  const stabilizedThis = tableData.map((el, index) => [el, index]);
-
-  stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) return order;
-    return a[1] - b[1];
-  });
-
-  tableData = stabilizedThis.map((el) => el[0]);
-
- 
-
-  if (filterName) {
-    tableData = tableData.filter((item) =>
-      item.cons_Id.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 ||
-      item.cons_Nombre.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 ||
-      item.empe_Nombres.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
-    );
-  }
-  
-
-  return tableData;
 }
