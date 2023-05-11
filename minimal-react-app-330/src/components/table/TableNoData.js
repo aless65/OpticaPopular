@@ -6,10 +6,6 @@ import EmptyContent from '../EmptyContent';
 
 // ----------------------------------------------------------------------
 
-TableNoData.propTypes = {
-  isNotFound: PropTypes.bool,
-};
-
 export default function TableNoData({ isNotFound }) {
   return (
     <>
@@ -32,3 +28,7 @@ export default function TableNoData({ isNotFound }) {
     </>
   );
 }
+
+TableNoData.propTypes = {
+  isNotFound: PropTypes.bool,
+};

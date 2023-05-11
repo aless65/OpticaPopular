@@ -21,16 +21,6 @@ const DropZoneStyle = styled('div')(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-UploadMultiFile.propTypes = {
-  error: PropTypes.bool,
-  showPreview: PropTypes.bool,
-  files: PropTypes.array,
-  onRemove: PropTypes.func,
-  onRemoveAll: PropTypes.func,
-  helperText: PropTypes.node,
-  sx: PropTypes.object,
-};
-
 export default function UploadMultiFile({
   error,
   showPreview = false,
@@ -71,3 +61,13 @@ export default function UploadMultiFile({
     </Box>
   );
 }
+
+UploadMultiFile.propTypes = {
+  error: PropTypes.bool,
+  showPreview: PropTypes.bool,
+  files: PropTypes.array,
+  onRemove: PropTypes.func,
+  onRemoveAll: PropTypes.func,
+  helperText: PropTypes.node,
+  sx: PropTypes.object,
+};

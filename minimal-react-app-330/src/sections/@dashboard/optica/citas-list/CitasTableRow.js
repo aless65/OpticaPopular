@@ -1,8 +1,10 @@
+/* eslint-disable camelcase */
 import * as React from 'react';
 import Moment from 'moment';
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { sentenceCase } from 'change-case';
+import { useSnackbar } from 'notistack';
 // @mui
 import { MenuItem } from '@mui/material';
 import Box from '@mui/material/Box';
@@ -23,15 +25,7 @@ import { TableMoreMenu, TableNoData } from '../../../../components/table';
 
 // ----------------------------------------------------------------------
 
-export default function CitasTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRow }) {
-
-  CitasTableRow.propTypes = {
-    row: PropTypes.object,
-    selected: PropTypes.bool,
-    onEditRow: PropTypes.func,
-    onSelectRow: PropTypes.func,
-    onDeleteRow: PropTypes.func,
-  };
+export default function CitasTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRow, onDetailsRow, onDetallesCita }) {
 
   Moment.locale('en');
 
@@ -39,10 +33,12 @@ export default function CitasTableRow({ row, selected, onEditRow, onSelectRow, o
   
   const [openMenu, setOpenMenuActions] = useState(null);
 
+  const [openMenuDetails, setOpenMenuActionsDetails] = useState(null);
+
   const [open, setOpen] = React.useState(false);
 
   const [tableEmpty, setTableEmpty] = useState(false);
-
+  
   const handleOpenMenu = (event) => {
     setOpenMenuActions(event.currentTarget);
   };
@@ -51,16 +47,25 @@ export default function CitasTableRow({ row, selected, onEditRow, onSelectRow, o
     setOpenMenuActions(null);
   };
 
+  const handleOpenMenuDetails = (event) => {
+    setOpenMenuActionsDetails(event.currentTarget);
+  };
+
+  const handleCloseMenuDetails = () => {
+    setOpenMenuActionsDetails(null);
+  };
+
   React.useEffect(() => {
     if(row.deci_Id === 0){
       setTableEmpty(true);
     }else{
       setTableEmpty(false);
     }
-  })
+  }, [row.deci_Id])
 
   return (
     <>
+    
     <TableRow hover selected={selected}>
       
       <TableCell>
@@ -87,7 +92,7 @@ export default function CitasTableRow({ row, selected, onEditRow, onSelectRow, o
 
       <TableCell>{(row.sucu_Id)}</TableCell>
       
-      <TableCell align="right" onClick={onSelectRow}>
+      <TableCell  onClick={onSelectRow}>
         <TableMoreMenu
           open={openMenu}
           onOpen={handleOpenMenu}
@@ -113,6 +118,16 @@ export default function CitasTableRow({ row, selected, onEditRow, onSelectRow, o
                 <Iconify icon={'eva:edit-fill'} />
                 Editar
               </MenuItem>
+              <MenuItem
+                onClick={() => {
+                  onDetailsRow();
+                  handleCloseMenu();
+                }}
+                style={{display: row.deci_Id !== 0 ? 'none' : ''}}
+              >
+                <Iconify icon={'mdi:check-all'} />
+                 Completar cita
+              </MenuItem>
             </>
           }
         />
@@ -133,6 +148,7 @@ export default function CitasTableRow({ row, selected, onEditRow, onSelectRow, o
                 <TableCell>Costo</TableCell>
                 <TableCell>Hora Inicio</TableCell>
                 <TableCell>Hora Fin</TableCell>
+                <TableCell>Acciones</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -149,9 +165,28 @@ export default function CitasTableRow({ row, selected, onEditRow, onSelectRow, o
                   <TableCell component="th" scope="row">
                     {row.deci_HoraFin}
                   </TableCell>
-                </TableRow>
-
-                <TableNoData isNotFound={tableEmpty} />
+                  <TableCell component="th" scope="row" style={{display: row.deci_Id === 0 ? 'none' : 'inline'}} >
+                  <TableMoreMenu
+                    open={openMenuDetails}
+                    onOpen={handleOpenMenuDetails}
+                    onClose={handleCloseMenuDetails}
+                    actions={
+                  <>
+                    <MenuItem
+                      onClick={() => {
+                        onDetallesCita();
+                        handleCloseMenuDetails();
+                      }}
+                    >
+                    <Iconify icon={'eva:edit-fill'} />
+                    Editar
+                   </MenuItem>
+                  </>
+                  }
+                   />
+                  </TableCell>
+              </TableRow>
+              <TableNoData isNotFound={tableEmpty} />
             </TableBody>
           </Table>
         </Box>
@@ -161,3 +196,11 @@ export default function CitasTableRow({ row, selected, onEditRow, onSelectRow, o
   </>
   );
 }
+
+CitasTableRow.propTypes = {
+  row: PropTypes.object,
+  selected: PropTypes.bool,
+  onEditRow: PropTypes.func,
+  onSelectRow: PropTypes.func,
+  onDeleteRow: PropTypes.func,
+};

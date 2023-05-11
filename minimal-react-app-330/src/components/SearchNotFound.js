@@ -3,10 +3,6 @@ import { Paper, Typography } from '@mui/material';
 
 // ----------------------------------------------------------------------
 
-SearchNotFound.propTypes = {
-  searchQuery: PropTypes.string,
-};
-
 export default function SearchNotFound({ searchQuery = '', ...other }) {
   return searchQuery ? (
     <Paper {...other}>
@@ -22,3 +18,8 @@ export default function SearchNotFound({ searchQuery = '', ...other }) {
     <Typography variant="body2"> Please enter keywords</Typography>
   );
 }
+
+SearchNotFound.propTypes = {
+  searchQuery: PropTypes.string,
+};
+

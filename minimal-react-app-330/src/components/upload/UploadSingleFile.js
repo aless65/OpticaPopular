@@ -25,13 +25,6 @@ const DropZoneStyle = styled('div')(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-UploadSingleFile.propTypes = {
-  error: PropTypes.bool,
-  file: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
-  helperText: PropTypes.node,
-  sx: PropTypes.object,
-};
-
 export default function UploadSingleFile({ error = false, file, helperText, sx, ...other }) {
   const { getRootProps, getInputProps, isDragActive, isDragReject, fileRejections } = useDropzone({
     multiple: false,
@@ -80,3 +73,10 @@ export default function UploadSingleFile({ error = false, file, helperText, sx, 
     </Box>
   );
 }
+
+UploadSingleFile.propTypes = {
+  error: PropTypes.bool,
+  file: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
+  helperText: PropTypes.node,
+  sx: PropTypes.object,
+};

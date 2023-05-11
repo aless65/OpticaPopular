@@ -22,11 +22,6 @@ export const ListSubheaderStyle = styled((props) => <ListSubheader disableSticky
 
 // ----------------------------------------------------------------------
 
-NavSectionVertical.propTypes = {
-  isCollapse: PropTypes.bool,
-  navConfig: PropTypes.array,
-};
-
 export default function NavSectionVertical({ navConfig, isCollapse = false, ...other }) {
   return (
     <Box {...other}>
@@ -50,3 +45,8 @@ export default function NavSectionVertical({ navConfig, isCollapse = false, ...o
     </Box>
   );
 }
+
+NavSectionVertical.propTypes = {
+  isCollapse: PropTypes.bool,
+  navConfig: PropTypes.array,
+};

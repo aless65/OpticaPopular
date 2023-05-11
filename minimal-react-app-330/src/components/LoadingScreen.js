@@ -24,10 +24,6 @@ const RootStyle = styled('div')(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-LoadingScreen.propTypes = {
-  isDashboard: PropTypes.bool,
-};
-
 export default function LoadingScreen({ isDashboard, ...other }) {
   return (
     <>
@@ -92,3 +88,7 @@ export default function LoadingScreen({ isDashboard, ...other }) {
     </>
   );
 }
+
+LoadingScreen.propTypes = {
+  isDashboard: PropTypes.bool,
+};

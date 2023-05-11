@@ -19,12 +19,6 @@ const RootStyle = styled('div')(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-EmptyContent.propTypes = {
-  title: PropTypes.string.isRequired,
-  img: PropTypes.string,
-  description: PropTypes.string,
-};
-
 export default function EmptyContent({ title, description, img, ...other }) {
   return (
     <RootStyle {...other}>
@@ -48,3 +42,9 @@ export default function EmptyContent({ title, description, img, ...other }) {
     </RootStyle>
   );
 }
+
+EmptyContent.propTypes = {
+  title: PropTypes.string.isRequired,
+  img: PropTypes.string,
+  description: PropTypes.string,
+};

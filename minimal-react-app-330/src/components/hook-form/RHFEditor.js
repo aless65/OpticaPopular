@@ -8,10 +8,6 @@ import Editor from '../editor';
 
 // ----------------------------------------------------------------------
 
-RHFEditor.propTypes = {
-  name: PropTypes.string,
-};
-
 export default function RHFEditor({ name, ...other }) {
   const { control } = useFormContext();
 
@@ -36,3 +32,7 @@ export default function RHFEditor({ name, ...other }) {
     />
   );
 }
+
+RHFEditor.propTypes = {
+  name: PropTypes.string,
+};

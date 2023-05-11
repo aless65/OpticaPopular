@@ -34,7 +34,7 @@ namespace OpticaPopular.API.Controllers
         [HttpPost("Insertar")]
         public IActionResult Insert(ClienteViewModel cliente)
         {
-            var item = _mapper.Map<tbClientes>(cliente);
+            var item = _mapper.Map<VW_tbClientes>(cliente);
             var insert = _opticaPopularService.InsertClientes(item);
 
             return Ok(insert);
@@ -43,7 +43,7 @@ namespace OpticaPopular.API.Controllers
         [HttpPut("Editar")]
         public IActionResult Update(ClienteViewModel cliente)
         {
-            var item = _mapper.Map<tbClientes>(cliente);
+            var item = _mapper.Map<VW_tbClientes>(cliente);
             var update = _opticaPopularService.UpdateClientes(item);
 
             return Ok(update);
@@ -52,7 +52,7 @@ namespace OpticaPopular.API.Controllers
         [HttpPut("Eliminar")]
         public IActionResult Delete(ClienteViewModel cliente)
         {
-            var item = _mapper.Map<tbClientes>(cliente);
+            var item = _mapper.Map<VW_tbClientes>(cliente);
             var delete = _opticaPopularService.DeleteClientes(item);
 
             return Ok(delete);

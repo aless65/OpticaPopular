@@ -52,10 +52,6 @@ function SnackbarStyles() {
 
 // ----------------------------------------------------------------------
 
-NotistackProvider.propTypes = {
-  children: PropTypes.node,
-};
-
 export default function NotistackProvider({ children }) {
   const notistackRef = useRef(null);
 
@@ -94,12 +90,11 @@ export default function NotistackProvider({ children }) {
   );
 }
 
-// ----------------------------------------------------------------------
-
-SnackbarIcon.propTypes = {
-  icon: PropTypes.string,
-  color: PropTypes.oneOf(['primary', 'secondary', 'info', 'success', 'warning', 'error']),
+NotistackProvider.propTypes = {
+  children: PropTypes.node,
 };
+
+// ----------------------------------------------------------------------
 
 function SnackbarIcon({ icon, color }) {
   return (
@@ -121,3 +116,8 @@ function SnackbarIcon({ icon, color }) {
     </Box>
   );
 }
+
+SnackbarIcon.propTypes = {
+  icon: PropTypes.string,
+  color: PropTypes.oneOf(['primary', 'secondary', 'info', 'success', 'warning', 'error']),
+};

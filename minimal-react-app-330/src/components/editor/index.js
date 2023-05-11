@@ -33,16 +33,6 @@ const RootStyle = styled(Box)(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-Editor.propTypes = {
-  id: PropTypes.string.isRequired,
-  value: PropTypes.string.isRequired,
-  onChange: PropTypes.func.isRequired,
-  error: PropTypes.bool,
-  helperText: PropTypes.node,
-  simple: PropTypes.bool,
-  sx: PropTypes.object,
-};
-
 export default function Editor({
   id = 'minimal-quill',
   error,
@@ -97,3 +87,13 @@ export default function Editor({
     </div>
   );
 }
+
+Editor.propTypes = {
+  id: PropTypes.string.isRequired,
+  value: PropTypes.string.isRequired,
+  onChange: PropTypes.func.isRequired,
+  error: PropTypes.bool,
+  helperText: PropTypes.node,
+  simple: PropTypes.bool,
+  sx: PropTypes.object,
+};

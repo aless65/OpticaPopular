@@ -59,10 +59,6 @@ const style = {
   borderRadius: 0.5,
 };
 
-VerticalBox.propTypes = {
-  isSelected: PropTypes.bool,
-};
-
 function VerticalBox({ isSelected }) {
   return (
     <>
@@ -92,9 +88,10 @@ function VerticalBox({ isSelected }) {
   );
 }
 
-HorizontalBox.propTypes = {
+VerticalBox.propTypes = {
   isSelected: PropTypes.bool,
 };
+
 
 function HorizontalBox({ isSelected }) {
   return (
@@ -137,3 +134,7 @@ function HorizontalBox({ isSelected }) {
     </>
   );
 }
+
+HorizontalBox.propTypes = {
+  isSelected: PropTypes.bool,
+};

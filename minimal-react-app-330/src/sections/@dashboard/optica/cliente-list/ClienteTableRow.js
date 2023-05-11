@@ -1,5 +1,6 @@
 /* eslint-disable camelcase */
-  import PropTypes from 'prop-types';
+
+import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { sentenceCase } from 'change-case';
 // @mui

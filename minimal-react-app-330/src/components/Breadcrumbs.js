@@ -5,11 +5,6 @@ import { Box, Link, Typography, Breadcrumbs as MUIBreadcrumbs } from '@mui/mater
 
 // ----------------------------------------------------------------------
 
-Breadcrumbs.propTypes = {
-  activeLast: PropTypes.bool,
-  links: PropTypes.array.isRequired,
-};
-
 export default function Breadcrumbs({ links, activeLast = false, ...other }) {
   const currentLink = links[links.length - 1].name;
 
@@ -46,15 +41,12 @@ export default function Breadcrumbs({ links, activeLast = false, ...other }) {
   );
 }
 
-// ----------------------------------------------------------------------
-
-LinkItem.propTypes = {
-  link: PropTypes.shape({
-    href: PropTypes.string,
-    icon: PropTypes.any,
-    name: PropTypes.string,
-  }),
+Breadcrumbs.propTypes = {
+  activeLast: PropTypes.bool,
+  links: PropTypes.array.isRequired,
 };
+
+// ----------------------------------------------------------------------
 
 function LinkItem({ link }) {
   const { href, name, icon } = link;
@@ -77,3 +69,11 @@ function LinkItem({ link }) {
     </Link>
   );
 }
+
+LinkItem.propTypes = {
+  link: PropTypes.shape({
+    href: PropTypes.string,
+    icon: PropTypes.any,
+    name: PropTypes.string,
+  }),
+};

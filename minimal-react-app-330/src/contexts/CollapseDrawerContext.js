@@ -17,10 +17,6 @@ const CollapseDrawerContext = createContext(initialState);
 
 // ----------------------------------------------------------------------
 
-CollapseDrawerProvider.propTypes = {
-  children: PropTypes.node,
-};
-
 function CollapseDrawerProvider({ children }) {
   const isDesktop = useResponsive('up', 'lg');
 
@@ -69,3 +65,7 @@ function CollapseDrawerProvider({ children }) {
 }
 
 export { CollapseDrawerProvider, CollapseDrawerContext };
+
+CollapseDrawerProvider.propTypes = {
+  children: PropTypes.node,
+};

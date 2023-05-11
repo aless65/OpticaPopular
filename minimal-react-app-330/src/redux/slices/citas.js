@@ -1,6 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-// utils
-import axios from '../../utils/axios';
+import axios from 'axios';
 //
 import { dispatch } from '../store';
 
@@ -82,7 +81,7 @@ export function getCitas() {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`citas/ListadoCitasPorIdSucursal/${JSON.parse(localStorage.getItem('usuario')).usua_EsAdmin === true ? 0 : localStorage.getItem('sucu_Id')}`);
+      const response = await axios.get(`Citas/ListadoCitasPorIdSucursal/${JSON.parse(localStorage.getItem('usuario')).usua_EsAdmin === true ? 0 : localStorage.getItem('sucu_Id')}`);
       dispatch(slice.actions.getcitasSuccess(response.data.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));

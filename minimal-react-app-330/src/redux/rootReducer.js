@@ -17,6 +17,8 @@ import marcaReducer from './slices/marca';
 import categoriaReducer from './slices/categoria';
 import sucursalReducer from './slices/sucursal';
 import consultorioReducer from './slices/consultorio';
+import ordenReducer from './slices/orden';
+import ordenDetalleReducer from './slices/ordendetalles';
 // ----------------------------------------------------------------------
 
 const rootPersistConfig = {
@@ -103,6 +105,20 @@ const consultorioPersistConfig = {
   whitelist: ['sortBy', 'checkout'],
 };
 
+const ordenPersistConfig = {
+  key: 'orden',
+  storage,
+  keyPrefix: 'redux-',
+  whitelist: ['sortBy', 'checkout'],
+};
+
+const ordenDetallePersistConfig = {
+  key: 'ordendetalle',
+  storage,
+  keyPrefix: 'redux-',
+  whitelist: ['sortBy', 'checkout'],
+};
+
 const rootReducer = combineReducers({
   mail: mailReducer,
   chat: chatReducer,
@@ -119,6 +135,8 @@ const rootReducer = combineReducers({
   categoria: persistReducer(categoriaPersistConfig, categoriaReducer),
   sucursal: persistReducer(sucursalPersistConfig, sucursalReducer),
   consultorio: persistReducer(consultorioPersistConfig, consultorioReducer),
+  orden: persistReducer(ordenPersistConfig, ordenReducer),
+  ordendetalle: persistReducer(ordenDetallePersistConfig, ordenDetalleReducer),
 });
 
 export { rootPersistConfig, rootReducer };

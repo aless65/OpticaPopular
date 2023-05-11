@@ -9,9 +9,6 @@ import Iconify from './Iconify';
 
 // ----------------------------------------------------------------------
 
-CopyClipboard.propTypes = {
-  value: PropTypes.string,
-};
 
 export default function CopyClipboard({ value, ...other }) {
   const { enqueueSnackbar } = useSnackbar();
@@ -53,3 +50,7 @@ export default function CopyClipboard({ value, ...other }) {
     />
   );
 }
+
+CopyClipboard.propTypes = {
+  value: PropTypes.string,
+};

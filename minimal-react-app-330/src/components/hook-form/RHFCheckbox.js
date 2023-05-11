@@ -6,10 +6,6 @@ import { Checkbox, FormGroup, FormControlLabel } from '@mui/material';
 
 // ----------------------------------------------------------------------
 
-RHFCheckbox.propTypes = {
-  name: PropTypes.string,
-};
-
 export function RHFCheckbox({ name, ...other }) {
   const { control } = useFormContext();
 
@@ -27,12 +23,11 @@ export function RHFCheckbox({ name, ...other }) {
   );
 }
 
-// ----------------------------------------------------------------------
-
-RHFMultiCheckbox.propTypes = {
+RHFCheckbox.propTypes = {
   name: PropTypes.string,
-  options: PropTypes.arrayOf(PropTypes.string),
 };
+
+// ----------------------------------------------------------------------
 
 export function RHFMultiCheckbox({ name, options, ...other }) {
   const { control } = useFormContext();
@@ -66,3 +61,8 @@ export function RHFMultiCheckbox({ name, options, ...other }) {
     />
   );
 }
+
+RHFMultiCheckbox.propTypes = {
+  name: PropTypes.string,
+  options: PropTypes.arrayOf(PropTypes.string),
+};

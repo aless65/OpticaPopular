@@ -8,13 +8,6 @@ import { getActive } from '..';
 
 // ----------------------------------------------------------------------
 
-NavListRoot.propTypes = {
-  list: PropTypes.shape({
-    children: PropTypes.array,
-    path: PropTypes.string,
-  }),
-};
-
 export function NavListRoot({ list }) {
   const menuRef = useRef(null);
 
@@ -74,14 +67,14 @@ export function NavListRoot({ list }) {
   return <NavItemRoot item={list} active={active} />;
 }
 
-// ----------------------------------------------------------------------
-
-NavListSub.propTypes = {
+NavListRoot.propTypes = {
   list: PropTypes.shape({
     children: PropTypes.array,
     path: PropTypes.string,
   }),
 };
+
+// ----------------------------------------------------------------------
 
 function NavListSub({ list }) {
   const menuRef = useRef(null);
@@ -134,3 +127,10 @@ function NavListSub({ list }) {
 
   return <NavItemSub item={list} active={active} />;
 }
+
+NavListSub.propTypes = {
+  list: PropTypes.shape({
+    children: PropTypes.array,
+    path: PropTypes.string,
+  }),
+};

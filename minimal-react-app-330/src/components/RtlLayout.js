@@ -10,10 +10,6 @@ import { useTheme } from '@mui/material/styles';
 
 // ----------------------------------------------------------------------
 
-RtlLayout.propTypes = {
-  children: PropTypes.node,
-};
-
 export default function RtlLayout({ children }) {
   const theme = useTheme();
 
@@ -28,3 +24,7 @@ export default function RtlLayout({ children }) {
 
   return <CacheProvider value={cacheRtl}>{children}</CacheProvider>;
 }
+
+RtlLayout.propTypes = {
+  children: PropTypes.node,
+};

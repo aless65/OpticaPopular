@@ -7,13 +7,6 @@ import { varFade } from './variants';
 
 // ----------------------------------------------------------------------
 
-DialogAnimate.propTypes = {
-  children: PropTypes.node.isRequired,
-  onClose: PropTypes.func,
-  open: PropTypes.bool.isRequired,
-  sx: PropTypes.object,
-  variants: PropTypes.object
-};
 
 export default function DialogAnimate({ open = false, variants, onClose, children, sx, ...other }) {
   return (
@@ -56,3 +49,11 @@ export default function DialogAnimate({ open = false, variants, onClose, childre
     </AnimatePresence>
   );
 }
+
+DialogAnimate.propTypes = {
+  children: PropTypes.node.isRequired,
+  onClose: PropTypes.func,
+  open: PropTypes.bool.isRequired,
+  sx: PropTypes.object,
+  variants: PropTypes.object
+};

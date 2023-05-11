@@ -95,6 +95,7 @@ export default function Router() {
                 },
                 { path: 'proveedores', element: <GuestGuard> <OpticaProveedores /> </GuestGuard>  },
                 { path: 'ordenes', element: <GuestGuard> <OpticaOrdenes /> </GuestGuard>  },
+                { path: 'ordenes/nuevo', element: <GuestGuard> <OpticaOrdenesCreate /> </GuestGuard>  },
                 { path: 'marcas', element: <GuestGuard> <OpticaMarcas /> </GuestGuard>  },
                 { path: 'categorias', element: <GuestGuard> <OpticaCategoria /> </GuestGuard>  },
                 { path: 'sucursales', element: <GuestGuard> <OpticaSucursales /> </GuestGuard>  },
@@ -140,11 +141,14 @@ const OpticaProveedores = Loadable(lazy(() => import('../pages/dashboard/OpticaP
 
 // ORDENES
 const OpticaOrdenes = Loadable(lazy(() => import('../pages/dashboard/OpticaOrdenes')));
+const OpticaOrdenesCreate = Loadable(lazy(() => import('../pages/dashboard/OpticaOrdenesCreate')));
 
+// MARCAS
 const OpticaMarcas = Loadable(lazy(() => import('../pages/dashboard/OpticaMarcas')));
 const OpticaCategoria = Loadable(lazy(() => import('../pages/dashboard/OpticaCategorias')));
 const OpticaSucursales = Loadable(lazy(() => import('../pages/dashboard/OpticaSucursales')));
 const OpticaConsultorios = Loadable(lazy(() => import('../pages/dashboard/OpticaConsultorios')));
+
 // DASHBOARD
 
 // GENERAL

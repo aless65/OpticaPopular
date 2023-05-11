@@ -1118,6 +1118,17 @@ CREATE OR ALTER PROCEDURE opti.UDP_opti_tbAros_List
 AS
 BEGIN
 	SELECT * FROM opti.VW_tbAros
+	WHERE aros_Estado = 1
+END	
+GO
+
+CREATE OR ALTER PROCEDURE opti.UDP_opti_tbAros_ListXSucursal 
+	@sucu_Id	INT
+AS
+BEGIN
+	SELECT * FROM opti.VW_tbAros T1
+	WHERE aros_Estado = 1
+	AND (SELECT [stsu_Stock] FROM [opti].[tbStockArosPorSucursal] T2 WHERE [sucu_Id] = @sucu_Id AND T1.aros_Id = T2.aros_Id) > 0
 END	
 GO
 
@@ -2243,16 +2254,11 @@ BEGIN
     ) AS ConsultoriosEmpleados
     WHERE RowNum = 1 
 END
-
 go
 
-
-
-
-
-
 /*Listado de Consultorios*/
-CREATE OR ALTER PROCEDURE opti.UDP_tbConsultorios_ListPorIdSucursal 
+GO
+CREATE OR ALTER PROCEDURE opti.UDP_tbConsultorios_ListPorIdSucursal
 	@sucu_Id	INT
 AS
 BEGIN
@@ -2645,11 +2651,14 @@ GO
 
 --***************************************************/UDPS tbCitas****************************************************--
 
+
+--************************************************UDPS tbDetallesCitas****************************************************--
+
 ---------- DETALLE CITAS -----------
 CREATE OR ALTER VIEW opti.VW_tbDetallesCitas
 AS
 	SELECT deci_Id,
-	       t1.cita_Id, 
+	       t1.cita_Id,
 		   deci_Costo, 
 		   deci_HoraInicio, 
 		   deci_HoraFin, 
@@ -2660,10 +2669,10 @@ AS
 		   t1.usua_IdModificacion, 
 		   t3.usua_NombreUsuario AS deci_NombreUsuarioModificacion,
 		   deci_FechaModificacion
-FROM opti.tbDetallesCitas t1  INNER JOIN acce.tbUsuarios t2
-ON t1.usua_IdCreacion = t2.usua_Id 
-LEFT JOIN acce.tbUsuarios t3
-ON t1.usua_IdModificacion = t3.usua_Id
+	FROM opti.tbDetallesCitas t1  INNER JOIN acce.tbUsuarios t2
+	ON t1.usua_IdCreacion = t2.usua_Id 
+	LEFT JOIN acce.tbUsuarios t3
+	ON t1.usua_IdModificacion = t3.usua_Id
 GO
 
 /*Listado de detalles citas*/
@@ -2671,20 +2680,22 @@ CREATE OR ALTER PROCEDURE opti.UDP_tbDetallesCitaPorIdCita
 	@cita_Id INT
 AS
 BEGIN
-	SELECT *
-	FROM opti.VW_tbDetallesCitas tb1
-	INNER JOIN opti.tbCitas tb2 
-	ON tb1.cita_Id = tb2.cita_Id
-	INNER JOIN opti.tbConsultorios tb3
-	ON tb2.cons_Id = tb3.cons_Id
-	INNER JOIN opti.tbEmpleados tb4
-	ON tb3.empe_Id = tb4.empe_Id
-	WHERE tb2.cita_Id = @cita_Id
-	AND [deci_Estado] = 1
+		SELECT *
+		FROM opti.VW_tbDetallesCitas tb1
+		INNER JOIN opti.tbCitas tb2 
+		ON tb1.cita_Id = tb2.cita_Id
+		INNER JOIN opti.tbConsultorios tb3
+		ON tb2.cons_Id = tb3.cons_Id
+		INNER JOIN opti.tbEmpleados tb4
+		ON tb3.empe_Id = tb4.empe_Id
+		INNER JOIN opti.tbSucursales tb5
+		ON tb4.sucu_Id = tb5.sucu_Id
+		WHERE tb2.cita_Id = @cita_Id
+		AND [deci_Estado] = 1
 END
 GO
 
-/*Insertar citas*/
+/*Insertar detalle citas*/
 CREATE OR ALTER PROCEDURE opti.UDP_opti_tbDetallesCitas_Insert
 	 @cita_Id            INT, 
 	 @deci_Costo         DECIMAL(18,2), 
@@ -2694,40 +2705,19 @@ CREATE OR ALTER PROCEDURE opti.UDP_opti_tbDetallesCitas_Insert
 AS
 BEGIN
 	BEGIN TRY
-
-			BEGIN
-			INSERT INTO [opti].[tbDetallesCitas] (cita_Id, deci_Costo, deci_HoraInicio, deci_HoraFin, usua_IdCreacion)
-			VALUES(@cita_Id, @deci_Costo, @deci_HoraInicio, @deci_HoraFin, @usua_IdCreacion)
+		INSERT INTO [opti].[tbDetallesCitas] (cita_Id, deci_Costo, deci_HoraInicio, deci_HoraFin, usua_IdCreacion)
+		VALUES(@cita_Id, @deci_Costo, @deci_HoraInicio, @deci_HoraFin, @usua_IdCreacion)
 			
-			SELECT 'El Detalle de la cita ha sido insertado con éxito'
-			END
-		
-			BEGIN
-			IF EXISTS (SELECT * FROM  [opti].[tbDetallesCitas]
-						WHERE  [cita_Id] = @cita_Id AND
-						       [deci_HoraInicio] = @deci_HoraInicio 
-						      AND deci_Estado = 0)
-				UPDATE  [opti].[tbDetallesCitas]
-				SET deci_Estado = 1,
-                    [deci_Costo] = @deci_Costo,
-                    [deci_HoraFin] = @deci_HoraFin,
-                    [usua_IdCreacion] = @usua_IdCreacion
-				WHERE  [cita_Id] = @cita_Id AND
-					   [deci_HoraInicio] = @deci_HoraInicio 
-
-				SELECT 'El detalle de la cita ha sido insertado con éxito'
-			END
-		
+		SELECT 1
 	END TRY
 	BEGIN CATCH
-		SELECT 'Ha ocurrido un error'
+		SELECT 0
 	END CATCH
 END
 GO
 
 /*Editar detalle cita*/
 CREATE OR ALTER PROCEDURE opti.UDP_opti_tbDetallesCitas_Update
-	@deci_Id               INT, 
 	@cita_Id               INT, 
 	@deci_Costo            DECIMAL(18,2), 
 	@deci_HoraInicio       VARCHAR(5), 
@@ -2736,23 +2726,18 @@ CREATE OR ALTER PROCEDURE opti.UDP_opti_tbDetallesCitas_Update
 
 AS
 BEGIN 
-	BEGIN TRY
-
-		BEGIN			
-			UPDATE  [opti].[tbDetallesCitas]
-			SET 	[cita_Id] = @cita_Id,
-			        [deci_Costo]=@deci_Costo,
-					[deci_HoraInicio]= @deci_HoraInicio,
-					[deci_HoraFin]= @deci_HoraFin,
-			        [usua_IdModificacion]=@usua_IdModificacion,
-					[deci_FechaModificacion]= GETDATE()
-			WHERE 	[deci_Id]= deci_Id
-			SELECT 'El detalle ha sido editado con éxito'
-		END
-	      
+	BEGIN TRY	
+		UPDATE  [opti].[tbDetallesCitas]
+		SET 	[deci_Costo]=@deci_Costo,
+				[deci_HoraInicio]= @deci_HoraInicio,
+				[deci_HoraFin]= @deci_HoraFin,
+		        [usua_IdModificacion]=@usua_IdModificacion,
+				[deci_FechaModificacion]= GETDATE()
+		WHERE 	[cita_Id]= @cita_Id
+		SELECT 1
 	END TRY
 	BEGIN CATCH
-		SELECT 'Ha ocurrido un error'
+		SELECT 0
 	END CATCH
 END
 GO
@@ -2778,6 +2763,7 @@ BEGIN
 END
 GO
 
+--***********************************************/UDPS tbDetallesCitas****************************************************--
 
 ---------- Ordenes -----------
 CREATE OR ALTER VIEW opti.VW_tbOrdenes
@@ -2813,6 +2799,29 @@ BEGIN
 END
 GO
 
+/*Listado de Ordenes x sucursal*/
+CREATE OR ALTER PROCEDURE opti.UDP_opti_tbOrdenes_ListXSucu
+	@sucu_Id	INT
+AS
+BEGIN
+	IF @sucu_Id > 0
+		BEGIN
+			SELECT *
+			FROM opti.VW_tbOrdenes
+			WHERE orde_Estado = 1
+			AND sucu_Id = @sucu_Id
+		END
+	ELSE
+		BEGIN
+		SELECT *
+				FROM opti.VW_tbOrdenes
+				WHERE orde_Estado = 1
+	
+		END
+END
+GO
+
+/*Find ordenes*/
 CREATE OR ALTER PROCEDURE opti.UDP_opti_tbOrdenes_Find 
 	@orde_Id	INT
 AS
@@ -2827,24 +2836,21 @@ GO
 
 
 /*Insertar Ordenes*/
-CREATE OR ALTER PROCEDURE opti.UDP_opti_tbOrdenes_Insert
+CREATE OR ALTER PROCEDURE opti.UDP_opti_tbOrdenes_Insert 
 	 @clie_Id               INT, 
 	 @orde_Fecha            DATE, 
 	 @orde_FechaEntrega     DATE, 
-	 @orde_FechaEntregaReal DATE, 
 	 @sucu_Id               INT, 
 	 @usua_IdCreacion       INT
-	 
 AS
 BEGIN
 	BEGIN TRY
 			BEGIN
-			INSERT INTO [opti].[tbOrdenes](clie_Id, orde_Fecha, orde_FechaEntrega, orde_FechaEntregaReal, sucu_Id, usua_IdCreacion)
-			VALUES(@clie_Id, @orde_Fecha, @orde_FechaEntrega, @orde_FechaEntregaReal, @sucu_Id, @usua_IdCreacion)
+			INSERT INTO [opti].[tbOrdenes](clie_Id, orde_Fecha, orde_FechaEntrega, sucu_Id, usua_IdCreacion)
+			VALUES(@clie_Id, @orde_Fecha, @orde_FechaEntrega, @sucu_Id, @usua_IdCreacion)
 			
-			SELECT 'La orden ha sido insertada con éxito'
+			SELECT SCOPE_IDENTITY()
 			END
-
 	END TRY
 	BEGIN CATCH
 		SELECT 'Ha ocurrido un error'
@@ -2852,20 +2858,22 @@ BEGIN
 END
 GO
 
---EXEC opti.UDP_opti_tbOrdenes_Insert 1, '2023-05-10', '2023-06-10', NULL, 1, 1
---EXEC opti.UDP_opti_tbOrdenes_Insert 4, '2023-05-11', '2023-06-09', NULL, 3, 1
---EXEC opti.UDP_opti_tbOrdenes_Insert 2, '2023-06-01', '2023-06-30', NULL, 3, 1
-
+EXEC opti.UDP_opti_tbOrdenes_Insert 1, '2023-05-10', '2023-06-10', 1, 1
+go
+EXEC opti.UDP_opti_tbOrdenes_Insert 4, '2023-05-11', '2023-06-09', 3, 1
+go
+EXEC opti.UDP_opti_tbOrdenes_Insert 2, '2023-06-01', '2023-06-30', 3, 1
+GO
 
 /*Editar Ordenes*/
 CREATE OR ALTER PROCEDURE opti.UDP_opti_tbOrdenes_Update
-	@orde_Id            INT, 
-	@clie_Id            INT, 
-	@orde_Fecha         DATE, 
-	@orde_FechaEntrega  DATE, 
-	@orde_FechaEntregaReal DATE, 
-	@sucu_Id             INT, 
-	@usua_IdModificacion INT
+	@orde_Id				INT, 
+	@clie_Id				INT, 
+	@orde_Fecha				DATE, 
+	@orde_FechaEntrega		DATE, 
+	@orde_FechaEntregaReal	DATE, 
+	@sucu_Id				INT, 
+	@usua_IdModificacion	INT
 AS
 BEGIN 
 	BEGIN TRY
@@ -2951,9 +2959,95 @@ BEGIN
 END
 GO
 
+CREATE OR ALTER PROCEDURE opti.UDP_opti_tbDetallesOrdenes_Insert 
+	@orde_Id					INT,
+	@aros_Id					INT, 
+	@deor_GraduacionLeft		NVARCHAR(10), 
+	@deor_GraduacionRight		NVARCHAR(10), 
+	@deor_Cantidad				INT, 
+	@usua_IdCreacion			INT
+AS
+BEGIN
+	BEGIN TRY
+		DECLARE @aros_Unitario DECIMAL(18,2) = (SELECT [aros_CostoUni] FROM [opti].[tbAros] WHERE [aros_Id] = @aros_Id)
+
+		DECLARE @deor_Precio DECIMAL (18,2) = (@aros_Unitario + (@aros_Unitario * 0.20))
+
+		DECLARE @IVA DECIMAL (18,2) = (@deor_Precio * 0.15)
+
+		DECLARE @deor_Total DECIMAL (18,2) = ((@deor_Precio + @IVA) * @deor_Cantidad)
+
+		IF EXISTS (SELECT * FROM [opti].[tbDetallesOrdenes] WHERE aros_Id = @aros_Id AND deor_GraduacionLeft = @deor_GraduacionLeft AND deor_GraduacionRight = @deor_GraduacionRight)
+			BEGIN 
+				UPDATE [opti].[tbDetallesOrdenes]
+				SET deor_Cantidad = (deor_Cantidad + @deor_Cantidad),
+					deor_Total = deor_Total + @deor_Total
+				WHERE aros_Id = @aros_Id AND deor_GraduacionLeft = @deor_GraduacionLeft AND deor_GraduacionRight = @deor_GraduacionRight
+
+				SELECT 'El detalle ha sido ingresado con éxito'
+			END
+		ELSE
+			BEGIN
+
+				INSERT INTO [opti].[tbDetallesOrdenes](orde_Id, aros_Id, deor_GraduacionLeft, deor_GraduacionRight, deor_Precio, deor_Cantidad, deor_Total, usua_IdCreacion)
+				VALUES(@orde_Id, @aros_Id, @deor_GraduacionLeft, @deor_GraduacionRight, @deor_Precio, @deor_Cantidad, @deor_Total, @usua_IdCreacion)
+
+				SELECT 'El detalle ha sido ingresado con éxito'
+			END
+
+	END TRY
+	BEGIN CATCH
+		SELECT 'Ha ocurrido un error'
+	END CATCH
+END
+GO
+
+
+/*TRIGGER AROS*/
+GO
+CREATE OR ALTER TRIGGER opti.trg_tbDetallesOrdenes_ReducirStock
+ON [opti].[tbDetallesOrdenes]
+AFTER INSERT
+AS
+BEGIN
+	UPDATE [opti].[tbStockArosPorSucursal]
+	SET [stsu_Stock] = [stsu_Stock] - (SELECT [deor_Cantidad] FROM inserted)
+	WHERE [aros_Id] = (SELECT [aros_Id] FROM inserted)
+	AND [sucu_Id] = (SELECT [sucu_Id] FROM [opti].[tbOrdenes] WHERE [orde_Id] = (SELECT [orde_Id] FROM inserted))
+END
+GO
+
+GO
+CREATE OR ALTER TRIGGER opti.trg_tbDetallesOrdenes_ReducirStock2
+ON [opti].[tbDetallesOrdenes]
+AFTER UPDATE
+AS
+BEGIN
+	UPDATE [opti].[tbStockArosPorSucursal]
+	SET [stsu_Stock] = [stsu_Stock] - ((SELECT [deor_Cantidad] FROM inserted) - (SELECT [deor_Cantidad] FROM deleted))
+	WHERE [aros_Id] = (SELECT [aros_Id] FROM inserted)
+	AND [sucu_Id] = (SELECT [sucu_Id] FROM [opti].[tbOrdenes] WHERE [orde_Id] = (SELECT [orde_Id] FROM inserted))
+END
+GO
+
+GO
+CREATE OR ALTER TRIGGER opti.trg_tbDetallesOrdenes_AumentarStock
+ON [opti].[tbDetallesOrdenes]
+AFTER DELETE
+AS
+BEGIN
+	UPDATE [opti].[tbStockArosPorSucursal]
+	SET [stsu_Stock] = [stsu_Stock] + (SELECT [deor_Cantidad] FROM deleted)
+	WHERE [aros_Id] = (SELECT [aros_Id] FROM deleted)
+	AND [sucu_Id] = (SELECT [sucu_Id] FROM [opti].[tbOrdenes] WHERE [orde_Id] = (SELECT [orde_Id] FROM deleted))
+END
+GO
+
 --INSERT INTO opti.tbDetallesOrdenes(orde_Id, aros_Id, deor_GraduacionLeft, deor_GraduacionRight, deor_Precio, deor_Cantidad, deor_Total, usua_IdCreacion)
 --VALUES(1, 2, 0.25, 0.50, 2000.00, 1, 2500.00, 1),
 --      (3, 8, 1.15, 0.65, 4800.00, 1, 5000.00, 1)
+
+GO
 
 ---------- Envios -----------
 CREATE OR ALTER VIEW opti.VW_tbEnvio

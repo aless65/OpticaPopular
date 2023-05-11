@@ -56,9 +56,33 @@ namespace OpticaPopular.BusinessLogic.Services
         }
 
         #region Aros
+        public ServiceResult ListadoAros()
+        {
+            var result = new ServiceResult();
+            try
+            {
+                var list = _arosRepository.List();
+                return result.Ok(list);
+            }
+            catch (Exception e)
+            {
+                return result.Error(e.Message);
+            }
+        }
 
-
-
+        public ServiceResult ListadoArosXSucursal(int id)
+        {
+            var result = new ServiceResult();
+            try
+            {
+                var list = _arosRepository.ListXSucursal(id);
+                return result.Ok(list);
+            }
+            catch (Exception e)
+            {
+                return result.Error(e.Message);
+            }
+        }
         #endregion
 
         #region Cargos
@@ -220,7 +244,6 @@ namespace OpticaPopular.BusinessLogic.Services
             }
         }
 
-
         public ServiceResult BuscarCitaPorId(int cita_Id)
         {
             var resultado = new ServiceResult();
@@ -253,7 +276,7 @@ namespace OpticaPopular.BusinessLogic.Services
             }
         }
 
-        public ServiceResult InsertClientes(tbClientes item)
+        public ServiceResult InsertClientes(VW_tbClientes item)
         {
             var result = new ServiceResult();
             try
@@ -272,7 +295,7 @@ namespace OpticaPopular.BusinessLogic.Services
             }
         }
 
-        public ServiceResult UpdateClientes(tbClientes item)
+        public ServiceResult UpdateClientes(VW_tbClientes item)
         {
             var result = new ServiceResult();
             try
@@ -291,7 +314,7 @@ namespace OpticaPopular.BusinessLogic.Services
             }
         }
 
-        public ServiceResult DeleteClientes(tbClientes item)
+        public ServiceResult DeleteClientes(VW_tbClientes item)
         {
             var result = new ServiceResult();
             try
@@ -348,7 +371,6 @@ namespace OpticaPopular.BusinessLogic.Services
             try
             {
                 var insert = _consultoriosRepository.Insert(item);
-
                 if (insert.MessageStatus == "El Consultorio ha sido insertado con éxito")
                     return result.SetMessage(insert.MessageStatus, ServiceResultType.Success);
                 else if (insert.MessageStatus == "El Consultorio ya existe")
@@ -402,13 +424,57 @@ namespace OpticaPopular.BusinessLogic.Services
             }
 
         }
-            #endregion
+        #endregion
 
-            #region DetallesCitas
+        #region DetallesCitas
+        public ServiceResult BuscarDetalleCitaPorIdCita(int cita_Id)
+        {
+            var resultado = new ServiceResult();
 
+            try
+            {
+                var respuesta = _detallesCitasRepository.Find(cita_Id);
+                return resultado.Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
 
+                return resultado.Error(ex.Message);
+            }
+        }
 
-            #endregion
+        public ServiceResult InsertarDetalleCita(tbDetallesCitas item)
+        {
+            var resultado = new ServiceResult();
+
+            try
+            {
+                var respuesta = _detallesCitasRepository.Insert(item);
+                return resultado.Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+
+                return resultado.Error(ex.Message);
+            }
+        }
+
+        public ServiceResult EditarDetalleCita(tbDetallesCitas item)
+        {
+            var resultado = new ServiceResult();
+
+            try
+            {
+                var respuesta = _detallesCitasRepository.Update(item);
+                return resultado.Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+
+                return resultado.Error(ex.Message);
+            }
+        }
+        #endregion
 
             #region DetallesEnvios
 
@@ -638,6 +704,20 @@ namespace OpticaPopular.BusinessLogic.Services
             }
         }
 
+        public ServiceResult ListadoOrdenesXSucursales(int id)
+        {
+            var result = new ServiceResult();
+            try
+            {
+                var list = _ordenesRepository.ListXSucursales(id);
+                return result.Ok(list);
+            }
+            catch (Exception e)
+            {
+                return result.Error(e.Message);
+            }
+        }
+
         public ServiceResult FindOrdenes(int id)
         {
             var result = new ServiceResult();
@@ -645,6 +725,42 @@ namespace OpticaPopular.BusinessLogic.Services
             {
                 var orden = _ordenesRepository.Find(id);
                 return result.Ok(orden);
+            }
+            catch (Exception e)
+            {
+                return result.Error(e.Message);
+            }
+        }
+
+        public ServiceResult InsertOrdenes(tbOrdenes item)
+        {
+            var result = new ServiceResult();
+            try
+            {
+                var insert = _ordenesRepository.Insert(item);
+
+                if (insert.MessageStatus == "Ha ocurrido un error")
+                    return result.SetMessage(insert.MessageStatus, ServiceResultType.Error);
+                else
+                    return result.SetMessage(insert.MessageStatus, ServiceResultType.Success);
+            }
+            catch (Exception e)
+            {
+                return result.Error(e.Message);
+            }
+        }
+
+        public ServiceResult InsertOrdenesDetalles(tbDetallesOrdenes item)
+        {
+            var result = new ServiceResult();
+            try
+            {
+                var insert = _ordenesRepository.InsertDetalles(item);
+
+                if (insert.MessageStatus == "Ha ocurrido un error")
+                    return result.SetMessage(insert.MessageStatus, ServiceResultType.Error);
+                else
+                    return result.SetMessage(insert.MessageStatus, ServiceResultType.Success);
             }
             catch (Exception e)
             {

@@ -4,13 +4,6 @@ import { Stack } from '@mui/material';
 
 // ----------------------------------------------------------------------
 
-TextIconLabel.propTypes = {
-  endIcon: PropTypes.bool,
-  icon: PropTypes.any,
-  sx: PropTypes.object,
-  value: PropTypes.any,
-};
-
 export default function TextIconLabel({ icon, value, endIcon = false, sx, ...other }) {
   return (
     <Stack
@@ -28,3 +21,11 @@ export default function TextIconLabel({ icon, value, endIcon = false, sx, ...oth
     </Stack>
   );
 }
+
+TextIconLabel.propTypes = {
+  endIcon: PropTypes.bool,
+  icon: PropTypes.any,
+  sx: PropTypes.object,
+  value: PropTypes.any,
+};
+

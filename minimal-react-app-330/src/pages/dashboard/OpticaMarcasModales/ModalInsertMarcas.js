@@ -79,7 +79,7 @@ export default function AddMarcaDialog({ open, onClose, marcas, setTableData }) 
         usua_IdCreacion: 1,
       };
 
-      fetch("https://localhost:44362/api/Marcas/Insertar", {
+      fetch("http://opticapopular.somee.com/api/Marcas/Insertar", {
         method: "POST",
         mode: "cors",
         headers: {

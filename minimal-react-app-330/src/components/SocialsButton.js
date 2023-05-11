@@ -7,13 +7,6 @@ import Iconify from './Iconify';
 
 // ----------------------------------------------------------------------
 
-SocialsButton.propTypes = {
-  initialColor: PropTypes.bool,
-  links: PropTypes.objectOf(PropTypes.string),
-  simple: PropTypes.bool,
-  sx: PropTypes.object,
-};
-
 export default function SocialsButton({ initialColor = false, simple = true, links = {}, sx, ...other }) {
   const SOCIALS = [
     {
@@ -96,3 +89,10 @@ export default function SocialsButton({ initialColor = false, simple = true, lin
     </Stack>
   );
 }
+
+SocialsButton.propTypes = {
+  initialColor: PropTypes.bool,
+  links: PropTypes.objectOf(PropTypes.string),
+  simple: PropTypes.bool,
+  sx: PropTypes.object,
+};

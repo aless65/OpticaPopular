@@ -8,10 +8,6 @@ import { UploadAvatar, UploadMultiFile, UploadSingleFile } from '../upload';
 
 // ----------------------------------------------------------------------
 
-RHFUploadAvatar.propTypes = {
-  name: PropTypes.string,
-};
-
 export function RHFUploadAvatar({ name, ...other }) {
   const { control } = useFormContext();
 
@@ -37,11 +33,12 @@ export function RHFUploadAvatar({ name, ...other }) {
   );
 }
 
-// ----------------------------------------------------------------------
-
-RHFUploadSingleFile.propTypes = {
+RHFUploadAvatar.propTypes = {
   name: PropTypes.string,
 };
+
+// ----------------------------------------------------------------------
+
 
 export function RHFUploadSingleFile({ name, ...other }) {
   const { control } = useFormContext();
@@ -73,11 +70,10 @@ export function RHFUploadSingleFile({ name, ...other }) {
   );
 }
 
-// ----------------------------------------------------------------------
-
-RHFUploadMultiFile.propTypes = {
+RHFUploadSingleFile.propTypes = {
   name: PropTypes.string,
 };
+// ----------------------------------------------------------------------
 
 export function RHFUploadMultiFile({ name, ...other }) {
   const { control } = useFormContext();
@@ -108,3 +104,7 @@ export function RHFUploadMultiFile({ name, ...other }) {
     />
   );
 }
+
+RHFUploadMultiFile.propTypes = {
+  name: PropTypes.string,
+};

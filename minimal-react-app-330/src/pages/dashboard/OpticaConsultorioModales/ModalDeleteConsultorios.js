@@ -57,7 +57,7 @@ export default function DeleteUserDialog({ open, onClose, consultorios, setTable
                 cons_Id: consultorioId,
             };
 
-            fetch("https://localhost:44362/api/Consultorios/Eliminar", {
+            fetch("http://opticapopular.somee.com/api/Consultorios/Eliminar", {
                 method: "PUT",
                 mode: "cors",
                 headers: {

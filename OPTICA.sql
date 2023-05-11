@@ -1396,7 +1396,7 @@ GO
 
 --*********************************************INSERTS tbDetallesCitas*************************************************--
 INSERT INTO [opti].[tbDetallesCitas] ([cita_Id], [deci_Costo], [deci_HoraInicio], [deci_HoraFin], [usua_IdCreacion])
-VALUES (2, 450.00, '01:20', '01:40', 1)
+VALUES (2, 450.00, '13:20', '13:40', 1)
 GO
 
 

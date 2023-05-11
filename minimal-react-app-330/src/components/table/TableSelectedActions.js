@@ -4,14 +4,6 @@ import { Checkbox, Typography, Stack } from '@mui/material';
 
 // ----------------------------------------------------------------------
 
-TableSelectedActions.propTypes = {
-  dense: PropTypes.bool,
-  actions: PropTypes.node,
-  rowCount: PropTypes.number,
-  numSelected: PropTypes.number,
-  onSelectAllRows: PropTypes.func,
-};
-
 export default function TableSelectedActions({ dense, actions, rowCount, numSelected, onSelectAllRows }) {
   return (
     <Stack
@@ -57,3 +49,11 @@ export default function TableSelectedActions({ dense, actions, rowCount, numSele
     </Stack>
   );
 }
+
+TableSelectedActions.propTypes = {
+  dense: PropTypes.bool,
+  actions: PropTypes.node,
+  rowCount: PropTypes.number,
+  numSelected: PropTypes.number,
+  onSelectAllRows: PropTypes.func,
+};
