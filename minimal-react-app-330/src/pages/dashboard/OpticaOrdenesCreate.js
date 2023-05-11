@@ -31,7 +31,7 @@ export default function OrdenCreate() {
 
   const dispatch = useDispatch();
 
-  const empleado = useSelector((state) => state.empleado.empleado);
+  const orden = useSelector((state) => state.orden.orden);
 
   const isEdit = pathname.includes('editar');
 
@@ -43,7 +43,7 @@ export default function OrdenCreate() {
 
   // const currentEmpleado = _userList.find((user) => paramCase(user.name) === name);
 
-  const currentEmpleado = isEdit ? empleado : null;
+  const currentOrden = isEdit ? orden : null;
 
   return (
     <Page title="Orden: Crear nueva">
@@ -56,7 +56,7 @@ export default function OrdenCreate() {
             { name: !isEdit ? 'Nueva orden' : 'Editar orden' },
           ]}
         />
-        <OrdenNewEditForm isEdit={isEdit} currentEmpleado={currentEmpleado} />
+        <OrdenNewEditForm isEdit={isEdit} currentOrden={currentOrden} />
       </Container>
     </Page>
   );

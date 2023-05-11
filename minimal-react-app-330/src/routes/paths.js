@@ -26,6 +26,7 @@ export const PATH_OPTICA = {
   citas: path(ROOTS_OPTICA, '/citas'),
   ordenes: path(ROOTS_OPTICA, '/ordenes'),
   ordenesNew: path(ROOTS_OPTICA, '/ordenes/nuevo'),
+  ordenesEdit: (name) => path(ROOTS_OPTICA, `/ordenes/${name}/editar`),
   proveedores: path(ROOTS_OPTICA, '/proveedores') ,
   marcas: path(ROOTS_OPTICA, '/marcas') ,
   categorias: path(ROOTS_OPTICA, '/categorias') ,

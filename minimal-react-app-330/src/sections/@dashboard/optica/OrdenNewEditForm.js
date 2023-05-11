@@ -56,7 +56,15 @@ import Iconify from '../../../components/Iconify';
 import { EmpleadoTableRow, TableToolbar } from './empleado-list';
 import Page from '../../../components/Page';
 import Scrollbar from '../../../components/Scrollbar';
+import ordendetalles, { getOrdenes } from '../../../redux/slices/ordendetalles';
 // import sucursal from 'src/redux/slices/sucursal';
+
+const TABLE_HEAD = [
+    { id: 'empe_NombreCompleto', label: 'Nombre', align: 'left' },
+    { id: 'empe_Sexo', label: 'Sexo', align: 'left' },
+    { id: 'empe_SucursalNombre', label: 'Sucursal', align: 'left' },
+    { id: '', label: 'Acciones', align: 'left' },
+];
 
 // ----------------------------------------------------------------------
 const IncrementerStyle = styled('div')(({ theme }) => ({
@@ -84,8 +92,6 @@ const LabelStyle = styled(Typography)(({ theme }) => ({
     marginBottom: theme.spacing(1),
 }));
 
-
-
 export default function OrdenNewEditForm({ isEdit, currentOrden, onIncreaseQuantity, onDecreaseQuantity, quantity, available }) {
     const navigate = useNavigate();
 
@@ -93,6 +99,7 @@ export default function OrdenNewEditForm({ isEdit, currentOrden, onIncreaseQuant
 
     const [filterName, setFilterName] = useState('');
 
+    const dispatch = useDispatch();
 
     const {
         dense,
@@ -125,7 +132,7 @@ export default function OrdenNewEditForm({ isEdit, currentOrden, onIncreaseQuant
 
     const { enqueueSnackbar } = useSnackbar();
 
-    const { empleados, isLoading } = useSelector((state) => state.empleado);
+    const { ordendetalles, isLoading } = useSelector((state) => state.ordendetalle);
 
     const [optionsClientes, setOptionsClientes] = useState([]);
 
@@ -135,10 +142,32 @@ export default function OrdenNewEditForm({ isEdit, currentOrden, onIncreaseQuant
 
     const [encabezadoInserted, setEncabezadoInserted] = useState(false);
 
+    const [detalleInserted, setDetalleInserted] = useState(false);
+
     const [ordeId, setOrdeId] = useState(currentOrden?.orde_Id || '');
 
 
     quantity = 1;
+
+
+    useEffect(() => {
+        if (detalleInserted === true) {
+            dispatch(getOrdenes(ordeId));
+            console.log("jejehola");
+            setDetalleInserted(false);
+        }
+    }, [ordeId, detalleInserted]);
+
+    useEffect(() => {
+        if (ordendetalles.length) {
+            setTableData(ordendetalles);
+        }
+    }, [ordendetalles]);
+
+    const handleFilterName = (filterName) => {
+        setFilterName(filterName);
+        setPage(0);
+    };
 
     // const [estadoCivilTemporal, setEstadoCivilTemporal] = useState(currentEmpleado?.estacivi_Id || '');
 
@@ -152,10 +181,10 @@ export default function OrdenNewEditForm({ isEdit, currentOrden, onIncreaseQuant
 
     const SecondFormSchema = Yup.object().shape({
         aros: Yup.string().required('Aros requeridos'),
-        precio: Yup.string().required('Precio requerido'),
+        // precio: Yup.string().required('Precio requerido'),
         graduacionLeft: Yup.string().required('Graduación requerida'),
         graduacionRight: Yup.string().required('Graduación requerida'),
-        cantidad: Yup.string().required('Cantidad requerida'),
+        // cantidad: Yup.string().required('Cantidad requerida'),
         // avatarUrl: Yup.mixed().test('required', 'Avatar is required', (value) => value !== ''),
     });
 
@@ -166,7 +195,7 @@ export default function OrdenNewEditForm({ isEdit, currentOrden, onIncreaseQuant
             fechaEntrega: currentOrden?.orde_FechaEntrega || '',
             sucursal: currentOrden?.sucu_Id || '',
             aros: '',
-            precio: '',
+            precio: 300,
             graduacionLeft: '',
             graduacionRight: '',
             cantidad: ''
@@ -176,7 +205,7 @@ export default function OrdenNewEditForm({ isEdit, currentOrden, onIncreaseQuant
     );
 
     const methods = useForm({
-        resolver: yupResolver(FirstFormSchema, SecondFormSchema),
+        resolver: encabezadoInserted ? yupResolver(SecondFormSchema) : yupResolver(FirstFormSchema),
         defaultValues,
     });
 
@@ -277,33 +306,19 @@ export default function OrdenNewEditForm({ isEdit, currentOrden, onIncreaseQuant
 
     const onSubmitDetalle = async (data) => {
         try {
-            const dateStr = data.fechaNacimiento;
-            const date = new Date(dateStr);
-            const year = date.getFullYear();
-            const month = date.getMonth() + 1; // add 1 to month to get 1-based month number
-            const day = date.getDate();
-            const formattedDate = `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
-
-
+            console.log(ordeId);
             const jsonData = {
-                empe_Id: currentOrden?.empe_Id,
-                empe_Nombres: data.nombres,
-                empe_Apellidos: data.apellidos,
-                empe_Identidad: data.identidad,
-                empe_FechaNacimiento: formattedDate,
-                empe_Sexo: data.sexo,
-                estacivi_Id: data.estadoCivil,
-                empe_Telefono: data.telefono,
-                empe_CorreoElectronico: data.email,
-                dire_DireccionExacta: data.direccion,
-                muni_Id: data.municipio,
-                carg_Id: data.cargo,
-                sucu_Id: data.sucursal,
-                empe_UsuCreacion: 1,
-                empe_UsuModificacion: 1,
+                orde_Id: ordeId,
+                aros_Id: data.aros,
+                deor_GraduacionLeft: data.graduacionLeft,
+                deor_GraduacionRight: data.graduacionRight,
+                deor_Cantidad: quantity,
+                usua_IdCreacion: 1,
             };
+            
+            console.log(jsonData);
 
-            fetch("http://opticapopular.somee.com/api/Empleados/Insertar", {
+            fetch("http://opticapopular.somee.com/api/Ordenes/InsertarDetalles", {
                 method: "POST",
                 mode: "cors",
                 headers: {
@@ -314,13 +329,12 @@ export default function OrdenNewEditForm({ isEdit, currentOrden, onIncreaseQuant
                 .then((response) => response.json())
                 .then((data) => {
                     console.log(data);
-                    if (data.message === "El empleado ha sido ingresado con éxito") {
-                        navigate(PATH_OPTICA.empleados);
-                        enqueueSnackbar(data.message);
-                    } else if (data.message === 'Ya existe un empleado con este número de identidad') {
-                        enqueueSnackbar(data.message, { variant: 'warning' });
-                    } else {
+                    if (data.message === "Ha ocurrido un error") {
+                        // navigate(PATH_OPTICA.empleados);
                         enqueueSnackbar(data.message, { variant: 'error' });
+                    } else {
+                        setDetalleInserted(true);
+                        enqueueSnackbar(data.message);
                     }
                 })
                 .catch((error) => console.error(error));
@@ -374,236 +388,263 @@ export default function OrdenNewEditForm({ isEdit, currentOrden, onIncreaseQuant
     const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
 
     return (
-        
-<>
-        <Box sx={{ display: 'flex', gap: '16px', height: '100%' }}>
-            <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-                <Card sx={{ flex: 1, p: 3, pl: 4, pr: 4 }}>
-                    <Box
-                        sx={{
-                            display: 'grid',
-                            columnGap: 2,
-                            rowGap: 3,
-                            gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
-                        }}
-                    >
-                        <Autocomplete
-                            disablePortal
-                            name="cliente"
-                            options={optionsClientes}
-                            error={!!errors.cliente}
-                            getOptionLabel={(option) => option.label}
-                            renderInput={(params) => (
-                                <TextField
-                                    {...params}
-                                    label="Cliente"
-                                    error={!!errors.cliente}
-                                    helperText={errors.cliente?.message}
-                                />
-                            )}
-                            onChange={(event, value) => {
-                                if (value != null) {
-                                    methods.setValue('cliente', value.id);
-                                    // setEstadoCivilTemporal(value.id);
-                                    defaultValues.cliente = value.id;
-                                    // console.log(defaultValues.estadoCivil);
-                                } else {
-                                    methods.setValue('cliente', '');
-                                    defaultValues.cliente = '';
-                                }
+
+        <>
+            <Box sx={{ display: 'flex', gap: '16px', height: '100%' }}>
+                <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+                    <Card sx={{ flex: 1, p: 3, pl: 4, pr: 4 }}>
+                        <Box
+                            sx={{
+                                display: 'grid',
+                                columnGap: 2,
+                                rowGap: 3,
+                                gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
                             }}
-                            disabled={encabezadoInserted}
-                            isOptionEqualToValue={(option, value) => option.id === value.id}
-                            value={optionsClientes.find(option => option.id === defaultValues.cliente) ?? null}
-                        />
-
-                        <Controller
-                            name="fecha"
-                            control={control}
-                            render={({ field, fieldState: { error } }) => (
-                                <DatePicker
-                                    label="Fecha"
-                                    value={field.value || new Date()}
-                                    minDate={new Date()}
-                                    onChange={(newValue) => {
-                                        field.onChange(newValue);
-                                    }}
-                                    renderInput={(params) => (
-                                        <TextField {...params} fullWidth error={!!error} helperText={error?.message} />
-                                    )}
-                                    disabled
-                                />
-                            )}
-                        />
-
-                        <Controller
-                            name="fechaEntrega"
-                            control={control}
-                            render={({ field, fieldState: { error } }) => (
-                                <DatePicker
-                                    label="Fecha de Entrega"
-                                    value={field.value || null}
-                                    onChange={(newValue) => {
-                                        field.onChange(newValue);
-                                        if (newValue < new Date()) {
-                                            enqueueSnackbar("La fecha de entrega debe ser posterior a la fecha actual", { variant: 'warning' });
-                                            field.onChange(null);
-                                        }
-                                    }}
-                                    renderInput={(params) => (
-                                        <TextField {...params} fullWidth error={!!error} helperText={error?.message} />
-                                    )}
-                                    disabled={encabezadoInserted}
-                                />
-                            )}
-                        />
-
-                        <Autocomplete
-                            disablePortal
-                            name="sucursal"
-                            options={optionsSucursales}
-                            error={!!errors.sucursal}
-                            getOptionLabel={(option) => option.label}
-                            renderInput={(params) => (
-                                <TextField
-                                    {...params}
-                                    label="Sucursal"
-                                    error={!!errors.sucursal}
-                                    helperText={errors.sucursal?.message}
-                                />
-                            )}
-                            onChange={(event, value) => {
-                                if (value != null) {
-                                    methods.setValue('sucursal', value.id);
-                                    // setEstadoCivilTemporal(value.id);
-                                    defaultValues.sucursal = value.id;
-                                    // console.log(defaultValues.estadoCivil);
-                                } else {
-                                    methods.setValue('sucursal', '');
-                                    defaultValues.sucursal = '';
-                                }
-                            }}
-                            disabled={encabezadoInserted}
-                            isOptionEqualToValue={(option, value) => option.id === value.id}
-                            value={optionsSucursales.find(option => option.id === defaultValues.sucursal) ?? null}
-                        />
-
-                    </Box>
-
-                    <Stack direction="row" justifyContent="flex-end" sx={{ mt: 3 }}>
-                        {/* <Button to={PATH_DASHBOARD.optica.empleados}>Cancelar</Button> */}
-                        <LoadingButton type="submit" variant="contained" disabled={encabezadoInserted} loading={isSubmitting}>
-                            Siguiente
-                        </LoadingButton>
-                    </Stack>
-                </Card>
-            </FormProvider>
-
-            <FormProvider methods={methods} onSubmit={handleSubmit(onSubmitDetalle)}>
-                <Card sx={{ flex: 1, p: 3, pl: 4, pr: 4 }}>
-                    <Box
-                        sx={{
-                            display: 'grid',
-                            columnGap: 2,
-                            rowGap: 3,
-                            gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
-                        }}
-                    >
-                        <Autocomplete
-                            disablePortal
-                            name="aros"
-                            options={optionsAros}
-                            error={!!errors.aros}
-                            getOptionLabel={(option) => option.label}
-                            renderInput={(params) => (
-                                <TextField
-                                    {...params}
-                                    label="Aros"
-                                    error={!!errors.aros}
-                                    helperText={errors.aros?.message}
-                                />
-                            )}
-                            onChange={(event, value) => {
-                                if (value != null) {
-                                    methods.setValue('aros', value.id);
-                                    defaultValues.aros = value.id;
-                                } else {
-                                    methods.setValue('aros', '');
-                                    defaultValues.aros = '';
-                                }
-                            }}
-                            disabled={!encabezadoInserted}
-                            isOptionEqualToValue={(option, value) => option.id === value.id}
-                            value={optionsAros.find(option => option.id === defaultValues.aros) ?? null}
-                        />
-
-                        <RHFTextField name="precio" disabled label="Precio" />
-                        <RHFTextField name="graduacionLeft" disabled={!encabezadoInserted} label="Graduación izquierdo" />
-                        <RHFTextField name="graduacionRight" disabled={!encabezadoInserted} label="Graduación derecho" />
-                        <TableCell align="left">
-                            <Incrementer
-                                quantity={quantity}
-                                available={available}
-                                onDecrease={() => onDecreaseQuantity()}
-                                onIncrease={() => onIncreaseQuantity()}
+                        >
+                            <Autocomplete
+                                disablePortal
+                                name="cliente"
+                                options={optionsClientes}
+                                error={!!errors.cliente}
+                                getOptionLabel={(option) => option.label}
+                                renderInput={(params) => (
+                                    <TextField
+                                        {...params}
+                                        label="Cliente"
+                                        error={!!errors.cliente}
+                                        helperText={errors.cliente?.message}
+                                    />
+                                )}
+                                onChange={(event, value) => {
+                                    if (value != null) {
+                                        methods.setValue('cliente', value.id);
+                                        // setEstadoCivilTemporal(value.id);
+                                        defaultValues.cliente = value.id;
+                                        // console.log(defaultValues.estadoCivil);
+                                    } else {
+                                        methods.setValue('cliente', '');
+                                        defaultValues.cliente = '';
+                                    }
+                                }}
+                                disabled={encabezadoInserted}
+                                isOptionEqualToValue={(option, value) => option.id === value.id}
+                                value={optionsClientes.find(option => option.id === defaultValues.cliente) ?? null}
                             />
-                        </TableCell>
-                    </Box>
-                </Card>
 
-            </FormProvider>
-        </Box>
-    <br/>
-<Card>
-    <Scrollbar>
-        <TableContainer sx={{ minWidth: 800 }}>
-            <Table size={dense ? 'small' : 'medium'}>
+                            <Controller
+                                name="fecha"
+                                control={control}
+                                render={({ field, fieldState: { error } }) => (
+                                    <DatePicker
+                                        label="Fecha"
+                                        value={field.value || new Date()}
+                                        minDate={new Date()}
+                                        onChange={(newValue) => {
+                                            field.onChange(newValue);
+                                        }}
+                                        renderInput={(params) => (
+                                            <TextField {...params} fullWidth error={!!error} helperText={error?.message} />
+                                        )}
+                                        disabled
+                                    />
+                                )}
+                            />
 
-                <TableBody>
-                    {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
-                        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                        .map((row, index) =>
-                            row ? (
-                                <EmpleadoTableRow
-                                    key={row.empe_Id}
-                                    row={row}
-                                    selected={selected.includes(row.empe_Id)}
-                                // onSelectRow={() => onSelectRow(row.empe_Id)}
-                                // onDeleteRow={() => handleDeleteRow(row.empe_Id)}
-                                // onEditRow={() => handleEditRow(row.empe_Id)}
+                            <Controller
+                                name="fechaEntrega"
+                                control={control}
+                                render={({ field, fieldState: { error } }) => (
+                                    <DatePicker
+                                        label="Fecha de Entrega"
+                                        value={field.value || null}
+                                        onChange={(newValue) => {
+                                            field.onChange(newValue);
+                                            if (newValue < new Date()) {
+                                                enqueueSnackbar("La fecha de entrega debe ser posterior a la fecha actual", { variant: 'warning' });
+                                                field.onChange(null);
+                                            }
+                                        }}
+                                        renderInput={(params) => (
+                                            <TextField {...params} fullWidth error={!!error} helperText={error?.message} />
+                                        )}
+                                        disabled={encabezadoInserted}
+                                    />
+                                )}
+                            />
+
+                            <Autocomplete
+                                disablePortal
+                                name="sucursal"
+                                options={optionsSucursales}
+                                error={!!errors.sucursal}
+                                getOptionLabel={(option) => option.label}
+                                renderInput={(params) => (
+                                    <TextField
+                                        {...params}
+                                        label="Sucursal"
+                                        error={!!errors.sucursal}
+                                        helperText={errors.sucursal?.message}
+                                    />
+                                )}
+                                onChange={(event, value) => {
+                                    if (value != null) {
+                                        methods.setValue('sucursal', value.id);
+                                        // setEstadoCivilTemporal(value.id);
+                                        defaultValues.sucursal = value.id;
+                                        // console.log(defaultValues.estadoCivil);
+                                    } else {
+                                        methods.setValue('sucursal', '');
+                                        defaultValues.sucursal = '';
+                                    }
+                                }}
+                                disabled={encabezadoInserted}
+                                isOptionEqualToValue={(option, value) => option.id === value.id}
+                                value={optionsSucursales.find(option => option.id === defaultValues.sucursal) ?? null}
+                            />
+
+                        </Box>
+
+                        <Stack direction="row" justifyContent="flex-end" sx={{ mt: 3 }}>
+                            {/* <Button to={PATH_DASHBOARD.optica.empleados}>Cancelar</Button> */}
+                            <LoadingButton type="submit" variant="contained" disabled={encabezadoInserted} loading={isSubmitting}>
+                                Siguiente
+                            </LoadingButton>
+                        </Stack>
+                    </Card>
+                </FormProvider>
+
+                <FormProvider methods={methods} onSubmit={handleSubmit(onSubmitDetalle)}>
+                    <Card sx={{ flex: 1, p: 3, pl: 4, pr: 4 }}>
+                        <Box
+                            sx={{
+                                display: 'grid',
+                                columnGap: 2,
+                                rowGap: 3,
+                                gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
+                            }}
+                        >
+                            <Autocomplete
+                                disablePortal
+                                name="aros"
+                                options={optionsAros}
+                                error={!!errors.aros}
+                                getOptionLabel={(option) => option.label}
+                                renderInput={(params) => (
+                                    <TextField
+                                        {...params}
+                                        label="Aros"
+                                        error={!!errors.aros}
+                                        helperText={errors.aros?.message}
+                                    />
+                                )}
+                                onChange={(event, value) => {
+                                    if (value != null) {
+                                        methods.setValue('aros', value.id);
+                                        defaultValues.aros = value.id;
+                                    } else {
+                                        methods.setValue('aros', '');
+                                        defaultValues.aros = '';
+                                    }
+                                }}
+                                disabled={!encabezadoInserted}
+                                isOptionEqualToValue={(option, value) => option.id === value.id}
+                                value={optionsAros.find(option => option.id === defaultValues.aros) ?? null}
+                            />
+
+                            <RHFTextField name="precio" disabled label="Precio" />
+                            <RHFTextField name="graduacionLeft" disabled={!encabezadoInserted} label="Graduación izquierdo" />
+                            <RHFTextField name="graduacionRight" disabled={!encabezadoInserted} label="Graduación derecho" />
+                            <TableCell align="left">
+                                <Incrementer
+                                    quantity={quantity}
+                                    available={available}
+                                    onDecrease={() => onDecreaseQuantity()}
+                                    onIncrease={() => onIncreaseQuantity()}
                                 />
-                            ) : (
-                                !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
-                            )
-                        )}
+                            </TableCell>
 
-                    <TableEmptyRows height={denseHeight} emptyRows={emptyRows(page, rowsPerPage, tableData.length)} />
+                            <LoadingButton type="submit"
+                                variant="contained"
+                                disabled={!encabezadoInserted}
+                                loading={isSubmitting}
+                                sx={{
+                                    width: 'auto', // Adjust width to content
+                                    height: 40,
+                                    mt: 2, // Adjust button height
+                                }}>
+                                Insertar
+                            </LoadingButton>
+                        </Box>
+                    </Card>
 
-                    <TableNoData isNotFound={isNotFound} />
-                </TableBody>
-            </Table>
-        </TableContainer>
-    </Scrollbar>
+                </FormProvider>
+            </Box>
+            <br />
+            <Card>
+                <TableToolbar filterName={filterName} onFilterName={handleFilterName} />
 
-    <Box sx={{ position: 'relative' }}>
-        <TablePagination
-            rowsPerPageOptions={[5, 10, 25]}
-            component="div"
-            count={dataFiltered.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onPageChange={onChangePage}
-            onRowsPerPageChange={onChangeRowsPerPage}
-        />
+                <Scrollbar>
+                    <TableContainer sx={{ minWidth: 800 }}>
+                        <Table size={dense ? 'small' : 'medium'}>
+                            <TableHeadCustom
+                                order={order}
+                                orderBy={orderBy}
+                                headLabel={TABLE_HEAD}
+                                rowCount={tableData.length}
+                                numSelected={selected.length}
+                                onSort={onSort}
+                                onSelectAllRows={(checked) =>
+                                    onSelectAllRows(
+                                        checked,
+                                        tableData.map((row) => row.empe_Id)
+                                    )
+                                }
+                            />
+                            <TableBody>
+                                {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
+                                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                                    .map((row, index) =>
+                                        row ? (
+                                            <EmpleadoTableRow
+                                                key={row.empe_Id}
+                                                row={row}
+                                                selected={selected.includes(row.empe_Id)}
+                                            // onSelectRow={() => onSelectRow(row.empe_Id)}
+                                            // onDeleteRow={() => handleDeleteRow(row.empe_Id)}
+                                            // onEditRow={() => handleEditRow(row.empe_Id)}
+                                            />
+                                        ) : (
+                                            !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
+                                        )
+                                    )}
 
-        <FormControlLabel
-            control={<Switch checked={dense} onChange={onChangeDense} />}
-            label="Denso"
-            sx={{ px: 3, py: 1.5, top: 0, position: { md: 'absolute' } }}
-        />
-    </Box>
-        </Card>
-</>
+                                <TableEmptyRows height={denseHeight} emptyRows={emptyRows(page, rowsPerPage, tableData.length)} />
+
+                                <TableNoData isNotFound={isNotFound} />
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                </Scrollbar>
+
+                <Box sx={{ position: 'relative' }}>
+                    <TablePagination
+                        rowsPerPageOptions={[5, 10, 25]}
+                        component="div"
+                        count={dataFiltered.length}
+                        rowsPerPage={rowsPerPage}
+                        page={page}
+                        onPageChange={onChangePage}
+                        onRowsPerPageChange={onChangeRowsPerPage}
+                    />
+
+                    <FormControlLabel
+                        control={<Switch checked={dense} onChange={onChangeDense} />}
+                        label="Denso"
+                        sx={{ px: 3, py: 1.5, top: 0, position: { md: 'absolute' } }}
+                    />
+                </Box>
+            </Card>
+        </>
     );
 }
 

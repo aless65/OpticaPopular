@@ -96,6 +96,7 @@ export default function Router() {
                 { path: 'proveedores', element: <GuestGuard> <OpticaProveedores /> </GuestGuard>  },
                 { path: 'ordenes', element: <GuestGuard> <OpticaOrdenes /> </GuestGuard>  },
                 { path: 'ordenes/nuevo', element: <GuestGuard> <OpticaOrdenesCreate /> </GuestGuard>  },
+                { path: 'ordenes/:name/editar', element: <GuestGuard> <OpticaOrdenesCreate /> </GuestGuard>  },
                 { path: 'marcas', element: <GuestGuard> <OpticaMarcas /> </GuestGuard>  },
                 { path: 'categorias', element: <GuestGuard> <OpticaCategoria /> </GuestGuard>  },
                 { path: 'sucursales', element: <GuestGuard> <OpticaSucursales /> </GuestGuard>  },
