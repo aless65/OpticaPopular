@@ -80,7 +80,7 @@ export function getMarcas() {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('https://localhost:44362/api/Marcas/Listado');
+      const response = await axios.get('Marcas/Listado');
       dispatch(slice.actions.getMarcasSuccess(response.data.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));

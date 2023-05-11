@@ -80,7 +80,7 @@ export function getCategorias() {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('https://localhost:44362/api/Categorias/Listado');
+      const response = await axios.get('http://opticapopular.somee.com/api/Categorias/Listado');
       dispatch(slice.actions.getCategoriasSuccess(response.data.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));

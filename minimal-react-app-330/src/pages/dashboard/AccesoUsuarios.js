@@ -98,6 +98,41 @@ export default function AccesoUsuarios() {
 
   const [insertSuccess, setInsertSuccess] = useState(false);
 
+// ----------------------------------------------------------------------
+
+function applySortFilter({ tableData, comparator, filterName }) {
+  const stabilizedThis = tableData.map((el, index) => [el, index]);
+
+  stabilizedThis.sort((a, b) => {
+    const order = comparator(a[0], b[0]);
+    if (order !== 0) return order;
+    return a[1] - b[1];
+  });
+
+  tableData = stabilizedThis.map((el) => el[0]);
+
+  // if (filterName) {
+  //   tableData = tableData.filter((item) => 
+  //     Object.values(item).some(
+  //       (value) => 
+  //         value && value.toString().toLowerCase().indexOf(filterName.toLowerCase()) !== -1
+  //     )
+  //   );
+  // }
+
+  if (filterName) {
+    tableData = tableData.filter((item) =>
+      item.usua_NombreUsuario.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 ||
+      item.empe_NombreCompleto.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 ||
+      item.role_Nombre.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
+    );
+  }
+
+
+  return tableData;
+}
+
+
   useEffect(() => {
     dispatch(getUsuarios());
   }, [dispatch]);
@@ -264,36 +299,3 @@ export default function AccesoUsuarios() {
   );
 }
 
-// ----------------------------------------------------------------------
-
-function applySortFilter({ tableData, comparator, filterName }) {
-  const stabilizedThis = tableData.map((el, index) => [el, index]);
-
-  stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) return order;
-    return a[1] - b[1];
-  });
-
-  tableData = stabilizedThis.map((el) => el[0]);
-
-  // if (filterName) {
-  //   tableData = tableData.filter((item) => 
-  //     Object.values(item).some(
-  //       (value) => 
-  //         value && value.toString().toLowerCase().indexOf(filterName.toLowerCase()) !== -1
-  //     )
-  //   );
-  // }
-
-  if (filterName) {
-    tableData = tableData.filter((item) =>
-      item.usua_NombreUsuario.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 ||
-      item.empe_NombreCompleto.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 ||
-      item.role_Nombre.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
-    );
-  }
-
-
-  return tableData;
-}

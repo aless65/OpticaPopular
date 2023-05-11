@@ -22,5 +22,18 @@ namespace OpticaPopular.API.Controllers
             _mapper = mapper;
         }
 
+        [HttpGet("Listado")]
+        public IActionResult Index()
+        {
+            var list = _opticaPopularService.ListadoAros();
+            return Ok(list);
+        }
+
+        [HttpGet("ListadoXSucursal")]
+        public IActionResult IndexSucursal(int id)
+        {
+            var list = _opticaPopularService.ListadoArosXSucursal(id);
+            return Ok(list);
+        }
     }
 }

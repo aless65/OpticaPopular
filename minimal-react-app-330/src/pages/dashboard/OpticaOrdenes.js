@@ -18,7 +18,7 @@ import {
 } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
-import { getEmpleados } from '../../redux/slices/empleado';
+import { getOrdenes } from '../../redux/slices/orden';
 // routes
 import { PATH_DASHBOARD, PATH_OPTICA } from '../../routes/paths';
 // hooks
@@ -37,21 +37,50 @@ import {
   TableSelectedActions,
 } from '../../components/table';
 // sections
-import { EmpleadoTableRow, TableToolbar } from '../../sections/@dashboard/optica/empleado-list';
+import { OrdenTableRow, TableToolbar } from '../../sections/@dashboard/optica/orden-list';
 import DeleteEmpleadoDialog from './OpticaEmpleadosModales/ModalDeleteEmpleados';
 
 // ----------------------------------------------------------------------
 
+function applySortFilter({ tableData, comparator, filterName }) {
+  const stabilizedThis = tableData.map((el, index) => [el, index]);
+
+  stabilizedThis.sort((a, b) => {
+    const order = comparator(a[0], b[0]);
+    if (order !== 0) return order;
+    return a[1] - b[1];
+  });
+
+  tableData = stabilizedThis.map((el) => el[0]);
+
+
+  if (filterName) {
+    tableData = tableData.filter((item) =>
+      item.empe_NombreCompleto.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 ||
+      item.empe_SucursalNombre.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 ||
+      item.empe_Sexo.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
+    );
+  }
+
+
+  return tableData;
+}
+
+// ----------------------------------------------------------------------
+
 const TABLE_HEAD = [
-  { id: 'empe_NombreCompleto', label: 'Nombre', align: 'left' },
-  { id: 'empe_Sexo', label: 'Sexo', align: 'left' },
-  { id: 'empe_SucursalNombre', label: 'Sucursal', align: 'left' },
   { id: '' },
+  { id: 'orde_Id', label: 'ID', align: 'left' },
+  { id: 'clie_NombreCompleto', label: 'Cliente', align: 'left' },
+  { id: 'orde_Fecha', label: 'Fecha de Orden', align: 'left' },
+  { id: 'orde_FechaEntrega', label: 'Fecha de Entrega', align: 'left' },
+  { id: 'sucu_Descripcion', label: 'Sucursal', align: 'left' },
+  { id: '', label: 'Acciones', align: 'left' },
 ];
 
 // ----------------------------------------------------------------------
 
-export default function OpticaEmpleados() {
+export default function OpticaOrdenes() {
   const {
     dense,
     page,
@@ -70,7 +99,7 @@ export default function OpticaEmpleados() {
     onChangePage,
     onChangeRowsPerPage,
   } = useTable({
-    defaultOrderBy: 'empe_NombreCompleto',
+    defaultOrderBy: 'orde_Id',
   });
 
   const { themeStretch } = useSettings();
@@ -79,7 +108,7 @@ export default function OpticaEmpleados() {
 
   const dispatch = useDispatch();
 
-  const { empleados, isLoading } = useSelector((state) => state.empleado);
+  const { ordenes, isLoading } = useSelector((state) => state.orden);
 
   const [tableData, setTableData] = useState([]);
 
@@ -90,14 +119,14 @@ export default function OpticaEmpleados() {
   const [filterName, setFilterName] = useState('');
 
   useEffect(() => {
-    dispatch(getEmpleados());
+    dispatch(getOrdenes());
   }, [dispatch]);
 
   useEffect(() => {
-    if (empleados.length) {
-      setTableData(empleados);
+    if (ordenes.length) {
+      setTableData(ordenes);
     }
-  }, [empleados]);
+  }, [ordenes]);
 
   const handleFilterName = (filterName) => {
     setFilterName(filterName);
@@ -110,7 +139,7 @@ export default function OpticaEmpleados() {
   };
 
   const handleDeleteRows = (selected) => {
-    const deleteRows = tableData.filter((row) => !selected.includes(row.empe_Id));
+    const deleteRows = tableData.filter((row) => !selected.includes(row.orde_Id));
     setSelected([]);
     setTableData(deleteRows);
   };
@@ -152,11 +181,11 @@ export default function OpticaEmpleados() {
                 variant="contained"
                 startIcon={<Iconify icon="eva:plus-fill" />}
                 component={RouterLink}
-                to={PATH_OPTICA.empleadosNew}
+                to={PATH_OPTICA.ordenesNew}
               >
                 Agregar
               </Button>
-              <DeleteEmpleadoDialog open={openDeleteEmpleadoDialog} onClose={handleCloseDeleteEmpleadoDialog} empleados={empleados} setTableData={setTableData} empeId={empeId} />
+              <DeleteEmpleadoDialog open={openDeleteEmpleadoDialog} onClose={handleCloseDeleteEmpleadoDialog} empleados={ordenes} setTableData={setTableData} empeId={empeId} />
 
             </div>
           }
@@ -178,7 +207,7 @@ export default function OpticaEmpleados() {
                   onSelectAllRows={(checked) =>
                     onSelectAllRows(
                       checked,
-                      tableData.map((row) => row.empe_Id)
+                      tableData.map((row) => row.orde_Id)
                     )
                   }
                 />
@@ -188,13 +217,13 @@ export default function OpticaEmpleados() {
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row, index) =>
                       row ? (
-                        <EmpleadoTableRow
-                          key={row.empe_Id}
+                        <OrdenTableRow
+                          key={row.orde_Id}
                           row={row}
-                          selected={selected.includes(row.empe_Id)}
-                          onSelectRow={() => onSelectRow(row.empe_Id)}
-                          onDeleteRow={() => handleDeleteRow(row.empe_Id)}
-                          onEditRow={() => handleEditRow(row.empe_Id)}
+                          selected={selected.includes(row.orde_Id)}
+                          onSelectRow={() => onSelectRow(row.orde_Id)}
+                          onDeleteRow={() => handleDeleteRow(row.orde_Id)}
+                          onEditRow={() => handleEditRow(row.orde_Id)}
                         />
                       ) : (
                         !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
@@ -230,38 +259,4 @@ export default function OpticaEmpleados() {
       </Container>
     </Page>
   );
-}
-
-// ----------------------------------------------------------------------
-
-function applySortFilter({ tableData, comparator, filterName }) {
-  const stabilizedThis = tableData.map((el, index) => [el, index]);
-
-  stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) return order;
-    return a[1] - b[1];
-  });
-
-  tableData = stabilizedThis.map((el) => el[0]);
-
-  // if (filterName) {
-  //   tableData = tableData.filter((item) => 
-  //     Object.values(item).some(
-  //       (value) => 
-  //         value && value.toString().toLowerCase().indexOf(filterName.toLowerCase()) !== -1
-  //     )
-  //   );
-  // }
-
-  if (filterName) {
-    tableData = tableData.filter((item) =>
-      item.empe_NombreCompleto.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 ||
-      item.empe_SucursalNombre.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 ||
-      item.empe_Sexo.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
-    );
-  }
-
-
-  return tableData;
 }

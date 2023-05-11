@@ -57,7 +57,7 @@ export default function DeleteCategoriaDialog({ open, onClose, categorias, setTa
                 cate_Id: categoriaId,
             };
 
-            fetch("https://localhost:44362/api/Categorias/Eliminar", {
+            fetch("http://opticapopular.somee.com/api/Categorias/Eliminar", {
                 method: "PUT",
                 mode: "cors",
                 headers: {

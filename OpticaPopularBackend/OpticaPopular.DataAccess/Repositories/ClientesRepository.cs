@@ -10,9 +10,9 @@ using System.Threading.Tasks;
 
 namespace OpticaPopular.DataAccess.Repositories
 {
-    public class ClientesRepository : IRepository<tbClientes, VW_tbClientes>
+    public class ClientesRepository : IRepository<VW_tbClientes, VW_tbClientes>
     {
-        public RequestStatus Delete(tbClientes item)
+        public RequestStatus Delete(VW_tbClientes item)
         {
             RequestStatus result = new RequestStatus();
 
@@ -33,7 +33,7 @@ namespace OpticaPopular.DataAccess.Repositories
             throw new NotImplementedException();
         }
 
-        public RequestStatus Insert(tbClientes item)
+        public RequestStatus Insert(VW_tbClientes item)
         {
             RequestStatus result = new RequestStatus();
 
@@ -49,6 +49,8 @@ namespace OpticaPopular.DataAccess.Repositories
             parametros.Add("@clie_Telefono", item.clie_Telefono, DbType.String, ParameterDirection.Input);
             parametros.Add("@clie_CorreoElectronico", item.clie_CorreoElectronico, DbType.String, ParameterDirection.Input);
             parametros.Add("@clie_UsuCreacion", item.clie_UsuCreacion, DbType.Int32, ParameterDirection.Input);
+            parametros.Add("@muni_Id", item.muni_Id, DbType.String, ParameterDirection.Input);
+            parametros.Add("@dire_DireccionExacta", item.dire_DireccionExacta, DbType.String, ParameterDirection.Input);
 
             var resultado = db.QueryFirst<string>(ScriptsDataBase.UDP_Inserta_Clientes, parametros, commandType: CommandType.StoredProcedure);
 
@@ -63,7 +65,7 @@ namespace OpticaPopular.DataAccess.Repositories
             return db.Query<VW_tbClientes>(ScriptsDataBase.UDP_Lista_Clientes, null, commandType: CommandType.StoredProcedure);
         }
 
-        public RequestStatus Update(tbClientes item)
+        public RequestStatus Update(VW_tbClientes item)
         {
             RequestStatus result = new RequestStatus();
 
@@ -80,6 +82,8 @@ namespace OpticaPopular.DataAccess.Repositories
             parametros.Add("@clie_Telefono", item.clie_Telefono, DbType.String, ParameterDirection.Input);
             parametros.Add("@clie_CorreoElectronico", item.clie_CorreoElectronico, DbType.String, ParameterDirection.Input);
             parametros.Add("@clie_UsuModificacion", item.clie_UsuModificacion, DbType.Int32, ParameterDirection.Input);
+            parametros.Add("@muni_Id", item.muni_Id, DbType.String, ParameterDirection.Input);
+            parametros.Add("@dire_DireccionExacta", item.dire_DireccionExacta, DbType.String, ParameterDirection.Input);
 
             var resultado = db.QueryFirst<string>(ScriptsDataBase.UDP_Edita_Clientes, parametros, commandType: CommandType.StoredProcedure);
 

@@ -46,7 +46,7 @@ const TABLE_HEAD = [
   { id: 'empe_NombreCompleto', label: 'Nombre', align: 'left' },
   { id: 'empe_Sexo', label: 'Sexo', align: 'left' },
   { id: 'empe_SucursalNombre', label: 'Sucursal', align: 'left' },
-  { id: '' },
+  { id: '', label: 'Acciones', align: 'left' },
 ];
 
 // ----------------------------------------------------------------------

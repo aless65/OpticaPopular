@@ -83,7 +83,7 @@ export default function EditRolCategoriaDialog({ open, onClose, categorias, setT
         cate_UsuModificacion: 1,
       };
 
-      fetch("https://localhost:44362/api/Categorias/Editar", {
+      fetch("http://opticapopular.somee.com/api/Categorias/Editar", {
         method: "PUT",
         mode: "cors",
         headers: {
