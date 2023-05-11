@@ -80,6 +80,7 @@ namespace OpticaPopular.DataAccess.Repositories
 
         #region Detalles Cita
         public static string UDP_tbDetallesCitaPorIdCita = "opti.UDP_tbDetallesCitaPorIdCita";
+        public static string UDP_tbDetallesCitas_Insert = "opti.UDP_opti_tbDetallesCitas_Insert";
         #endregion
 
         #region Consultorios

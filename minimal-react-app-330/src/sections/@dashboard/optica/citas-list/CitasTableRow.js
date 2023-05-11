@@ -1,7 +1,8 @@
+/* eslint-disable camelcase */
 import * as React from 'react';
 import Moment from 'moment';
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { sentenceCase } from 'change-case';
 import { useSnackbar } from 'notistack';
 // @mui
@@ -24,7 +25,7 @@ import { TableMoreMenu, TableNoData } from '../../../../components/table';
 
 // ----------------------------------------------------------------------
 
-export default function CitasTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRow, onDetailsRow }) {
+export default function CitasTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRow, onDetailsRow, onDetallesCita }) {
 
   Moment.locale('en');
 
@@ -37,9 +38,7 @@ export default function CitasTableRow({ row, selected, onEditRow, onSelectRow, o
   const [open, setOpen] = React.useState(false);
 
   const [tableEmpty, setTableEmpty] = useState(false);
-
-  const { enqueueSnackbar } = useSnackbar();
-
+  
   const handleOpenMenu = (event) => {
     setOpenMenuActions(event.currentTarget);
   };
@@ -56,21 +55,17 @@ export default function CitasTableRow({ row, selected, onEditRow, onSelectRow, o
     setOpenMenuActionsDetails(null);
   };
 
-  const handleEditDetailsRow = (Id) => {
-
-    enqueueSnackbar(`Hola ${Id}`, { variant: 'success' }); 
-  }
-
   React.useEffect(() => {
     if(row.deci_Id === 0){
       setTableEmpty(true);
     }else{
       setTableEmpty(false);
     }
-  })
+  }, [row.deci_Id])
 
   return (
     <>
+    
     <TableRow hover selected={selected}>
       
       <TableCell>
@@ -128,8 +123,9 @@ export default function CitasTableRow({ row, selected, onEditRow, onSelectRow, o
                   onDetailsRow();
                   handleCloseMenu();
                 }}
+                style={{display: row.deci_Id !== 0 ? 'none' : ''}}
               >
-                <Iconify icon={'material-symbols:fact-check-outline'} />
+                <Iconify icon={'mdi:check-all'} />
                  Completar cita
               </MenuItem>
             </>
@@ -178,7 +174,7 @@ export default function CitasTableRow({ row, selected, onEditRow, onSelectRow, o
                   <>
                     <MenuItem
                       onClick={() => {
-                        handleEditDetailsRow(row.deci_Id);
+                        onDetallesCita();
                         handleCloseMenuDetails();
                       }}
                     >

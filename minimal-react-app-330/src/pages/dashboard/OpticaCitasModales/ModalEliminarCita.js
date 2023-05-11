@@ -50,7 +50,7 @@ export default function ModalEliminarCita({ open, onClose, citas, setTableData, 
                         enqueueSnackbar('Cita eliminada con éxito', { variant: 'success' });
                         setDeleteSuccess(true);
                     } else {
-                        enqueueSnackbar('Ocurrio un error al intentar eliminar la cita 1', { variant: 'error' });
+                        enqueueSnackbar('Ocurrio un error al intentar eliminar la cita', { variant: 'error' });
                     }
                 }else{
                     enqueueSnackbar('Ocurrio un error al intentar eliminar la cita', { variant: 'error' });   

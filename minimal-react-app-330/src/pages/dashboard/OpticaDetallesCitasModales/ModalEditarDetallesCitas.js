@@ -20,12 +20,12 @@ import { useForm, Controller } from 'react-hook-form';
 import { useState, useEffect } from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useSnackbar } from 'notistack';
-import { useDispatch } from '../../../redux/store';
+import { useDispatch, useSelector } from '../../../redux/store';
 import { getCitas, getcita } from '../../../redux/slices/citas';
 import { FormProvider, RHFTextField} from '../../../components/hook-form';
 import useIsMountedRef from '../../../hooks/useIsMountedRef';
 
-export default function ModalAgregarDetalleCita({ open, onClose, citas, setTableData, citaId }) {
+export default function ModalEditarDetalleCita({ open, onClose, citas, setTableData, citaId }) {
 
     const isMountedRef = useIsMountedRef();
 
@@ -40,7 +40,15 @@ export default function ModalAgregarDetalleCita({ open, onClose, citas, setTable
     const [mostrarAlertaError, setMostrarAlerta] = useState(false);
 
     const dispatch = useDispatch();
-    
+
+    const cita  = useSelector((state) => state.cita.cita);
+
+    useEffect(() => {
+        if (citaId) {
+            dispatch(getcita(1));
+        }
+    }, [citaId, dispatch]);
+
     const mostrarAlerta = () => {
         setMostrarAlerta(true);
     }
@@ -69,9 +77,9 @@ export default function ModalAgregarDetalleCita({ open, onClose, citas, setTable
     });
 
     const defaultValues = {
-        deci_Costo: '500.00',
-        deci_HoraInicio: '',
-        deci_HoraFin: '',
+        deci_Costo: cita?.deci_Costo,
+        deci_HoraInicio: cita?.deci_HoraInicio,
+        deci_HoraFin: cita?.deci_HoraFin
     };
 
     const methods = useForm({
@@ -162,16 +170,6 @@ export default function ModalAgregarDetalleCita({ open, onClose, citas, setTable
         ocultarAlerta();
     };
 
-    useEffect(() => {
-        if (insertSuccess === true) {
-          dispatch(getCitas());
-    
-          setTableData(citas);
-    
-          setInsertSuccess(false);
-        }
-    }, [insertSuccess]);
-
     return (
         <div>
             <FormProvider methods={methods}>
@@ -183,7 +181,7 @@ export default function ModalAgregarDetalleCita({ open, onClose, citas, setTable
                     aria-labelledby="alert-dialog-title"
                     >
                     <DialogTitle component="h2" id="alert-dialog-title">
-                        Completar cita
+                        Editar detalles cita
                     </DialogTitle>
                     <br/>
                     <Divider />

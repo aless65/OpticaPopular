@@ -45,7 +45,7 @@ import ModalAgregarCita from './OpticaCitasModales/ModalInsertarCita';
 import ModalEditarCita from './OpticaCitasModales/ModalEditarCita';
 import ModalEliminarCita from './OpticaCitasModales/ModalEliminarCita';
 import ModalAgregarDetalleCita from './OpticaDetallesCitasModales/ModalInsertarDetallesCitas';
-
+import ModalEditarDetalleCita from './OpticaDetallesCitasModales/ModalEditarDetallesCitas';
 // ----------------------------------------------------------------------
 
 function applySortFilter({ tableData, comparator, filterName }) {
@@ -119,6 +119,8 @@ export default function OpticaCitas() {
 
     const [citaIdEliminar, setCitaIdEliminar ] = useState('');
 
+    const [citaIdDetalleEditar, setCitaIdDetalleEditar ] = useState('');
+
     const [tableData, setTableData] = useState([]);
 
     const [openAddCitaDialog, setOpenAddCitaDialog] = useState(false);
@@ -128,6 +130,9 @@ export default function OpticaCitas() {
     const [openDeleteCitaDialog, setOpenDeleteCitaDialog]= useState(false);
 
     const [openAddDetalleCitaDialog, setOpenAddDetalleCitaDialog] = useState(false);
+
+    const [openEditDetailsCitaDialog, setOpenEditDetalleCitaDialog] = useState(false);
+
 
     const [filterName, setFilterName] = useState('');
 
@@ -140,6 +145,12 @@ export default function OpticaCitas() {
             dispatch(getcita(citaIdEditar));
         }
     }, [citaIdEditar, dispatch]);
+
+    useEffect(() => {
+        if (citaIdDetalleEditar) {
+            dispatch(getcita(citaIdDetalleEditar));
+        }
+    }, [citaIdDetalleEditar, dispatch]);
 
     const handleOpenAddCitaDialog = () => {
         setOpenAddCitaDialog(true)
@@ -172,6 +183,14 @@ export default function OpticaCitas() {
     const handleCloseAddDetalleCitaDialog = () => {
         setOpenAddDetalleCitaDialog(false);
     }
+    
+    const handleOpenEditCitaDetalleDialog = () => {
+        setOpenEditDetalleCitaDialog(true);
+    }
+
+    const handleCloseEditDetalleCitaDialog = () => {
+        setOpenEditDetalleCitaDialog(false);
+    }
 
     useEffect(() => {
         dispatch(getCitas());
@@ -194,7 +213,13 @@ export default function OpticaCitas() {
     };
 
     const handleDetailsRow = (Id) => {
+        setcitaIdAddDetalleCita(Id);
         handleOpenAddDetalleCitaDialog();
+    }
+
+    const handleEditDetailsRow = (Id) => {
+        setCitaIdDetalleEditar(Id);
+        handleOpenEditCitaDetalleDialog();
     }
 
     const handleDeleteRow = (Id) => {
@@ -245,10 +270,39 @@ export default function OpticaCitas() {
                             >
                                 Agregar
                             </Button>
-                            <ModalAgregarCita open={openAddCitaDialog} onClose={handleCloseAddCitaDialog} citas={citas} setTableData={setTableData} />
-                            <ModalEditarCita open={openEditCitaDialog} onClose={handleCloseEditCitaDialog} citas={citas} setTableData={setTableData} cita={cita} />
-                            <ModalEliminarCita open={openDeleteCitaDialog} onClose={handleCloseDeleteCitaDialog} citas={citas} setTableData={setTableData} citaId={citaIdEliminar} />
-                            <ModalAgregarDetalleCita open={openAddDetalleCitaDialog} onClose={handleCloseAddDetalleCitaDialog} citas={citas} setTableData={setTableData} citaId={citaIdAddDetalleCita} />
+                            <ModalAgregarCita 
+                                open={openAddCitaDialog} 
+                                onClose={handleCloseAddCitaDialog} 
+                                citas={citas} 
+                                setTableData={setTableData} 
+                            />
+                            <ModalEditarCita 
+                                open={openEditCitaDialog} 
+                                onClose={handleCloseEditCitaDialog} 
+                                citas={citas}
+                                setTableData={setTableData} 
+                                cita={cita} 
+                            />
+                            <ModalEliminarCita 
+                                open={openDeleteCitaDialog} 
+                                onClose={handleCloseDeleteCitaDialog} 
+                                citas={citas} 
+                                setTableData={setTableData} 
+                                citaId={citaIdEliminar} 
+                            />
+                            <ModalAgregarDetalleCita 
+                                open={openAddDetalleCitaDialog} 
+                                onClose={handleCloseAddDetalleCitaDialog} 
+                                citas={citas} setTableData={setTableData} 
+                                citaId={citaIdAddDetalleCita} 
+                            />
+                            <ModalEditarDetalleCita
+                                open={openEditDetailsCitaDialog} 
+                                onClose={handleCloseEditDetalleCitaDialog} 
+                                citaId={citaIdDetalleEditar}
+                                citas={citas} 
+                                setTableData={setTableData}
+                            />
                         </div>
                     }
                 />
@@ -286,7 +340,9 @@ export default function OpticaCitas() {
                                                     onSelectRow={() => onSelectRow(row.cita_Id)}
                                                     onDeleteRow={() => handleDeleteRow(row.cita_Id)}
                                                     onEditRow={() => handleEditRow(row.cita_Id)}
-                                                    onDetailsRow={() => handleDetailsRow(row.cita_Id)}                                                />
+                                                    onDetailsRow={() => handleDetailsRow(row.cita_Id)}      
+                                                    onDetallesCita={() => handleEditDetailsRow(row.cita_Id) }
+                                                    />
                                             ) : (
                                                 !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
                                             )

@@ -2200,13 +2200,7 @@ BEGIN
     ) AS ConsultoriosEmpleados
     WHERE RowNum = 1 
 END
-
 go
-
-EXEC opti.UDP_ConsultoriosListado
-
-
-
 
 /*Listado de Consultorios*/
 CREATE OR ALTER PROCEDURE opti.UDP_tbConsultorios_ListPorIdSucursal
@@ -2602,6 +2596,9 @@ GO
 
 --***************************************************/UDPS tbCitas****************************************************--
 
+
+--************************************************UDPS tbDetallesCitas****************************************************--
+
 ---------- DETALLE CITAS -----------
 CREATE OR ALTER VIEW opti.VW_tbDetallesCitas
 AS
@@ -2643,7 +2640,7 @@ BEGIN
 END
 GO
 
-/*Insertar citas*/
+/*Insertar detalle citas*/
 CREATE OR ALTER PROCEDURE opti.UDP_opti_tbDetallesCitas_Insert
 	 @cita_Id            INT, 
 	 @deci_Costo         DECIMAL(18,2), 
@@ -2653,33 +2650,13 @@ CREATE OR ALTER PROCEDURE opti.UDP_opti_tbDetallesCitas_Insert
 AS
 BEGIN
 	BEGIN TRY
-
-			BEGIN
-			INSERT INTO [opti].[tbDetallesCitas] (cita_Id, deci_Costo, deci_HoraInicio, deci_HoraFin, usua_IdCreacion)
-			VALUES(@cita_Id, @deci_Costo, @deci_HoraInicio, @deci_HoraFin, @usua_IdCreacion)
+		INSERT INTO [opti].[tbDetallesCitas] (cita_Id, deci_Costo, deci_HoraInicio, deci_HoraFin, usua_IdCreacion)
+		VALUES(@cita_Id, @deci_Costo, @deci_HoraInicio, @deci_HoraFin, @usua_IdCreacion)
 			
-			SELECT 'El Detalle de la cita ha sido insertado con éxito'
-			END
-		
-			BEGIN
-			IF EXISTS (SELECT * FROM  [opti].[tbDetallesCitas]
-						WHERE  [cita_Id] = @cita_Id AND
-						       [deci_HoraInicio] = @deci_HoraInicio 
-						      AND deci_Estado = 0)
-				UPDATE  [opti].[tbDetallesCitas]
-				SET deci_Estado = 1,
-                    [deci_Costo] = @deci_Costo,
-                    [deci_HoraFin] = @deci_HoraFin,
-                    [usua_IdCreacion] = @usua_IdCreacion
-				WHERE  [cita_Id] = @cita_Id AND
-					   [deci_HoraInicio] = @deci_HoraInicio 
-
-				SELECT 'El detalle de la cita ha sido insertado con éxito'
-			END
-		
+		SELECT 1
 	END TRY
 	BEGIN CATCH
-		SELECT 'Ha ocurrido un error'
+		SELECT 0
 	END CATCH
 END
 GO
@@ -2737,6 +2714,7 @@ BEGIN
 END
 GO
 
+--***********************************************/UDPS tbDetallesCitas****************************************************--
 
 ---------- Ordenes -----------
 CREATE OR ALTER VIEW opti.VW_tbOrdenes
@@ -2803,7 +2781,6 @@ BEGIN
 			
 			SELECT 'La orden ha sido insertada con éxito'
 			END
-
 	END TRY
 	BEGIN CATCH
 		SELECT 'Ha ocurrido un error'
