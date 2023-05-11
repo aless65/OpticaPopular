@@ -38,7 +38,7 @@ import useAuth from '../../../hooks/useAuth';
 import useIsMountedRef from '../../../hooks/useIsMountedRef';
 
 
-export default function AddConsultorioDialog({ open, onClose, consultorio, setTableData }) {
+export default function AddConsultorioDialog({ open, onClose, consultorios, setTableData }) {
 
   const isMountedRef = useIsMountedRef();
 
@@ -139,7 +139,7 @@ export default function AddConsultorioDialog({ open, onClose, consultorio, setTa
     if (insertSuccess === true) {
       dispatch(getConsultorios());
 
-      setTableData(consultorio);
+      setTableData(consultorios);
 
       setInsertSuccess(false);
     }
@@ -157,7 +157,7 @@ export default function AddConsultorioDialog({ open, onClose, consultorio, setTa
 
   return (
     <FormProvider methods={methods}>
-      <Dialog open={open} fullWidth maxWidth="sm" onClose={handleDialogClose} consultorio={consultorio} >
+      <Dialog open={open} fullWidth maxWidth="sm" onClose={handleDialogClose} consultorios={consultorios} >
         <DialogTitle>Insertar consultorio</DialogTitle>
 
         {!!errors.afterSubmit && <Alert severity="error">{errors.afterSubmit.message}</Alert>}

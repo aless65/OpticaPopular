@@ -328,18 +328,17 @@ namespace OpticaPopular.BusinessLogic.Services
             }
         }
 
-        public ServiceResult ListadoConsultorios2()
+        public ServiceResult ListadoConsultorios()
         {
-            var resultado = new ServiceResult();
-
+            var result = new ServiceResult();
             try
             {
-                var list = _consultoriosRepository.List2();
-                return resultado.Ok(list);
+                var list = _consultoriosRepository.List();
+                return result.Ok(list);
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                return resultado.Error(ex.Message);
+                return result.Error(e.Message);
             }
         }
 

@@ -152,7 +152,7 @@ export default function OpticaEmpleados() {
                 variant="contained"
                 startIcon={<Iconify icon="eva:plus-fill" />}
                 component={RouterLink}
-                to={PATH_OPTICA.empleadosNew}
+                to={PATH_OPTICA.clientesNew}
               >
                 Agregar
               </Button>

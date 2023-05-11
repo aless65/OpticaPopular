@@ -38,7 +38,7 @@ import useAuth from '../../../hooks/useAuth';
 import useIsMountedRef from '../../../hooks/useIsMountedRef';
 
 
-export default function EditConsultorioDialog({ open, onClose, consultorios, setTableData, consultorioId }) {
+export default function EditConsultorioDialog({ open, onClose, consultorios, setTableData, consultorioId,consultorioNombre }) {
 
     const isMountedRef = useIsMountedRef();
 
@@ -55,9 +55,9 @@ export default function EditConsultorioDialog({ open, onClose, consultorios, set
     const dispatch = useDispatch();
 
     const [empleadoTemporal, setEmpleadoTemporal] = useState('');
-
+    const [consultorioTemporal, setconsultorioTemporal] = useState('');
     
-
+    const [ConsultorioNombre, setConsultorioNombre] = useState('');
    
 
     // const { register, handleSubmit, setValue, reset, formState: { errors } } = useForm({ defaultValues });
@@ -67,6 +67,10 @@ export default function EditConsultorioDialog({ open, onClose, consultorios, set
             dispatch(getConsultorio(consultorioId));
         }
     }, [consultorioId, dispatch, insertSuccess]);
+
+    useEffect(() => {
+        setconsultorioTemporal(consultorioNombre);
+      }, [consultorioId]);
 
     useEffect(() => {
         if (consultorio) {
@@ -117,7 +121,7 @@ export default function EditConsultorioDialog({ open, onClose, consultorios, set
     } = methods;
 
     useEffect(() => {
-        methods.setValue('consultorioNombre', defaultValues.consultorioNombre);
+        methods.setValue('nombre', defaultValues.consultorioNombre);
         methods.setValue('empleado', defaultValues.empleado);
         
       }, [defaultValues]);
@@ -127,6 +131,7 @@ export default function EditConsultorioDialog({ open, onClose, consultorios, set
         try {
             const jsonData = {
                 cons_Id: consultorioId,
+                cons_Nombre:consultorioNombre, 
                 empe_Id: data.empleado,
                 usua_UsuModificacion: 1,
             };
@@ -188,10 +193,20 @@ export default function EditConsultorioDialog({ open, onClose, consultorios, set
                 {!!errors.afterSubmit && <Alert severity="error">{errors.afterSubmit.message}</Alert>}
 
                 <Stack spacing={3} sx={{ p: 3, pb: 0, pl: 5, pr: 5 }}>
-                    <RHFTextField name="consultorioNombre" disabled value={consultorio?.cons_Nombre || ''} label="Nombre de consultorio" />
+                    
+                                  
+                <TextField
+    label="Nombre del consultorio"
+    variant="outlined"
+    fullWidth
+    inputProps={{ readOnly: false }}
+    {...methods.register('consultorioNombre')}
+    value={consultorioTemporal}
+    onChange={(event) => setconsultorioTemporal(event.target.value)}
+/>
 
                     <Grid container>
-                        <Grid item xs={12} sx={{ pr: 1 }} sm={6}>
+                        <Grid item xs={12} sx={{ pr: 5 }} sm={12}>
                             <Autocomplete
                                 disablePortal
                                 name="empleado"

@@ -118,7 +118,7 @@ function applySortFilter({ tableData, comparator, filterName }) {
 
   if (filterName) {
     tableData = tableData.filter((item) =>
-      item.cons_Id.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 ||
+      item.cons_Id.indexOf(filterName.toLowerCase()) !== -1 ||
       item.cons_Nombre.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 ||
       item.empe_Nombres.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
     );
@@ -163,8 +163,9 @@ function applySortFilter({ tableData, comparator, filterName }) {
   //   console.log(usuaId);
   // }, [usuaId]);
 
-  const handleEditRow = (id) => {
+  const handleEditRow = (id,Nombre) => {
     setConsultorioId(id);
+    setConsultorioNombre(Nombre);
     handleOpenEditUserDialog();
   };
 

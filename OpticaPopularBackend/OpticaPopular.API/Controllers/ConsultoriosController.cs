@@ -24,6 +24,13 @@ namespace OpticaPopular.API.Controllers
             _mapper = mapper;
         }
 
+        [HttpGet("Listado")]
+        public IActionResult Index()
+        {
+            var list = _opticaPopularService.ListadoConsultorios();
+            return Ok(list);
+        }
+
         [HttpGet("ListadoConsultoriosPorIdSucursal/{sucu_Id}")]
         public IActionResult CarritoPorIdUsuario(int sucu_Id)
         {
@@ -34,15 +41,6 @@ namespace OpticaPopular.API.Controllers
             return Ok(lista);
         }
 
-        [HttpGet("ListadoConsultorios2")]
-        public IActionResult List()
-        {
-            var lista = _opticaPopularService.ListadoConsultorios2();
-
-            lista.Data = _mapper.Map<IEnumerable<ConsultoriosViewModel>>(lista.Data);
-
-            return Ok(lista);
-        }
 
         [HttpPost("Insertar")]
         public IActionResult Insert(ConsultoriosViewModel consultorios)
