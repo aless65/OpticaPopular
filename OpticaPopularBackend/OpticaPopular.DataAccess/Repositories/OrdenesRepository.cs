@@ -19,7 +19,6 @@ namespace OpticaPopular.DataAccess.Repositories
 
         public VW_tbOrdenes Find(int? id)
         {
-            RequestStatus result = new RequestStatus();
 
             using var db = new SqlConnection(OpticaPopularContext.ConnectionString);
 
@@ -31,7 +30,42 @@ namespace OpticaPopular.DataAccess.Repositories
 
         public RequestStatus Insert(tbOrdenes item)
         {
-            throw new NotImplementedException();
+            RequestStatus result = new RequestStatus();
+
+            using var db = new SqlConnection(OpticaPopularContext.ConnectionString);
+
+            var parametros = new DynamicParameters();
+            parametros.Add("@clie_Id", item.clie_Id, DbType.Int32, ParameterDirection.Input);
+            parametros.Add("@orde_Fecha", item.orde_Fecha, DbType.Date, ParameterDirection.Input);
+            parametros.Add("@orde_FechaEntrega", item.orde_FechaEntrega, DbType.Date, ParameterDirection.Input);
+            parametros.Add("@sucu_Id", item.sucu_Id, DbType.Date, ParameterDirection.Input);
+            parametros.Add("@usua_IdCreacion", item.usua_IdCreacion, DbType.Date, ParameterDirection.Input);
+
+            result = db.QueryFirst<RequestStatus>(ScriptsDataBase.UDP_Inserta_Ordenes, parametros, commandType: CommandType.StoredProcedure);
+
+            if (result.MessageStatus == "La orden ha sido insertada con éxito")
+                result.MessageStatus = result.CodeStatus.ToString();
+
+            return result;
+        }
+
+        public RequestStatus InsertDetalles(tbDetallesOrdenes item)
+        {
+            RequestStatus result = new RequestStatus();
+
+            using var db = new SqlConnection(OpticaPopularContext.ConnectionString);
+
+            var parametros = new DynamicParameters();
+            parametros.Add("@orde_Id", item.orde_Id, DbType.Int32, ParameterDirection.Input);
+            parametros.Add("@aros_Id", item.aros_Id, DbType.Int32, ParameterDirection.Input);
+            parametros.Add("@deor_GraduacionLeft", item.deor_GraduacionLeft, DbType.String, ParameterDirection.Input);
+            parametros.Add("@deor_GraduacionRight", item.deor_GraduacionRight, DbType.String, ParameterDirection.Input);
+            parametros.Add("@deor_Cantidad", item.deor_Cantidad, DbType.Int32, ParameterDirection.Input);
+            parametros.Add("@usua_IdCreacion", item.usua_IdCreacion, DbType.Int32, ParameterDirection.Input);
+
+            result.MessageStatus = db.QueryFirst<string>(ScriptsDataBase.UDP_Inserta_DetallesOrdenes, parametros, commandType: CommandType.StoredProcedure);
+
+            return result;
         }
 
         public IEnumerable<VW_tbOrdenes> ListXSucursales(int id)

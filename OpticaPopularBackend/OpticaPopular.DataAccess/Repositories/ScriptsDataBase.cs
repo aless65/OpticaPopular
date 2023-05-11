@@ -91,6 +91,7 @@ namespace OpticaPopular.DataAccess.Repositories
         public static string UDP_Lista_OrdenesPorSucursal = "opti.UDP_opti_tbOrdenes_ListXSucu";
 
         public static string UDP_Lista_DetallesOrdenes = "opti.UDP_opti_tbDetallesOrdenes_List";
+        public static string UDP_Inserta_DetallesOrdenes = "opti.UDP_opti_tbDetallesOrdenes_Insert";
         #endregion
 
         #region Proveedores

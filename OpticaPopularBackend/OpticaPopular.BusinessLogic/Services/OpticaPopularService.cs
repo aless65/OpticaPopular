@@ -607,6 +607,42 @@ namespace OpticaPopular.BusinessLogic.Services
             }
         }
 
+        public ServiceResult InsertOrdenes(tbOrdenes item)
+        {
+            var result = new ServiceResult();
+            try
+            {
+                var insert = _ordenesRepository.Insert(item);
+
+                if (insert.MessageStatus == "Ha ocurrido un error")
+                    return result.SetMessage(insert.MessageStatus, ServiceResultType.Error);
+                else
+                    return result.SetMessage(insert.MessageStatus, ServiceResultType.Success);
+            }
+            catch (Exception e)
+            {
+                return result.Error(e.Message);
+            }
+        }
+
+        public ServiceResult InsertOrdenesDetalles(tbDetallesOrdenes item)
+        {
+            var result = new ServiceResult();
+            try
+            {
+                var insert = _ordenesRepository.InsertDetalles(item);
+
+                if (insert.MessageStatus == "Ha ocurrido un error")
+                    return result.SetMessage(insert.MessageStatus, ServiceResultType.Error);
+                else
+                    return result.SetMessage(insert.MessageStatus, ServiceResultType.Success);
+            }
+            catch (Exception e)
+            {
+                return result.Error(e.Message);
+            }
+        }
+
         public ServiceResult ListadoDetallesOrdenes(int id)
         {
             var result = new ServiceResult();

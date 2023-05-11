@@ -69,12 +69,13 @@ function applySortFilter({ tableData, comparator, filterName }) {
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
+  { id: '' },
   { id: 'orde_Id', label: 'ID', align: 'left' },
   { id: 'clie_NombreCompleto', label: 'Cliente', align: 'left' },
   { id: 'orde_Fecha', label: 'Fecha de Orden', align: 'left' },
   { id: 'orde_FechaEntrega', label: 'Fecha de Entrega', align: 'left' },
   { id: 'sucu_Descripcion', label: 'Sucursal', align: 'left' },
-  { id: 'Acciones' },
+  { id: '', label: 'Acciones', align: 'left' },
 ];
 
 // ----------------------------------------------------------------------
@@ -180,7 +181,7 @@ export default function OpticaOrdenes() {
                 variant="contained"
                 startIcon={<Iconify icon="eva:plus-fill" />}
                 component={RouterLink}
-                to={PATH_OPTICA.empleadosNew}
+                to={PATH_OPTICA.ordenesNew}
               >
                 Agregar
               </Button>

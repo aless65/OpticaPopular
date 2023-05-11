@@ -2776,10 +2776,20 @@ CREATE OR ALTER PROCEDURE opti.UDP_opti_tbOrdenes_ListXSucu
 	@sucu_Id	INT
 AS
 BEGIN
-	SELECT *
-	FROM opti.VW_tbOrdenes
-	WHERE orde_Estado = 1
-	AND sucu_Id = @sucu_Id
+	IF @sucu_Id > 0
+		BEGIN
+			SELECT *
+			FROM opti.VW_tbOrdenes
+			WHERE orde_Estado = 1
+			AND sucu_Id = @sucu_Id
+		END
+	ELSE
+		BEGIN
+		SELECT *
+				FROM opti.VW_tbOrdenes
+				WHERE orde_Estado = 1
+	
+		END
 END
 GO
 
@@ -2802,18 +2812,16 @@ CREATE OR ALTER PROCEDURE opti.UDP_opti_tbOrdenes_Insert
 	 @clie_Id               INT, 
 	 @orde_Fecha            DATE, 
 	 @orde_FechaEntrega     DATE, 
-	 @orde_FechaEntregaReal DATE, 
 	 @sucu_Id               INT, 
 	 @usua_IdCreacion       INT
-	 
 AS
 BEGIN
 	BEGIN TRY
 			BEGIN
-			INSERT INTO [opti].[tbOrdenes](clie_Id, orde_Fecha, orde_FechaEntrega, orde_FechaEntregaReal, sucu_Id, usua_IdCreacion)
-			VALUES(@clie_Id, @orde_Fecha, @orde_FechaEntrega, @orde_FechaEntregaReal, @sucu_Id, @usua_IdCreacion)
+			INSERT INTO [opti].[tbOrdenes](clie_Id, orde_Fecha, orde_FechaEntrega, sucu_Id, usua_IdCreacion)
+			VALUES(@clie_Id, @orde_Fecha, @orde_FechaEntrega, @sucu_Id, @usua_IdCreacion)
 			
-			SELECT 'La orden ha sido insertada con éxito'
+			SELECT 'La orden ha sido insertada con éxito' AS MessageStatus, SCOPE_IDENTITY() AS CodeStatus
 			END
 
 	END TRY
@@ -2823,10 +2831,12 @@ BEGIN
 END
 GO
 
---EXEC opti.UDP_opti_tbOrdenes_Insert 1, '2023-05-10', '2023-06-10', NULL, 1, 1
---EXEC opti.UDP_opti_tbOrdenes_Insert 4, '2023-05-11', '2023-06-09', NULL, 3, 1
---EXEC opti.UDP_opti_tbOrdenes_Insert 2, '2023-06-01', '2023-06-30', NULL, 3, 1
-
+EXEC opti.UDP_opti_tbOrdenes_Insert 1, '2023-05-10', '2023-06-10', 1, 1
+go
+EXEC opti.UDP_opti_tbOrdenes_Insert 4, '2023-05-11', '2023-06-09', 3, 1
+go
+EXEC opti.UDP_opti_tbOrdenes_Insert 2, '2023-06-01', '2023-06-30', 3, 1
+GO
 
 /*Editar Ordenes*/
 CREATE OR ALTER PROCEDURE opti.UDP_opti_tbOrdenes_Update
@@ -2922,9 +2932,95 @@ BEGIN
 END
 GO
 
---INSERT INTO opti.tbDetallesOrdenes(orde_Id, aros_Id, deor_GraduacionLeft, deor_GraduacionRight, deor_Precio, deor_Cantidad, deor_Total, usua_IdCreacion)
---VALUES(1, 2, 0.25, 0.50, 2000.00, 1, 2500.00, 1),
---      (3, 8, 1.15, 0.65, 4800.00, 1, 5000.00, 1)
+CREATE OR ALTER PROCEDURE opti.UDP_opti_tbDetallesOrdenes_Insert
+	@orde_Id					INT,
+	@aros_Id					INT, 
+	@deor_GraduacionLeft		NVARCHAR(10), 
+	@deor_GraduacionRight		NVARCHAR(10), 
+	@deor_Cantidad				INT, 
+	@usua_IdCreacion			INT
+AS
+BEGIN
+	BEGIN TRY
+		DECLARE @aros_Unitario DECIMAL(18,2) = (SELECT [aros_CostoUni] FROM [opti].[tbAros] WHERE [aros_Id] = @aros_Id)
+
+		DECLARE @deor_Precio DECIMAL (18,2) = (@aros_Unitario + (@aros_Unitario * 0.20))
+
+		DECLARE @IVA DECIMAL (18,2) = (@deor_Precio * 0.15)
+
+		DECLARE @deor_Total DECIMAL (18,2) = ((@deor_Precio + @IVA) * @deor_Cantidad)
+
+		IF EXISTS (SELECT * FROM [opti].[tbDetallesOrdenes] WHERE aros_Id = @aros_Id AND deor_GraduacionLeft = @deor_GraduacionLeft AND deor_GraduacionRight = @deor_GraduacionRight)
+			BEGIN 
+				UPDATE [opti].[tbDetallesOrdenes]
+				SET deor_Cantidad = (deor_Cantidad + @deor_Cantidad),
+					deor_Total = deor_Total + @deor_Total
+				WHERE aros_Id = @aros_Id AND deor_GraduacionLeft = @deor_GraduacionLeft AND deor_GraduacionRight = @deor_GraduacionRight
+
+				SELECT 'El detalle ha sido ingresado con éxito'
+			END
+		ELSE
+			BEGIN
+
+				INSERT INTO [opti].[tbDetallesOrdenes](orde_Id, aros_Id, deor_GraduacionLeft, deor_GraduacionRight, deor_Precio, deor_Cantidad, deor_Total, usua_IdCreacion)
+				VALUES(@orde_Id, @aros_Id, @deor_GraduacionLeft, @deor_GraduacionRight, @deor_Precio, @deor_Cantidad, @deor_Total, @usua_IdCreacion)
+
+				SELECT 'El detalle ha sido ingresado con éxito'
+			END
+
+	END TRY
+	BEGIN CATCH
+		SELECT 'Ha ocurrido un error'
+	END CATCH
+END
+GO
+
+
+/*TRIGGER AROS*/
+GO
+CREATE OR ALTER TRIGGER opti.trg_tbDetallesOrdenes_ReducirStock
+ON [opti].[tbDetallesOrdenes]
+AFTER INSERT
+AS
+BEGIN
+	UPDATE [opti].[tbStockArosPorSucursal]
+	SET [stsu_Stock] = [stsu_Stock] - (SELECT [deor_Cantidad] FROM inserted)
+	WHERE [aros_Id] = (SELECT [aros_Id] FROM inserted)
+	AND [sucu_Id] = (SELECT [sucu_Id] FROM [opti].[tbOrdenes] WHERE [orde_Id] = (SELECT [orde_Id] FROM inserted))
+END
+GO
+
+GO
+CREATE OR ALTER TRIGGER opti.trg_tbDetallesOrdenes_ReducirStock2
+ON [opti].[tbDetallesOrdenes]
+AFTER UPDATE
+AS
+BEGIN
+	UPDATE [opti].[tbStockArosPorSucursal]
+	SET [stsu_Stock] = [stsu_Stock] - ((SELECT [deor_Cantidad] FROM inserted) - (SELECT [deor_Cantidad] FROM deleted))
+	WHERE [aros_Id] = (SELECT [aros_Id] FROM inserted)
+	AND [sucu_Id] = (SELECT [sucu_Id] FROM [opti].[tbOrdenes] WHERE [orde_Id] = (SELECT [orde_Id] FROM inserted))
+END
+GO
+
+GO
+CREATE OR ALTER TRIGGER opti.trg_tbDetallesOrdenes_AumentarStock
+ON [opti].[tbDetallesOrdenes]
+AFTER DELETE
+AS
+BEGIN
+	UPDATE [opti].[tbStockArosPorSucursal]
+	SET [stsu_Stock] = [stsu_Stock] + (SELECT [deor_Cantidad] FROM deleted)
+	WHERE [aros_Id] = (SELECT [aros_Id] FROM deleted)
+	AND [sucu_Id] = (SELECT [sucu_Id] FROM [opti].[tbOrdenes] WHERE [orde_Id] = (SELECT [orde_Id] FROM deleted))
+END
+GO
+
+INSERT INTO opti.tbDetallesOrdenes(orde_Id, aros_Id, deor_GraduacionLeft, deor_GraduacionRight, deor_Precio, deor_Cantidad, deor_Total, usua_IdCreacion)
+VALUES(1, 2, 0.25, 0.50, 2000.00, 1, 2500.00, 1),
+      (3, 8, 1.15, 0.65, 4800.00, 1, 5000.00, 1)
+
+GO
 
 ---------- Envios -----------
 CREATE OR ALTER VIEW opti.VW_tbEnvio

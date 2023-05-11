@@ -42,13 +42,13 @@ const slice = createSlice({
     // GET citas
     getOrdenesSuccess(state, action) {
       state.isLoading = false;
-      state.citas = action.payload;
+      state.ordenes = action.payload;
     },
 
     // GET cita
     getOrdenSuccess(state, action) {
       state.isLoading = false;
-      state.cita = action.payload;
+      state.orden = action.payload;
     },
 
     //  SORT & FILTER cita
@@ -84,16 +84,9 @@ export function getOrdenes() {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      // let endpoint = '';
-      if (localStorage.getItem('usuario').usua_EsAdmin === true) {
-        const response = await axios.get(`Ordenes/Listado`);
-        console.log(response.data.data);
+      const response = await axios.get(`Ordenes/ListadoXSucursales?id=${JSON.parse(localStorage.getItem('usuario')).usua_EsAdmin === true ? 0 : localStorage.getItem('sucu_Id')}`);
+        // console.log(response.data.data);
         dispatch(slice.actions.getOrdenesSuccess(response.data.data));
-      } else {
-        const response = await axios.get(`Ordenes/ListadoXSucursales?id=${localStorage.getItem("sucu_Id")}`);
-        console.log(response.data.data);
-        dispatch(slice.actions.getOrdenesSuccess(response.data.data));
-      }
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }

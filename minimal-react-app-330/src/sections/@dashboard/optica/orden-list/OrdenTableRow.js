@@ -47,11 +47,9 @@ export default function OrdenTableRow({ row, selected, onEditRow, onSelectRow, o
     const [detallesOrden, setDetallesOrden] = useState([]);
 
     useEffect(() => {
-        console.log("consigue data");
-        fetch(`http://opticapopular.somee.com/api/Ordenes/ListadoDetalles${row.orde_Id}`)
+        fetch(`http://opticapopular.somee.com/api/Ordenes/ListadoDetalles?id=${orde_Id}`)
             .then(response => response.json())
             .then(data => {
-                console.log(data.data);
                 setDetallesOrden(data.data);
             })
             .catch(error => console.error(error));
@@ -87,15 +85,15 @@ export default function OrdenTableRow({ row, selected, onEditRow, onSelectRow, o
                     </IconButton>
                 </TableCell>
 
-                <TableCell>{(row.orde_Id)}</TableCell>
+                <TableCell>{(orde_Id)}</TableCell>
 
-                <TableCell>{(row.clie_NombreCompleto)}</TableCell>
+                <TableCell>{(clie_NombreCompleto)}</TableCell>
 
-                <TableCell>{(row.orde_Fecha)}</TableCell>
+                <TableCell>{(orde_Fecha)}</TableCell>
 
-                <TableCell>{(row.orde_FechaEntrega)}</TableCell>
+                <TableCell>{(orde_FechaEntrega)}</TableCell>
 
-                <TableCell>{(row.sucu_Descripcion)}</TableCell>
+                <TableCell>{(sucu_Descripcion)}</TableCell>
 
                 <TableCell align="right" onClick={onSelectRow}>
                     <TableMoreMenu
@@ -150,7 +148,7 @@ export default function OrdenTableRow({ row, selected, onEditRow, onSelectRow, o
                                 </TableHead>
                                 <TableBody>
                                     {detallesOrden.map((detalle) => (
-                                        <TableRow key={detalle.orde_Id}>
+                                        <TableRow key={detalle.deor_Id}>
                                             <TableCell component="th" scope="row">
                                                 {detalle.orde_Id === 0 ? '' : detalle.orde_Id}
                                             </TableCell>
