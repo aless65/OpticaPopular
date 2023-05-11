@@ -176,7 +176,7 @@ export default function ModalEditarCita({ open, onClose, citas, setTableData, ci
                     <Divider />
                     {!!errors.afterSubmit && <Alert severity="error">{errors.afterSubmit.message}</Alert>}
                     <DialogContent >
-                    <Stack spacing={3} sx={{ p: 3, pb: 0, pl: 5, pr: 5 }}>
+                    <Stack spacing={3}>
                         <Grid container>
                             <Grid item xs={12} sx={{ pr: 1 }} sm={6}>
                                 <Autocomplete

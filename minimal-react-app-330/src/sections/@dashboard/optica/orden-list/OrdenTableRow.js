@@ -64,12 +64,12 @@ export default function OrdenTableRow({ row, selected, onEditRow, onSelectRow, o
     };
 
     React.useEffect(() => {
-        if (row.orde_Id === 0) {
+        if (detallesOrden.length === 0) {
             setTableEmpty(true);
         } else {
             setTableEmpty(false);
         }
-    })
+    }, [detallesOrden])
 
     return (
         <>
@@ -89,9 +89,9 @@ export default function OrdenTableRow({ row, selected, onEditRow, onSelectRow, o
 
                 <TableCell>{(clie_NombreCompleto)}</TableCell>
 
-                <TableCell>{(orde_Fecha)}</TableCell>
+                <TableCell>{(Moment(orde_Fecha).format('DD-MM-YYYY'))}</TableCell>
 
-                <TableCell>{(orde_FechaEntrega)}</TableCell>
+                <TableCell>{(Moment(orde_FechaEntrega).format('DD-MM-YYYY'))}</TableCell>
 
                 <TableCell>{(sucu_Descripcion)}</TableCell>
 

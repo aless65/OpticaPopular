@@ -48,30 +48,6 @@ export default function ModalEditarDetalleCita({ open, onClose, citas, setTableD
 
     const dispatch = useDispatch();
 
-    const InsertSchema = Yup.object().shape({
-        deci_Costo: Yup.string().required('El precio de la cita es requerido').trim().matches(/^(?!0+(\.0{1,2})?$)\d{3,4}(\.\d{1,2})?$/, 'El costo debe estar entre 100 y 9,999 con un máximo de 2 decimales opcionales'),
-        deci_HoraInicio: Yup.string().required('La hora de inicio es requerida').nullable(),
-        deci_HoraFin: Yup.string().required('La hora fin es requerida').nullable(),
-    });
-
-    const defaultValues = {
-        deci_Costo: deci_CostoTemp || '',
-        deci_HoraInicio: deci_HoraInicioTemp || '' ,
-        deci_HoraFin: deci_HoraFinTemp || ''
-    };
-
-    const methods = useForm({
-        resolver: yupResolver(InsertSchema),
-        defaultValues,
-    });
-
-    const {
-        reset,
-        setError,
-        handleSubmit,
-        formState: { errors, isSubmitting },
-    } = methods;
-
     useEffect(() => {
         if (citaId) {
             axios.get(`DetallesCitas/BuscarDetalleCitaPorIdCita/${citaId}`)
@@ -101,11 +77,36 @@ export default function ModalEditarDetalleCita({ open, onClose, citas, setTableD
           }
     }, [citaId, insertSuccess]);
 
+    
+    const InsertSchema = Yup.object().shape({
+        deci_Costo: Yup.string().required('El precio de la cita es requerido').trim().matches(/^(?!0+(\.0{1,2})?$)\d{3,4}(\.\d{1,2})?$/, 'El costo debe estar entre 100 y 9,999 con un máximo de 2 decimales opcionales'),
+        deci_HoraInicio: Yup.string().required('La hora de inicio es requerida').nullable(),
+        deci_HoraFin: Yup.string().required('La hora fin es requerida').nullable(),
+    });
+
+    const defaultValues = {
+        deci_Costo: deci_CostoTemp || '',
+        deci_HoraInicio: deci_HoraInicioTemp || '' ,
+        deci_HoraFin: deci_HoraFinTemp || ''
+    };
+
+    const methods = useForm({
+        resolver: yupResolver(InsertSchema),
+        defaultValues,
+    });
+
+    const {
+        reset,
+        setError,
+        handleSubmit,
+        formState: { errors, isSubmitting },
+    } = methods;
+
     useEffect(() => {
         methods.setValue('deci_Costo', defaultValues.deci_Costo);
         methods.setValue('deci_HoraInicio', defaultValues.deci_HoraInicio);
         methods.setValue('deci_HoraFin', defaultValues.deci_HoraFin);
-    }, [methods])
+    }, [defaultValues])
 
     const mostrarAlerta = () => {
         setMostrarAlerta(true);
@@ -219,7 +220,7 @@ export default function ModalEditarDetalleCita({ open, onClose, citas, setTableD
                     <br/>
                     <Divider />
                     <DialogContent>
-                    <Stack spacing={3} sx={{ p: 3, pb: 0, pl: 5, pr: 5 }}>
+                    <Stack spacing={3}>
                         {mostrarAlertaError && renderErrorMessage("generalError")}
                         <Grid container>
                             <Grid item xs={12} sx={{ pr: 1 }} sm={12}>

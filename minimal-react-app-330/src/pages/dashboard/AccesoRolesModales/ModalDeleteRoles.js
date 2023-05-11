@@ -23,7 +23,9 @@ import {
     FormControlLabel,
     Grid,
     CardHeader,
-    CardContent
+    CardContent,
+    Divider,
+    DialogContent
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 
@@ -109,12 +111,15 @@ export default function DeleteRolDialog({ open, onClose, roles, setTableData, ro
 
     return (
         <Dialog open={open} fullWidth maxWidth="sm" onClose={handleDialogClose} roles={roles}>
-            <Card>
-                <Typography variant="h5" sx={{pt: 3, pl: 3}} component="h2">Eliminar rol</Typography>
-                <CardContent>
-                    ¿Está seguro de que desea eliminar este rol?
-                </CardContent>
-            </Card>
+            <DialogTitle variant="h5">
+                Eliminar rol
+            </DialogTitle>
+            <br/>                
+            <Divider/>
+            <DialogContent>
+                ¿Está seguro de que desea eliminar este rol?
+            </DialogContent>
+            <Divider/>
             <DialogActions>
                 <LoadingButton variant="contained" type="submit" loading={isSubmitting} onClick={submitHandler}>
                     Eliminar
