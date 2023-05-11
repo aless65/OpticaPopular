@@ -81,7 +81,7 @@ export function getConsultorios() {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('https://localhost:44362/api/Consultorios/ListadoConsultoriosPorIdSucursal/0');
+      const response = await axios.get('Consultorios/ListadoConsultoriosPorIdSucursal/0');
       dispatch(slice.actions.getConsultoriosSuccess(response.data.data));
       console.log(response.data.data);
     } catch (error) {

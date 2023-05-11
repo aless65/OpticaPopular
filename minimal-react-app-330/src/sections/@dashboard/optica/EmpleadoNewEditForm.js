@@ -1,3 +1,4 @@
+
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
 import { useCallback, useEffect, useMemo, useState } from 'react';
@@ -37,6 +38,7 @@ import { FormProvider, RHFSelect, RHFSwitch, RHFTextField, RHFRadioGroup } from 
 
 // ----------------------------------------------------------------------
 
+// eslint-disable-next-line no-use-before-define
 EmpleadoNewEditForm.propTypes = {
   isEdit: PropTypes.bool,
   currentUser: PropTypes.object,
@@ -484,7 +486,7 @@ export default function EmpleadoNewEditForm({ isEdit, currentEmpleado }) {
         </Box>
 
         <Stack direction="row" justifyContent="flex-end" sx={{ mt: 3 }}>
-          <Button to={PATH_OPTICA.empleados}>Cancelar</Button>
+          <Button to={PATH_DASHBOARD.optica.empleados}>Cancelar</Button>
           <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
             {!isEdit ? 'Crear empleado' : 'Guardar cambios'}
           </LoadingButton>

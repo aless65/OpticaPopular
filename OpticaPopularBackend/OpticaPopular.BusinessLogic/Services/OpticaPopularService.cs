@@ -56,9 +56,33 @@ namespace OpticaPopular.BusinessLogic.Services
         }
 
         #region Aros
+        public ServiceResult ListadoAros()
+        {
+            var result = new ServiceResult();
+            try
+            {
+                var list = _arosRepository.List();
+                return result.Ok(list);
+            }
+            catch (Exception e)
+            {
+                return result.Error(e.Message);
+            }
+        }
 
-
-
+        public ServiceResult ListadoArosXSucursal(int id)
+        {
+            var result = new ServiceResult();
+            try
+            {
+                var list = _arosRepository.ListXSucursal(id);
+                return result.Ok(list);
+            }
+            catch (Exception e)
+            {
+                return result.Error(e.Message);
+            }
+        }
         #endregion
 
         #region Cargos
@@ -680,6 +704,20 @@ namespace OpticaPopular.BusinessLogic.Services
             }
         }
 
+        public ServiceResult ListadoOrdenesXSucursales(int id)
+        {
+            var result = new ServiceResult();
+            try
+            {
+                var list = _ordenesRepository.ListXSucursales(id);
+                return result.Ok(list);
+            }
+            catch (Exception e)
+            {
+                return result.Error(e.Message);
+            }
+        }
+
         public ServiceResult FindOrdenes(int id)
         {
             var result = new ServiceResult();
@@ -687,6 +725,42 @@ namespace OpticaPopular.BusinessLogic.Services
             {
                 var orden = _ordenesRepository.Find(id);
                 return result.Ok(orden);
+            }
+            catch (Exception e)
+            {
+                return result.Error(e.Message);
+            }
+        }
+
+        public ServiceResult InsertOrdenes(tbOrdenes item)
+        {
+            var result = new ServiceResult();
+            try
+            {
+                var insert = _ordenesRepository.Insert(item);
+
+                if (insert.MessageStatus == "Ha ocurrido un error")
+                    return result.SetMessage(insert.MessageStatus, ServiceResultType.Error);
+                else
+                    return result.SetMessage(insert.MessageStatus, ServiceResultType.Success);
+            }
+            catch (Exception e)
+            {
+                return result.Error(e.Message);
+            }
+        }
+
+        public ServiceResult InsertOrdenesDetalles(tbDetallesOrdenes item)
+        {
+            var result = new ServiceResult();
+            try
+            {
+                var insert = _ordenesRepository.InsertDetalles(item);
+
+                if (insert.MessageStatus == "Ha ocurrido un error")
+                    return result.SetMessage(insert.MessageStatus, ServiceResultType.Error);
+                else
+                    return result.SetMessage(insert.MessageStatus, ServiceResultType.Success);
             }
             catch (Exception e)
             {

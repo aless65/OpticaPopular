@@ -70,6 +70,11 @@ namespace OpticaPopular.DataAccess.Repositories
         public static string UDP_Lista_Departamentos = "gral.UDP_gral_tbDepartamentos_List";
         #endregion
 
+        #region Aros
+        public static string UDP_Lista_Aros = "opti.UDP_opti_tbAros_List";
+        public static string UDP_Lista_ArosXSucursal = "opti.UDP_opti_tbAros_ListXSucursal";
+        #endregion
+
         #region Citas
         public static string UDP_tbCitas_ListadoPorIdSucursal = "opti.UDP_tbCitas_ListadoPorIdSucursal";
         public static string UDP_tbCitas_InsertarNuevaCita = "opti.UDP_tbCitas_InsertarNuevaCita";
@@ -88,15 +93,16 @@ namespace OpticaPopular.DataAccess.Repositories
         public static string UDP_tbConsultorios_ListPorIdSucursal = "opti.UDP_tbConsultorios_ListPorIdSucursal";
         #endregion
 
-        #region Ordenes
+        #region Órdenes
         public static string UDP_Lista_Ordenes = "opti.UDP_opti_tbOrdenes_List";
         public static string UDP_Find_Ordenes = "opti.UDP_opti_tbOrdenes_Find";
         public static string UDP_Inserta_Ordenes = "opti.UDP_opti_tbOrdenes_Insert";
         public static string UDP_Edita_Ordenes = "opti.UDP_opti_tbOrdenes_Update";
         public static string UDP_Elimina_Ordenes = "opti.UDP_opti_tbOrdenes_Delete";
-
+        public static string UDP_Lista_OrdenesPorSucursal = "opti.UDP_opti_tbOrdenes_ListXSucu";
 
         public static string UDP_Lista_DetallesOrdenes = "opti.UDP_opti_tbDetallesOrdenes_List";
+        public static string UDP_Inserta_DetallesOrdenes = "opti.UDP_opti_tbDetallesOrdenes_Insert";
         #endregion
 
         #region Proveedores
