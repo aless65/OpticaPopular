@@ -39,7 +39,7 @@ export default function ModalEditarCita({ open, onClose, citas, setTableData, ci
 
     const [optionsConsultorios, setOptionsConsultorios] = useState([]);
 
-    const [fechaTemp, setFechaTemp] = useState(dayjs(cita?.cita_Fecha));
+    const [fechaTemp, setFechaTemp] = useState('');
 
     const InsertSchema = Yup.object().shape({
         clie_Id: Yup.string().required('El cliente es requerido'),
@@ -50,8 +50,20 @@ export default function ModalEditarCita({ open, onClose, citas, setTableData, ci
     const defaultValues = {
         clie_Id: cita?.clie_Id,
         cons_Id: cita?.cons_Id,
-        cita_Fecha: fechaTemp,
+        cita_Fecha: dayjs(cita?.cita_Fecha)
     }; 
+
+    const methods = useForm({
+        resolver: yupResolver(InsertSchema),
+        defaultValues,
+    });
+
+    const {
+        reset,
+        setError,
+        handleSubmit,
+        formState: { errors, isSubmitting },
+    } = methods;
 
     useEffect(() => {
         axios.get('Clientes/Listado')
@@ -75,19 +87,14 @@ export default function ModalEditarCita({ open, onClose, citas, setTableData, ci
                 setOptionsConsultorios(optionsData);
             })
             .catch(error => console.error(error));
-    }, []);
+        if(cita){
+            setFechaTemp(cita.cita_Fecha);
+        }
+        methods.setValue('clie_Id', defaultValues.clie_Id);
+        methods.setValue('cita_Fecha', defaultValues.cita_Fecha);
+        methods.setValue('cons_Id', defaultValues.cons_Id);
+    }, [cita, methods]);
 
-    const methods = useForm({
-        resolver: yupResolver(InsertSchema),
-        defaultValues,
-    });
-
-    const {
-        reset,
-        setError,
-        handleSubmit,
-        formState: { errors, isSubmitting },
-    } = methods;
 
     const onSubmit = async (data) => {
         const dateFecha = new Date(data.cita_Fecha);
@@ -202,7 +209,7 @@ export default function ModalEditarCita({ open, onClose, citas, setTableData, ci
                                     render={({ field, fieldState: { error } }) => (
                                     <DatePicker
                                         label="Fecha de la cita"
-                                        value={field.value ?? null}
+                                        value={field.value || fechaTemp}
                                         minDate={new Date()}
                                         error={errors.cita_Fecha?.message !== undefined}
                                         onChange={(newValue) => {

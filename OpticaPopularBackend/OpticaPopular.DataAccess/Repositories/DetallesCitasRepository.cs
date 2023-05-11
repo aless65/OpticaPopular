@@ -58,7 +58,25 @@ namespace OpticaPopular.DataAccess.Repositories
 
         public RequestStatus Update(tbDetallesCitas item)
         {
-            throw new NotImplementedException();
+            using var db = new SqlConnection(OpticaPopularContext.ConnectionString);
+
+            var parametros = new DynamicParameters();
+
+            parametros.Add("@cita_Id", item.cita_Id, DbType.Int32, ParameterDirection.Input);
+            parametros.Add("@deci_Costo", item.deci_Costo, DbType.Decimal, ParameterDirection.Input);
+            parametros.Add("@deci_HoraInicio", item.deci_HoraInicio, DbType.String, ParameterDirection.Input);
+            parametros.Add("@deci_HoraFin", item.deci_HoraFin, DbType.String, ParameterDirection.Input);
+            parametros.Add("@usua_IdModificacion", item.usua_IdModificacion, DbType.Int32, ParameterDirection.Input);
+
+            var resultado = db.QueryFirst<int>(ScriptsDataBase.UDP_tbDetallesCitas_Update, parametros, commandType: CommandType.StoredProcedure);
+
+            RequestStatus request = new()
+            {
+                CodeStatus = resultado,
+                MessageStatus = "Estado insert"
+            };
+
+            return request;
         }
 
 

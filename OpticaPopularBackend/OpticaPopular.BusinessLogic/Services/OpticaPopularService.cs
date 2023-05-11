@@ -377,6 +377,21 @@ namespace OpticaPopular.BusinessLogic.Services
             }
         }
 
+        public ServiceResult EditarDetalleCita(tbDetallesCitas item)
+        {
+            var resultado = new ServiceResult();
+
+            try
+            {
+                var respuesta = _detallesCitasRepository.Update(item);
+                return resultado.Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+
+                return resultado.Error(ex.Message);
+            }
+        }
         #endregion
 
         #region DetallesEnvios

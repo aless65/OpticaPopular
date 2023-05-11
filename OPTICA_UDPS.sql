@@ -2663,7 +2663,6 @@ GO
 
 /*Editar detalle cita*/
 CREATE OR ALTER PROCEDURE opti.UDP_opti_tbDetallesCitas_Update
-	@deci_Id               INT, 
 	@cita_Id               INT, 
 	@deci_Costo            DECIMAL(18,2), 
 	@deci_HoraInicio       VARCHAR(5), 
@@ -2672,23 +2671,18 @@ CREATE OR ALTER PROCEDURE opti.UDP_opti_tbDetallesCitas_Update
 
 AS
 BEGIN 
-	BEGIN TRY
-
-		BEGIN			
-			UPDATE  [opti].[tbDetallesCitas]
-			SET 	[cita_Id] = @cita_Id,
-			        [deci_Costo]=@deci_Costo,
-					[deci_HoraInicio]= @deci_HoraInicio,
-					[deci_HoraFin]= @deci_HoraFin,
-			        [usua_IdModificacion]=@usua_IdModificacion,
-					[deci_FechaModificacion]= GETDATE()
-			WHERE 	[deci_Id]= deci_Id
-			SELECT 'El detalle ha sido editado con éxito'
-		END
-	      
+	BEGIN TRY	
+		UPDATE  [opti].[tbDetallesCitas]
+		SET 	[deci_Costo]=@deci_Costo,
+				[deci_HoraInicio]= @deci_HoraInicio,
+				[deci_HoraFin]= @deci_HoraFin,
+		        [usua_IdModificacion]=@usua_IdModificacion,
+				[deci_FechaModificacion]= GETDATE()
+		WHERE 	[cita_Id]= @cita_Id
+		SELECT 1
 	END TRY
 	BEGIN CATCH
-		SELECT 'Ha ocurrido un error'
+		SELECT 0
 	END CATCH
 END
 GO

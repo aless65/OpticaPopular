@@ -40,6 +40,25 @@ namespace OpticaPopular.API.Controllers
             return Ok(respuesta);
 
         }
+
+        [HttpPost("Editar")]
+        public IActionResult Update(int cita_Id, string deci_Costo, string deci_HoraInicio, string deci_HoraFin, int usua_IdModificacion)
+        {
+
+            tbDetallesCitas item = new()
+            {
+                cita_Id = cita_Id,
+                deci_Costo = decimal.Parse(deci_Costo),
+                deci_HoraInicio = deci_HoraInicio,
+                deci_HoraFin = deci_HoraFin,
+                usua_IdModificacion = usua_IdModificacion
+            };
+
+            var respuesta = _opticaPopularService.EditarDetalleCita(item);
+            return Ok(respuesta);
+
+        }
+
         [HttpGet("BuscarDetalleCitaPorIdCita/{cita_Id}")]
         public IActionResult BuscarDetalleCitaPorIdCita(int cita_Id)
         {

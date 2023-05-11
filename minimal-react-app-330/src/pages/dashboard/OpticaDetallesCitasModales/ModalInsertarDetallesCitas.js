@@ -53,7 +53,7 @@ export default function ModalAgregarDetalleCita({ open, onClose, citas, setTable
         horaFinErrorMayor: "La hora final no puede ser menor a la hora de inicio",
         horaInicioError: "La hora de inicio no es válida",
         horaFinError: "La hora fin no es válida",
-        horaInicioFueraHorario: "La hora de inicio debe ser mayor o igual a la hora de apertura (08:00)",
+        horaInicioFueraHorario: "La hora de inicio debe ser mayor a la hora de apertura (08:00)",
         horaFinFueraHorario: "La hora fin debe ser menor a la hora de cierre (17:00)"
     };
 
@@ -127,8 +127,8 @@ export default function ModalAgregarDetalleCita({ open, onClose, citas, setTable
             params:{
                 cita_Id: citaId,
                 deci_Costo: data.deci_Costo,
-                deci_HoraInicio: `${dayjs(data.deci_HoraInicio).hour()}:${dayjs(data.deci_HoraInicio).minute()}`,
-                deci_HoraFin: `${dayjs(data.deci_HoraFin).hour()}:${dayjs(data.deci_HoraFin).minute()}`,
+                deci_HoraInicio: `${dayjs(data.deci_HoraInicio).format('HH:mm:ss').substring(0, 2)}:${dayjs(data.deci_HoraInicio).format('HH:mm:ss').substring(3, 5)}`,
+                deci_HoraFin: `${dayjs(data.deci_HoraFin).format('HH:mm:ss').substring(0, 2)}:${dayjs(data.deci_HoraFin).format('HH:mm:ss').substring(3, 5)}`,
                 usua_IdCreacion: JSON.parse(localStorage.getItem('usuario')).usua_Id
             }
             })
@@ -141,7 +141,7 @@ export default function ModalAgregarDetalleCita({ open, onClose, citas, setTable
                         enqueueSnackbar('Ocurrio un error al intentar completar la cita', { variant: 'error' });
                     }
                 }else{
-                    enqueueSnackbar('Ocurrio un error al intentar cmpletar la cita', { variant: 'error' });   
+                    enqueueSnackbar('Ocurrio un error al intentar completar la cita', { variant: 'error' });   
                 }
                 handleDialogClose();
             })

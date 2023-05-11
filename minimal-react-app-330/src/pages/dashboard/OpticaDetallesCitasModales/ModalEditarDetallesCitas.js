@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import axios from 'axios';
 import * as React from 'react';
 import * as Yup from 'yup';
@@ -21,7 +22,7 @@ import { useState, useEffect } from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useSnackbar } from 'notistack';
 import { useDispatch, useSelector } from '../../../redux/store';
-import { getCitas, getcita } from '../../../redux/slices/citas';
+import { getCitas } from '../../../redux/slices/citas';
 import { FormProvider, RHFTextField} from '../../../components/hook-form';
 import useIsMountedRef from '../../../hooks/useIsMountedRef';
 
@@ -39,36 +40,13 @@ export default function ModalEditarDetalleCita({ open, onClose, citas, setTableD
 
     const [mostrarAlertaError, setMostrarAlerta] = useState(false);
 
+    const [deci_CostoTemp, setdeci_CostoTemp] = useState('');
+
+    const [deci_HoraInicioTemp, setdeci_HoraInicioTemp] = useState('');
+
+    const [deci_HoraFinTemp, setdeci_HoraFinTemp] = useState('');
+
     const dispatch = useDispatch();
-
-    const cita  = useSelector((state) => state.cita.cita);
-
-    useEffect(() => {
-        if (citaId) {
-            dispatch(getcita(1));
-        }
-    }, [citaId, dispatch]);
-
-    const mostrarAlerta = () => {
-        setMostrarAlerta(true);
-    }
-
-    const ocultarAlerta = () => {
-        setMostrarAlerta(false);
-    }
-
-    const errores = {
-        horaFinErrorMayor: "La hora final no puede ser menor a la hora de inicio",
-        horaInicioError: "La hora de inicio no es válida",
-        horaFinError: "La hora fin no es válida",
-        horaInicioFueraHorario: "La hora de inicio debe ser mayor o igual a la hora de apertura (08:00)",
-        horaFinFueraHorario: "La hora fin debe ser menor a la hora de cierre (17:00)"
-    };
-
-    const renderErrorMessage = (name) =>
-    name === errorMessages.name && (
-      <Alert severity="error" >{errorMessages.message}</Alert>
-    );
 
     const InsertSchema = Yup.object().shape({
         deci_Costo: Yup.string().required('El precio de la cita es requerido').trim().matches(/^(?!0+(\.0{1,2})?$)\d{3,4}(\.\d{1,2})?$/, 'El costo debe estar entre 100 y 9,999 con un máximo de 2 decimales opcionales'),
@@ -77,9 +55,9 @@ export default function ModalEditarDetalleCita({ open, onClose, citas, setTableD
     });
 
     const defaultValues = {
-        deci_Costo: cita?.deci_Costo,
-        deci_HoraInicio: cita?.deci_HoraInicio,
-        deci_HoraFin: cita?.deci_HoraFin
+        deci_Costo: deci_CostoTemp || '',
+        deci_HoraInicio: deci_HoraInicioTemp || '' ,
+        deci_HoraFin: deci_HoraFinTemp || ''
     };
 
     const methods = useForm({
@@ -94,8 +72,61 @@ export default function ModalEditarDetalleCita({ open, onClose, citas, setTableD
         formState: { errors, isSubmitting },
     } = methods;
 
-    const onSubmit = async (data) => {
+    useEffect(() => {
+        if (citaId) {
+            axios.get(`DetallesCitas/BuscarDetalleCitaPorIdCita/${citaId}`)
+            .then((response) => {
+                if (response.data.code === 200) {
+                    setdeci_CostoTemp(response.data.data.deci_Costo);
+                    const newDate1 = new Date();
+                    newDate1.setHours(response.data.data.deci_HoraInicio.substring(0, 2));
+                    newDate1.setMinutes(response.data.data.deci_HoraInicio.substring(3, 5));
+                    newDate1.setSeconds(0);
+                    setdeci_HoraInicioTemp(dayjs(newDate1));
+                    const newDate2 = new Date();
+                    newDate2.setHours(response.data.data.deci_HoraFin.substring(0, 2));
+                    newDate2.setMinutes(response.data.data.deci_HoraFin.substring(3, 5));
+                    newDate2.setSeconds(0);
+                    setdeci_HoraFinTemp(newDate2);
+                }
+             })
+        }
+        methods.setValue('deci_Costo', defaultValues.deci_Costo);
+        methods.setValue('deci_HoraInicio', defaultValues.deci_HoraInicio);
+        methods.setValue('deci_HoraFin', defaultValues.deci_HoraFin);
 
+        if (insertSuccess === true) {
+            dispatch(getCitas());
+      
+            setTableData(citas);
+      
+            setInsertSuccess(false);
+          }
+    }, [citaId, methods, insertSuccess]);
+
+    const mostrarAlerta = () => {
+        setMostrarAlerta(true);
+    }
+
+    const ocultarAlerta = () => {
+        setMostrarAlerta(false);
+    }
+
+    const errores = {
+        horaFinErrorMayor: "La hora final no puede ser menor a la hora de inicio",
+        horaInicioError: "La hora de inicio no es válida",
+        horaFinError: "La hora fin no es válida",
+        horaInicioFueraHorario: "La hora de inicio debe ser mayor a la hora de apertura (08:00)",
+        horaFinFueraHorario: "La hora fin debe ser menor a la hora de cierre (17:00)"
+    };
+
+    const renderErrorMessage = (name) =>
+    name === errorMessages.name && (
+      <Alert severity="error" >{errorMessages.message}</Alert>
+    );
+
+    const onSubmit = async (data) => {
+        
         if(data.deci_HoraInicio === "Invalid Date"){
             setErrorMessages({ name: "generalError", message: errores.horaInicioError });
         }
@@ -131,34 +162,33 @@ export default function ModalEditarDetalleCita({ open, onClose, citas, setTableD
             && dayjs(data.deci_HoraFin) > dayjs(data.deci_HoraInicio) && dayjs(data.deci_HoraInicio) > dayjs(horaApertura)
             && dayjs(data.deci_HoraFin) < dayjs(horaCierre)
         ){
-           axios.post('DetallesCitas/Insert', {}, {
+           axios.post('DetallesCitas/Editar', {}, {
             params:{
                 cita_Id: citaId,
                 deci_Costo: data.deci_Costo,
-                deci_HoraInicio: `${dayjs(data.deci_HoraInicio).hour()}:${dayjs(data.deci_HoraInicio).minute()}`,
-                deci_HoraFin: `${dayjs(data.deci_HoraFin).hour()}:${dayjs(data.deci_HoraFin).minute()}`,
-                usua_IdCreacion: JSON.parse(localStorage.getItem('usuario')).usua_Id
+                deci_HoraInicio: `${dayjs(data.deci_HoraInicio).format('HH:mm:ss').substring(0, 2)}:${dayjs(data.deci_HoraInicio).format('HH:mm:ss').substring(3, 5)}`,
+                deci_HoraFin: `${dayjs(data.deci_HoraFin).format('HH:mm:ss').substring(0, 2)}:${dayjs(data.deci_HoraFin).format('HH:mm:ss').substring(3, 5)}`,
+                usua_IdModificacion: JSON.parse(localStorage.getItem('usuario')).usua_Id
             }
             })
             .then((response) => {
                 if (response.data.code === 200) {
                     if (response.data.data.codeStatus > 0) {
-                        enqueueSnackbar('Cita completada con éxito', { variant: 'success' });
+                        enqueueSnackbar('Detalles cita editados con éxito', { variant: 'success' });
                         setInsertSuccess(true);
                     } else {
-                        enqueueSnackbar('Ocurrio un error al intentar completar la cita', { variant: 'error' });
+                        enqueueSnackbar('Ocurrio un error al intentar editar detalles de la cita', { variant: 'error' });
                     }
                 }else{
-                    enqueueSnackbar('Ocurrio un error al intentar cmpletar la cita', { variant: 'error' });   
+                    enqueueSnackbar('Ocurrio un error al intentar editar detalles de la cita', { variant: 'error' });   
                 }
                 handleDialogClose();
             })
             .catch((error) => {
-                enqueueSnackbar(`Ocurrio un error al intentar completar la cita`, { variant: 'error' });   
+                enqueueSnackbar(`Ocurrio un error al intentar editar detalles de la cita`, { variant: 'error' });   
                 console.log(error);
             });
         }
-
         mostrarAlerta();
     };
 
@@ -193,6 +223,7 @@ export default function ModalEditarDetalleCita({ open, onClose, citas, setTableD
                                 <RHFTextField
                                     name="deci_Costo"
                                     label="Precio de la cita"
+                                    value={deci_CostoTemp || ''}
                                     />
                             </Grid>
                         </Grid>
@@ -204,7 +235,7 @@ export default function ModalEditarDetalleCita({ open, onClose, citas, setTableD
                                         <TimePicker
                                             ampm={false}    
                                             label="Hora inicio"
-                                            value={field.value || null}
+                                            value={field.value || deci_HoraInicioTemp}
                                             error={errors.deci_HoraInicio?.message !== undefined}
                                             onChange={(newValue) => {
                                                 field.onChange(newValue);
@@ -227,7 +258,7 @@ export default function ModalEditarDetalleCita({ open, onClose, citas, setTableD
                                         <TimePicker
                                             ampm={false}
                                             label="Hora fin"
-                                            value={field.value || null}
+                                            value={field.value || deci_HoraFinTemp}
                                             error={errors.deci_HoraFin?.message !== undefined}
                                             onChange={(newValue) => {
                                                 field.onChange(newValue);
@@ -249,7 +280,7 @@ export default function ModalEditarDetalleCita({ open, onClose, citas, setTableD
                     <Divider/>
                     <DialogActions>
                         <LoadingButton variant="contained" type="submit" loading={isSubmitting} onClick={submitHandler}>
-                            Completar cita
+                            Guardar edición
                         </LoadingButton>
                         <Button onClick={handleDialogClose}>Cancelar</Button>
                     </DialogActions>
