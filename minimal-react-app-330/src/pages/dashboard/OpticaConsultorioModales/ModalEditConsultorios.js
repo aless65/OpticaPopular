@@ -136,7 +136,7 @@ export default function EditConsultorioDialog({ open, onClose, consultorios, set
                 usua_UsuModificacion: 1,
             };
 
-            fetch("https://localhost:44362/api/Consultorios/Editar", {
+            fetch("http://opticapopular.somee.com/api/Consultorios/Editar", {
                 method: "PUT",
                 mode: "cors",
                 headers: {

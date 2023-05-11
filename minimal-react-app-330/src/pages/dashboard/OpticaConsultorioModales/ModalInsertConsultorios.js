@@ -101,7 +101,7 @@ export default function AddConsultorioDialog({ open, onClose, consultorios, setT
         usua_IdCreacion: 1,
       };
 
-      fetch("https://localhost:44362/api/Consultorios/Insertar", {
+      fetch("http://opticapopular.somee.com/api/Consultorios/Insertar", {
         method: "POST",
         mode: "cors",
         headers: {

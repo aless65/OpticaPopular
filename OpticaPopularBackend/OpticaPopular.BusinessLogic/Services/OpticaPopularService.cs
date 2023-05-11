@@ -276,7 +276,7 @@ namespace OpticaPopular.BusinessLogic.Services
             }
         }
 
-        public ServiceResult InsertClientes(tbClientes item)
+        public ServiceResult InsertClientes(VW_tbClientes item)
         {
             var result = new ServiceResult();
             try
@@ -295,7 +295,7 @@ namespace OpticaPopular.BusinessLogic.Services
             }
         }
 
-        public ServiceResult UpdateClientes(tbClientes item)
+        public ServiceResult UpdateClientes(VW_tbClientes item)
         {
             var result = new ServiceResult();
             try
@@ -314,7 +314,7 @@ namespace OpticaPopular.BusinessLogic.Services
             }
         }
 
-        public ServiceResult DeleteClientes(tbClientes item)
+        public ServiceResult DeleteClientes(VW_tbClientes item)
         {
             var result = new ServiceResult();
             try

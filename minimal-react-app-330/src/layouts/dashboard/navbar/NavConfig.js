@@ -4,6 +4,10 @@ import GroupIcon from '@mui/icons-material/Group';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import ShoppingBasketIcon from '@mui/icons-material/ShoppingBasket';
 import BusinessIcon from '@mui/icons-material/Business';
+import SellIcon from '@mui/icons-material/Sell';
+import CategoryIcon from '@mui/icons-material/Category';
+import StoreIcon from '@mui/icons-material/Store';
+import DeskIcon from '@mui/icons-material/Desk';
 
 // routes
 import { PATH_ACCESO, PATH_DASHBOARD, PATH_OPTICA } from '../../../routes/paths';
@@ -49,10 +53,10 @@ const navConfig = [
       { title: 'citas', path: PATH_OPTICA.citas, icon: <CalendarMonthIcon/> },
       { title: 'proveedores', path: PATH_OPTICA.proveedores, icon: <BusinessIcon/> },
       { title: 'ordenes', path: PATH_OPTICA.ordenes, icon: <ShoppingBasketIcon/> },
-      { title: 'marcas', path: PATH_OPTICA.marcas, icon: ICONS.cart },
-      { title: 'categorias', path: PATH_OPTICA.categorias, icon: ICONS.cart },
-      { title: 'sucursales', path: PATH_OPTICA.sucursales, icon: ICONS.cart },
-      { title: 'consultorios', path: PATH_OPTICA.consultorios, icon: ICONS.cart },
+      { title: 'marcas', path: PATH_OPTICA.marcas, icon: <SellIcon/> },
+      { title: 'categorias', path: PATH_OPTICA.categorias, icon: <CategoryIcon/> },
+      { title: 'sucursales', path: PATH_OPTICA.sucursales, icon: <StoreIcon/> },
+      { title: 'consultorios', path: PATH_OPTICA.consultorios, icon: <DeskIcon/> },
     ],
   },
 ];

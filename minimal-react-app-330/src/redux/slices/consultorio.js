@@ -96,7 +96,7 @@ export function getConsultorio(name) {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('https://localhost:44362/api/Consultorios/ListadoConsultoriosPorIdSucursal/0', {
+      const response = await axios.get('http://opticapopular.somee.com/api/Consultorios/ListadoConsultoriosPorIdSucursal/0', {
         params: { name },
       });
       dispatch(slice.actions.getConsultorioSuccess(response.data.data));

@@ -578,10 +578,12 @@ C:\Users\LAB01\Documents\OpticaPopular\OpticaPopularBackend\OpticaPopular.API\ob
 C:\Users\LAB01\Documents\OpticaPopular\OpticaPopularBackend\OpticaPopular.API\obj\Release\net5.0\ref\OpticaPopular.API.dll
 C:\Users\LAB01\Documents\OpticaPopular\OpticaPopularBackend\OpticaPopular.API\obj\Release\net5.0\OpticaPopular.API.pdb
 C:\Users\LAB01\Documents\OpticaPopular\OpticaPopularBackend\OpticaPopular.API\obj\Release\net5.0\OpticaPopular.API.genruntimeconfig.cache
+C:\Users\LAB01\Documents\GitHub\OpticaPopular\OpticaPopularBackend\OpticaPopular.API\obj\Release\net5.0\OpticaPopular.API.csproj.AssemblyReference.cache
 C:\Users\LAB01\Documents\GitHub\OpticaPopular\OpticaPopularBackend\OpticaPopular.API\obj\Release\net5.0\OpticaPopular.API.GeneratedMSBuildEditorConfig.editorconfig
 C:\Users\LAB01\Documents\GitHub\OpticaPopular\OpticaPopularBackend\OpticaPopular.API\obj\Release\net5.0\OpticaPopular.API.AssemblyInfoInputs.cache
 C:\Users\LAB01\Documents\GitHub\OpticaPopular\OpticaPopularBackend\OpticaPopular.API\obj\Release\net5.0\OpticaPopular.API.AssemblyInfo.cs
 C:\Users\LAB01\Documents\GitHub\OpticaPopular\OpticaPopularBackend\OpticaPopular.API\obj\Release\net5.0\OpticaPopular.API.csproj.CoreCompileInputs.cache
+C:\Users\LAB01\Documents\GitHub\OpticaPopular\OpticaPopularBackend\OpticaPopular.API\obj\Release\net5.0\OpticaPopular.API.MvcApplicationPartsAssemblyInfo.cs
 C:\Users\LAB01\Documents\GitHub\OpticaPopular\OpticaPopularBackend\OpticaPopular.API\obj\Release\net5.0\OpticaPopular.API.MvcApplicationPartsAssemblyInfo.cache
 C:\Users\LAB01\Documents\GitHub\OpticaPopular\OpticaPopularBackend\OpticaPopular.API\bin\Release\net5.0\appsettings.Development.json
 C:\Users\LAB01\Documents\GitHub\OpticaPopular\OpticaPopularBackend\OpticaPopular.API\bin\Release\net5.0\appsettings.json
@@ -712,7 +714,6 @@ C:\Users\LAB01\Documents\GitHub\OpticaPopular\OpticaPopularBackend\OpticaPopular
 C:\Users\LAB01\Documents\GitHub\OpticaPopular\OpticaPopularBackend\OpticaPopular.API\bin\Release\net5.0\OpticaPopular.BusinessLogic.pdb
 C:\Users\LAB01\Documents\GitHub\OpticaPopular\OpticaPopularBackend\OpticaPopular.API\bin\Release\net5.0\OpticaPopular.DataAccess.pdb
 C:\Users\LAB01\Documents\GitHub\OpticaPopular\OpticaPopularBackend\OpticaPopular.API\bin\Release\net5.0\OpticaPopular.Entities.pdb
-C:\Users\LAB01\Documents\GitHub\OpticaPopular\OpticaPopularBackend\OpticaPopular.API\obj\Release\net5.0\OpticaPopular.API.csproj.AssemblyReference.cache
 C:\Users\LAB01\Documents\GitHub\OpticaPopular\OpticaPopularBackend\OpticaPopular.API\obj\Release\net5.0\staticwebassets\OpticaPopular.API.StaticWebAssets.Manifest.cache
 C:\Users\LAB01\Documents\GitHub\OpticaPopular\OpticaPopularBackend\OpticaPopular.API\obj\Release\net5.0\staticwebassets\OpticaPopular.API.StaticWebAssets.xml
 C:\Users\LAB01\Documents\GitHub\OpticaPopular\OpticaPopularBackend\OpticaPopular.API\obj\Release\net5.0\scopedcss\bundle\OpticaPopular.API.styles.css
@@ -722,4 +723,3 @@ C:\Users\LAB01\Documents\GitHub\OpticaPopular\OpticaPopularBackend\OpticaPopular
 C:\Users\LAB01\Documents\GitHub\OpticaPopular\OpticaPopularBackend\OpticaPopular.API\obj\Release\net5.0\ref\OpticaPopular.API.dll
 C:\Users\LAB01\Documents\GitHub\OpticaPopular\OpticaPopularBackend\OpticaPopular.API\obj\Release\net5.0\OpticaPopular.API.pdb
 C:\Users\LAB01\Documents\GitHub\OpticaPopular\OpticaPopularBackend\OpticaPopular.API\obj\Release\net5.0\OpticaPopular.API.genruntimeconfig.cache
-C:\Users\LAB01\Documents\GitHub\OpticaPopular\OpticaPopularBackend\OpticaPopular.API\obj\Release\net5.0\OpticaPopular.API.MvcApplicationPartsAssemblyInfo.cs

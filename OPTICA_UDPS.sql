@@ -1126,9 +1126,9 @@ CREATE OR ALTER PROCEDURE opti.UDP_opti_tbAros_ListXSucursal
 	@sucu_Id	INT
 AS
 BEGIN
-	SELECT * FROM opti.VW_tbAros
+	SELECT * FROM opti.VW_tbAros T1
 	WHERE aros_Estado = 1
-	AND (SELECT [stsu_Stock] FROM [opti].[tbStockArosPorSucursal] WHERE [sucu_Id] = @sucu_Id) > 0
+	AND (SELECT [stsu_Stock] FROM [opti].[tbStockArosPorSucursal] T2 WHERE [sucu_Id] = @sucu_Id AND T1.aros_Id = T2.aros_Id) > 0
 END	
 GO
 
@@ -2959,7 +2959,7 @@ BEGIN
 END
 GO
 
-CREATE OR ALTER PROCEDURE opti.UDP_opti_tbDetallesOrdenes_Insert
+CREATE OR ALTER PROCEDURE opti.UDP_opti_tbDetallesOrdenes_Insert 
 	@orde_Id					INT,
 	@aros_Id					INT, 
 	@deor_GraduacionLeft		NVARCHAR(10), 
@@ -3043,9 +3043,9 @@ BEGIN
 END
 GO
 
-INSERT INTO opti.tbDetallesOrdenes(orde_Id, aros_Id, deor_GraduacionLeft, deor_GraduacionRight, deor_Precio, deor_Cantidad, deor_Total, usua_IdCreacion)
-VALUES(1, 2, 0.25, 0.50, 2000.00, 1, 2500.00, 1),
-      (3, 8, 1.15, 0.65, 4800.00, 1, 5000.00, 1)
+--INSERT INTO opti.tbDetallesOrdenes(orde_Id, aros_Id, deor_GraduacionLeft, deor_GraduacionRight, deor_Precio, deor_Cantidad, deor_Total, usua_IdCreacion)
+--VALUES(1, 2, 0.25, 0.50, 2000.00, 1, 2500.00, 1),
+--      (3, 8, 1.15, 0.65, 4800.00, 1, 5000.00, 1)
 
 GO
 
