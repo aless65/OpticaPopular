@@ -1075,6 +1075,17 @@ CREATE OR ALTER PROCEDURE opti.UDP_opti_tbAros_List
 AS
 BEGIN
 	SELECT * FROM opti.VW_tbAros
+	WHERE aros_Estado = 1
+END	
+GO
+
+CREATE OR ALTER PROCEDURE opti.UDP_opti_tbAros_ListXSucursal 
+	@sucu_Id	INT
+AS
+BEGIN
+	SELECT * FROM opti.VW_tbAros
+	WHERE aros_Estado = 1
+	AND (SELECT [stsu_Stock] FROM [opti].[tbStockArosPorSucursal] WHERE [sucu_Id] = @sucu_Id) > 0
 END	
 GO
 
@@ -2808,7 +2819,7 @@ GO
 
 
 /*Insertar Ordenes*/
-CREATE OR ALTER PROCEDURE opti.UDP_opti_tbOrdenes_Insert
+CREATE OR ALTER PROCEDURE opti.UDP_opti_tbOrdenes_Insert 
 	 @clie_Id               INT, 
 	 @orde_Fecha            DATE, 
 	 @orde_FechaEntrega     DATE, 
@@ -2821,7 +2832,7 @@ BEGIN
 			INSERT INTO [opti].[tbOrdenes](clie_Id, orde_Fecha, orde_FechaEntrega, sucu_Id, usua_IdCreacion)
 			VALUES(@clie_Id, @orde_Fecha, @orde_FechaEntrega, @sucu_Id, @usua_IdCreacion)
 			
-			SELECT 'La orden ha sido insertada con éxito' AS MessageStatus, SCOPE_IDENTITY() AS CodeStatus
+			SELECT SCOPE_IDENTITY()
 			END
 
 	END TRY
@@ -2840,13 +2851,13 @@ GO
 
 /*Editar Ordenes*/
 CREATE OR ALTER PROCEDURE opti.UDP_opti_tbOrdenes_Update
-	@orde_Id            INT, 
-	@clie_Id            INT, 
-	@orde_Fecha         DATE, 
-	@orde_FechaEntrega  DATE, 
-	@orde_FechaEntregaReal DATE, 
-	@sucu_Id             INT, 
-	@usua_IdModificacion INT
+	@orde_Id				INT, 
+	@clie_Id				INT, 
+	@orde_Fecha				DATE, 
+	@orde_FechaEntrega		DATE, 
+	@orde_FechaEntregaReal	DATE, 
+	@sucu_Id				INT, 
+	@usua_IdModificacion	INT
 AS
 BEGIN 
 	BEGIN TRY

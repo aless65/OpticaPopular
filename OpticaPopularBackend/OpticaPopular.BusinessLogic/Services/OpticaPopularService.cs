@@ -56,9 +56,33 @@ namespace OpticaPopular.BusinessLogic.Services
         }
 
         #region Aros
+        public ServiceResult ListadoAros()
+        {
+            var result = new ServiceResult();
+            try
+            {
+                var list = _arosRepository.List();
+                return result.Ok(list);
+            }
+            catch (Exception e)
+            {
+                return result.Error(e.Message);
+            }
+        }
 
-
-
+        public ServiceResult ListadoArosXSucursal(int id)
+        {
+            var result = new ServiceResult();
+            try
+            {
+                var list = _arosRepository.ListXSucursal(id);
+                return result.Ok(list);
+            }
+            catch (Exception e)
+            {
+                return result.Error(e.Message);
+            }
+        }
         #endregion
 
         #region Cargos

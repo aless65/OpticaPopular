@@ -38,13 +38,13 @@ namespace OpticaPopular.DataAccess.Repositories
             parametros.Add("@clie_Id", item.clie_Id, DbType.Int32, ParameterDirection.Input);
             parametros.Add("@orde_Fecha", item.orde_Fecha, DbType.Date, ParameterDirection.Input);
             parametros.Add("@orde_FechaEntrega", item.orde_FechaEntrega, DbType.Date, ParameterDirection.Input);
-            parametros.Add("@sucu_Id", item.sucu_Id, DbType.Date, ParameterDirection.Input);
-            parametros.Add("@usua_IdCreacion", item.usua_IdCreacion, DbType.Date, ParameterDirection.Input);
+            parametros.Add("@sucu_Id", item.sucu_Id, DbType.Int32, ParameterDirection.Input);
+            parametros.Add("@usua_IdCreacion", item.usua_IdCreacion, DbType.Int32, ParameterDirection.Input);
 
-            result = db.QueryFirst<RequestStatus>(ScriptsDataBase.UDP_Inserta_Ordenes, parametros, commandType: CommandType.StoredProcedure);
+            result.MessageStatus = db.QueryFirst<string>(ScriptsDataBase.UDP_Inserta_Ordenes, parametros, commandType: CommandType.StoredProcedure);
 
-            if (result.MessageStatus == "La orden ha sido insertada con éxito")
-                result.MessageStatus = result.CodeStatus.ToString();
+            //if (result.MessageStatus == "La orden ha sido insertada con éxito")
+            //    result.MessageStatus = result.CodeStatus.ToString();
 
             return result;
         }

@@ -70,6 +70,11 @@ namespace OpticaPopular.DataAccess.Repositories
         public static string UDP_Lista_Departamentos = "gral.UDP_gral_tbDepartamentos_List";
         #endregion
 
+        #region Aros
+        public static string UDP_Lista_Aros = "opti.UDP_opti_tbAros_List";
+        public static string UDP_Lista_ArosXSucursal = "opti.UDP_opti_tbAros_ListXSucursal";
+        #endregion
+
         #region Citas
         public static string UDP_tbCitas_ListadoPorIdSucursal = "opti.UDP_tbCitas_ListadoPorIdSucursal";
         public static string UDP_tbCitas_InsertarNuevaCita = "opti.UDP_tbCitas_InsertarNuevaCita";
