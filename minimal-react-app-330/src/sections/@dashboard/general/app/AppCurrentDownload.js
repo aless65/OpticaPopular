@@ -7,6 +7,7 @@ import { Card, CardHeader } from '@mui/material';
 import { fNumber } from '../../../../utils/formatNumber';
 //
 import { BaseOptionChart } from '../../../../components/chart';
+import { useEffect } from 'react';
 
 // ----------------------------------------------------------------------
 
@@ -31,19 +32,23 @@ const ChartWrapperStyle = styled('div')(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-const CHART_DATA = [12244, 53345, 44313, 78343];
+const CHART_DATA = [12244, 53345];
 
 export default function AppCurrentDownload() {
   const theme = useTheme();
 
+  useEffect(() => {
+    
+  }, [CHART_DATA])
+
   const chartOptions = merge(BaseOptionChart(), {
     colors: [
       theme.palette.primary.lighter,
-      theme.palette.primary.light,
+      // theme.palette.primary.light,
       theme.palette.primary.main,
-      theme.palette.primary.dark,
+      // theme.palette.primary.dark,
     ],
-    labels: ['Mac', 'Window', 'iOS', 'Android'],
+    labels: ['Femenino', 'Masculino'],
     stroke: { colors: [theme.palette.background.paper] },
     legend: { floating: true, horizontalAlign: 'center' },
     tooltip: {

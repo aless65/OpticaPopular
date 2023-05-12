@@ -48,19 +48,19 @@ CREATE TABLE acce.tbPantallas(
 GO
 
 INSERT INTO acce.tbPantallas(pant_Nombre, pant_Url, pant_Menu, pant_Icon, pant_UsuCreacion)
-VALUES ('usuarios', 'PATH_ACCESO.usuarios', 'acceso', '<ManageAccountsIcon/>', 1),
-       ('roles', 'PATH_ACCESO.roles', 'acceso', 'ICONS.kanban', 1),
-       ('empleados', 'PATH_OPTICA.empleados', 'óptica', '<PeopleAltIcon/>', 1),
-	   ('clientes', 'PATH_OPTICA.clientes', 'óptica', '<GroupIcon/>', 1),
-	   ('proveedores', 'PATH_OPTICA.proveedores', 'óptica', '<BusinessIcon/>', 1),
-	   ('ordenes', 'PATH_OPTICA.ordenes', 'óptica', '<ShoppingBasketIcon/>', 1),
-	   ('marcas', 'PATH_OPTICA.marcas', 'óptica', '<SellIcon/>', 1),
-	   ('categorias', 'PATH_OPTICA.categorias','óptica', '<CategoryIcon/>', 1),
-	   ('sucursales', 'PATH_OPTICA.sucursales', 'óptica', '<StoreIcon/>', 1),
-	   ('consultorios', 'PATH_OPTICA.consultorios', 'óptica', '<DeskIcon/>', 1),
-	   ('envios', 'PATH_OPTICA.envios', 'óptica', '<DeskIcon/>', 1),
-	   ('ventas', 'PATH_OPTICA.ventas', 'óptica', '<DeskIcon/>', 1),
-	   ('facturas', 'PATH_OPTICA.ventas', 'óptica', '<DeskIcon/>', 1)
+VALUES ('usuarios', '/acceso/usuarios', 'acceso', '<ManageAccountsIcon/>', 1),
+       ('roles', '/acceso/roles', 'acceso', 'ICONS.kanban', 1),
+       ('empleados', '/optica/empleados', 'óptica', '<PeopleAltIcon/>', 1),
+	   ('clientes', '/optica/clientes', 'óptica', '<GroupIcon/>', 1),
+	   ('proveedores', '/optica/proveedores', 'óptica', '<BusinessIcon/>', 1),
+	   ('ordenes', '/optica/ordenes', 'óptica', '<ShoppingBasketIcon/>', 1),
+	   ('marcas', '/optica/marcas', 'óptica', '<SellIcon/>', 1),
+	   ('categorias', '/optica/categorias','óptica', '<CategoryIcon/>', 1),
+	   ('sucursales', '/optica/sucursales', 'óptica', '<StoreIcon/>', 1),
+	   ('consultorios', '/optica/consultorios', 'óptica', '<DeskIcon/>', 1),
+	   ('envios', '/optica/envios', 'óptica', '<DeskIcon/>', 1),
+	   ('ventas', '/optica/ventas', 'óptica', '<DeskIcon/>', 1),
+	   ('facturas', '/optica/facturas', 'óptica', '<DeskIcon/>', 1)
        --('Marca', '/Marca/Listado', 'Optica', 'marcasItem', 1)
 GO
 
