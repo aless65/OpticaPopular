@@ -137,6 +137,20 @@ namespace OpticaPopular.BusinessLogic.Services
             }
         }
 
+        public ServiceResult ListadoPantallasMenu(bool esAdmin, int role_Id)
+        {
+            var result = new ServiceResult();
+            try
+            {
+                var list = _pantallasRepository.ListMenu(esAdmin, role_Id);
+                return result.Ok(list);
+            }
+            catch (Exception e)
+            {
+                return result.Error(e.Message);
+            }
+        }
+
         public ServiceResult ListadoPantallasXRoles(int id)
         {
             var result = new ServiceResult();

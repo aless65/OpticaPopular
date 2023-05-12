@@ -44,6 +44,37 @@ namespace OpticaPopular.DataAccess.Repositories
             return db.Query<VW_tbAros>(ScriptsDataBase.UDP_Lista_ArosXSucursal, parameters, commandType: CommandType.StoredProcedure);
         }
 
+        public RequestStatus PrecioAros(int id)
+        {
+            RequestStatus result = new RequestStatus();
+
+            using var db = new SqlConnection(OpticaPopularContext.ConnectionString);
+
+            var parameters = new DynamicParameters();
+
+            parameters.Add("@aros_Id", id, DbType.Int32, ParameterDirection.Input);
+
+            result.MessageStatus = db.QueryFirst<string>(ScriptsDataBase.UDP_Precio_Aros, parameters, commandType: CommandType.StoredProcedure);
+
+            return result;
+        }
+
+        public RequestStatus StockAros(int aros_Id, int sucu_Id)
+        {
+            RequestStatus result = new RequestStatus();
+
+            using var db = new SqlConnection(OpticaPopularContext.ConnectionString);
+
+            var parameters = new DynamicParameters();
+
+            parameters.Add("@aros_Id", aros_Id, DbType.Int32, ParameterDirection.Input);
+            parameters.Add("@sucu_Id", sucu_Id, DbType.Int32, ParameterDirection.Input);
+
+            result.MessageStatus = db.QueryFirst<string>(ScriptsDataBase.UDP_Stock_ArosXSucursal, parameters, commandType: CommandType.StoredProcedure);
+
+            return result;
+        }
+
         public RequestStatus Update(tbAros item)
         {
             throw new NotImplementedException();

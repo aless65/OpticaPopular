@@ -17,6 +17,7 @@ import useIsMountedRef from '../../../hooks/useIsMountedRef';
 // components
 import Iconify from '../../../components/Iconify';
 import { FormProvider, RHFTextField, RHFCheckbox } from '../../../components/hook-form';
+// import usuario from 'src/redux/slices/usuario';
 
 // ----------------------------------------------------------------------
 
@@ -74,16 +75,18 @@ export default function LoginForm() {
           .then((response) => {
             if (response.data.code === 200) {
               if (response.data.data.length > 0) {
-                
+
                 const usuario = {
-                    usua_Id: response.data.data[0].usua_Id,
-                    usua_NombreUsuario: response.data.data[0].usua_NombreUsuario,
-                    usua_EsAdmin: response.data.data[0].usua_EsAdmin,
-                    empe_NombreCompleto: response.data.data[0].empe_NombreCompleto,
-                    role_Id: response.data.data[0].role_Id,
-                    empe_CorreoElectronico: response.data.data[0].empe_CorreoElectronico,
+                  usua_Id: response.data.data[0].usua_Id,
+                  usua_NombreUsuario: response.data.data[0].usua_NombreUsuario,
+                  usua_EsAdmin: response.data.data[0].usua_EsAdmin,
+                  empe_NombreCompleto: response.data.data[0].empe_NombreCompleto,
+                  role_Id: response.data.data[0].role_Id,
+                  empe_CorreoElectronico: response.data.data[0].empe_CorreoElectronico,
                 };
+
                 
+
                 localStorage.setItem('sucu_Id', response.data.data[0].sucu_Id);
                 localStorage.setItem('usuario', JSON.stringify(usuario));
                 navigate('/Inicio/app', { replace: true });
@@ -94,7 +97,7 @@ export default function LoginForm() {
           })
           .catch((ex) => {
             console.log(ex);
-        });
+          });
       }
     } catch (error) {
       console.error(error);
@@ -104,6 +107,13 @@ export default function LoginForm() {
       }
     }
   };
+
+
+  // useEffect(() => {
+  //   if (usuario) {
+  //     console.log("jiji");
+  //   }
+  // }, [usuario]);
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)} >
@@ -143,4 +153,5 @@ export default function LoginForm() {
       </LoadingButton>
     </FormProvider>
   );
+
 }

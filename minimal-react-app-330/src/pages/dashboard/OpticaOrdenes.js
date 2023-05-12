@@ -18,7 +18,7 @@ import {
 } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
-import { getOrdenes } from '../../redux/slices/orden';
+import { getOrdenes, getOrden } from '../../redux/slices/orden';
 // routes
 import { PATH_DASHBOARD, PATH_OPTICA } from '../../routes/paths';
 // hooks
@@ -38,7 +38,7 @@ import {
 } from '../../components/table';
 // sections
 import { OrdenTableRow, TableToolbar } from '../../sections/@dashboard/optica/orden-list';
-import DeleteEmpleadoDialog from './OpticaEmpleadosModales/ModalDeleteEmpleados';
+import ModalEditarOrden from './OpticaOrdenesModales/ModalEditOrdenes';
 
 // ----------------------------------------------------------------------
 
@@ -56,9 +56,8 @@ function applySortFilter({ tableData, comparator, filterName }) {
 
   if (filterName) {
     tableData = tableData.filter((item) =>
-      item.empe_NombreCompleto.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 ||
-      item.empe_SucursalNombre.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 ||
-      item.empe_Sexo.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
+      item.clie_NombreCompleto.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 ||
+      item.sucu_Descripcion.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 
     );
   }
 
@@ -112,15 +111,25 @@ export default function OpticaOrdenes() {
 
   const [tableData, setTableData] = useState([]);
 
-  const [empeId, setEmpeId] = useState('');
+  const [ordenId, setOrdenId] = useState('');
+
+  const [openEditOrdenDialog, setOpenEditOrdenDialog] = useState(false);
 
   const [openDeleteEmpleadoDialog, setOpenDeleteEmpleadoDialog] = useState(false);
 
   const [filterName, setFilterName] = useState('');
 
+  const orden  = useSelector((state) => state.orden.orden);
+
   useEffect(() => {
     dispatch(getOrdenes());
   }, [dispatch]);
+
+  useEffect(() => {
+    if (ordenId) {
+        dispatch(getOrden(ordenId));
+    }
+}, [ordenId, dispatch]);
 
   useEffect(() => {
     if (ordenes.length) {
@@ -134,8 +143,8 @@ export default function OpticaOrdenes() {
   };
 
   const handleDeleteRow = (id) => {
-    setEmpeId(id);
-    handleOpenDeleteEmpleadoDialog();
+    // setEmpeId(id);
+    // handleOpenDeleteEmpleadoDialog();
   };
 
   const handleDeleteRows = (selected) => {
@@ -145,7 +154,12 @@ export default function OpticaOrdenes() {
   };
 
   const handleEditRow = (id) => {
-    navigate(PATH_OPTICA.empleadosEdit(id));
+    setOrdenId(id);
+    handleOpenEditOrdenDialog();
+  };
+
+  const handleDetallesRow = (id) => {
+    navigate(PATH_OPTICA.ordenesEdit(id));
   };
 
   const dataFiltered = applySortFilter({
@@ -154,12 +168,12 @@ export default function OpticaOrdenes() {
     filterName,
   });
 
-  const handleOpenDeleteEmpleadoDialog = () => {
-    setOpenDeleteEmpleadoDialog(true);
+  const handleOpenEditOrdenDialog = () => {
+    setOpenEditOrdenDialog(true);
   }
 
-  const handleCloseDeleteEmpleadoDialog = () => {
-    setOpenDeleteEmpleadoDialog(false);
+  const handleCloseEditOrdenDialog = () => {
+    setOpenEditOrdenDialog(false);
   }
 
   const denseHeight = dense ? 60 : 80;
@@ -185,7 +199,14 @@ export default function OpticaOrdenes() {
               >
                 Agregar
               </Button>
-              <DeleteEmpleadoDialog open={openDeleteEmpleadoDialog} onClose={handleCloseDeleteEmpleadoDialog} empleados={ordenes} setTableData={setTableData} empeId={empeId} />
+              <ModalEditarOrden
+                open={openEditOrdenDialog}
+                onClose={handleCloseEditOrdenDialog}
+                ordenes={ordenes}
+                setTableData={setTableData}
+                orden={orden}
+              />
+              {/* <DeleteEmpleadoDialog open={openDeleteEmpleadoDialog} onClose={handleCloseDeleteEmpleadoDialog} empleados={ordenes} setTableData={setTableData} empeId={empeId} /> */}
 
             </div>
           }
@@ -224,6 +245,7 @@ export default function OpticaOrdenes() {
                           onSelectRow={() => onSelectRow(row.orde_Id)}
                           onDeleteRow={() => handleDeleteRow(row.orde_Id)}
                           onEditRow={() => handleEditRow(row.orde_Id)}
+                          onDetallesRow={() => handleDetallesRow(row.orde_Id)}
                         />
                       ) : (
                         !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />

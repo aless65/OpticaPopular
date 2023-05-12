@@ -54,6 +54,22 @@ namespace OpticaPopular.API.Controllers
             return Ok(insert);
         }
 
+        [HttpPut("Editar")]
+        public IActionResult Update(OrdenesViewModel orden)
+        {
+            var item = _mapper.Map<tbOrdenes>(orden);
+            var update = _opticaPopularService.UpdateOrdenes(item);
+
+            return Ok(update);
+        }
+
+        [HttpGet("ListadoDetalles")]
+        public IActionResult IndexDetalles(int id)
+        {
+            var list = _opticaPopularService.ListadoDetallesOrdenes(id);
+            return Ok(list);
+        }
+
         [HttpPost("InsertarDetalles")]
         public IActionResult InsertDetalles(DetallesOrdenesViewModel orden)
         {
@@ -63,11 +79,12 @@ namespace OpticaPopular.API.Controllers
             return Ok(insert);
         }
 
-        [HttpGet("ListadoDetalles")]
-        public IActionResult IndexDetalles(int id)
+        [HttpPut("EliminarDetalles")]
+        public IActionResult DeleteDetalles(int id)
         {
-            var list = _opticaPopularService.ListadoDetallesOrdenes(id);
-            return Ok(list);
+            var delete = _opticaPopularService.DeleteDetallesOrdenes(id);
+
+            return Ok(delete);
         }
     }
 }

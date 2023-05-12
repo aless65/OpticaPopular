@@ -73,7 +73,7 @@ export default function OrdenDetallesTableRow({ row, selected, onEditRow, onSele
                 sx={{ color: 'error.main' }}
               >
                 <Iconify icon={'eva:trash-2-outline'} />
-                Eliminar
+                Cancelar
               </MenuItem>
               <MenuItem
                 onClick={() => {

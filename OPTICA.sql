@@ -37,7 +37,7 @@ CREATE TABLE acce.tbPantallas(
 	pant_Nombre				NVARCHAR(100) NOT NULL,
 	pant_Url				NVARCHAR(300) NOT NULL,
 	pant_Menu				NVARCHAR(300) NOT NULL,
-	pant_HtmlId				NVARCHAR(80) NOT NULL,
+	pant_Icon				NVARCHAR(80) NOT NULL,
 	pant_UsuCreacion		INT NOT NULL,
 	pant_FechaCreacion		DATETIME NOT NULL CONSTRAINT DF_pant_FechaCreacion DEFAULT(GETDATE()),
 	pant_UsuModificacion	INT,
@@ -47,21 +47,21 @@ CREATE TABLE acce.tbPantallas(
 );
 GO
 
-INSERT INTO acce.tbPantallas(pant_Nombre, pant_Url, pant_Menu, pant_HtmlId, pant_UsuCreacion)
-VALUES ('Usuarios', '/Usuario/Listado', 'Acceso', 'usuariosItem', 1),
-       ('Roles', '/Rol/Listado', 'Acceso', 'rolItem', 1),
-       ('Empleados', '/Empleados/Listado', 'Optica', 'empleadosItem', 1),
-	   ('Clientes', '/Clientes/Listado', 'Optica', 'clientesItem', 1),
-	   ('Proveedores', '/Proveedores/Listado', 'Optica', 'proveedoresItem', 1),
-	   ('Citas', '/Citas/Listado', 'Optica', 'opticaItem', 1),
-	   ('Consultorio', '/Consultorio/Listado', 'Optica', 'opticaItem', 1),
-	   ('Consultas', '/Consultas/Listado','Optica', 'consultasItem', 1),
-	   ('Ordenes', '/Ordenes/Listado', 'Optica', 'ordenesItem', 1),
-	   ('Aros', '/Aros/Listado', 'Optica', 'arosItem', 1),
-	   ('Envios', '/Envios/Listado', 'Optica', 'enviosItem', 1),
-	   ('Categorias', '/Categorias/Listado', 'Optica', 'categoriasItem', 1),
-	   ('Direcciones', '/Direcciones/Listado', 'Optica', 'direccionItem', 1),
-       ('Marca', '/Marca/Listado', 'Optica', 'marcasItem', 1)
+INSERT INTO acce.tbPantallas(pant_Nombre, pant_Url, pant_Menu, pant_Icon, pant_UsuCreacion)
+VALUES ('usuarios', 'PATH_ACCESO.usuarios', 'acceso', '<ManageAccountsIcon/>', 1),
+       ('roles', 'PATH_ACCESO.roles', 'acceso', 'ICONS.kanban', 1),
+       ('empleados', 'PATH_OPTICA.empleados', 'óptica', '<PeopleAltIcon/>', 1),
+	   ('clientes', 'PATH_OPTICA.clientes', 'óptica', '<GroupIcon/>', 1),
+	   ('proveedores', 'PATH_OPTICA.proveedores', 'óptica', '<BusinessIcon/>', 1),
+	   ('ordenes', 'PATH_OPTICA.ordenes', 'óptica', '<ShoppingBasketIcon/>', 1),
+	   ('marcas', 'PATH_OPTICA.marcas', 'óptica', '<SellIcon/>', 1),
+	   ('categorias', 'PATH_OPTICA.categorias','óptica', '<CategoryIcon/>', 1),
+	   ('sucursales', 'PATH_OPTICA.sucursales', 'óptica', '<StoreIcon/>', 1),
+	   ('consultorios', 'PATH_OPTICA.consultorios', 'óptica', '<DeskIcon/>', 1),
+	   ('envios', 'PATH_OPTICA.envios', 'óptica', '<DeskIcon/>', 1),
+	   ('ventas', 'PATH_OPTICA.ventas', 'óptica', '<DeskIcon/>', 1),
+	   ('facturas', 'PATH_OPTICA.ventas', 'óptica', '<DeskIcon/>', 1)
+       --('Marca', '/Marca/Listado', 'Optica', 'marcasItem', 1)
 GO
 
 --***********CREACION TABLA ROLES/PANTALLA*****************---

@@ -30,6 +30,7 @@ namespace OpticaPopular.DataAccess.Repositories
 
         #region Pantallas
         public static string UDP_Lista_Pantallas = "acce.UDP_acce_tbPantallas_List";
+        public static string UDP_Lista_PantallasMenu = "acce.UDP_opti_tbPantallas_ListMenu";
         #endregion
 
         #region Clientes
@@ -73,6 +74,8 @@ namespace OpticaPopular.DataAccess.Repositories
         #region Aros
         public static string UDP_Lista_Aros = "opti.UDP_opti_tbAros_List";
         public static string UDP_Lista_ArosXSucursal = "opti.UDP_opti_tbAros_ListXSucursal";
+        public static string UDP_Precio_Aros = "opti.UDP_opti_PrecioAros";
+        public static string UDP_Stock_ArosXSucursal = "opti.UDP_opti_StockArosXSucursal";
         #endregion
 
         #region Citas
@@ -103,6 +106,7 @@ namespace OpticaPopular.DataAccess.Repositories
 
         public static string UDP_Lista_DetallesOrdenes = "opti.UDP_opti_tbDetallesOrdenes_List";
         public static string UDP_Inserta_DetallesOrdenes = "opti.UDP_opti_tbDetallesOrdenes_Insert";
+        public static string UDP_Elimina_DetallesOrdenes = "opti.UDP_opti_tbDetallesOrdenes_Delete";
         #endregion
 
         #region Proveedores

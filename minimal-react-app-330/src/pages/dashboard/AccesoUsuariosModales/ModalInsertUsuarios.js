@@ -204,7 +204,6 @@ export default function AddUserDialog({ open, onClose, usuarios, setTableData })
           <Grid container>
             <Grid item xs={12} sx={{ pr: 1 }} sm={6}>
               <Autocomplete
-                disablePortal
                 name="empleado"
                 options={optionsEmpleados}
                 error={errors.empleado?.message !== undefined}
@@ -229,7 +228,6 @@ export default function AddUserDialog({ open, onClose, usuarios, setTableData })
             </Grid>
             <Grid item xs={12} sx={{ pl: 1 }} sm={6}>
               <Autocomplete
-                disablePortal
                 name="rol"
                 options={optionsRoles}
                 error={errors.rol?.message !== undefined}

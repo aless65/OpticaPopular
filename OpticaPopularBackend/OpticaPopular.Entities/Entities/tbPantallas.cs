@@ -17,7 +17,7 @@ namespace OpticaPopular.Entities.Entities
         public string pant_Nombre { get; set; }
         public string pant_Url { get; set; }
         public string pant_Menu { get; set; }
-        public string pant_HtmlId { get; set; }
+        public string pant_Icon { get; set; }
         public int pant_UsuCreacion { get; set; }
         public DateTime pant_FechaCreacion { get; set; }
         public int? pant_UsuModificacion { get; set; }

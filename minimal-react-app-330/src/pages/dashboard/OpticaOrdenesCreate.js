@@ -16,7 +16,7 @@ import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 // sections
 import OrdenNewEditForm from '../../sections/@dashboard/optica/OrdenNewEditForm';
 import { useDispatch, useSelector } from '../../redux/store';
-import { getEmpleado } from '../../redux/slices/empleado';
+import { getOrden } from '../../redux/slices/orden';
 
 // ----------------------------------------------------------------------
 
@@ -31,19 +31,21 @@ export default function OrdenCreate() {
 
   const dispatch = useDispatch();
 
-  const empleado = useSelector((state) => state.empleado.empleado);
+  const orden = useSelector((state) => state.orden.orden);
 
   const isEdit = pathname.includes('editar');
 
   useEffect(() => {
     if(isEdit){
-      dispatch(getEmpleado(name));
+      // console.log(name);
+      dispatch(getOrden(name));
+      // console.log(orden);
     }
-  }, [name]);
+  }, [isEdit]);
 
   // const currentEmpleado = _userList.find((user) => paramCase(user.name) === name);
 
-  const currentEmpleado = isEdit ? empleado : null;
+  const currentOrden = isEdit ? orden : null;
 
   return (
     <Page title="Orden: Crear nueva">
@@ -56,7 +58,7 @@ export default function OrdenCreate() {
             { name: !isEdit ? 'Nueva orden' : 'Editar orden' },
           ]}
         />
-        <OrdenNewEditForm isEdit={isEdit} currentEmpleado={currentEmpleado} />
+        <OrdenNewEditForm isEdit={isEdit} currentOrden={currentOrden} orden={name}/>
       </Container>
     </Page>
   );

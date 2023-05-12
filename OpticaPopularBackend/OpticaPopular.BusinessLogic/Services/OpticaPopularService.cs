@@ -83,6 +83,34 @@ namespace OpticaPopular.BusinessLogic.Services
                 return result.Error(e.Message);
             }
         }
+
+        public ServiceResult PrecioAros(int id)
+        {
+            var result = new ServiceResult();
+            try
+            {
+                var list = _arosRepository.PrecioAros(id);
+                return result.Ok(list);
+            }
+            catch (Exception e)
+            {
+                return result.Error(e.Message);
+            }
+        }
+
+        public ServiceResult StockAros(int aros_Id, int sucu_Id)
+        {
+            var result = new ServiceResult();
+            try
+            {
+                var list = _arosRepository.StockAros(aros_Id, sucu_Id);
+                return result.Ok(list);
+            }
+            catch (Exception e)
+            {
+                return result.Error(e.Message);
+            }
+        }
         #endregion
 
         #region Cargos
@@ -476,31 +504,31 @@ namespace OpticaPopular.BusinessLogic.Services
         }
         #endregion
 
-            #region DetallesEnvios
+        #region DetallesEnvios
 
 
 
             #endregion
 
-            #region DetallesOrdenes
+        #region DetallesOrdenes
 
 
 
             #endregion
 
-            #region Direcciones
+        #region Direcciones
 
 
 
             #endregion
 
-            #region Direcciones Por Cliente
+        #region Direcciones Por Cliente
 
 
 
             #endregion
 
-            #region Empleados
+        #region Empleados
 
             public ServiceResult ListadoEmpleados()
         {
@@ -749,6 +777,22 @@ namespace OpticaPopular.BusinessLogic.Services
                 return result.Error(e.Message);
             }
         }
+        public ServiceResult UpdateOrdenes(tbOrdenes item)
+        {
+            var result = new ServiceResult();
+            try
+            {
+                var update = _ordenesRepository.Update(item);
+                if (update.MessageStatus == "La orden ha sido editada con éxito")
+                    return result.SetMessage(update.MessageStatus, ServiceResultType.Success);
+                else
+                    return result.SetMessage(update.MessageStatus, ServiceResultType.Error);
+            }
+            catch (Exception e)
+            {
+                return result.Error(e.Message);
+            }
+        }
 
         public ServiceResult InsertOrdenesDetalles(tbDetallesOrdenes item)
         {
@@ -774,6 +818,20 @@ namespace OpticaPopular.BusinessLogic.Services
             try
             {
                 var list = _ordenesRepository.ListDetalles(id);
+                return result.Ok(list);
+            }
+            catch (Exception e)
+            {
+                return result.Error(e.Message);
+            }
+        }
+
+        public ServiceResult DeleteDetallesOrdenes(int id)
+        {
+            var result = new ServiceResult();
+            try
+            {
+                var list = _ordenesRepository.DeleteDetalles(id);
                 return result.Ok(list);
             }
             catch (Exception e)

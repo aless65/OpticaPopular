@@ -35,5 +35,19 @@ namespace OpticaPopular.API.Controllers
             var list = _opticaPopularService.ListadoArosXSucursal(id);
             return Ok(list);
         }
+
+        [HttpGet("PrecioAros")]
+        public IActionResult PrecioAros(int id)
+        {
+            var list = _opticaPopularService.PrecioAros(id);
+            return Ok(list);
+        }
+
+        [HttpGet("StockAros")]
+        public IActionResult StockAros(int aros_Id, int sucu_Id)
+        {
+            var list = _opticaPopularService.StockAros(aros_Id, sucu_Id);
+            return Ok(list);
+        }
     }
 }

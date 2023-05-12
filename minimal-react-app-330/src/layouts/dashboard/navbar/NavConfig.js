@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import GroupIcon from '@mui/icons-material/Group';
@@ -18,6 +19,7 @@ import { PATH_ACCESO, PATH_DASHBOARD, PATH_OPTICA } from '../../../routes/paths'
 import Label from '../../../components/Label';
 import SvgIconStyle from '../../../components/SvgIconStyle';
 
+
 // ----------------------------------------------------------------------
 
 const getIcon = (name) => <SvgIconStyle src={`/icons/${name}.svg`} sx={{ width: 1, height: 1 }} />;
@@ -27,6 +29,42 @@ const ICONS = {
   kanban: getIcon('ic_kanban'),
   dashboard: getIcon('ic_dashboard'),
 };
+
+//  menuAcceso = [];
+
+const fetchPantallasData = async () => {
+  try {
+    console.log("entra");
+    const response = await fetch(`http://opticapopular.somee.com/api/Pantallas/ListadoMenu?esAdmin=${JSON.parse(localStorage.getItem('usuario')).usua_EsAdmin}&role_Id=${JSON.parse(localStorage.getItem('usuario')).role_Id}`, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    const data = await response.json();
+    console.log(data);
+
+    const menuAcceso = data.data.filter((item) => item.pant_Menu === 'acceso');
+    console.log(menuAcceso);
+
+    const extractedData = menuAcceso.map((item) => {
+      // Extract the specific data you need from each item
+      // For example:
+      return {
+        title: item.pant_Nombre,
+        path: item.pant_Url,
+        icon: item.pant_Icon,
+      };
+    });
+
+    console.log(extractedData);
+    return data;
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+};
+
+fetchPantallasData();
 
 const navConfig = [
   // GENERAL

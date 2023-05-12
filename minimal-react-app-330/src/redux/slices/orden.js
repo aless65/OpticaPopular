@@ -96,11 +96,12 @@ export function getOrdenes() {
 // ----------------------------------------------------------------------
 
 export function getOrden(Id) {
-  return async () => {
+  return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`Citas/BuscarCitaPorId/${Id}`);
-      dispatch(slice.actions.getcitaSuccess(response.data.data));
+      const response = await axios.get(`Ordenes/Find?id=${Id}`);
+      dispatch(slice.actions.getOrdenSuccess(response.data.data));
+      console.log(response.data.data);
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error));
