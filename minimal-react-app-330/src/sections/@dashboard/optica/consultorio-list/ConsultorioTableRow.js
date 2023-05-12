@@ -26,8 +26,6 @@ ConsultorioTableRow.propTypes = {
   onDeleteRow: PropTypes.func,
 };
 
-
-
 export default function ConsultorioTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRow }) {
 
   const theme = useTheme();

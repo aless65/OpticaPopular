@@ -90,7 +90,7 @@ export default function ModalAgregarCita({ open, onClose, citas, setTableData })
     } = methods;
 
     const onSubmit = async (data) => {
-        const dateFecha = new Date(data.cita_Fecha);
+        const dateFecha = dayjs(new Date(data.cita_Fecha)).subtract(1, 'day');
         const formattedDate = dateFecha.toISOString();
         console.log(formattedDate);
 

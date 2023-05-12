@@ -41,6 +41,18 @@ namespace OpticaPopular.Entities.Entities
         [NotMapped]
         public string sucu_Descripcion { get; set; }
 
+        [NotMapped]
+        public int sucu_Id { get; set; }
+
+        [NotMapped]
+        public int clie_Id { get; set; }
+
+        [NotMapped]
+        public string clie_Nombres { get; set; }
+
+        [NotMapped]
+        public string clie_Apellidos { get; set; }
+
         public virtual tbCitas cita { get; set; }
         public virtual tbUsuarios usua_IdCreacionNavigation { get; set; }
         public virtual tbUsuarios usua_IdModificacionNavigation { get; set; }

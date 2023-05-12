@@ -30,5 +30,13 @@ namespace OpticaPopular.API.Models
         public string empe_Apellidos { get; set; }
 
         public string sucu_Descripcion { get; set; }
+
+        public int sucu_Id { get; set; }
+
+        public int clie_Id { get; set; }
+
+        public string clie_Nombres { get; set; }
+
+        public string clie_Apellidos { get; set; }
     }
 }

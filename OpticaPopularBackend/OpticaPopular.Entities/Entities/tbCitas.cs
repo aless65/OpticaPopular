@@ -32,6 +32,9 @@ namespace OpticaPopular.Entities.Entities
         public string clie_Apellidos { get; set; }
 
         [NotMapped]
+        public int empe_Id { get; set; }
+
+        [NotMapped]
         public string cons_Nombre { get; set; }
 
         [NotMapped]
@@ -46,8 +49,6 @@ namespace OpticaPopular.Entities.Entities
         [NotMapped]
         public int sucu_Id { get; set; }
 
-        [NotMapped]
-        public int deci_Id { get; set; }
 
         [NotMapped]
         public decimal deci_Costo { get; set; }
@@ -57,6 +58,13 @@ namespace OpticaPopular.Entities.Entities
 
         [NotMapped]
         public string deci_HoraFin { get; set; }
+
+        [NotMapped]
+        public string empe_Apellidos { get; set; }
+
+        [NotMapped]
+        public string sucu_Descripcion { get; set; }
+
 
         public virtual tbClientes clie { get; set; }
         public virtual tbConsultorios cons { get; set; }

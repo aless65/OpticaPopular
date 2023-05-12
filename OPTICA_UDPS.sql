@@ -2620,12 +2620,43 @@ CREATE OR ALTER PROCEDURE opti.UDP_tbCitas_BuscarCitaPorId
 	@cita_Id	INT
 AS
 BEGIN
-	SELECT [cita_Id],
-		   [clie_Id],
-		   [cons_Id],
-		   [cita_Fecha]
-	 FROM [opti].[tbCitas]
-	 WHERE [cita_Id] = @cita_Id
+	SELECT tb1.[cita_Id],
+		   tb1.[clie_Id],
+		   tb2.clie_Nombres,
+		   tb2.clie_Apellidos,
+		   tb1.[cons_Id],
+		   tb3.cons_Nombre,
+		   [cita_Fecha],
+		   tb6.empe_Id,
+		   tb6.empe_Nombres,
+		   tb6.empe_Apellidos,
+		   tb6.sucu_Id,
+		   tb7.sucu_Descripcion,
+		   tb8.deci_Costo,
+		   tb8.deci_HoraInicio,
+		   tb8.deci_HoraFin,
+		   tb1.usua_IdCreacion,
+		   tb4.usua_NombreUsuario AS usua_NombreCreacion,
+		   tb1.cita_FechaCreacion,
+		   tb1.usua_IdModificacion,
+		   tb5.usua_NombreUsuario AS usua_NombreModificacion,
+		   tb1.cita_FechaModificacion
+	 FROM [opti].[tbCitas] tb1
+	 INNER JOIN [opti].[tbClientes] tb2
+	 ON tb1.clie_Id = tb2.clie_Id
+	 INNER JOIN [opti].[tbConsultorios] tb3
+	 ON tb1.cons_Id = tb3.cons_Id
+	 INNER JOIN [acce].[tbUsuarios] tb4
+	 ON tb1.usua_IdCreacion = tb4.usua_Id
+	 LEFT JOIN [acce].[tbUsuarios] tb5
+	 ON tb1.usua_IdModificacion = tb5.usua_Id
+	 INNER JOIN [opti].[tbEmpleados] tb6
+	 ON tb3.empe_Id = tb6.empe_Id
+	 INNER JOIN [opti].[tbSucursales] tb7
+	 ON tb6.sucu_Id = tb7.sucu_Id
+	 INNER JOIN [opti].[tbDetallesCitas] tb8
+	 ON tb1.cita_Id = tb8.cita_Id
+	 WHERE tb1.cita_Id = @cita_Id
 	 AND [cita_Estado] = 1
 END
 GO
