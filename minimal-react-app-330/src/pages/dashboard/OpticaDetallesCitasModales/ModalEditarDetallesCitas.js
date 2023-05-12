@@ -48,6 +48,36 @@ export default function ModalEditarDetalleCita({ open, onClose, citas, setTableD
 
     const dispatch = useDispatch();
 
+    useEffect(() => {
+        if (citaId) {
+            axios.get(`DetallesCitas/BuscarDetalleCitaPorIdCita/${citaId}`)
+            .then((response) => {
+                if (response.data.code === 200) {
+                    setdeci_CostoTemp(response.data.data.deci_Costo);
+                    const newDate1 = new Date();
+                    newDate1.setHours(response.data.data.deci_HoraInicio.substring(0, 2));
+                    newDate1.setMinutes(response.data.data.deci_HoraInicio.substring(3, 5));
+                    newDate1.setSeconds(0);
+                    setdeci_HoraInicioTemp(dayjs(newDate1));
+                    const newDate2 = new Date();
+                    newDate2.setHours(response.data.data.deci_HoraFin.substring(0, 2));
+                    newDate2.setMinutes(response.data.data.deci_HoraFin.substring(3, 5));
+                    newDate2.setSeconds(0);
+                    setdeci_HoraFinTemp(newDate2);
+                }
+             })
+        }
+      
+        if (insertSuccess === true) {
+            dispatch(getCitas());
+      
+            setTableData(citas);
+      
+            setInsertSuccess(false);
+          }
+    }, [citaId, insertSuccess]);
+
+    
     const InsertSchema = Yup.object().shape({
         deci_Costo: Yup.string().required('El precio de la cita es requerido').trim().matches(/^(?!0+(\.0{1,2})?$)\d{3,4}(\.\d{1,2})?$/, 'El costo debe estar entre 100 y 9,999 con un máximo de 2 decimales opcionales'),
         deci_HoraInicio: Yup.string().required('La hora de inicio es requerida').nullable(),
@@ -73,36 +103,10 @@ export default function ModalEditarDetalleCita({ open, onClose, citas, setTableD
     } = methods;
 
     useEffect(() => {
-        if (citaId) {
-            axios.get(`DetallesCitas/BuscarDetalleCitaPorIdCita/${citaId}`)
-            .then((response) => {
-                if (response.data.code === 200) {
-                    setdeci_CostoTemp(response.data.data.deci_Costo);
-                    const newDate1 = new Date();
-                    newDate1.setHours(response.data.data.deci_HoraInicio.substring(0, 2));
-                    newDate1.setMinutes(response.data.data.deci_HoraInicio.substring(3, 5));
-                    newDate1.setSeconds(0);
-                    setdeci_HoraInicioTemp(dayjs(newDate1));
-                    const newDate2 = new Date();
-                    newDate2.setHours(response.data.data.deci_HoraFin.substring(0, 2));
-                    newDate2.setMinutes(response.data.data.deci_HoraFin.substring(3, 5));
-                    newDate2.setSeconds(0);
-                    setdeci_HoraFinTemp(newDate2);
-                }
-             })
-        }
         methods.setValue('deci_Costo', defaultValues.deci_Costo);
         methods.setValue('deci_HoraInicio', defaultValues.deci_HoraInicio);
         methods.setValue('deci_HoraFin', defaultValues.deci_HoraFin);
-
-        if (insertSuccess === true) {
-            dispatch(getCitas());
-      
-            setTableData(citas);
-      
-            setInsertSuccess(false);
-          }
-    }, [citaId, methods, insertSuccess]);
+    }, [defaultValues])
 
     const mostrarAlerta = () => {
         setMostrarAlerta(true);
@@ -216,15 +220,24 @@ export default function ModalEditarDetalleCita({ open, onClose, citas, setTableD
                     <br/>
                     <Divider />
                     <DialogContent>
-                    <Stack spacing={3} sx={{ p: 3, pb: 0, pl: 5, pr: 5 }}>
+                    <Stack spacing={3}>
                         {mostrarAlertaError && renderErrorMessage("generalError")}
                         <Grid container>
                             <Grid item xs={12} sx={{ pr: 1 }} sm={12}>
-                                <RHFTextField
-                                    name="deci_Costo"
-                                    label="Precio de la cita"
-                                    value={deci_CostoTemp || ''}
-                                    />
+                                <Controller
+                                     name="deci_Costo"
+                                     render={({ field }) => (
+                                         <RHFTextField
+                                             name="deci_Costo"
+                                             label="Precio de la cita"
+                                             value={field.value || deci_CostoTemp || ''}
+                                             onChange={(newValue) => {
+                                                field.onChange(newValue);
+                                                setdeci_CostoTemp('');
+                                             }}
+                                         />
+                                     )}
+                                />
                             </Grid>
                         </Grid>
                         <Grid container>

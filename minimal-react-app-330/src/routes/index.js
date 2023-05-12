@@ -93,6 +93,7 @@ export default function Router() {
                             <OpticaCitas />
                         </GuestGuard>
                 },
+                { path: 'citas/Detalles/:Id', element: <GuestGuard> <OpticaCitasDetalles/> </GuestGuard>  },
                 { path: 'proveedores', element: <GuestGuard> <OpticaProveedores /> </GuestGuard>  },
                 { path: 'proveedores/nuevo', element: <GuestGuard> <OpticaProveedoresCreate /> </GuestGuard>  },
                 { path: 'proveedores/:name/editar', element: <GuestGuard>  <OpticaProveedoresCreate /> </GuestGuard> },
@@ -103,6 +104,10 @@ export default function Router() {
                 { path: 'categorias', element: <GuestGuard> <OpticaCategoria /> </GuestGuard>  },
                 { path: 'sucursales', element: <GuestGuard> <OpticaSucursales /> </GuestGuard>  },
                 { path: 'consultorios', element: <GuestGuard> <OpticaConsultorios /> </GuestGuard>  },
+                { path: 'facturas', element: <GuestGuard> <OpticaFacturas /> </GuestGuard>  },
+                { path: 'ventas', element: <GuestGuard> <OpticaVentas /> </GuestGuard>  },
+                { path: 'envios', element: <GuestGuard> <OpticaEnvios /> </GuestGuard>  },
+
             ],
         },
         // Main Routes
@@ -139,7 +144,17 @@ const OpticaEmpleadosCreate = Loadable(lazy(() => import('../pages/dashboard/Opt
 // CLIENTES
 const OpticaClientes = Loadable(lazy(() => import('../pages/dashboard/OpticaClientes')));
 const OpticaClientesCreate = Loadable(lazy(() => import('../pages/dashboard/OpticaClientesCreate')));
+
+// CITAS
 const OpticaCitas = Loadable(lazy(() => import('../pages/dashboard/OpticaCitas')));
+const OpticaCitasDetalles = Loadable(lazy(() => import('../pages/dashboard/OpticaCitasDetalles')));
+
+// VENTAS
+const OpticaFacturas = Loadable(lazy(() => import('../pages/dashboard/OpticaFacturas')));
+const OpticaVentas = Loadable(lazy(() => import('../pages/dashboard/OpticaVentas')));
+const OpticaEnvios = Loadable(lazy(() => import('../pages/dashboard/OpticaEnvios')));
+
+// PROVEEDORES
 const OpticaProveedores = Loadable(lazy(() => import('../pages/dashboard/OpticaProveedores')));
 const OpticaProveedoresCreate = Loadable(lazy(() => import('../pages/dashboard/OpticaProveedoresCreate')));
 // ORDENES

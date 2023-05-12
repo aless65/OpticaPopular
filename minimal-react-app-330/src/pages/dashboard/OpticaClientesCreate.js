@@ -51,7 +51,7 @@ export default function UserCreate() {
         <HeaderBreadcrumbs
           heading={!isEdit ? 'Crear nuevo cliente' : 'Editar cliente'}
           links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
+            { name: 'Inicio', href: PATH_DASHBOARD.root },
             { name: 'Clientes', href: PATH_OPTICA.clientes },
             { name: !isEdit ? 'Nuevo cliente' : 'Editar cliente'  },
           ]}

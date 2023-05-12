@@ -30,6 +30,8 @@ namespace OpticaPopular.Entities.Entities
             tbDetallesCitasusua_IdModificacionNavigation = new HashSet<tbDetallesCitas>();
             tbDetallesEnviosusua_IdCreacionNavigation = new HashSet<tbDetallesEnvios>();
             tbDetallesEnviosusua_IdModificacionNavigation = new HashSet<tbDetallesEnvios>();
+            tbDetallesFacturausua_IdCreacionNavigation = new HashSet<tbDetallesFactura>();
+            tbDetallesFacturausua_IdModificacionNavigation = new HashSet<tbDetallesFactura>();
             tbDetallesOrdenesusua_IdCreacionNavigation = new HashSet<tbDetallesOrdenes>();
             tbDetallesOrdenesusua_IdModificacionNavigation = new HashSet<tbDetallesOrdenes>();
             tbDireccionesPorClienteusua_IdCreacionNavigation = new HashSet<tbDireccionesPorCliente>();
@@ -42,10 +44,8 @@ namespace OpticaPopular.Entities.Entities
             tbEnviosusua_IdModificacionNavigation = new HashSet<tbEnvios>();
             tbEstadosCivilesestacivi_UsuCreacionNavigation = new HashSet<tbEstadosCiviles>();
             tbEstadosCivilesestacivi_UsuModificacionNavigation = new HashSet<tbEstadosCiviles>();
-            tbFacturasDetallesfactdeta_UsuCreacionNavigation = new HashSet<tbFacturasDetalles>();
-            tbFacturasDetallesfactdeta_UsuModificacionNavigation = new HashSet<tbFacturasDetalles>();
-            tbFacturasfact_UsuCreacionNavigation = new HashSet<tbFacturas>();
-            tbFacturasfact_UsuModificacionNavigation = new HashSet<tbFacturas>();
+            tbFacturasusua_IdCreacionNavigation = new HashSet<tbFacturas>();
+            tbFacturasusua_IdModificacionNavigation = new HashSet<tbFacturas>();
             tbMarcasusua_IdCreacionNavigation = new HashSet<tbMarcas>();
             tbMarcasusua_IdModificacionNavigation = new HashSet<tbMarcas>();
             tbMetodosPagometo_UsuCreacionNavigation = new HashSet<tbMetodosPago>();
@@ -102,6 +102,8 @@ namespace OpticaPopular.Entities.Entities
         public virtual ICollection<tbDetallesCitas> tbDetallesCitasusua_IdModificacionNavigation { get; set; }
         public virtual ICollection<tbDetallesEnvios> tbDetallesEnviosusua_IdCreacionNavigation { get; set; }
         public virtual ICollection<tbDetallesEnvios> tbDetallesEnviosusua_IdModificacionNavigation { get; set; }
+        public virtual ICollection<tbDetallesFactura> tbDetallesFacturausua_IdCreacionNavigation { get; set; }
+        public virtual ICollection<tbDetallesFactura> tbDetallesFacturausua_IdModificacionNavigation { get; set; }
         public virtual ICollection<tbDetallesOrdenes> tbDetallesOrdenesusua_IdCreacionNavigation { get; set; }
         public virtual ICollection<tbDetallesOrdenes> tbDetallesOrdenesusua_IdModificacionNavigation { get; set; }
         public virtual ICollection<tbDireccionesPorCliente> tbDireccionesPorClienteusua_IdCreacionNavigation { get; set; }
@@ -114,10 +116,8 @@ namespace OpticaPopular.Entities.Entities
         public virtual ICollection<tbEnvios> tbEnviosusua_IdModificacionNavigation { get; set; }
         public virtual ICollection<tbEstadosCiviles> tbEstadosCivilesestacivi_UsuCreacionNavigation { get; set; }
         public virtual ICollection<tbEstadosCiviles> tbEstadosCivilesestacivi_UsuModificacionNavigation { get; set; }
-        public virtual ICollection<tbFacturasDetalles> tbFacturasDetallesfactdeta_UsuCreacionNavigation { get; set; }
-        public virtual ICollection<tbFacturasDetalles> tbFacturasDetallesfactdeta_UsuModificacionNavigation { get; set; }
-        public virtual ICollection<tbFacturas> tbFacturasfact_UsuCreacionNavigation { get; set; }
-        public virtual ICollection<tbFacturas> tbFacturasfact_UsuModificacionNavigation { get; set; }
+        public virtual ICollection<tbFacturas> tbFacturasusua_IdCreacionNavigation { get; set; }
+        public virtual ICollection<tbFacturas> tbFacturasusua_IdModificacionNavigation { get; set; }
         public virtual ICollection<tbMarcas> tbMarcasusua_IdCreacionNavigation { get; set; }
         public virtual ICollection<tbMarcas> tbMarcasusua_IdModificacionNavigation { get; set; }
         public virtual ICollection<tbMetodosPago> tbMetodosPagometo_UsuCreacionNavigation { get; set; }

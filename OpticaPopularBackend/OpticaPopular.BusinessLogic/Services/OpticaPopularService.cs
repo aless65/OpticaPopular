@@ -24,14 +24,14 @@ namespace OpticaPopular.BusinessLogic.Services
         private readonly EmpleadosRepository _empleadosRepository;
         private readonly EnviosRepository _enviosRepository;
         private readonly FacturasRepository _facturasRepository;
-        private readonly FacturasDetallesRepository _facturasDetallesRepository;
+        private readonly DetallesFacturaRepository _facturasDetallesRepository;
         private readonly MarcasRepository _marcasRepository;
         private readonly MetodosPagoRepository _metodosPagoRepository;
         private readonly OrdenesRepository _ordenesRepository;
         private readonly ProveedoresRepository _proveedoresRepository;
         private readonly SucursalesRepository _sucursalesRepository;
 
-        public OpticaPopularService(ArosRepository arosRepository, CargosRepository cargosRepository, CategoriasRepository categoriasRepository, CitasRepository citasRepository, ClientesRepository clientesRepository, ConsultoriosRepository consultoriosRepository, DetallesCitasRepository detallesCitasRepository, DetallesEnviosRepository detallesEnviosRepository, DetallesOrdenesRepository detallesOrdenesRepository, DireccionesRepository direccionesRepository, DireccionesPorClienteRepository direccionesPorClienteRepository, EmpleadosRepository empleadosRepository, EnviosRepository enviosRepository, FacturasRepository facturasRepository, FacturasDetallesRepository facturasDetallesRepository, MarcasRepository marcasRepository, MetodosPagoRepository metodosPagoRepository, OrdenesRepository ordenesRepository, ProveedoresRepository proveedoresRepository, SucursalesRepository sucursalesRepository)
+        public OpticaPopularService(ArosRepository arosRepository, CargosRepository cargosRepository, CategoriasRepository categoriasRepository, CitasRepository citasRepository, ClientesRepository clientesRepository, ConsultoriosRepository consultoriosRepository, DetallesCitasRepository detallesCitasRepository, DetallesEnviosRepository detallesEnviosRepository, DetallesOrdenesRepository detallesOrdenesRepository, DireccionesRepository direccionesRepository, DireccionesPorClienteRepository direccionesPorClienteRepository, EmpleadosRepository empleadosRepository, EnviosRepository enviosRepository, FacturasRepository facturasRepository, DetallesFacturaRepository facturasDetallesRepository, MarcasRepository marcasRepository, MetodosPagoRepository metodosPagoRepository, OrdenesRepository ordenesRepository, ProveedoresRepository proveedoresRepository, SucursalesRepository sucursalesRepository)
         {
             _arosRepository = arosRepository;
             _cargosRepository = cargosRepository;

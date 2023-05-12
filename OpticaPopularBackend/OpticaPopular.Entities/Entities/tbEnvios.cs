@@ -11,11 +11,11 @@ namespace OpticaPopular.Entities.Entities
         public tbEnvios()
         {
             tbDetallesEnvios = new HashSet<tbDetallesEnvios>();
-            tbFacturasDetalles = new HashSet<tbFacturasDetalles>();
+            tbDetallesFactura = new HashSet<tbDetallesFactura>();
         }
 
         public int envi_Id { get; set; }
-        public int clie_Id { get; set; }
+        public int fact_Id { get; set; }
         public int dire_Id { get; set; }
         public DateTime? envi_Fecha { get; set; }
         public DateTime envi_FechaEntrega { get; set; }
@@ -26,11 +26,11 @@ namespace OpticaPopular.Entities.Entities
         public int? usua_IdModificacion { get; set; }
         public DateTime? envi_FechaModificacion { get; set; }
 
-        public virtual tbClientes clie { get; set; }
         public virtual tbDirecciones dire { get; set; }
+        public virtual tbFacturas fact { get; set; }
         public virtual tbUsuarios usua_IdCreacionNavigation { get; set; }
         public virtual tbUsuarios usua_IdModificacionNavigation { get; set; }
         public virtual ICollection<tbDetallesEnvios> tbDetallesEnvios { get; set; }
-        public virtual ICollection<tbFacturasDetalles> tbFacturasDetalles { get; set; }
+        public virtual ICollection<tbDetallesFactura> tbDetallesFactura { get; set; }
     }
 }

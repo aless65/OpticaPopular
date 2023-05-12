@@ -25,7 +25,7 @@ import { TableMoreMenu, TableNoData } from '../../../../components/table';
 
 // ----------------------------------------------------------------------
 
-export default function CitasTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRow, onDetailsRow, onDetallesCita, onDetalle }) {
+export default function FacturasTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRow, onDetailsRow, onDetallesCita, onDetalle }) {
 
   Moment.locale('en');
 

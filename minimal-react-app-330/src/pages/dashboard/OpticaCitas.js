@@ -19,6 +19,7 @@ import {
     FormControlLabel,
 } from '@mui/material';
 import { useSnackbar } from 'notistack';
+import dayjs from 'dayjs';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
 import { getCitas, getcita } from '../../redux/slices/citas';
@@ -133,7 +134,6 @@ export default function OpticaCitas() {
 
     const [openEditDetailsCitaDialog, setOpenEditDetalleCitaDialog] = useState(false);
 
-
     const [filterName, setFilterName] = useState('');
 
     const { enqueueSnackbar } = useSnackbar();
@@ -192,6 +192,10 @@ export default function OpticaCitas() {
         setOpenEditDetalleCitaDialog(false);
     }
 
+    const handleDetalle = (Id) => {
+        navigate(`/optica/citas/Detalles/${Id}`, { replace: true });
+    }
+
     useEffect(() => {
         dispatch(getCitas());
     }, [dispatch]);
@@ -212,9 +216,13 @@ export default function OpticaCitas() {
         handleOpenEditCitaDialog();
     };
 
-    const handleDetailsRow = (Id) => {
-        setcitaIdAddDetalleCita(Id);
-        handleOpenAddDetalleCitaDialog();
+    const handleDetailsRow = (Id, fecha) => {
+        if(dayjs(new Date(fecha)) > dayjs(new Date())){
+            enqueueSnackbar(`No se puede completar la cita por que la fecha de la cita es mayor a la fecha actual`, { variant: 'error' }); 
+        }else{
+            setcitaIdAddDetalleCita(Id);
+            handleOpenAddDetalleCitaDialog();
+        }
     }
 
     const handleEditDetailsRow = (Id) => {
@@ -227,7 +235,7 @@ export default function OpticaCitas() {
             .then((response) => {
                 if (response.data.code === 200) {
                     if (response.data.data.deci_Id > 0) {
-                        enqueueSnackbar(`No se puede eliminar la cita por que ya ha fue completada`, { variant: 'error' }); 
+                        enqueueSnackbar(`No se puede eliminar la cita por que ya fue completada`, { variant: 'error' }); 
                     } else {
                         setCitaIdEliminar(Id);
                         handleOpenDeleteCitaDialog();
@@ -340,8 +348,9 @@ export default function OpticaCitas() {
                                                     onSelectRow={() => onSelectRow(row.cita_Id)}
                                                     onDeleteRow={() => handleDeleteRow(row.cita_Id)}
                                                     onEditRow={() => handleEditRow(row.cita_Id)}
-                                                    onDetailsRow={() => handleDetailsRow(row.cita_Id)}      
-                                                    onDetallesCita={() => handleEditDetailsRow(row.cita_Id) }
+                                                    onDetailsRow={() => handleDetailsRow(row.cita_Id, row.cita_Fecha)}      
+                                                    onDetallesCita={() => handleEditDetailsRow(row.cita_Id)}
+                                                    onDetalle={() => handleDetalle(row.cita_Id)}
                                                     />
                                             ) : (
                                                 !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />

@@ -8,6 +8,9 @@ import SellIcon from '@mui/icons-material/Sell';
 import CategoryIcon from '@mui/icons-material/Category';
 import StoreIcon from '@mui/icons-material/Store';
 import DeskIcon from '@mui/icons-material/Desk';
+import DescriptionIcon from '@mui/icons-material/Description';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 
 // routes
 import { PATH_ACCESO, PATH_DASHBOARD, PATH_OPTICA } from '../../../routes/paths';
@@ -57,6 +60,10 @@ const navConfig = [
       { title: 'categorias', path: PATH_OPTICA.categorias, icon: <CategoryIcon/> },
       { title: 'sucursales', path: PATH_OPTICA.sucursales, icon: <StoreIcon/> },
       { title: 'consultorios', path: PATH_OPTICA.consultorios, icon: <DeskIcon/> },
+      { title: 'facturas', path: PATH_OPTICA.facturas, icon: <DescriptionIcon/> },
+      { title: 'ventas', path: PATH_OPTICA.ventas, icon: <ShoppingCartIcon/> },
+      { title: 'envios', path: PATH_OPTICA.envios, icon: <LocalShippingIcon/> },
+
     ],
   },
 ];

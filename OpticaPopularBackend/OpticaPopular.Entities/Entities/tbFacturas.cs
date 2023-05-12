@@ -10,27 +10,28 @@ namespace OpticaPopular.Entities.Entities
     {
         public tbFacturas()
         {
-            tbFacturasDetalles = new HashSet<tbFacturasDetalles>();
+            tbDetallesFactura = new HashSet<tbDetallesFactura>();
+            tbEnvios = new HashSet<tbEnvios>();
         }
 
         public int fact_Id { get; set; }
-        public int clie_Id { get; set; }
-        public DateTime fact_Fecha { get; set; }
+        public int? cita_Id { get; set; }
+        public DateTime? fact_Fecha { get; set; }
         public int meto_Id { get; set; }
         public int empe_Id { get; set; }
-        public bool fact_esEnvio { get; set; }
-        public decimal? fact_PrecioTotal { get; set; }
-        public int fact_UsuCreacion { get; set; }
-        public DateTime fact_FechaCreacion { get; set; }
-        public int? fact_UsuModificacion { get; set; }
-        public DateTime? fact_FechaModificacion { get; set; }
+        public decimal fact_Total { get; set; }
         public bool? fact_Estado { get; set; }
+        public int usua_IdCreacion { get; set; }
+        public DateTime? fact_FechaCreacion { get; set; }
+        public int? usua_IdModificacion { get; set; }
+        public DateTime? fact_FechaModificacion { get; set; }
 
-        public virtual tbClientes clie { get; set; }
+        public virtual tbCitas cita { get; set; }
         public virtual tbEmpleados empe { get; set; }
-        public virtual tbUsuarios fact_UsuCreacionNavigation { get; set; }
-        public virtual tbUsuarios fact_UsuModificacionNavigation { get; set; }
         public virtual tbMetodosPago meto { get; set; }
-        public virtual ICollection<tbFacturasDetalles> tbFacturasDetalles { get; set; }
+        public virtual tbUsuarios usua_IdCreacionNavigation { get; set; }
+        public virtual tbUsuarios usua_IdModificacionNavigation { get; set; }
+        public virtual ICollection<tbDetallesFactura> tbDetallesFactura { get; set; }
+        public virtual ICollection<tbEnvios> tbEnvios { get; set; }
     }
 }

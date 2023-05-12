@@ -79,7 +79,7 @@ namespace OpticaPopular.API
             }
 
             app.UseHttpsRedirection();
-
+            
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {

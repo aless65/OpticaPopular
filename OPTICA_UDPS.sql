@@ -683,7 +683,8 @@ AS
 BEGIN
 	
 	BEGIN TRY
-		IF NOT EXISTS (SELECT * FROM opti.[tbFacturas] WHERE clie_Id = @clie_Id AND fact_Estado = 1)
+		IF NOT EXISTS (SELECT * FROM [opti].[tbOrdenes] WHERE clie_Id = @clie_Id AND [orde_Estado] = 1) OR
+		   NOT EXISTS (SELECT * FROM [opti].[tbCitas] WHERE [clie_Id] = @clie_Id AND [cita_Estado] = 1)
 			BEGIN
 				UPDATE opti.[tbClientes] 
 				SET clie_Estado = 0
@@ -2685,12 +2686,44 @@ CREATE OR ALTER PROCEDURE opti.UDP_tbCitas_BuscarCitaPorId
 	@cita_Id	INT
 AS
 BEGIN
-	SELECT [cita_Id],
-		   [clie_Id],
-		   [cons_Id],
-		   [cita_Fecha]
-	 FROM [opti].[tbCitas]
-	 WHERE [cita_Id] = @cita_Id
+	SELECT tb1.[cita_Id],
+		   tb1.[clie_Id],
+		   tb2.clie_Nombres,
+		   tb2.clie_Apellidos,
+		   tb1.[cons_Id],
+		   tb3.cons_Nombre,
+		   [cita_Fecha],
+		   tb6.empe_Id,
+		   tb6.empe_Nombres,
+		   tb6.empe_Apellidos,
+		   tb6.sucu_Id,
+		   tb7.sucu_Descripcion,
+		   tb8.deci_Id,
+		   tb8.deci_Costo,
+		   tb8.deci_HoraInicio,
+		   tb8.deci_HoraFin,
+		   tb1.usua_IdCreacion,
+		   tb4.usua_NombreUsuario AS usua_NombreCreacion,
+		   tb1.cita_FechaCreacion,
+		   tb1.usua_IdModificacion,
+		   tb5.usua_NombreUsuario AS usua_NombreModificacion,
+		   tb1.cita_FechaModificacion
+	 FROM [opti].[tbCitas] tb1
+	 LEFT JOIN [opti].[tbClientes] tb2
+	 ON tb1.clie_Id = tb2.clie_Id
+	 LEFT JOIN [opti].[tbConsultorios] tb3
+	 ON tb1.cons_Id = tb3.cons_Id
+	 LEFT JOIN [acce].[tbUsuarios] tb4
+	 ON tb1.usua_IdCreacion = tb4.usua_Id
+	 LEFT JOIN [acce].[tbUsuarios] tb5
+	 ON tb1.usua_IdModificacion = tb5.usua_Id
+	 LEFT JOIN [opti].[tbEmpleados] tb6
+	 ON tb3.empe_Id = tb6.empe_Id
+	 LEFT JOIN [opti].[tbSucursales] tb7
+	 ON tb6.sucu_Id = tb7.sucu_Id
+	 LEFT JOIN [opti].[tbDetallesCitas] tb8
+	 ON tb1.cita_Id = tb8.cita_Id
+	 WHERE tb1.cita_Id = @cita_Id
 	 AND [cita_Estado] = 1
 END
 GO
@@ -2749,11 +2782,11 @@ BEGIN
 		FROM opti.VW_tbDetallesCitas tb1
 		INNER JOIN opti.tbCitas tb2 
 		ON tb1.cita_Id = tb2.cita_Id
-		INNER JOIN opti.tbConsultorios tb3
+		LEFT JOIN opti.tbConsultorios tb3
 		ON tb2.cons_Id = tb3.cons_Id
-		INNER JOIN opti.tbEmpleados tb4
+		LEFT JOIN opti.tbEmpleados tb4
 		ON tb3.empe_Id = tb4.empe_Id
-		INNER JOIN opti.tbSucursales tb5
+		LEFT JOIN opti.tbSucursales tb5
 		ON tb4.sucu_Id = tb5.sucu_Id
 		WHERE tb2.cita_Id = @cita_Id
 		AND [deci_Estado] = 1
@@ -3095,7 +3128,7 @@ BEGIN
 END
 GO
 
-GO
+
 CREATE OR ALTER TRIGGER opti.trg_tbDetallesOrdenes_AumentarStock
 ON [opti].[tbDetallesOrdenes]
 AFTER DELETE
@@ -3112,125 +3145,6 @@ GO
 --VALUES(1, 2, 0.25, 0.50, 2000.00, 1, 2500.00, 1),
 --      (3, 8, 1.15, 0.65, 4800.00, 1, 5000.00, 1)
 
-GO
-
----------- Envios -----------
-CREATE OR ALTER VIEW opti.VW_tbEnvio
-AS
-	SELECT  envi_Id, 
-	        t1.clie_Id, 
-			t4.clie_Nombres
-			dire_Id,
-			t5.dire_DireccionExacta, 
-			envi_Fecha, 
-			envi_FechaEntrega, 
-			envi_FechaEntregaReal, 
-			t1.envi_Estado, 
-			t1.usua_IdCreacion,
-			T2.usua_NombreUsuario AS envi_NombreUsuarioCreacion, 
-			t1.envi_FechaCreacion, 
-			t1.usua_IdModificacion,
-			t3.usua_NombreUsuario AS envi_NombreUsuarioModificacion, 
-			t1.envi_FechaModificacion
-FROM opti.tbEnvios t1 INNER JOIN acce.tbUsuarios t2
-ON t1.usua_IdCreacion = t2.usua_Id LEFT JOIN acce.tbUsuarios t3
-ON t1.usua_IdModificacion = t3.usua_Id INNER JOIN opti.tbClientes T4
-ON T1.clie_Id = T4.clie_Id INNER JOIN opti.tbDirecciones t5
-ON T1.dire_Id = T5.dire_Id
-GO
-
-
-/*Listado de Envio*/
-CREATE OR ALTER PROCEDURE opti.UDP_opti_tbEnvio_List
-AS
-BEGIN
-	SELECT *
-	FROM opti.VW_tbEnvio
-END
-GO
-
-
-/*Insertar Envio*/
-CREATE OR ALTER PROCEDURE opti.UDP_opti_tbEnvios_Insert
-	 @clie_Id              INT, 
-	 @dire_Id              INT, 
-	 @envi_Fecha           DATE, 
-	 @envi_FechaEntrega    DATE, 
-	 @envi_FechaEntregaReal DATE, 
-	 @usua_IdCreacion      INT
-	 
-AS
-BEGIN
-	BEGIN TRY
-			BEGIN
-			INSERT INTO [opti].[tbEnvios](clie_Id, dire_Id, envi_Fecha, envi_FechaEntrega, envi_FechaEntregaReal, usua_IdCreacion)
-			VALUES(@clie_Id, @dire_Id, @envi_Fecha, @envi_FechaEntrega, @envi_FechaEntregaReal, @usua_IdCreacion)
-			
-			SELECT 'El envio ha sido insertado con éxito'
-			END
-
-	END TRY
-	BEGIN CATCH
-		SELECT 'Ha ocurrido un error'
-	END CATCH
-END
-GO
-
-
-/*Editar Envio*/
-CREATE OR ALTER PROCEDURE opti.UDP_opti_tbEnvios_Update
-	@envi_Id                 INT, 
-	@clie_Id                 INT, 
-	@dire_Id                 INT, 
-	@envi_Fecha              DATE, 
-	@envi_FechaEntrega       DATE, 
-	@envi_FechaEntregaReal   DATE, 
-    @usua_IdModificacion     INT
-AS
-BEGIN 
-	BEGIN TRY
-		BEGIN			
-			UPDATE   [opti].[tbEnvios]
-			SET 	[clie_Id] = @clie_Id,
-			        dire_Id = @dire_Id,
-					 envi_Fecha = @envi_Fecha,
-                     envi_FechaEntrega = @envi_FechaEntrega,
-                     envi_FechaEntregaReal = @envi_FechaEntregaReal,
-					 usua_IdModificacion = @usua_IdModificacion , 
-                     [envi_FechaModificacion] = GETDATE()
-			WHERE envi_Id = @envi_Id	
-			SELECT 'El envio ha sido editado con éxito'
-		  END
-	END TRY
-	BEGIN CATCH
-		SELECT 'Ha ocurrido un error'
-	END CATCH
-END
-GO
-
-
-/*Eliminar Envio*/
-CREATE OR ALTER PROCEDURE opti.UDP_opti_tbEnvio_Delete 
-	@envi_Id	INT
-AS
-BEGIN
-	BEGIN TRY
-		IF NOT EXISTS (SELECT * FROM [opti].[tbDetallesEnvios] WHERE [envi_Id] = @envi_Id)
-			BEGIN
-				UPDATE [opti].[tbEnvios]
-				SET envi_Estado = 0
-				WHERE envi_Id = @envi_Id 
-
-				SELECT 'El envio ha sido eliminado'
-			END
-		ELSE
-			SELECT 'El envio no puede ser eliminado ya que está siendo usado'
-	END TRY
-	BEGIN CATCH
-		SELECT 'Ha ocurrido un error'
-	END CATCH
-END
-GO
 
 
 ---------- Estados Civiles -----------

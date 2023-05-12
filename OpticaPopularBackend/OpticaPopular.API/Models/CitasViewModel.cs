@@ -16,7 +16,11 @@ namespace OpticaPopular.API.Models
         public int? usua_IdModificacion { get; set; }
         public DateTime? cita_FechaModificacion { get; set; }
 
+        public int deci_Id { get; set; }
+
         public int sucu_Id { get; set; }
+
+        public string sucu_Descripcion { get; set; }
 
         public string clie_Nombres { get; set; }
 
@@ -24,13 +28,15 @@ namespace OpticaPopular.API.Models
 
         public string cons_Nombre { get; set; }
 
+        public int empe_Id { get; set; }
+
         public string empe_Nombres { get; set; }
+
+        public string empe_Apellidos { get; set; }
 
         public string usua_NombreCreacion { get; set; }
 
         public string usua_NombreModificacion { get; set; }
-
-        public int deci_Id { get; set; }
 
         public decimal deci_Costo { get; set; }
 

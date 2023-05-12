@@ -188,7 +188,7 @@ export default function ModalAgregarDetalleCita({ open, onClose, citas, setTable
                     <br/>
                     <Divider />
                     <DialogContent>
-                    <Stack spacing={3} sx={{ p: 3, pb: 0, pl: 5, pr: 5 }}>
+                    <Stack spacing={3} >
                         {mostrarAlertaError && renderErrorMessage("generalError")}
                         <Grid container>
                             <Grid item xs={12} sx={{ pr: 1 }} sm={12}>

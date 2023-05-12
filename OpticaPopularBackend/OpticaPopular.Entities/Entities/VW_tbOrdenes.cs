@@ -9,7 +9,7 @@ namespace OpticaPopular.Entities.Entities
     public partial class VW_tbOrdenes
     {
         public int orde_Id { get; set; }
-        public int clie_Id { get; set; }
+        public int? clie_Id { get; set; }
         public string clie_NombreCompleto { get; set; }
         public DateTime? orde_Fecha { get; set; }
         public DateTime orde_FechaEntrega { get; set; }

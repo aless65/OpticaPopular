@@ -12,8 +12,6 @@ namespace OpticaPopular.Entities.Entities
         {
             tbCitas = new HashSet<tbCitas>();
             tbDireccionesPorCliente = new HashSet<tbDireccionesPorCliente>();
-            tbEnvios = new HashSet<tbEnvios>();
-            tbFacturas = new HashSet<tbFacturas>();
             tbOrdenes = new HashSet<tbOrdenes>();
         }
 
@@ -39,8 +37,6 @@ namespace OpticaPopular.Entities.Entities
         public virtual tbEstadosCiviles estacivi { get; set; }
         public virtual ICollection<tbCitas> tbCitas { get; set; }
         public virtual ICollection<tbDireccionesPorCliente> tbDireccionesPorCliente { get; set; }
-        public virtual ICollection<tbEnvios> tbEnvios { get; set; }
-        public virtual ICollection<tbFacturas> tbFacturas { get; set; }
         public virtual ICollection<tbOrdenes> tbOrdenes { get; set; }
     }
 }

@@ -22,6 +22,8 @@ import {
   Checkbox,
   FormControlLabel,
   Grid,
+  Divider,
+  DialogContent,
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 
@@ -173,10 +175,11 @@ export default function AddRolDialog({ open, onClose, roles, setTableData }) {
         <DialogTitle>Insertar rol</DialogTitle>
 
         {!!errors.afterSubmit && <Alert severity="error">{errors.afterSubmit.message}</Alert>}
-
-        <Stack spacing={3} sx={{ p: 3, pb: 0, pl: 5, pr: 5 }}>
+        <br/>
+        <Divider/>
+        <DialogContent>
+        <Stack spacing={3}>
           <RHFTextField name="nombre" label="Nombre del rol" />
-
           <Autocomplete
               multiple
               id="checkboxes-tags-demo"
@@ -197,6 +200,8 @@ export default function AddRolDialog({ open, onClose, roles, setTableData }) {
               isOptionEqualToValue={(option, value) => option.id === value.id}
             />
         </Stack>
+        </DialogContent>
+        <Divider/>
         <DialogActions>
           <LoadingButton variant="contained" type="submit" loading={isSubmitting} onClick={submitHandler}>
             Ingresar

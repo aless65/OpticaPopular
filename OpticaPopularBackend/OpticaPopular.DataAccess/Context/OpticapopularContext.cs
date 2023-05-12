@@ -30,7 +30,6 @@ namespace OpticaPopular.DataAccess.Context
         public virtual DbSet<VW_tbDirecciones> VW_tbDirecciones { get; set; }
         public virtual DbSet<VW_tbDireccionesPorClientes> VW_tbDireccionesPorClientes { get; set; }
         public virtual DbSet<VW_tbEmpleados> VW_tbEmpleados { get; set; }
-        public virtual DbSet<VW_tbEnvio> VW_tbEnvio { get; set; }
         public virtual DbSet<VW_tbMarcas> VW_tbMarcas { get; set; }
         public virtual DbSet<VW_tbMetodosPagos> VW_tbMetodosPagos { get; set; }
         public virtual DbSet<VW_tbOrdenes> VW_tbOrdenes { get; set; }
@@ -49,6 +48,7 @@ namespace OpticaPopular.DataAccess.Context
         public virtual DbSet<tbDepartamentos> tbDepartamentos { get; set; }
         public virtual DbSet<tbDetallesCitas> tbDetallesCitas { get; set; }
         public virtual DbSet<tbDetallesEnvios> tbDetallesEnvios { get; set; }
+        public virtual DbSet<tbDetallesFactura> tbDetallesFactura { get; set; }
         public virtual DbSet<tbDetallesOrdenes> tbDetallesOrdenes { get; set; }
         public virtual DbSet<tbDirecciones> tbDirecciones { get; set; }
         public virtual DbSet<tbDireccionesPorCliente> tbDireccionesPorCliente { get; set; }
@@ -56,7 +56,6 @@ namespace OpticaPopular.DataAccess.Context
         public virtual DbSet<tbEnvios> tbEnvios { get; set; }
         public virtual DbSet<tbEstadosCiviles> tbEstadosCiviles { get; set; }
         public virtual DbSet<tbFacturas> tbFacturas { get; set; }
-        public virtual DbSet<tbFacturasDetalles> tbFacturasDetalles { get; set; }
         public virtual DbSet<tbMarcas> tbMarcas { get; set; }
         public virtual DbSet<tbMetodosPago> tbMetodosPago { get; set; }
         public virtual DbSet<tbMunicipios> tbMunicipios { get; set; }
@@ -454,35 +453,6 @@ namespace OpticaPopular.DataAccess.Context
                 entity.Property(e => e.sucu_MunicipioNombre)
                     .IsRequired()
                     .HasMaxLength(80);
-            });
-
-            modelBuilder.Entity<VW_tbEnvio>(entity =>
-            {
-                entity.HasNoKey();
-
-                entity.ToView("VW_tbEnvio", "opti");
-
-                entity.Property(e => e.dire_DireccionExacta).IsRequired();
-
-                entity.Property(e => e.dire_Id)
-                    .IsRequired()
-                    .HasMaxLength(300);
-
-                entity.Property(e => e.envi_Fecha).HasColumnType("date");
-
-                entity.Property(e => e.envi_FechaCreacion).HasColumnType("datetime");
-
-                entity.Property(e => e.envi_FechaEntrega).HasColumnType("date");
-
-                entity.Property(e => e.envi_FechaEntregaReal).HasColumnType("date");
-
-                entity.Property(e => e.envi_FechaModificacion).HasColumnType("datetime");
-
-                entity.Property(e => e.envi_NombreUsuarioCreacion)
-                    .IsRequired()
-                    .HasMaxLength(100);
-
-                entity.Property(e => e.envi_NombreUsuarioModificacion).HasMaxLength(100);
             });
 
             modelBuilder.Entity<VW_tbMarcas>(entity =>
@@ -1126,6 +1096,51 @@ namespace OpticaPopular.DataAccess.Context
                     .HasConstraintName("FK_opti_tbDetallesEnvios_usua_IdModificacion_acce_tbUsuarios_usua_Id");
             });
 
+            modelBuilder.Entity<tbDetallesFactura>(entity =>
+            {
+                entity.HasKey(e => e.defa_Id)
+                    .HasName("PK_opti_tbDetallesFactura_defa_Id");
+
+                entity.ToTable("tbDetallesFactura", "opti");
+
+                entity.Property(e => e.defa_Estado).HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.defa_FechaCreacion)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.defa_FechaModificacion).HasColumnType("datetime");
+
+                entity.Property(e => e.defa_Total).HasColumnType("decimal(18, 2)");
+
+                entity.HasOne(d => d.envi)
+                    .WithMany(p => p.tbDetallesFactura)
+                    .HasForeignKey(d => d.envi_Id)
+                    .HasConstraintName("FK_opti_tbDetallesFactura_envi_Id_opti_tbEnvios_envi_Id");
+
+                entity.HasOne(d => d.fact)
+                    .WithMany(p => p.tbDetallesFactura)
+                    .HasForeignKey(d => d.fact_Id)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_opti_tbDetallesFactura_fact_Id_opti_tbFacturas_fact_Id");
+
+                entity.HasOne(d => d.orde)
+                    .WithMany(p => p.tbDetallesFactura)
+                    .HasForeignKey(d => d.orde_Id)
+                    .HasConstraintName("FK_opti_tbDetallesFactura_orde_Id_opti_tbOrdenes_orde_Id");
+
+                entity.HasOne(d => d.usua_IdCreacionNavigation)
+                    .WithMany(p => p.tbDetallesFacturausua_IdCreacionNavigation)
+                    .HasForeignKey(d => d.usua_IdCreacion)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_opti_tbDetallesFactura_usua_IdCreacion_acce_tbUsuarios_usua_Id");
+
+                entity.HasOne(d => d.usua_IdModificacionNavigation)
+                    .WithMany(p => p.tbDetallesFacturausua_IdModificacionNavigation)
+                    .HasForeignKey(d => d.usua_IdModificacion)
+                    .HasConstraintName("FK_opti_tbDetallesFactura_usua_IdModificacion_acce_tbUsuarios_usua_Id");
+            });
+
             modelBuilder.Entity<tbDetallesOrdenes>(entity =>
             {
                 entity.HasKey(e => e.deor_Id)
@@ -1134,6 +1149,8 @@ namespace OpticaPopular.DataAccess.Context
                 entity.ToTable("tbDetallesOrdenes", "opti");
 
                 entity.Property(e => e.deor_Estado).HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.deor_FiltroLuzAzul).HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.deor_GraduacionLeft)
                     .HasMaxLength(10)
@@ -1146,6 +1163,8 @@ namespace OpticaPopular.DataAccess.Context
                 entity.Property(e => e.deor_Precio).HasColumnType("decimal(18, 2)");
 
                 entity.Property(e => e.deor_Total).HasColumnType("decimal(18, 2)");
+
+                entity.Property(e => e.deor_Transition).HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.orde_FechaCreacion)
                     .HasColumnType("datetime")
@@ -1361,17 +1380,17 @@ namespace OpticaPopular.DataAccess.Context
 
                 entity.Property(e => e.envi_FechaModificacion).HasColumnType("datetime");
 
-                entity.HasOne(d => d.clie)
-                    .WithMany(p => p.tbEnvios)
-                    .HasForeignKey(d => d.clie_Id)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_opti_tbEnvios_clie_Id_opti_tbClientes_clie_Id");
-
                 entity.HasOne(d => d.dire)
                     .WithMany(p => p.tbEnvios)
                     .HasForeignKey(d => d.dire_Id)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_opti_tbDirecciones_dire_Id_opti_tbDirecciones_dire_Id");
+                    .HasConstraintName("FK_opti_tbEnvios_dire_Id_opti_tbDirecciones_dire_Id");
+
+                entity.HasOne(d => d.fact)
+                    .WithMany(p => p.tbEnvios)
+                    .HasForeignKey(d => d.fact_Id)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_opti_tbEnvios_fact_Id_opti_tbFacturas_fact_Id");
 
                 entity.HasOne(d => d.usua_IdCreacionNavigation)
                     .WithMany(p => p.tbEnviosusua_IdCreacionNavigation)
@@ -1423,11 +1442,11 @@ namespace OpticaPopular.DataAccess.Context
 
                 entity.ToTable("tbFacturas", "opti");
 
-                entity.Property(e => e.fact_Estado)
-                    .IsRequired()
-                    .HasDefaultValueSql("((1))");
+                entity.Property(e => e.fact_Estado).HasDefaultValueSql("((1))");
 
-                entity.Property(e => e.fact_Fecha).HasColumnType("datetime");
+                entity.Property(e => e.fact_Fecha)
+                    .HasColumnType("date")
+                    .HasDefaultValueSql("(getdate())");
 
                 entity.Property(e => e.fact_FechaCreacion)
                     .HasColumnType("datetime")
@@ -1435,89 +1454,35 @@ namespace OpticaPopular.DataAccess.Context
 
                 entity.Property(e => e.fact_FechaModificacion).HasColumnType("datetime");
 
-                entity.Property(e => e.fact_PrecioTotal).HasColumnType("decimal(18, 2)");
+                entity.Property(e => e.fact_Total).HasColumnType("decimal(18, 2)");
 
-                entity.HasOne(d => d.clie)
+                entity.HasOne(d => d.cita)
                     .WithMany(p => p.tbFacturas)
-                    .HasForeignKey(d => d.clie_Id)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_opti_tbFacturas_opti_tbClientes_clie_Id");
+                    .HasForeignKey(d => d.cita_Id)
+                    .HasConstraintName("FK_opti_tbFacturas_cita_Id_opti_tbCitas_cita_Id");
 
                 entity.HasOne(d => d.empe)
                     .WithMany(p => p.tbFacturas)
                     .HasForeignKey(d => d.empe_Id)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_opti_tbFacturas_opti_tbEmpleados_empe_Id");
-
-                entity.HasOne(d => d.fact_UsuCreacionNavigation)
-                    .WithMany(p => p.tbFacturasfact_UsuCreacionNavigation)
-                    .HasForeignKey(d => d.fact_UsuCreacion)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_opti_tbFacturas_acce_tbUsuarios_fact_UsuCreacion_usua_Id");
-
-                entity.HasOne(d => d.fact_UsuModificacionNavigation)
-                    .WithMany(p => p.tbFacturasfact_UsuModificacionNavigation)
-                    .HasForeignKey(d => d.fact_UsuModificacion)
-                    .HasConstraintName("FK_opti_tbFacturas_acce_tbUsuarios_fact_UsuModificacion_usua_Id");
+                    .HasConstraintName("FK_opti_tbFacturas_empe_Id_opti_tbEmpleados_empe_Id");
 
                 entity.HasOne(d => d.meto)
                     .WithMany(p => p.tbFacturas)
                     .HasForeignKey(d => d.meto_Id)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_opti_tbFacturas_opti_tbMetodosPago_meto_Id");
-            });
+                    .HasConstraintName("FK_opti_tbFacturas_meto_Id_opti_tbMetodosPago_meto_Id");
 
-            modelBuilder.Entity<tbFacturasDetalles>(entity =>
-            {
-                entity.HasKey(e => e.factdeta_Id)
-                    .HasName("PK_opti_tbFacturasDetalles_factdeta_Id");
-
-                entity.ToTable("tbFacturasDetalles", "opti");
-
-                entity.Property(e => e.factdeta_Estado)
-                    .IsRequired()
-                    .HasDefaultValueSql("((1))");
-
-                entity.Property(e => e.factdeta_FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasDefaultValueSql("(getdate())");
-
-                entity.Property(e => e.factdeta_FechaModificacion).HasColumnType("datetime");
-
-                entity.Property(e => e.factdeta_Precio).HasColumnType("decimal(18, 2)");
-
-                entity.HasOne(d => d.cita)
-                    .WithMany(p => p.tbFacturasDetalles)
-                    .HasForeignKey(d => d.cita_Id)
-                    .HasConstraintName("FK_opti_tbFacturasDetalles_opti_tbCitas_cita_Id");
-
-                entity.HasOne(d => d.envi)
-                    .WithMany(p => p.tbFacturasDetalles)
-                    .HasForeignKey(d => d.envi_Id)
-                    .HasConstraintName("FK_opti_tbFacturasDetalles_opti_tbEnvios_envi_Id");
-
-                entity.HasOne(d => d.fact)
-                    .WithMany(p => p.tbFacturasDetalles)
-                    .HasForeignKey(d => d.fact_Id)
+                entity.HasOne(d => d.usua_IdCreacionNavigation)
+                    .WithMany(p => p.tbFacturasusua_IdCreacionNavigation)
+                    .HasForeignKey(d => d.usua_IdCreacion)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_opti_tbFacturasDetalles_opti_tbFacturas_fact_Id");
+                    .HasConstraintName("FK_opti_tbFacturas_usua_IdCreacion_acce_tbUsuarios_usua_Id");
 
-                entity.HasOne(d => d.factdeta_UsuCreacionNavigation)
-                    .WithMany(p => p.tbFacturasDetallesfactdeta_UsuCreacionNavigation)
-                    .HasForeignKey(d => d.factdeta_UsuCreacion)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_opti_tbFacturasDetalles_acce_tbUsuarios_factdeta_UsuCreacion_usua_Id");
-
-                entity.HasOne(d => d.factdeta_UsuModificacionNavigation)
-                    .WithMany(p => p.tbFacturasDetallesfactdeta_UsuModificacionNavigation)
-                    .HasForeignKey(d => d.factdeta_UsuModificacion)
-                    .HasConstraintName("FK_opti_tbFacturasDetalles_acce_tbUsuarios_factdeta_UsuModificacion_usua_Id");
-
-                entity.HasOne(d => d.orde)
-                    .WithMany(p => p.tbFacturasDetalles)
-                    .HasForeignKey(d => d.orde_Id)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_opti_tbFacturasDetalles_opti_tbOrdenes_orde_Id");
+                entity.HasOne(d => d.usua_IdModificacionNavigation)
+                    .WithMany(p => p.tbFacturasusua_IdModificacionNavigation)
+                    .HasForeignKey(d => d.usua_IdModificacion)
+                    .HasConstraintName("FK_opti_tbFacturas_usua_IdModificacion_acce_tbUsuarios_usua_Id");
             });
 
             modelBuilder.Entity<tbMarcas>(entity =>
@@ -1657,10 +1622,14 @@ namespace OpticaPopular.DataAccess.Context
 
                 entity.Property(e => e.orde_FechaModificacion).HasColumnType("datetime");
 
+                entity.HasOne(d => d.cita)
+                    .WithMany(p => p.tbOrdenes)
+                    .HasForeignKey(d => d.cita_Id)
+                    .HasConstraintName("FK_opti_tbOrdenes_cita_Id_opti_tbCitas_cita_Id");
+
                 entity.HasOne(d => d.clie)
                     .WithMany(p => p.tbOrdenes)
                     .HasForeignKey(d => d.clie_Id)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_opti_tbOrdenes_clie_Id_opti_tbClientes_clie_Id");
 
                 entity.HasOne(d => d.sucu)

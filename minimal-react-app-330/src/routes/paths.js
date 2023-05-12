@@ -24,6 +24,7 @@ export const PATH_OPTICA = {
   clientesNew: path(ROOTS_OPTICA, '/clientes/nuevo'),
   clientesEdit: (name) => path(ROOTS_OPTICA, `/clientes/${name}/editar`),
   citas: path(ROOTS_OPTICA, '/citas'),
+  detallesCita: (Id) => path(ROOTS_OPTICA, `/citas/Detalles/${Id}`),
   ordenes: path(ROOTS_OPTICA, '/ordenes'),
   ordenesNew: path(ROOTS_OPTICA, '/ordenes/nuevo'),
   proveedores: path(ROOTS_OPTICA, '/proveedores') ,
@@ -32,7 +33,10 @@ export const PATH_OPTICA = {
   marcas: path(ROOTS_OPTICA, '/marcas') ,
   categorias: path(ROOTS_OPTICA, '/categorias') ,
   sucursales: path(ROOTS_OPTICA, '/sucursales') ,
-  consultorios: path(ROOTS_OPTICA, '/consultorios') ,
+  consultorios: path(ROOTS_OPTICA, '/consultorios'),
+  facturas: path(ROOTS_OPTICA, '/facturas'),
+  ventas: path(ROOTS_OPTICA, '/ventas'),
+  envios: path(ROOTS_OPTICA, '/envios'),
 };
 
 export const PATH_AUTH = {

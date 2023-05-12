@@ -90,7 +90,7 @@ export default function ModalAgregarCita({ open, onClose, citas, setTableData })
     } = methods;
 
     const onSubmit = async (data) => {
-        const dateFecha = new Date(data.cita_Fecha);
+        const dateFecha = dayjs(new Date(data.cita_Fecha)).subtract(1, 'day');
         const formattedDate = dateFecha.toISOString();
         console.log(formattedDate);
 
@@ -173,7 +173,7 @@ export default function ModalAgregarCita({ open, onClose, citas, setTableData })
                     <Divider />
                     {!!errors.afterSubmit && <Alert severity="error">{errors.afterSubmit.message}</Alert>}
                     <DialogContent>
-                    <Stack spacing={3} sx={{ p: 3, pb: 0, pl: 5, pr: 5 }}>
+                    <Stack spacing={3}>
                         <Grid container>
                             <Grid item xs={12} sx={{ pr: 1 }} sm={6}>
                                 <Autocomplete
