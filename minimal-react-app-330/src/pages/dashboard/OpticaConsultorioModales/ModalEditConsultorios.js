@@ -208,7 +208,6 @@ export default function EditConsultorioDialog({ open, onClose, consultorios, set
                     <Grid container>
                         <Grid item xs={12} sx={{ pr: 5 }} sm={12}>
                             <Autocomplete
-                                disablePortal
                                 name="empleado"
                                 options={optionsEmpleados}
                                 error={errors.empleado?.message}

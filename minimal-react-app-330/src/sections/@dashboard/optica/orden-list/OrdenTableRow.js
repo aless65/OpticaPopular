@@ -24,7 +24,7 @@ import { TableMoreMenu, TableNoData } from '../../../../components/table';
 
 // ----------------------------------------------------------------------
 
-export default function OrdenTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRow }) {
+export default function OrdenTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRow, onDetallesRow }) {
 
     OrdenTableRow.propTypes = {
         row: PropTypes.object,
@@ -32,6 +32,7 @@ export default function OrdenTableRow({ row, selected, onEditRow, onSelectRow, o
         onEditRow: PropTypes.func,
         onSelectRow: PropTypes.func,
         onDeleteRow: PropTypes.func,
+        onDetallesRow: PropTypes.func,
     };
 
     Moment.locale('en');
@@ -120,6 +121,26 @@ export default function OrdenTableRow({ row, selected, onEditRow, onSelectRow, o
                                 >
                                     <Iconify icon={'eva:edit-fill'} />
                                     Editar
+                                </MenuItem>
+                                <MenuItem
+                                    onClick={() => {
+                                        // onDetailsRow();
+                                        handleCloseMenu();
+                                    }}
+                                    style={{ display: row.orde_FechaEntregaReal !== null ? 'none' : '' }}
+                                >
+                                    <Iconify icon={'mdi:check-all'} />
+                                    Cerrar orden
+                                </MenuItem>
+                                <MenuItem
+                                    onClick={() => {
+                                        onDetallesRow();
+                                        handleCloseMenu();
+                                    }}
+                                    style={{ display: row.orde_FechaEntregaReal !== null ? 'none' : '' }}
+                                >
+                                    <Iconify icon={'mdi:add'} />
+                                    Editar detalles
                                 </MenuItem>
                             </>
                         }

@@ -53,16 +53,19 @@ import Label from '../../../components/Label';
 import useTable, { getComparator, emptyRows } from '../../../hooks/useTable';
 import { FormProvider, RHFSelect, RHFSwitch, RHFTextField, RHFRadioGroup } from '../../../components/hook-form';
 import Iconify from '../../../components/Iconify';
-import { EmpleadoTableRow, TableToolbar } from './empleado-list';
+import { OrdenDetallesTableRow, TableToolbar } from './orden-list';
 import Page from '../../../components/Page';
 import Scrollbar from '../../../components/Scrollbar';
-import ordendetalles, { getOrdenes } from '../../../redux/slices/ordendetalles';
+import { getOrdenes } from '../../../redux/slices/ordendetalles';
 // import sucursal from 'src/redux/slices/sucursal';
 
 const TABLE_HEAD = [
-    { id: 'empe_NombreCompleto', label: 'Nombre', align: 'left' },
-    { id: 'empe_Sexo', label: 'Sexo', align: 'left' },
-    { id: 'empe_SucursalNombre', label: 'Sucursal', align: 'left' },
+    { id: 'aros_Descripcion', label: 'Descripción', align: 'left' },
+    { id: 'deor_GraduacionLeft', label: 'Graduación izquierdo', align: 'left' },
+    { id: 'deor_GraduacionRight', label: 'Graduación derecho', align: 'left' },
+    { id: 'deor_Precio', label: 'Precio', align: 'left' },
+    { id: 'deor_Cantidad', label: 'Cantidad', align: 'left' },
+    { id: 'deor_Total', label: 'Total', align: 'left' },
     { id: '', label: 'Acciones', align: 'left' },
 ];
 
@@ -81,10 +84,12 @@ const IncrementerStyle = styled('div')(({ theme }) => ({
 // eslint-disable-next-line no-use-before-define
 OrdenNewEditForm.propTypes = {
     isEdit: PropTypes.bool,
+    // quantity: PropTypes.number,
     currentUser: PropTypes.object,
     onDecreaseQuantity: PropTypes.func,
     onIncreaseQuantity: PropTypes.func,
 };
+
 
 const LabelStyle = styled(Typography)(({ theme }) => ({
     ...theme.typography.subtitle2,
@@ -92,7 +97,7 @@ const LabelStyle = styled(Typography)(({ theme }) => ({
     marginBottom: theme.spacing(1),
 }));
 
-export default function OrdenNewEditForm({ isEdit, currentOrden, onIncreaseQuantity, onDecreaseQuantity, quantity, available }) {
+export default function OrdenNewEditForm({ isEdit, currentOrden }) {
     const navigate = useNavigate();
 
     const [tableData, setTableData] = useState([]);
@@ -100,6 +105,10 @@ export default function OrdenNewEditForm({ isEdit, currentOrden, onIncreaseQuant
     const [filterName, setFilterName] = useState('');
 
     const dispatch = useDispatch();
+
+    const [quantity, setQuantity] = useState(1 || '');
+
+    const [available, setAvailable] = useState('');
 
     const {
         dense,
@@ -119,7 +128,7 @@ export default function OrdenNewEditForm({ isEdit, currentOrden, onIncreaseQuant
         onChangePage,
         onChangeRowsPerPage,
     } = useTable({
-        defaultOrderBy: 'empe_NombreCompleto',
+        defaultOrderBy: 'deor_Id',
     });
 
     // eslint-disable-next-line no-use-before-define
@@ -140,20 +149,28 @@ export default function OrdenNewEditForm({ isEdit, currentOrden, onIncreaseQuant
 
     const [optionsSucursales, setOptionsSucursales] = useState([]);
 
-    const [encabezadoInserted, setEncabezadoInserted] = useState(false);
+    const [encabezadoInserted, setEncabezadoInserted] = useState(isEdit === true);
 
-    const [detalleInserted, setDetalleInserted] = useState(false);
+    const [detalleInserted, setDetalleInserted] = useState(isEdit === true);
 
     const [ordeId, setOrdeId] = useState(currentOrden?.orde_Id || '');
 
+    const onIncreaseQuantity = () => {
+        setQuantity(quantity => quantity + 1);
+        setAvailable(available => available - 1);
+    };
 
-    quantity = 1;
+    const onDecreaseQuantity = () => {
+        if (quantity > 0) {
+            setQuantity(quantity => quantity - 1);
+            setAvailable(available => available + 1);
+        }
+    }
 
 
     useEffect(() => {
         if (detalleInserted === true) {
             dispatch(getOrdenes(ordeId));
-            console.log("jejehola");
             setDetalleInserted(false);
         }
     }, [ordeId, detalleInserted]);
@@ -195,7 +212,7 @@ export default function OrdenNewEditForm({ isEdit, currentOrden, onIncreaseQuant
             fechaEntrega: currentOrden?.orde_FechaEntrega || '',
             sucursal: currentOrden?.sucu_Id || '',
             aros: '',
-            precio: 300,
+            precio: '',
             graduacionLeft: '',
             graduacionRight: '',
             cantidad: ''
@@ -230,6 +247,21 @@ export default function OrdenNewEditForm({ isEdit, currentOrden, onIncreaseQuant
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isEdit, currentOrden]);
 
+    useEffect(() => {
+        if (defaultValues.aros) {
+            fetch(`http://opticapopular.somee.com/api/Aros/StockAros?aros_Id=${defaultValues.aros}&sucu_Id=${defaultValues.sucursal}`)
+                .then(response => response.json())
+                .then(data => {
+                    // console.log(defaultValues.aros);
+                    // console.log(defaultValues.sucursal);
+                    console.log(data.data);
+                    setAvailable(data.data.messageStatus - 1);
+                    // methods.setValue('precio', data.data.messageStatus);
+                })
+                .catch(error => console.error(error));
+        }
+    }, [defaultValues.aros])
+
     const onSubmit = async (data) => {
         try {
             const date = new Date();
@@ -255,50 +287,26 @@ export default function OrdenNewEditForm({ isEdit, currentOrden, onIncreaseQuant
 
             console.log(jsonData);
 
-            if (isEdit) {
-                fetch("http://opticapopular.somee.com/api/Ordenes/Editar", {
-                    method: "PUT",
-                    mode: "cors",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify(jsonData),
+            fetch("http://opticapopular.somee.com/api/Ordenes/Insertar", {
+                method: "POST",
+                mode: "cors",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(jsonData),
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    console.log(data);
+                    if (data.message === "Ha ocurrido un error") {
+                        enqueueSnackbar(data.message, { variant: 'error' });
+                    } else {
+                        setOrdeId(data.message);
+                        setEncabezadoInserted(true);
+                    }
                 })
-                    .then((response) => response.json())
-                    .then((data) => {
-                        console.log(data);
-                        if (data.message === "El empleado ha sido editado con éxito") {
-                            navigate(PATH_OPTICA.empleados);
-                            enqueueSnackbar(data.message);
-                        } else if (data.message === 'Ya existe un empleado con este número de identidad') {
-                            enqueueSnackbar(data.message, { variant: 'warning' });
-                        } else {
-                            enqueueSnackbar(data.message, { variant: 'error' });
-                        }
-                    })
-                    .catch((error) => console.error(error));
-            } else {
-                fetch("http://opticapopular.somee.com/api/Ordenes/Insertar", {
-                    method: "POST",
-                    mode: "cors",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify(jsonData),
-                })
-                    .then((response) => response.json())
-                    .then((data) => {
-                        console.log(data);
-                        if (data.message === "Ha ocurrido un error") {
-                            enqueueSnackbar(data.message, { variant: 'error' });
-                        } else {
-                            enqueueSnackbar(data.message);
-                            setOrdeId(data.message);
-                            setEncabezadoInserted(true);
-                        }
-                    })
-                    .catch((error) => console.error(error));
-            }
+                .catch((error) => console.error(error));
+
         } catch (error) {
             console.error(error);
         }
@@ -315,7 +323,7 @@ export default function OrdenNewEditForm({ isEdit, currentOrden, onIncreaseQuant
                 deor_Cantidad: quantity,
                 usua_IdCreacion: 1,
             };
-            
+
             console.log(jsonData);
 
             fetch("http://opticapopular.somee.com/api/Ordenes/InsertarDetalles", {
@@ -333,6 +341,13 @@ export default function OrdenNewEditForm({ isEdit, currentOrden, onIncreaseQuant
                         // navigate(PATH_OPTICA.empleados);
                         enqueueSnackbar(data.message, { variant: 'error' });
                     } else {
+                        methods.setValue('aros', '');
+                        defaultValues.aros = '';
+                        methods.setValue('precio', 0.00);
+                        methods.setValue('graduacionLeft', '');
+                        methods.setValue('graduacionRight', '');
+                        setQuantity(1);
+                        setAvailable(0);
                         setDetalleInserted(true);
                         enqueueSnackbar(data.message);
                     }
@@ -371,16 +386,20 @@ export default function OrdenNewEditForm({ isEdit, currentOrden, onIncreaseQuant
     }, [currentOrden]);
 
     useEffect(() => {
-        fetch(`http://opticapopular.somee.com/api/Aros/ListadoXSucursal?id=${defaultValues.sucursal}`)
-            .then(response => response.json())
-            .then(data => {
-                const optionsData = data.data.map(item => ({
-                    label: item.aros_Descripcion, // replace 'name' with the property name that contains the label
-                    id: item.aros_Id // replace 'id' with the property name that contains the ID
-                }));
-                setOptionsAros(optionsData);
-            })
-            .catch(error => console.error(error));
+        if (defaultValues.sucursal) {
+            fetch(`http://opticapopular.somee.com/api/Aros/ListadoXSucursal?id=${defaultValues.sucursal}`)
+                .then(response => response.json())
+                .then(data => {
+                    const optionsData = data.data.map(item => ({
+                        label: item.aros_Descripcion, // replace 'name' with the property name that contains the label
+                        id: item.aros_Id,
+                        precio: item.aros_CostoUni // replace 'id' with the property name that contains the ID
+                    }));
+                    setOptionsAros(optionsData);
+                })
+                .catch(error => console.error(error));
+
+        }
     }, [defaultValues.sucursal]);
 
     const denseHeight = dense ? 60 : 80;
@@ -391,7 +410,7 @@ export default function OrdenNewEditForm({ isEdit, currentOrden, onIncreaseQuant
 
         <>
             <Box sx={{ display: 'flex', gap: '16px', height: '100%' }}>
-                <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+                <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)} quantity={quantity}>
                     <Card sx={{ flex: 1, p: 3, pl: 4, pr: 4 }}>
                         <Box
                             sx={{
@@ -402,7 +421,6 @@ export default function OrdenNewEditForm({ isEdit, currentOrden, onIncreaseQuant
                             }}
                         >
                             <Autocomplete
-                                disablePortal
                                 name="cliente"
                                 options={optionsClientes}
                                 error={!!errors.cliente}
@@ -473,7 +491,6 @@ export default function OrdenNewEditForm({ isEdit, currentOrden, onIncreaseQuant
                             />
 
                             <Autocomplete
-                                disablePortal
                                 name="sucursal"
                                 options={optionsSucursales}
                                 error={!!errors.sucursal}
@@ -524,7 +541,6 @@ export default function OrdenNewEditForm({ isEdit, currentOrden, onIncreaseQuant
                             }}
                         >
                             <Autocomplete
-                                disablePortal
                                 name="aros"
                                 options={optionsAros}
                                 error={!!errors.aros}
@@ -541,9 +557,13 @@ export default function OrdenNewEditForm({ isEdit, currentOrden, onIncreaseQuant
                                     if (value != null) {
                                         methods.setValue('aros', value.id);
                                         defaultValues.aros = value.id;
+                                        methods.setValue('precio', value.precio);
+                                        defaultValues.precio = value.precio;
                                     } else {
                                         methods.setValue('aros', '');
                                         defaultValues.aros = '';
+                                        defaultValues.precio = '';
+                                        setAvailable('');
                                     }
                                 }}
                                 disabled={!encabezadoInserted}
@@ -560,6 +580,7 @@ export default function OrdenNewEditForm({ isEdit, currentOrden, onIncreaseQuant
                                     available={available}
                                     onDecrease={() => onDecreaseQuantity()}
                                     onIncrease={() => onIncreaseQuantity()}
+                                    encabezadoInserted={encabezadoInserted}
                                 />
                             </TableCell>
 
@@ -596,7 +617,7 @@ export default function OrdenNewEditForm({ isEdit, currentOrden, onIncreaseQuant
                                 onSelectAllRows={(checked) =>
                                     onSelectAllRows(
                                         checked,
-                                        tableData.map((row) => row.empe_Id)
+                                        tableData.map((row) => row.deor_Id)
                                     )
                                 }
                             />
@@ -605,10 +626,10 @@ export default function OrdenNewEditForm({ isEdit, currentOrden, onIncreaseQuant
                                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                     .map((row, index) =>
                                         row ? (
-                                            <EmpleadoTableRow
-                                                key={row.empe_Id}
+                                            <OrdenDetallesTableRow
+                                                key={row.deor_Id}
                                                 row={row}
-                                                selected={selected.includes(row.empe_Id)}
+                                                selected={selected.includes(row.deor_Id)}
                                             // onSelectRow={() => onSelectRow(row.empe_Id)}
                                             // onDeleteRow={() => handleDeleteRow(row.empe_Id)}
                                             // onEditRow={() => handleEditRow(row.empe_Id)}
@@ -657,7 +678,7 @@ Incrementer.propTypes = {
     onDecrease: PropTypes.func,
 };
 
-function Incrementer({ available, quantity, onIncrease, onDecrease }) {
+function Incrementer({ available, quantity, onIncrease, onDecrease, encabezadoInserted }) {
     return (
         <Box sx={{ width: 96, textAlign: 'right' }}>
             <IncrementerStyle>
@@ -665,12 +686,12 @@ function Incrementer({ available, quantity, onIncrease, onDecrease }) {
                     <Iconify icon={'eva:minus-fill'} width={16} height={16} />
                 </IconButton>
                 {quantity}
-                <IconButton size="small" color="inherit" onClick={onIncrease} disabled={quantity >= available}>
+                <IconButton size="small" color="inherit" onClick={onIncrease} disabled={quantity >= available || !encabezadoInserted}>
                     <Iconify icon={'eva:plus-fill'} width={16} height={16} />
                 </IconButton>
             </IncrementerStyle>
             <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-                available: {available}
+                Stock: {available}
             </Typography>
         </Box>
     );
@@ -689,9 +710,9 @@ function applySortFilter({ tableData, comparator, filterName }) {
 
     if (filterName) {
         tableData = tableData.filter((item) =>
-            item.empe_NombreCompleto.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 ||
-            item.empe_SucursalNombre.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 ||
-            item.empe_Sexo.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
+            item.aros_Descripcion.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 ||
+            item.deor_GraduacionLeft.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 ||
+            item.deor_GraduacionRight.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
         );
     }
 

@@ -1132,6 +1132,25 @@ BEGIN
 END	
 GO
 
+CREATE OR ALTER PROCEDURE opti.UDP_opti_PrecioAros 
+	@aros_Id	INT
+AS
+BEGIN
+	SELECT aros_CostoUni FROM opti.VW_tbAros 
+	WHERE aros_Id = @aros_Id
+END	
+GO
+
+CREATE OR ALTER PROCEDURE opti.UDP_opti_StockArosXSucursal 
+	@aros_Id	INT,
+	@sucu_Id	INT
+AS
+BEGIN
+	SELECT [stsu_Stock] FROM [opti].[tbStockArosPorSucursal]
+	WHERE aros_Id = @aros_Id AND sucu_Id = @sucu_Id
+END	
+GO
+
 
 /*Insertar Proveedor*/
 CREATE OR ALTER PROCEDURE opti.UDP_opti_tbAros_Insert
@@ -2880,10 +2899,8 @@ BEGIN
 		BEGIN			
 			UPDATE  [opti].[tbOrdenes] 
 			SET 	clie_Id = @clie_Id,
-			        orde_Fecha = @orde_Fecha,
 					orde_FechaEntrega = @orde_FechaEntrega,
-					orde_FechaEntregaReal = @orde_FechaEntregaReal,
-					sucu_Id = sucu_Id,
+					sucu_Id = @sucu_Id,
 					usua_IdModificacion = usua_IdModificacion,
                     orde_FechaModificacion = GETDATE()
 			WHERE 	orde_Id  = @orde_Id 
@@ -3001,6 +3018,22 @@ BEGIN
 	END CATCH
 END
 GO
+
+/*Eliminar Ordenes detalles*/
+CREATE OR ALTER PROCEDURE opti.UDP_opti_tbDetallesOrdenes_Delete 
+	@deor_Id	INT
+AS
+BEGIN
+	BEGIN TRY
+		DELETE FROM opti.tbDetallesOrdenes
+		WHERE deor_Id = @deor_Id
+	END TRY
+	BEGIN CATCH
+		SELECT 'Ha ocurrido un error'
+	END CATCH
+END
+GO
+
 
 
 /*TRIGGER AROS*/

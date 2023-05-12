@@ -13,14 +13,14 @@ const initialState = {
   ordendetalle: null,
   sortBy: null,
   filters: {
-    orde_Id: 0,
-    clie_Id: '',
-    clie_NombreCompleto: '',
-    orde_Fecha: '',
-    orde_FechaEntrega: '',
-    orde_FechaEntregaReal: '',
-    sucu_Id: '',
-    sucu_Descripcion: ''
+    deor_Id: 0,
+    orde_Id: '',
+    aros_Id: '',
+    deor_GraduacionLeft: '',
+    deor_GraduacionRight: '',
+    deor_Precio: '',
+    deor_Cantidad: '',
+    deor_Total: ''
   },
 };
 
@@ -42,13 +42,13 @@ const slice = createSlice({
     // GET citas
     getOrdenesDetallesSuccess(state, action) {
       state.isLoading = false;
-      state.ordenedetalles = action.payload;
+      state.ordendetalles = action.payload;
     },
 
     // GET cita
     getOrdenDetalleSuccess(state, action) {
       state.isLoading = false;
-      state.orden = action.payload;
+      state.ordendetalle = action.payload;
     },
 
     //  SORT & FILTER cita
@@ -57,14 +57,14 @@ const slice = createSlice({
     },
 
     filterOrdenesDetalles(state, action) {
+      state.filters.deor_Id = action.payload.deor_Id;
       state.filters.orde_Id = action.payload.orde_Id;
-      state.filters.clie_Id = action.payload.clie_Id;
-      state.filters.clie_NombreCompleto = action.payload.clie_NombreCompleto;
-      state.filters.orde_Fecha = action.payload.orde_Fecha;
-      state.filters.orde_FechaEntrega = action.payload.orde_FechaEntrega;
-      state.filters.orde_FechaEntregaReal = action.payload.orde_FechaEntregaReal;
-      state.filters.sucu_Id = action.payload.sucu_Id;
-      state.filters.sucu_Descripcion = action.payload.sucu_Descripcion;
+      state.filters.aros_Id = action.payload.aros_Id;
+      state.filters.deor_GraduacionLeft = action.payload.deor_GraduacionLeft;
+      state.filters.deor_GraduacionRight = action.payload.deor_GraduacionRight;
+      state.filters.deor_Precio = action.payload.deor_Precio;
+      state.filters.deor_Cantidad = action.payload.deor_Cantidad;
+      state.filters.deor_Total = action.payload.deor_Total;
     },
   },
 });
@@ -84,8 +84,9 @@ export function getOrdenes(id) {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
+      console.log("entra");
       const response = await axios.get(`Ordenes/ListadoDetalles?id=${id}`);
-        // console.log(response.data.data);
+        console.log(response.data.data);
         dispatch(slice.actions.getOrdenesDetallesSuccess(response.data.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));

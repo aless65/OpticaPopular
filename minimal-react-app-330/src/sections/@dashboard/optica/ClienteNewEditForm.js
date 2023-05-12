@@ -308,7 +308,6 @@ export default function ClienteNewEditForm({ isEdit, currentCliente }) {
 
 
           <Autocomplete
-            disablePortal
             name="estadoCivil"
             options={optionsEstadosCiviles}
             error={!!errors.estadoCivil}
@@ -340,7 +339,6 @@ export default function ClienteNewEditForm({ isEdit, currentCliente }) {
           <RHFTextField name="email" label="Correo electrónico" />
 
           <Autocomplete
-            disablePortal
             name="departamento"
             options={optionsDepartamentos}
             error={!!errors.departamento}
@@ -369,7 +367,6 @@ export default function ClienteNewEditForm({ isEdit, currentCliente }) {
           />
 
           <Autocomplete
-            disablePortal
             name="municipio"
             options={optionsMunicipios}
             error={!!errors.municipio}

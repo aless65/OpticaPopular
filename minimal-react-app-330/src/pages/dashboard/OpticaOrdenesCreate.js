@@ -16,7 +16,7 @@ import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 // sections
 import OrdenNewEditForm from '../../sections/@dashboard/optica/OrdenNewEditForm';
 import { useDispatch, useSelector } from '../../redux/store';
-import { getEmpleado } from '../../redux/slices/empleado';
+import { getOrden } from '../../redux/slices/orden';
 
 // ----------------------------------------------------------------------
 
@@ -37,7 +37,7 @@ export default function OrdenCreate() {
 
   useEffect(() => {
     if(isEdit){
-      dispatch(getEmpleado(name));
+      dispatch(getOrden(name));
     }
   }, [name]);
 
