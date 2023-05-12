@@ -28,10 +28,7 @@ namespace OpticaPopular.DataAccess.Repositories
             return result;
         }
 
-        public VW_tbClientes Find(int? id)
-        {
-            throw new NotImplementedException();
-        }
+      
 
         public RequestStatus Insert(VW_tbClientes item)
         {
@@ -63,6 +60,15 @@ namespace OpticaPopular.DataAccess.Repositories
         {
             using var db = new SqlConnection(OpticaPopularContext.ConnectionString);
             return db.Query<VW_tbClientes>(ScriptsDataBase.UDP_Lista_Clientes, null, commandType: CommandType.StoredProcedure);
+        }
+        public VW_tbClientes Find(int? id)
+        {
+            using var db = new SqlConnection(OpticaPopularContext.ConnectionString);
+
+            var parameters = new DynamicParameters();
+            parameters.Add("@clie_Id", id, DbType.Int32, ParameterDirection.Input);
+
+            return db.QueryFirst<VW_tbClientes>(ScriptsDataBase.UDP_Find_Clientes, parameters, commandType: CommandType.StoredProcedure);
         }
 
         public RequestStatus Update(VW_tbClientes item)

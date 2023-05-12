@@ -235,7 +235,7 @@ function applySortFilter({ tableData, comparator, filterName }) {
                           selected={selected.includes(row.clie_Id)}
                           onSelectRow={() => onSelectRow(row.clie_Id)}
                           onDeleteRow={() => handleDeleteRow(row.clie_Id)}
-                          onEditRow={() => handleEditRow(row.clie_NombreCompleto)}
+                          onEditRow={() => handleEditRow(row.clie_Id)}
                         />
                       ) : (
                         !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />

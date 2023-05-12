@@ -13,10 +13,10 @@ import { _userList } from '../../_mock';
 // components
 import Page from '../../components/Page';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
-// sections
-import ClienteNewEditForm from '../../sections/@dashboard/optica/ClienteNewEditForm';
+// sections                          
+import ProveedorNewEditForm from '../../sections/@dashboard/optica/ProveedorNewEditForm';
 import { useDispatch, useSelector } from '../../redux/store';
-import { getCliente } from '../../redux/slices/cliente';
+import { getProveedor } from '../../redux/slices/proveedor'; 
 
 // ----------------------------------------------------------------------
 
@@ -31,32 +31,32 @@ export default function UserCreate() {
 
   const dispatch = useDispatch();
 
-  const cliente = useSelector((state) => state.cliente.cliente);
+  const proveedor = useSelector((state) => state.proveedor.proveedor);
 
   const isEdit = pathname.includes('editar');
 
   useEffect(() => {
     if(isEdit){
-      dispatch(getCliente(name));
+      dispatch(getProveedor(name));
     }
   }, [name]);
 
   // const currentEmpleado = _userList.find((user) => paramCase(user.name) === name);
 
-  const currentCliente = isEdit ? cliente : null;
+  const currentProveedor = isEdit ? proveedor : null;
 
   return (
-    <Page title="Cliente: Crear nuevo">
+    <Page title="Proveedor: Crear nuevo">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
-          heading={!isEdit ? 'Crear nuevo cliente' : 'Editar cliente'}
+          heading={!isEdit ? 'Crear nuevo proveeedor' : 'Editar proveedor'}
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            { name: 'Clientes', href: PATH_OPTICA.clientes },
-            { name: !isEdit ? 'Nuevo cliente' : 'Editar cliente'  },
+            { name: 'Proveeedores', href: PATH_OPTICA.proveedores },
+            { name: !isEdit ? 'Nuevo proveeedor' : 'Editar proveedor'  },
           ]}
         />
-        <ClienteNewEditForm isEdit={isEdit} currentCliente={currentCliente} />
+        <ProveedorNewEditForm isEdit={isEdit} currentProveedor={currentProveedor} />
       </Container>
     </Page>
   );

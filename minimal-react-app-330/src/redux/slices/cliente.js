@@ -80,7 +80,7 @@ export function getClientes() {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('Clientes/Listado');
+      const response = await axios.get('https://localhost:44362/api/Clientes/Listado');
       dispatch(slice.actions.getClientesSuccess(response.data.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
@@ -90,14 +90,16 @@ export function getClientes() {
 
 // ----------------------------------------------------------------------
 
-export function getCliente(name) {
+
+export function getCliente(id) {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('/api/products/product', {
-        params: { name },
-      });
+      console.log(id);
+      const response = await axios.get(`https://localhost:44362/api/Clientes/Find?id=${id}`);
+      
       dispatch(slice.actions.getClienteSuccess(response.data.data));
+      console.log(response.data.data);
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error));

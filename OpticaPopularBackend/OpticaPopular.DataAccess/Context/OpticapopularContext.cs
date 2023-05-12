@@ -614,7 +614,19 @@ namespace OpticaPopular.DataAccess.Context
 
                 entity.ToView("VW_tbProveedores", "opti");
 
+                entity.Property(e => e.depa_Id)
+                    .IsRequired()
+                    .HasMaxLength(2)
+                    .IsUnicode(false)
+                    .IsFixedLength(true);
+
                 entity.Property(e => e.dire_DireccionExacta).IsRequired();
+
+                entity.Property(e => e.muni_Id)
+                    .IsRequired()
+                    .HasMaxLength(4)
+                    .IsUnicode(false)
+                    .IsFixedLength(true);
 
                 entity.Property(e => e.prov_CorreoElectronico)
                     .IsRequired()
@@ -637,6 +649,10 @@ namespace OpticaPopular.DataAccess.Context
                 entity.Property(e => e.prov_Telefono)
                     .IsRequired()
                     .HasMaxLength(15);
+
+                entity.Property(e => e.sucu_MunicipioNombre)
+                    .IsRequired()
+                    .HasMaxLength(80);
             });
 
             modelBuilder.Entity<VW_tbRoles>(entity =>

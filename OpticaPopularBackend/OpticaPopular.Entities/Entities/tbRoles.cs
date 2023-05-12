@@ -25,6 +25,7 @@ namespace OpticaPopular.Entities.Entities
 
         [NotMapped]
         public int[] role_Pantallas { get; set; }
+
         public virtual tbUsuarios role_UsuCreacionNavigation { get; set; }
         public virtual tbUsuarios role_UsuModificacionNavigation { get; set; }
         public virtual ICollection<tbPantallasPorRoles> tbPantallasPorRoles { get; set; }

@@ -37,6 +37,7 @@ namespace OpticaPopular.DataAccess.Repositories
         public static string UDP_Inserta_Clientes = "opti.UDP_opti_tbClientes_Insert";
         public static string UDP_Edita_Clientes = "opti.UDP_opti_tbClientes_Update";
         public static string UDP_Elimina_Clientes = "opti.UDP_opti_tbClientes_Delete";
+        public static string UDP_Find_Clientes = "opti.UDP_opti_tbClientes_Find";
         #endregion
 
         #region Empleados
@@ -107,9 +108,10 @@ namespace OpticaPopular.DataAccess.Repositories
 
         #region Proveedores
         public static string UDP_Lista_Proveedores = "opti.UDP_opti_tbProveedore_List";
-        public static string UDP_Inserta_Proveedores = "opti.UDP_opti_tbProveedor_Insert";
-        public static string UDP_Edita_Proveedores = "opti.UDP_opti_tbProveedor_Update";
+        public static string UDP_Inserta_Proveedores = "opti.UDP_opti_tbProveedores_Insert";
+        public static string UDP_Edita_Proveedores = "opti.UDP_opti_tbProveedores_Update";
         public static string UDP_Elimina_Proveedores = "opti.UDP_opti_tbProveedor_Delete";
+        public static string UDP_Find_Proveedores = "opti.UDP_opti_tbProveedores_Find ";
         #endregion
 
         #region Consultorios

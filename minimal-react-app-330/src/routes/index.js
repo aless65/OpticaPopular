@@ -94,6 +94,9 @@ export default function Router() {
                         </GuestGuard>
                 },
                 { path: 'proveedores', element: <GuestGuard> <OpticaProveedores /> </GuestGuard>  },
+                { path: 'proveedores/nuevo', element: <GuestGuard> <OpticaProveedoresCreate /> </GuestGuard>  },
+                { path: 'proveedores/:name/editar', element: <GuestGuard>  <OpticaProveedoresCreate /> </GuestGuard> },
+
                 { path: 'ordenes', element: <GuestGuard> <OpticaOrdenes /> </GuestGuard>  },
                 { path: 'ordenes/nuevo', element: <GuestGuard> <OpticaOrdenesCreate /> </GuestGuard>  },
                 { path: 'marcas', element: <GuestGuard> <OpticaMarcas /> </GuestGuard>  },
@@ -138,7 +141,7 @@ const OpticaClientes = Loadable(lazy(() => import('../pages/dashboard/OpticaClie
 const OpticaClientesCreate = Loadable(lazy(() => import('../pages/dashboard/OpticaClientesCreate')));
 const OpticaCitas = Loadable(lazy(() => import('../pages/dashboard/OpticaCitas')));
 const OpticaProveedores = Loadable(lazy(() => import('../pages/dashboard/OpticaProveedores')));
-
+const OpticaProveedoresCreate = Loadable(lazy(() => import('../pages/dashboard/OpticaProveedoresCreate')));
 // ORDENES
 const OpticaOrdenes = Loadable(lazy(() => import('../pages/dashboard/OpticaOrdenes')));
 const OpticaOrdenesCreate = Loadable(lazy(() => import('../pages/dashboard/OpticaOrdenesCreate')));
