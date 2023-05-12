@@ -80,7 +80,7 @@ export const {
 
 // ----------------------------------------------------------------------
 
-export function getOrdenes(id) {
+export function getOrdenesDetalles(id) {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {

@@ -40,13 +40,39 @@ export default function ModalEditarOrden({ open, onClose, ordenes, setTableData,
     const [optionsSucursales, setOptionsSucursales] = useState([]);
 
     const [fechaTemp, setFechaTemp] = useState('');
+
+    const [clienteTemporal, setClienteTemporal] = useState('');
+
+    const [sucursalTemporal, setSucursalTemporal] = useState('');
+
+    const [fechaEntregaTemporal, setFechaEntregaTemporal] = useState('');
   
     const defaultValues = {
-        clie_Id: orden?.clie_Id,
-        sucu_Id: orden?.sucu_Id,
+        clie_Id: clienteTemporal || '',
+        sucu_Id: sucursalTemporal || '',
         orde_Fecha: orden?.orde_Fecha,
-        orde_FechaEntrega: dayjs(orden?.orde_FechaEntrega)
+        orde_FechaEntrega: dayjs(fechaEntregaTemporal || ''),
     }; 
+
+    const InsertSchema = Yup.object().shape({
+        // clie_Id: Yup.string().required('El cliente es requerido'),
+        // sucu_Id: Yup.string().required('La sucursal es requerida'),
+        deor_FechaEntrega: Yup.string().required('La fecha de entrega es requerida').nullable(),
+    });
+
+    useEffect(() => {
+        if (orden) {
+          setFechaTemp(orden.orde_FechaEntrega);
+          setClienteTemporal(orden.clie_Id);
+          setSucursalTemporal(orden.sucu_Id);
+          setFechaEntregaTemporal(orden.orde_FechaEntrega);
+        }
+      }, [orden]);
+
+    const methods = useForm({
+        resolver: yupResolver(InsertSchema),
+        defaultValues,
+    });
 
     useEffect(() => {
         methods.setValue('clie_Id', defaultValues.clie_Id);
@@ -54,17 +80,6 @@ export default function ModalEditarOrden({ open, onClose, ordenes, setTableData,
         methods.setValue('orde_Fecha', defaultValues.orde_Fecha);
         methods.setValue('orde_FechaEntrega', defaultValues.orde_FechaEntrega);
       }, [defaultValues]);
-
-    const InsertSchema = Yup.object().shape({
-        clie_Id: Yup.string().required('El cliente es requerido'),
-        sucu_Id: Yup.string().required('La sucursal es requerida'),
-        deor_FechaEntrega: Yup.string().required('La fecha de entrega es requerida').nullable(),
-    });
-
-    const methods = useForm({
-        resolver: yupResolver(InsertSchema),
-        defaultValues,
-    });
 
     const {
         reset,
@@ -203,10 +218,11 @@ export default function ModalEditarOrden({ open, onClose, ordenes, setTableData,
                                         if (value != null) {
                                             methods.setValue('clie_Id', value.id);
                                             defaultValues.clie_Id = value.id;
+                                            setClienteTemporal(value.id);
                                         }
                                     }}
                                     isOptionEqualToValue={(option, value) => option.id === value.id}
-                                    value={optionsClientes.find(option => option.id === defaultValues.clie_Id)?? null}
+                                    value={optionsClientes.find(option => option.id === clienteTemporal) ?? null}
                                 />
                             </Grid>
                             <Grid item xs={12} sx={{ pr: 1 }} sm={6}>
@@ -247,6 +263,8 @@ export default function ModalEditarOrden({ open, onClose, ordenes, setTableData,
                                         onChange={(newValue) => {
                                             field.onChange(newValue);
                                             defaultValues.orde_FechaEntrega = newValue; 
+                                            methods.setValue('orde_FechaEntrega', newValue);
+                                            setFechaEntregaTemporal(newValue);
                                         }}
                                         renderInput={(params) => (
                                             <TextField 
@@ -275,11 +293,13 @@ export default function ModalEditarOrden({ open, onClose, ordenes, setTableData,
                                     onChange={(event, value) => {
                                         if (value != null) {
                                             methods.setValue('sucu_Id', value.id);
-                                            defaultValues.sucu_Id = value.id
+                                            defaultValues.sucu_Id = value.id;
+                                            setSucursalTemporal(value.id);
+                                            // console.log(defaultValues.sucu_Id);
                                         }
                                     }}
                                     isOptionEqualToValue={(option, value) => option.id === value.id}
-                                    value={optionsSucursales.find(option => option.id === defaultValues.sucu_Id)?? null}
+                                    value={optionsSucursales.find(option => option.id === sucursalTemporal) ?? null}
                                 />
                             </Grid>
                         </Grid>

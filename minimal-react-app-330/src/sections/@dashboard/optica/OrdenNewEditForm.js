@@ -56,7 +56,7 @@ import Iconify from '../../../components/Iconify';
 import { OrdenDetallesTableRow, TableToolbar } from './orden-list';
 import Page from '../../../components/Page';
 import Scrollbar from '../../../components/Scrollbar';
-import { getOrdenes } from '../../../redux/slices/ordendetalles';
+import { getOrdenesDetalles } from '../../../redux/slices/ordendetalles';
 // import sucursal from 'src/redux/slices/sucursal';
 
 const TABLE_HEAD = [
@@ -97,7 +97,7 @@ const LabelStyle = styled(Typography)(({ theme }) => ({
     marginBottom: theme.spacing(1),
 }));
 
-export default function OrdenNewEditForm({ isEdit, currentOrden }) {
+export default function OrdenNewEditForm({ isEdit, currentOrden, orden }) {
     const navigate = useNavigate();
 
     const [tableData, setTableData] = useState([]);
@@ -150,10 +150,11 @@ export default function OrdenNewEditForm({ isEdit, currentOrden }) {
     const [optionsSucursales, setOptionsSucursales] = useState([]);
 
     const [encabezadoInserted, setEncabezadoInserted] = useState(isEdit === true);
+    
+    const [ordeId, setOrdeId] = useState(isEdit ? orden : '');
 
     const [detalleInserted, setDetalleInserted] = useState(isEdit === true);
 
-    const [ordeId, setOrdeId] = useState(currentOrden?.orde_Id || '');
 
     const onIncreaseQuantity = () => {
         setQuantity(quantity => quantity + 1);
@@ -170,16 +171,15 @@ export default function OrdenNewEditForm({ isEdit, currentOrden }) {
 
     useEffect(() => {
         if (detalleInserted === true) {
-            dispatch(getOrdenes(ordeId));
+            dispatch(getOrdenesDetalles(ordeId));
             setDetalleInserted(false);
+            // setEncabezadoInserted(true);
         }
-    }, [ordeId, detalleInserted]);
+    }, [orden, detalleInserted]);
 
     useEffect(() => {
-        if (ordendetalles.length) {
-            setTableData(ordendetalles);
-        }
-    }, [ordendetalles]);
+        setTableData(ordendetalles);
+    }, [ordendetalles, detalleInserted, ordeId]);
 
     const handleFilterName = (filterName) => {
         setFilterName(filterName);
@@ -271,10 +271,11 @@ export default function OrdenNewEditForm({ isEdit, currentOrden }) {
             const formattedFecha = `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
 
             const dateEntrega = new Date(data.fechaEntrega);
-            const yearEntrega = date.getFullYear();
-            const monthEntrega = date.getMonth() + 1; // add 1 to month to get 1-based month number
-            const dayEntrega = date.getDate();
-            const formattedFechaEntrega = `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
+            const yearEntrega = dateEntrega.getFullYear();
+            const monthEntrega = dateEntrega.getMonth() + 1; // add 1 to month to get 1-based month number
+            const dayEntrega = dateEntrega.getDate();
+            const formattedFechaEntrega = `${yearEntrega}-${monthEntrega.toString().padStart(2, '0')}-${dayEntrega.toString().padStart(2, '0')}`;
+            console.log(data.fechaEntrega);
 
             const jsonData = {
                 orde_Id: currentOrden?.orde_Id,
@@ -563,6 +564,7 @@ export default function OrdenNewEditForm({ isEdit, currentOrden }) {
                                         methods.setValue('aros', '');
                                         defaultValues.aros = '';
                                         defaultValues.precio = '';
+                                        methods.setValue('precio', '');
                                         setAvailable('');
                                     }
                                 }}

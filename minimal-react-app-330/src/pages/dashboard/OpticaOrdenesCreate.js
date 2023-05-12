@@ -37,9 +37,11 @@ export default function OrdenCreate() {
 
   useEffect(() => {
     if(isEdit){
+      // console.log(name);
       dispatch(getOrden(name));
+      // console.log(orden);
     }
-  }, [name]);
+  }, [isEdit]);
 
   // const currentEmpleado = _userList.find((user) => paramCase(user.name) === name);
 
@@ -56,7 +58,7 @@ export default function OrdenCreate() {
             { name: !isEdit ? 'Nueva orden' : 'Editar orden' },
           ]}
         />
-        <OrdenNewEditForm isEdit={isEdit} currentOrden={currentOrden} />
+        <OrdenNewEditForm isEdit={isEdit} currentOrden={currentOrden} orden={name}/>
       </Container>
     </Page>
   );
