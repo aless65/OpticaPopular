@@ -103,6 +103,7 @@ export default function Router() {
                 { path: 'consultorios', element: <GuestGuard> <OpticaConsultorios /> </GuestGuard>  },
                 { path: 'facturas', element: <GuestGuard> <OpticaFacturas /> </GuestGuard>  },
                 { path: 'ventas', element: <GuestGuard> <OpticaVentas /> </GuestGuard>  },
+                { path: 'envios', element: <GuestGuard> <OpticaEnvios /> </GuestGuard>  },
 
             ],
         },
@@ -148,6 +149,7 @@ const OpticaCitasDetalles = Loadable(lazy(() => import('../pages/dashboard/Optic
 // VENTAS
 const OpticaFacturas = Loadable(lazy(() => import('../pages/dashboard/OpticaFacturas')));
 const OpticaVentas = Loadable(lazy(() => import('../pages/dashboard/OpticaVentas')));
+const OpticaEnvios = Loadable(lazy(() => import('../pages/dashboard/OpticaEnvios')));
 
 // PROVEEDORES
 const OpticaProveedores = Loadable(lazy(() => import('../pages/dashboard/OpticaProveedores')));

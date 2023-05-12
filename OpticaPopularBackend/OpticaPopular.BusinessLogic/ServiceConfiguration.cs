@@ -36,7 +36,7 @@ namespace OpticaPopular.BusinessLogic
             services.AddScoped<EmpleadosRepository>();
             services.AddScoped<EnviosRepository>();
             services.AddScoped<FacturasRepository>();
-            services.AddScoped<FacturasDetallesRepository>();
+            services.AddScoped<DetallesFacturaRepository>();
             services.AddScoped<MarcasRepository>();
             services.AddScoped<MetodosPagoRepository>();
             services.AddScoped<OrdenesRepository>();

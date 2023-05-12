@@ -91,9 +91,6 @@ export default function ModalEditarCita({ open, onClose, citas, setTableData, ci
         if(cita){
             setFechaTemp(cita.cita_Fecha);
         }
-        methods.setValue('clie_Id', defaultValues.clie_Id);
-        methods.setValue('cita_Fecha', defaultValues.cita_Fecha);
-        methods.setValue('cons_Id', defaultValues.cons_Id);
 
         if (insertSuccess === true) {
             dispatch(getCitas());
@@ -103,6 +100,12 @@ export default function ModalEditarCita({ open, onClose, citas, setTableData, ci
             setInsertSuccess(false);
         }
     }, [cita, methods, insertSuccess]);
+
+    useEffect(() => {
+        methods.setValue('clie_Id', defaultValues.clie_Id);
+        methods.setValue('cita_Fecha', defaultValues.cita_Fecha);
+        methods.setValue('cons_Id', defaultValues.cons_Id);
+    }, [defaultValues])
 
     const onSubmit = async (data) => {
         const dateFecha = new Date(data.cita_Fecha);

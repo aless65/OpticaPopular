@@ -7,29 +7,29 @@ using System.Threading.Tasks;
 
 namespace OpticaPopular.DataAccess.Repositories
 {
-    public class FacturasDetallesRepository : IRepository<tbFacturasDetalles, tbFacturasDetalles>
+    public class DetallesFacturaRepository : IRepository<tbDetallesFactura, tbDetallesFactura>
     {
-        public RequestStatus Delete(tbFacturasDetalles item)
+        public RequestStatus Delete(tbDetallesFactura item)
         {
             throw new NotImplementedException();
         }
 
-        public tbFacturasDetalles Find(int? id)
+        public tbDetallesFactura Find(int? id)
         {
             throw new NotImplementedException();
         }
 
-        public RequestStatus Insert(tbFacturasDetalles item)
+        public RequestStatus Insert(tbDetallesFactura item)
         {
             throw new NotImplementedException();
         }
 
-        public IEnumerable<tbFacturasDetalles> List()
+        public IEnumerable<tbDetallesFactura> List()
         {
             throw new NotImplementedException();
         }
 
-        public RequestStatus Update(tbFacturasDetalles item)
+        public RequestStatus Update(tbDetallesFactura item)
         {
             throw new NotImplementedException();
         }

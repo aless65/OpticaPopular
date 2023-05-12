@@ -163,7 +163,7 @@ export default function DetallesCita() {
                             <Typography fontSize={15} paragraph variant="overline" sx={{ color: 'text.disabled' }}>
                                 Precio de la cita
                             </Typography>
-                            <Typography fontSize={15} variant="body2">{cita?.deci_Costo}</Typography>
+                            <Typography fontSize={15} variant="body2">{cita?.deci_Costo === 0 ? '' : cita?.deci_Costo}</Typography>
                         </Grid>
                     </Grid>
                 </Card>

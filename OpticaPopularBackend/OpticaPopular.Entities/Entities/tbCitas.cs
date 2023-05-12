@@ -12,7 +12,8 @@ namespace OpticaPopular.Entities.Entities
         public tbCitas()
         {
             tbDetallesCitas = new HashSet<tbDetallesCitas>();
-            tbFacturasDetalles = new HashSet<tbFacturasDetalles>();
+            tbFacturas = new HashSet<tbFacturas>();
+            tbOrdenes = new HashSet<tbOrdenes>();
         }
 
         public int cita_Id { get; set; }
@@ -24,6 +25,9 @@ namespace OpticaPopular.Entities.Entities
         public DateTime? cita_FechaCreacion { get; set; }
         public int? usua_IdModificacion { get; set; }
         public DateTime? cita_FechaModificacion { get; set; }
+
+        [NotMapped]
+        public int deci_Id { get; set; }
 
         [NotMapped]
         public string clie_Nombres { get; set; }
@@ -49,7 +53,6 @@ namespace OpticaPopular.Entities.Entities
         [NotMapped]
         public int sucu_Id { get; set; }
 
-
         [NotMapped]
         public decimal deci_Costo { get; set; }
 
@@ -65,12 +68,12 @@ namespace OpticaPopular.Entities.Entities
         [NotMapped]
         public string sucu_Descripcion { get; set; }
 
-
         public virtual tbClientes clie { get; set; }
         public virtual tbConsultorios cons { get; set; }
         public virtual tbUsuarios usua_IdCreacionNavigation { get; set; }
         public virtual tbUsuarios usua_IdModificacionNavigation { get; set; }
         public virtual ICollection<tbDetallesCitas> tbDetallesCitas { get; set; }
-        public virtual ICollection<tbFacturasDetalles> tbFacturasDetalles { get; set; }
+        public virtual ICollection<tbFacturas> tbFacturas { get; set; }
+        public virtual ICollection<tbOrdenes> tbOrdenes { get; set; }
     }
 }

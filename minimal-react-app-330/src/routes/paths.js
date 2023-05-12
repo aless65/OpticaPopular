@@ -34,6 +34,7 @@ export const PATH_OPTICA = {
   consultorios: path(ROOTS_OPTICA, '/consultorios'),
   facturas: path(ROOTS_OPTICA, '/facturas'),
   ventas: path(ROOTS_OPTICA, '/ventas'),
+  envios: path(ROOTS_OPTICA, '/envios'),
 };
 
 export const PATH_AUTH = {

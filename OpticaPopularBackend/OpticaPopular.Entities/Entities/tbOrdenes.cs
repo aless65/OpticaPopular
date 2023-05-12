@@ -11,12 +11,13 @@ namespace OpticaPopular.Entities.Entities
         public tbOrdenes()
         {
             tbDetallesEnvios = new HashSet<tbDetallesEnvios>();
+            tbDetallesFactura = new HashSet<tbDetallesFactura>();
             tbDetallesOrdenes = new HashSet<tbDetallesOrdenes>();
-            tbFacturasDetalles = new HashSet<tbFacturasDetalles>();
         }
 
         public int orde_Id { get; set; }
-        public int clie_Id { get; set; }
+        public int? clie_Id { get; set; }
+        public int? cita_Id { get; set; }
         public DateTime? orde_Fecha { get; set; }
         public DateTime orde_FechaEntrega { get; set; }
         public DateTime? orde_FechaEntregaReal { get; set; }
@@ -27,12 +28,13 @@ namespace OpticaPopular.Entities.Entities
         public int? usua_IdModificacion { get; set; }
         public DateTime? orde_FechaModificacion { get; set; }
 
+        public virtual tbCitas cita { get; set; }
         public virtual tbClientes clie { get; set; }
         public virtual tbSucursales sucu { get; set; }
         public virtual tbUsuarios usua_IdCreacionNavigation { get; set; }
         public virtual tbUsuarios usua_IdModificacionNavigation { get; set; }
         public virtual ICollection<tbDetallesEnvios> tbDetallesEnvios { get; set; }
+        public virtual ICollection<tbDetallesFactura> tbDetallesFactura { get; set; }
         public virtual ICollection<tbDetallesOrdenes> tbDetallesOrdenes { get; set; }
-        public virtual ICollection<tbFacturasDetalles> tbFacturasDetalles { get; set; }
     }
 }
