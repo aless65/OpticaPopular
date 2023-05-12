@@ -30,6 +30,7 @@ namespace OpticaPopular.DataAccess.Repositories
 
         #region Pantallas
         public static string UDP_Lista_Pantallas = "acce.UDP_acce_tbPantallas_List";
+        public static string UDP_Lista_PantallasMenu = "acce.UDP_opti_tbPantallas_ListMenu";
         #endregion
 
         #region Clientes

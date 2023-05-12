@@ -192,6 +192,30 @@ BEGIN
 END
 GO
 
+---------- PANTALLAS -----------
+/*UDP para pantallas*/
+CREATE OR ALTER PROCEDURE acce.UDP_opti_tbPantallas_ListMenu
+	@usua_EsAdmin	BIT,
+	@role_Id		INT
+AS
+BEGIN
+	IF @usua_EsAdmin > 0
+		BEGIN
+			SELECT * 
+			FROM acce.tbPantallas 
+			WHERE pant_Estado = 1
+		END
+	ELSE
+		BEGIN
+			SELECT * 
+			FROM acce.tbPantallas T1 INNER JOIN acce.tbPantallasPorRoles T2
+			ON T1.pant_Id = T2.pant_Id
+			AND t2.role_Id = @role_Id
+		END
+	
+END
+GO
+
 
 /*Vista cargos*/
 CREATE OR ALTER VIEW opti.VW_tbCargos
@@ -1779,7 +1803,7 @@ AS
 	        pant_Nombre, 
 			pant_Url, 
 			pant_Menu, 
-			pant_HtmlId, 
+			pant_Icon, 
 			pant_UsuCreacion, 
 			T2.usua_NombreUsuario AS pant_NombreUsuarioCreacion,
 			pant_FechaCreacion, 
@@ -1809,7 +1833,7 @@ CREATE OR ALTER PROCEDURE acce.UDP_acce_tbPantallas_Insert
 	@pant_Nombre          NVARCHAR(100), 
 	@pant_Url             NVARCHAR(300), 
 	@pant_Menu            NVARCHAR(300), 
-	@pant_HtmlId          NVARCHAR(80), 
+	@pant_Icon          NVARCHAR(80), 
 	@pant_UsuCreacion     INT 
 
 AS
@@ -1818,8 +1842,8 @@ BEGIN
 		IF NOT EXISTS (SELECT * FROM acce.tbPantallas
 						WHERE pant_Nombre = @pant_Nombre)
 			BEGIN
-			INSERT INTO [acce].[tbPantallas](pant_Nombre, pant_Url, pant_Menu, pant_HtmlId, pant_UsuCreacion)
-			VALUES(@pant_Nombre, @pant_Url, @pant_Menu, @pant_HtmlId, @pant_UsuCreacion)
+			INSERT INTO [acce].[tbPantallas](pant_Nombre, pant_Url, pant_Menu, pant_Icon, pant_UsuCreacion)
+			VALUES(@pant_Nombre, @pant_Url, @pant_Menu, @pant_Icon, @pant_UsuCreacion)
 			
 			SELECT 'La pantalla ha sido insertada con éxito'
 			END
@@ -1849,7 +1873,7 @@ CREATE OR ALTER PROCEDURE acce.UDP_acce_tbPantallas_Update
 	@pant_Nombre           NVARCHAR(100), 
 	@pant_Url              NVARCHAR(300), 
 	@pant_Menu             NVARCHAR(300), 
-	@pant_HtmlId           NVARCHAR(80), 
+	@pant_Icon           NVARCHAR(80), 
 	@pant_UsuModificacion   INT
 AS
 BEGIN 
@@ -1861,11 +1885,11 @@ BEGIN
 			SET 	[pant_Nombre] = @pant_Nombre,
 			        [pant_Url] = @pant_Url,
                     [pant_Menu] = @pant_Menu,
-					[pant_HtmlId] = @pant_HtmlId,
+					[pant_Icon] = @pant_Icon,
 					[pant_UsuModificacion]= @pant_UsuModificacion,
 					[pant_FechaModificacion] = GETDATE()
 			WHERE 	[pant_Id] = @pant_Id
-			SELECT 'La pantalla ha sido editado con éxito'
+			SELECT 'La pantalla ha sido editada con éxito'
 		END
 		ELSE IF EXISTS (SELECT * FROM [acce].[tbPantallas]
 						WHERE @pant_Nombre = [pant_Nombre]
@@ -1878,7 +1902,7 @@ BEGIN
 			    [pant_UsuModificacion]  = @pant_UsuModificacion,
 			    [pant_Url] = @pant_Url,
                 [pant_Menu] = @pant_Menu,
-				[pant_HtmlId] = @pant_HtmlId,
+				[pant_Icon] = @pant_Icon,
 				[pant_FechaModificacion] = GETDATE()
 			WHERE  [pant_Nombre] = @pant_Nombre
 
@@ -2877,12 +2901,12 @@ BEGIN
 END
 GO
 
-EXEC opti.UDP_opti_tbOrdenes_Insert 1, '2023-05-10', '2023-06-10', 1, 1
-go
-EXEC opti.UDP_opti_tbOrdenes_Insert 4, '2023-05-11', '2023-06-09', 3, 1
-go
-EXEC opti.UDP_opti_tbOrdenes_Insert 2, '2023-06-01', '2023-06-30', 3, 1
-GO
+--EXEC opti.UDP_opti_tbOrdenes_Insert 1, '2023-05-10', '2023-06-10', 1, 1
+--go
+--EXEC opti.UDP_opti_tbOrdenes_Insert 4, '2023-05-11', '2023-06-09', 3, 1
+--go
+--EXEC opti.UDP_opti_tbOrdenes_Insert 2, '2023-06-01', '2023-06-30', 3, 1
+--GO
 
 /*Editar Ordenes*/
 CREATE OR ALTER PROCEDURE opti.UDP_opti_tbOrdenes_Update

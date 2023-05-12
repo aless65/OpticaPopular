@@ -33,6 +33,18 @@ namespace OpticaPopular.DataAccess.Repositories
             return db.Query<VW_tbPantallas>(ScriptsDataBase.UDP_Lista_Pantallas, null, commandType: CommandType.StoredProcedure);
         }
 
+        public IEnumerable<VW_tbPantallas> ListMenu(bool esAdmin, int role_Id)
+        {
+            using var db = new SqlConnection(OpticaPopularContext.ConnectionString);
+
+            var parameters = new DynamicParameters();
+
+            parameters.Add("@usua_EsAdmin", esAdmin, DbType.Boolean, ParameterDirection.Input);
+            parameters.Add("@role_Id", role_Id, DbType.Int32, ParameterDirection.Input);
+
+            return db.Query<VW_tbPantallas>(ScriptsDataBase.UDP_Lista_PantallasMenu, parameters, commandType: CommandType.StoredProcedure);
+        }
+
         public IEnumerable<VW_tbPantallasPorRoles> ListXRol(int id)
         {
             using var db = new SqlConnection(OpticaPopularContext.ConnectionString);

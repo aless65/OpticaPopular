@@ -562,7 +562,7 @@ namespace OpticaPopular.DataAccess.Context
 
                 entity.Property(e => e.pant_FechaModificacion).HasColumnType("datetime");
 
-                entity.Property(e => e.pant_HtmlId)
+                entity.Property(e => e.pant_Icon)
                     .IsRequired()
                     .HasMaxLength(80);
 
@@ -1682,7 +1682,7 @@ namespace OpticaPopular.DataAccess.Context
 
                 entity.Property(e => e.pant_FechaModificacion).HasColumnType("datetime");
 
-                entity.Property(e => e.pant_HtmlId)
+                entity.Property(e => e.pant_Icon)
                     .IsRequired()
                     .HasMaxLength(80);
 
