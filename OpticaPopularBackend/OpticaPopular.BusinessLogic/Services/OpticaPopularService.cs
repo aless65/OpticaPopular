@@ -304,6 +304,20 @@ namespace OpticaPopular.BusinessLogic.Services
             }
         }
 
+        public ServiceResult FindClientes(int id)
+        {
+            var result = new ServiceResult();
+            try
+            {
+                var cliente = _clientesRepository.Find(id);
+                return result.Ok(cliente);
+            }
+            catch (Exception e)
+            {
+                return result.Error(e.Message);
+            }
+        }
+
         public ServiceResult InsertClientes(VW_tbClientes item)
         {
             var result = new ServiceResult();
@@ -856,8 +870,21 @@ namespace OpticaPopular.BusinessLogic.Services
             }
         }
 
+        public ServiceResult FindProveedores(int id)
+        {
+            var result = new ServiceResult();
+            try
+            {
+                var proveedor = _proveedoresRepository.Find(id);
+                return result.Ok(proveedor);
+            }
+            catch (Exception e)
+            {
+                return result.Error(e.Message);
+            }
+        }
 
-        public ServiceResult InsertProveedores(tbProveedores item)
+        public ServiceResult InsertProveedores(VW_tbProveedores item)
         {
             var result = new ServiceResult();
             try
@@ -877,7 +904,7 @@ namespace OpticaPopular.BusinessLogic.Services
             }
         }
 
-        public ServiceResult UpdateProveedores(tbProveedores item)
+        public ServiceResult UpdateProveedores(VW_tbProveedores item)
         {
             var result = new ServiceResult();
             try
@@ -897,7 +924,7 @@ namespace OpticaPopular.BusinessLogic.Services
             }
         }
 
-        public ServiceResult DeleteProveedores(tbProveedores item)
+        public ServiceResult DeleteProveedores(VW_tbProveedores item)
         {
             var result = new ServiceResult();
             try

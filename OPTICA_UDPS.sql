@@ -686,6 +686,18 @@ BEGIN
 	END CATCH
 END
 GO
+
+/*Find clientes*/
+GO
+CREATE OR ALTER PROCEDURE opti.UDP_opti_tbClientes_Find 
+	@clie_Id	INT
+AS
+BEGIN
+	SELECT * FROM opti.VW_tbClientes
+	WHERE clie_Id = @clie_Id
+END
+GO
+
 --opti.UDP_opti_tbClientes_Update 11,'Marcos','funes','021542842125','F','2000-02-08',1,'25013624','hshdbhd@gmail.com',1,'0102','nadaaaa' 
 
 /*Eliminar Cliente*/
@@ -975,7 +987,10 @@ AS
 	SELECT prov_Id, 
 	       prov_Nombre, 
 		   T1.dire_Id,
-		   dire_DireccionExacta,
+		   t4.dire_DireccionExacta,
+		    t4.muni_Id,
+		   T7.muni_Nombre AS sucu_MunicipioNombre, 
+		   T7.depa_Id,
 		   prov_CorreoElectronico, 
 		   prov_Telefono, 
 		   prov_UsuCreacion, 
@@ -989,7 +1004,8 @@ AS
 	ON T1.prov_UsuCreacion = T2.usua_Id LEFT JOIN acce.tbUsuarios T3 
 	ON T1.prov_UsuModificacion = T3.usua_Id
 	INNER JOIN opti.tbDirecciones t4
-	ON T1.dire_Id = t4.dire_Id
+	ON T1.dire_Id = t4.dire_Id INNER JOIN gral.tbMunicipios T7
+	ON T4.muni_Id = T7.muni_id
 GO
 
 
@@ -997,41 +1013,69 @@ GO
 CREATE OR ALTER PROCEDURE opti.UDP_opti_tbProveedore_List
 AS
 BEGIN
-	SELECT * FROM opti.VW_tbProveedores
+	SELECT * FROM opti.VW_tbProveedores where prov_Estado = 1
 END	
+GO
+
+/*Find proveedores*/
+GO
+CREATE OR ALTER PROCEDURE opti.UDP_opti_tbProveedores_Find 
+	@prov_Id	INT
+AS
+BEGIN
+	SELECT *  FROM opti.VW_tbProveedores
+	WHERE prov_Id = @prov_Id
+END
 GO
 
 
 /*Insertar Proveedor*/
-CREATE OR ALTER PROCEDURE opti.UDP_opti_tbProveedor_Insert
-	@prov_Nombre                NVARCHAR(100),
-    @prov_Direccion             INT,
+
+CREATE OR ALTER PROCEDURE opti.UDP_opti_tbProveedores_Insert
+    @prov_Nombre                NVARCHAR(100),
     @prov_CorreoElectronico     NVARCHAR(200),
     @prov_Telefono              NVARCHAR(15),
-    @prov_UsuCreacion           INT
+    @prov_UsuCreacion           INT,
+	@muni_Id					VARCHAR(4),
+	@dire_DireccionExacta		NVARCHAR(350)
 AS
 BEGIN
 	BEGIN TRY
+	 DECLARE @dire_Id INT
 		IF NOT EXISTS (SELECT * FROM opti.tbProveedores 
 						WHERE prov_Nombre = @prov_Nombre)
 			BEGIN
-			INSERT INTO opti.tbProveedores(prov_Nombre,[dire_Id],prov_CorreoElectronico,prov_Telefono,prov_UsuCreacion)
-			VALUES(@prov_Nombre,@prov_Direccion,@prov_CorreoElectronico,@prov_Telefono,@prov_UsuCreacion)
-			
-			SELECT 'El proveedor ha sido insertada con éxito'
+			INSERT INTO [opti].[tbDirecciones]([muni_Id], [dire_DireccionExacta], [usua_IdCreacion])
+				VALUES(@muni_Id, @dire_DireccionExacta, @prov_UsuCreacion)
+
+				SET @dire_Id = SCOPE_IDENTITY()
+
+				INSERT INTO opti.tbProveedores(prov_Nombre,[dire_Id],prov_CorreoElectronico,prov_Telefono,prov_UsuCreacion)
+			VALUES(@prov_Nombre,@dire_Id,@prov_CorreoElectronico,@prov_Telefono,@prov_UsuCreacion)
+
+				SELECT 'El proveedor ha sido insertada con éxito'
+
 			END
 		ELSE IF EXISTS (SELECT * FROM opti.tbProveedores 
-						WHERE prov_Nombre = @prov_Nombre
-						AND prov_Estado = 0)
+						WHERE prov_Nombre = @prov_Nombre	
+						AND [prov_Estado] = 1)
+
+			SELECT 'Ya existe un proveedor con este nombre'
+		ELSE
 			BEGIN
+
+			UPDATE opti.tbDirecciones
+				SET muni_Id = @muni_Id,
+				    dire_DireccionExacta = @dire_DireccionExacta,
+					dire_Estado = 1
+				WHERE dire_Id = (SELECT dire_Id FROM opti.tbProveedores WHERE prov_Nombre = @prov_Nombre)
+
 				UPDATE opti.tbProveedores
 				SET prov_Estado = 1
 				WHERE prov_Nombre = @prov_Nombre
 
 				SELECT 'El proveedor ha sido insertada con éxito'
 			END
-		ELSE
-			SELECT 'El proveedor ya existe'
 	END TRY
 	BEGIN CATCH
 		SELECT 'Ha ocurrido un error'
@@ -1040,23 +1084,32 @@ END
 GO
 
 
+
 /*Editar Proveedor*/
-CREATE OR ALTER PROCEDURE opti.UDP_opti_tbProveedor_Update
+CREATE OR ALTER PROCEDURE opti.UDP_opti_tbProveedores_Update 
 	@prov_Id					INT,
     @prov_Nombre                NVARCHAR(200),
-    @prov_Direccion             NVARCHAR(500),
     @prov_CorreoElectronico     NVARCHAR(200),
     @prov_Telefono              NVARCHAR(15),
-    @prov_UsuModificacion       INT
+    @prov_UsuModificacion       INT,
+	@muni_Id					VARCHAR(4),
+	@dire_DireccionExacta		NVARCHAR(350)
+	
 AS
-BEGIN 
+BEGIN
 	BEGIN TRY
+
 	IF NOT EXISTS (SELECT * FROM opti.tbProveedores
 						WHERE @prov_Nombre = [prov_Nombre])
-		BEGIN			
+		BEGIN	
+			UPDATE opti.tbDirecciones
+				SET muni_Id = @muni_Id,
+				    dire_DireccionExacta = @dire_DireccionExacta,
+					usua_IdModificacion = @prov_UsuModificacion
+				WHERE dire_Id = (SELECT dire_Id FROM [opti].[tbProveedores] WHERE [prov_Id] = @prov_Id )
+
 			UPDATE opti.tbProveedores
 			SET 	[prov_Nombre] = @prov_Nombre,
-			        [dire_Id] = @prov_Direccion,
                     [prov_CorreoElectronico] = @prov_CorreoElectronico,
                     [prov_Telefono] = @prov_Telefono,
                     [prov_UsuModificacion] = @prov_UsuModificacion,
@@ -1070,12 +1123,24 @@ BEGIN
 							  AND [prov_Id] != @prov_Id)
 			SELECT 'EL Proveedor ya existe'
 		ELSE
-			UPDATE opti.tbProveedores
-			SET prov_Estado = 1,
-			  [prov_UsuModificacion] = @prov_UsuModificacion
-			WHERE [prov_Nombre] = @prov_Nombre
+			BEGIN
+				UPDATE opti.tbDirecciones
+				SET dire_Estado = 1,
+					muni_Id = @muni_Id,
+				    dire_DireccionExacta = @dire_DireccionExacta,
+					usua_IdModificacion = @prov_UsuModificacion
+				WHERE dire_Id = (SELECT dire_Id FROM opti.tbProveedores WHERE [prov_Nombre] = @prov_Nombre )
 
-			SELECT 'El proveedor ha sido editada con éxito'
+				
+			UPDATE opti.tbProveedores
+			SET 	[prov_Nombre] = @prov_Nombre,
+                    [prov_CorreoElectronico] = @prov_CorreoElectronico,
+                    [prov_Telefono] = @prov_Telefono,
+                    [prov_UsuModificacion] = @prov_UsuModificacion,
+                    [prov_FechaModificacion] = GETDATE()
+			WHERE 	[prov_Id] = @prov_Id
+			SELECT 'El Proveedor ha sido editada con éxito'
+			END
 	END TRY
 	BEGIN CATCH
 		SELECT 'Ha ocurrido un error'

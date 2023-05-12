@@ -20,7 +20,7 @@ import {
 import { useDispatch, useSelector } from '../../redux/store';
 import { getProveedores } from '../../redux/slices/proveedor';      
 // routes
-import { PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_DASHBOARD, PATH_OPTICA  } from '../../routes/paths';
 // hooks
 import useSettings from '../../hooks/useSettings';
 import useTable, { getComparator, emptyRows } from '../../hooks/useTable';
@@ -31,14 +31,14 @@ import Scrollbar from '../../components/Scrollbar';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 import {
   TableNoData,
-  TableSkeleton,
+  TableSkeleton, 
   TableEmptyRows,
   TableHeadCustom,
-  TableSelectedActions,
+  TableSelectedActions, 
 } from '../../components/table';
 // sections
 import { ProveedorTableRow, TableToolbar } from '../../sections/@dashboard/optica/proveedores-list';
-
+import DeleteProveedorDialog from './OpticaProveedoresModales/ModalDeleteProveedores';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
@@ -51,7 +51,7 @@ const TABLE_HEAD = [
 
 // ----------------------------------------------------------------------
 
-export default function OpticaClientes() {
+export default function OpticaProveedores() {
   const {
     dense,
     page,
@@ -83,7 +83,46 @@ export default function OpticaClientes() {
 
   const [tableData, setTableData] = useState([]);
 
+  const [proveedorId, setproveedorId] = useState('');
+
   const [filterName, setFilterName] = useState('');
+
+  const [openDeleteProveedorDialog, setOpenDeleteProveedorDialog] = useState(false);
+
+
+// ----------------------------------------------------------------------
+
+function applySortFilter({ tableData, comparator, filterName }) {
+  const stabilizedThis = tableData.map((el, index) => [el, index]);
+
+  stabilizedThis.sort((a, b) => {
+    const order = comparator(a[0], b[0]);
+    if (order !== 0) return order;
+    return a[1] - b[1];
+  });
+
+  tableData = stabilizedThis.map((el) => el[0]);
+
+  // if (filterName) {
+  //   tableData = tableData.filter((item) => 
+  //     Object.values(item).some(
+  //       (value) => 
+  //         value && value.toString().toLowerCase().indexOf(filterName.toLowerCase()) !== -1
+  //     )
+  //   );
+  // }
+
+  if (filterName) {
+    tableData = tableData.filter((item) =>                                                
+      item.prov_Nombre.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 ||
+      item.prov_Telefono.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 ||
+      item.prov_CorreoElectronico.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 
+    );
+  }
+  
+
+  return tableData;
+}
 
   useEffect(() => {
     dispatch(getProveedores());                     
@@ -101,9 +140,8 @@ export default function OpticaClientes() {
   };
 
   const handleDeleteRow = (id) => {
-    const deleteRow = tableData.filter((row) => row.prov_Id !== id);    
-    setSelected([]);
-    setTableData(deleteRow);
+    setproveedorId(id);
+    handleOpenDeleteProveedorDialog();
   };
 
   const handleDeleteRows = (selected) => {
@@ -112,8 +150,9 @@ export default function OpticaClientes() {
     setTableData(deleteRows);
   };
 
+
   const handleEditRow = (id) => {
-    navigate(PATH_DASHBOARD.eCommerce.edit(paramCase(id)));
+    navigate(PATH_OPTICA.proveedoresEdit(id));
   };
 
   const dataFiltered = applySortFilter({
@@ -121,6 +160,14 @@ export default function OpticaClientes() {
     comparator: getComparator(order, orderBy),
     filterName,
   });
+
+  const handleOpenDeleteProveedorDialog = () => {
+    setOpenDeleteProveedorDialog(true);
+  }
+
+  const handleCloseDeleteProveedorDialog = () => {
+    setOpenDeleteProveedorDialog(false);
+  }
 
   const denseHeight = dense ? 60 : 80;
 
@@ -136,14 +183,17 @@ export default function OpticaClientes() {
             { name: 'Proveedores' },
           ]}
           action={
+            <div>
             <Button
               variant="contained"
               startIcon={<Iconify icon="eva:plus-fill" />}
               component={RouterLink}
-              to={PATH_DASHBOARD.general.app}
+              to={PATH_OPTICA.proveedoresNew}
             >
               Agregar
             </Button>
+            <DeleteProveedorDialog open={openDeleteProveedorDialog} onClose={handleCloseDeleteProveedorDialog} proveedores={proveedores} setTableData={setTableData} proveedorId={proveedorId} />
+            </div>
           }
         />
 
@@ -180,7 +230,7 @@ export default function OpticaClientes() {
                           selected={selected.includes(row.prov_Id)}
                           onSelectRow={() => onSelectRow(row.prov_Id)}
                           onDeleteRow={() => handleDeleteRow(row.prov_Id)}
-                          onEditRow={() => handleEditRow(row.prov_Nombre)}
+                          onEditRow={() => handleEditRow(row.prov_Id)}
                         />
                       ) : (
                         !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
@@ -218,36 +268,4 @@ export default function OpticaClientes() {
   );
 }
 
-// ----------------------------------------------------------------------
 
-function applySortFilter({ tableData, comparator, filterName }) {
-  const stabilizedThis = tableData.map((el, index) => [el, index]);
-
-  stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) return order;
-    return a[1] - b[1];
-  });
-
-  tableData = stabilizedThis.map((el) => el[0]);
-
-  // if (filterName) {
-  //   tableData = tableData.filter((item) => 
-  //     Object.values(item).some(
-  //       (value) => 
-  //         value && value.toString().toLowerCase().indexOf(filterName.toLowerCase()) !== -1
-  //     )
-  //   );
-  // }
-
-  if (filterName) {
-    tableData = tableData.filter((item) =>                                                
-      item.prov_Nombre.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 ||
-      item.prov_Telefono.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 ||
-      item.prov_CorreoElectronico.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 
-    );
-  }
-  
-
-  return tableData;
-}

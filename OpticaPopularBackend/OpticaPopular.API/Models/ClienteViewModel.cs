@@ -19,5 +19,9 @@ namespace OpticaPopular.API.Models
         public int clie_UsuCreacion { get; set; }
         public int? clie_UsuModificacion { get; set; }
         public bool? clie_Estado { get; set; }
+
+        public string dire_DireccionExacta { get; set; }
+        public string muni_Id { get; set; }
+
     }
 }

@@ -6,12 +6,12 @@ import { useNavigate } from 'react-router-dom';
 // form
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-// @mui
+// @mui 
 import { LoadingButton, DatePicker } from '@mui/lab';
 import {
   Box,
   Card,
-  Grid,
+  Grid, 
   Stack,
   Switch,
   Typography,
@@ -37,7 +37,7 @@ import { FormProvider, RHFSelect, RHFSwitch, RHFTextField, RHFRadioGroup } from 
 
 // ----------------------------------------------------------------------
 
-ClienteNewEditForm.propTypes = {
+ProveedorNewEditForm.propTypes = {
   isEdit: PropTypes.bool,
   currentUser: PropTypes.object,
 };
@@ -49,12 +49,11 @@ const LabelStyle = styled(Typography)(({ theme }) => ({
 }));
 
 
-export default function ClienteNewEditForm({ isEdit, currentCliente }) {
+export default function ProveedorNewEditForm({ isEdit, currentProveedor }) {
   const navigate = useNavigate();
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const [optionsEstadosCiviles, setOptionsEstadoCiviles] = useState([]);
 
   const [optionsDepartamentos, setOptionsDepartamentos] = useState([]);
 
@@ -62,19 +61,14 @@ export default function ClienteNewEditForm({ isEdit, currentCliente }) {
 
   const [optionsMunicipios, setOptionsMunicipios] = useState([]);
 
-  const GENDER_OPTION = ['Masculino', 'Femenino'];
+  
 
   // const [estadoCivilTemporal, setEstadoCivilTemporal] = useState(currentEmpleado?.estacivi_Id || '');
 
   const NewUserSchema = Yup.object().shape({
     nombres: Yup.string().required('Nombres requeridos'),
-    apellidos: Yup.string().required('Apellidos requeridos'),
-    identidad: Yup.string().required('Identidad requerida'),
-    fechaNacimiento: Yup.string().required('Fecha de Nacimiento requerida').nullable(),
-    sexo: Yup.string().required('Sexo requerido'),
-    estadoCivil: Yup.string().required('Estado Civil requerido'),
-    telefono: Yup.string().required('Teléfono requerido'),
     email: Yup.string().required('Correo Electrónico requerido').email('Correo inválido'),
+    telefono: Yup.string().required('Teléfono requerido'),
     departamento: Yup.string().required('Departamento requerido'),
     municipio: Yup.string().required('Municipio requerido'),
     direccion: Yup.string().required('Dirección requerida'),
@@ -83,20 +77,15 @@ export default function ClienteNewEditForm({ isEdit, currentCliente }) {
 
   const defaultValues = useMemo(
     () => ({
-      nombres: currentCliente?.clie_Nombres || '',
-      apellidos: currentCliente?.clie_Apellidos || '',
-      identidad: currentCliente?.clie_Identidad || '',
-      fechaNacimiento: currentCliente?.clie_FechaNacimiento || '',
-      sexo: currentCliente?.clie_Sexo || '',
-      estadoCivil: currentCliente?.estacivi_Id || '',
-      telefono: currentCliente?.clie_Telefono || '',
-      email: currentCliente?.clie_CorreoElectronico || '',
-      departamento: currentCliente?.depa_Id || '',
-      municipio: currentCliente?.muni_id || '',
-      direccion: currentCliente?.dire_DireccionExacta || '',
+      nombres: currentProveedor?.prov_Nombre || '',
+      email: currentProveedor?.prov_CorreoElectronico || '',
+      telefono: currentProveedor?.prov_Telefono || '',
+      departamento: currentProveedor?.depa_Id || '',
+      municipio: currentProveedor?.muni_id || '',
+      direccion: currentProveedor?.dire_DireccionExacta || '',
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [currentCliente]
+    [currentProveedor]
   );
 
   const methods = useForm({
@@ -116,44 +105,33 @@ export default function ClienteNewEditForm({ isEdit, currentCliente }) {
   const values = watch();
 
   useEffect(() => {
-    if (isEdit && currentCliente) {
+    if (isEdit && currentProveedor) {
       reset(defaultValues);
     }
     if (!isEdit) {
       reset(defaultValues);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isEdit, currentCliente]);
- 
+  }, [isEdit, currentProveedor]);
+
+  
+
   const onSubmit = async (data) => {
     try {
-      const dateStr = data.fechaNacimiento;
-      const date = new Date(dateStr);
-      const year = date.getFullYear();
-      const month = date.getMonth() + 1; // add 1 to month to get 1-based month number
-      const day = date.getDate();
-      const formattedDate = `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
-
-
       const jsonData = {
-        clie_Id: currentCliente?.clie_Id,
-        clie_Nombres: data.nombres,
-        clie_Apellidos: data.apellidos,
-        clie_Identidad: data.identidad,
-        clie_Sexo: data.sexo,
-        clie_FechaNacimiento: formattedDate,
-        estacivi_Id: data.estadoCivil,
-        clie_Telefono: data.telefono,
-        clie_CorreoElectronico: data.email,
-        clie_UsuCreacion: 1,
-        clie_UsuModificacion: 1,
+        prov_Id: currentProveedor?.prov_Id,
+        prov_Nombre: data.nombres,
+        prov_CorreoElectronico: data.email,
+        prov_Telefono: data.telefono,
+        prov_UsuCreacion: 1,
+        prov_UsuModificacion: 1,
         dire_DireccionExacta: data.direccion,
         muni_Id: data.municipio,
       };
      console.log(jsonData)
 
       if (isEdit) {
-        fetch("https://localhost:44362/api/Clientes/Editar", {
+        fetch("https://localhost:44362/api/Proveedores/Editar", {
           method: "PUT",
           mode: "cors",
           headers: {
@@ -165,10 +143,10 @@ export default function ClienteNewEditForm({ isEdit, currentCliente }) {
           .then((data) => {
             console.log(data);
             console.log("update")
-            if (data.message === "El cliente ha sido editado con éxito") {
-              navigate(PATH_OPTICA.clientes);
+            if (data.message === "El Proveedor ha sido editada con éxito") {
+              navigate(PATH_OPTICA.proveedores);
               enqueueSnackbar(data.message);
-            } else if (data.message === 'Ya existe un cliente con este número de identidad') {
+            } else if (data.message === 'El proveedor ya existe') {
               enqueueSnackbar(data.message, { variant: 'warning' });
             } else {
               enqueueSnackbar(data.message, { variant: 'error' });
@@ -176,7 +154,7 @@ export default function ClienteNewEditForm({ isEdit, currentCliente }) {
           })
           .catch((error) => console.error(error));
       } else {
-        fetch("https://localhost:44362/api/Clientes/Insertar", {
+        fetch("https://localhost:44362/api/Proveedores/Insertar", {
           method: "POST",
           mode: "cors",
           headers: {
@@ -188,10 +166,10 @@ export default function ClienteNewEditForm({ isEdit, currentCliente }) {
           .then((data) => {
             console.log(data);
             console.log("insertar");
-            if (data.message === "El cliente ha sido ingresado con éxito") {
-              navigate(PATH_OPTICA.clientes);
+            if (data.message === "El proveedor ha sido insertada con éxito") {
+              navigate(PATH_OPTICA.proveedores);
               enqueueSnackbar(data.message);
-            } else if (data.message === 'Ya existe un cliente con este número de identidad') {
+            } else if (data.message === 'El proveedor ya existe') {
               enqueueSnackbar(data.message, { variant: 'warning' });
             } else {
               enqueueSnackbar(data.message, { variant: 'error' });
@@ -199,23 +177,13 @@ export default function ClienteNewEditForm({ isEdit, currentCliente }) {
           })
           .catch((error) => console.error(error));
       }
+    
     } catch (error) {
       console.error(error); 
     }
   };
 
   useEffect(() => {
-
-    fetch('http://opticapopular.somee.com/api/EstadosCiviles/Listado')
-      .then(response => response.json())
-      .then(data => {
-        const optionsData = data.data.map(item => ({
-          label: item.estacivi_Nombre, // replace 'name' with the property name that contains the label
-          id: item.estacivi_Id // replace 'id' with the property name that contains the ID
-        }));
-        setOptionsEstadoCiviles(optionsData);
-      })
-      .catch(error => console.error(error));
 
     fetch('http://opticapopular.somee.com/api/Departamentos/Listado')
       .then(response => response.json())
@@ -229,8 +197,8 @@ export default function ClienteNewEditForm({ isEdit, currentCliente }) {
       .catch(error => console.error(error));
 
 
-    setDepaId(currentCliente?.depa_Id);
-  }, [currentCliente]);
+    setDepaId(currentProveedor?.depa_Id);
+  }, [currentProveedor]);
 
   useEffect(() => {
     fetch(`http://opticapopular.somee.com/api/Municipios/ListadoDdl?id=${depaId}`)
@@ -250,7 +218,7 @@ export default function ClienteNewEditForm({ isEdit, currentCliente }) {
   }, [depaId])
 
   useEffect(() => {
-    fetch(`http://opticapopular.somee.com/api/Municipios/ListadoDdl?id=${currentCliente?.depa_Id}`)
+    fetch(`http://opticapopular.somee.com/api/Municipios/ListadoDdl?id=${currentProveedor?.depa_Id}`)
       .then(response => response.json())
       .then(data => {
         const optionsData = data.data.map(item => ({
@@ -258,12 +226,12 @@ export default function ClienteNewEditForm({ isEdit, currentCliente }) {
           id: item.muni_id // replace 'id' with the property name that contains the ID
         }));
         setOptionsMunicipios(optionsData);
-        defaultValues.municipio = currentCliente?.muni_Id;
-        methods.setValue('municipio', currentCliente?.muni_Id);
+        defaultValues.municipio = currentProveedor?.muni_Id;
+        methods.setValue('municipio', currentProveedor?.muni_Id);
       })
       .catch(error => console.error(error));
 
-  }, [currentCliente])
+  }, [currentProveedor])
 
 
   return (
@@ -277,71 +245,15 @@ export default function ClienteNewEditForm({ isEdit, currentCliente }) {
             gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
           }}
         >
-          <RHFTextField name="nombres" label="Nombres" />
-          <RHFTextField name="apellidos" label="Apellidos" />
-          <RHFTextField name="identidad" label="Identidad" />
+          <RHFTextField name="nombres" label="Nombre" />
+         
           {/* <RHFTextField type="date" name="nacimiento" label="" /> */}
-          <Controller
-            name="fechaNacimiento"
-            control={control}
-            render={({ field, fieldState: { error } }) => (
-              <DatePicker
-                label="Fecha de Nacimiento"
-                value={field.value || null}
-                onChange={(newValue) => {
-                  field.onChange(newValue);
-                }}
-                renderInput={(params) => (
-                  <TextField {...params} fullWidth error={!!error} helperText={error?.message} />
-                )}
-              />
-            )}
-          />
-
-          <div>
-            <LabelStyle>Sexo</LabelStyle>
-            <RHFRadioGroup
-              name="sexo"
-              options={GENDER_OPTION}
-              sx={{
-                '& .MuiFormControlLabel-root': { mr: 4 },
-              }}
-            />
-          </div>
-
-
-          <Autocomplete
-            name="estadoCivil"
-            options={optionsEstadosCiviles}
-            error={!!errors.estadoCivil}
-            getOptionLabel={(option) => option.label}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label="Estado Civil"
-                error={!!errors.estadoCivil}
-                helperText={errors.estadoCivil?.message}
-              />
-            )}
-            onChange={(event, value) => {
-              if (value != null) {
-                methods.setValue('estadoCivil', value.id);
-                // setEstadoCivilTemporal(value.id);
-                defaultValues.estadoCivil = value.id;
-                // console.log(defaultValues.estadoCivil);
-              } else {
-                methods.setValue('estadoCivil', '');
-                defaultValues.estadoCivil = '';
-              }
-            }}
-            isOptionEqualToValue={(option, value) => option.id === value.id}
-            value={optionsEstadosCiviles.find(option => option.id === defaultValues.estadoCivil) ?? null}
-          />
 
           <RHFTextField name="telefono" label="Teléfono" />
           <RHFTextField name="email" label="Correo electrónico" />
 
           <Autocomplete
+            disablePortal
             name="departamento"
             options={optionsDepartamentos}
             error={!!errors.departamento}
@@ -370,6 +282,7 @@ export default function ClienteNewEditForm({ isEdit, currentCliente }) {
           />
 
           <Autocomplete
+            disablePortal
             name="municipio"
             options={optionsMunicipios}
             error={!!errors.municipio}
@@ -401,9 +314,9 @@ export default function ClienteNewEditForm({ isEdit, currentCliente }) {
         </Box>
 
         <Stack direction="row" justifyContent="flex-end" sx={{ mt: 3 }}>
-          <Button to={PATH_DASHBOARD.optica.clientes}>Cancelar</Button>
+          <Button to={PATH_DASHBOARD.optica.proveedores}>Cancelar</Button>
           <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-            {!isEdit ? 'Crear cliente' : 'Guardar cambios'}
+            {!isEdit ? 'Crear Proveedor' : 'Guardar cambios'}
           </LoadingButton>
         </Stack>
       </Card>

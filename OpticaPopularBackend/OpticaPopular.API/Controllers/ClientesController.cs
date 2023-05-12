@@ -31,6 +31,13 @@ namespace OpticaPopular.API.Controllers
             return Ok(list);
         }
 
+        [HttpGet("Find")]
+        public IActionResult Find(int id)
+        {
+            var list = _opticaPopularService.FindClientes(id);
+            return Ok(list);
+        }
+
         [HttpPost("Insertar")]
         public IActionResult Insert(ClienteViewModel cliente)
         {

@@ -81,7 +81,7 @@ export function getProveedores() {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('Proveedores/Listado');
+      const response = await axios.get('https://localhost:44362/api/Proveedores/Listado');
       dispatch(slice.actions.getProveedoresSuccess(response.data.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
@@ -91,14 +91,17 @@ export function getProveedores() {
 
 // ----------------------------------------------------------------------
 
-export function getProveedor(name) {                 
+
+
+export function getProveedor(id) {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('/api/products/product', {
-        params: { name },
-      });
-      dispatch(slice.actions.getClienteSuccess(response.data.data));
+      console.log(id);
+      const response = await axios.get(`https://localhost:44362/api/Proveedores/Find?id=${id}`);
+      
+      dispatch(slice.actions.getProveedorSuccess(response.data.data));
+      console.log(response.data.data);
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error));

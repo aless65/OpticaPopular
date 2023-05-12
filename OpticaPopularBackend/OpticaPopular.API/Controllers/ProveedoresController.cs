@@ -30,11 +30,18 @@ namespace OpticaPopular.API.Controllers
             return Ok(list);
         }
 
+        [HttpGet("Find")]
+        public IActionResult Find(int id)
+        {
+            var list = _opticaPopularService.FindProveedores(id);
+            return Ok(list);
+        }
+
 
         [HttpPost("Insertar")]
         public IActionResult Insert(ProveedoresViewModel proveedores)
         {
-            var item = _mapper.Map<tbProveedores>(proveedores);
+            var item = _mapper.Map<VW_tbProveedores>(proveedores);
             var insert = _opticaPopularService.InsertProveedores(item);
 
             return Ok(insert);
@@ -43,7 +50,7 @@ namespace OpticaPopular.API.Controllers
         [HttpPut("Editar")]
         public IActionResult Update(ProveedoresViewModel proveedores)
         {
-            var item = _mapper.Map<tbProveedores>(proveedores);
+            var item = _mapper.Map<VW_tbProveedores>(proveedores);
             var update = _opticaPopularService.UpdateProveedores(item);
 
             return Ok(update);
@@ -52,7 +59,7 @@ namespace OpticaPopular.API.Controllers
         [HttpPut("Eliminar")]
         public IActionResult Delete(ProveedoresViewModel proveedores)
         {
-            var item = _mapper.Map<tbProveedores>(proveedores);
+            var item = _mapper.Map<VW_tbProveedores>(proveedores);
             var delete = _opticaPopularService.DeleteProveedores(item);
 
             return Ok(delete);

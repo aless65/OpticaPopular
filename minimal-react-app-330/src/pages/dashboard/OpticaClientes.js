@@ -39,7 +39,7 @@ import {
 } from '../../components/table';
 // sections
 import { ClienteTableRow, TableToolbar } from '../../sections/@dashboard/optica/cliente-list';
-
+import DeleteClienteDialog from './OpticaClienteModales/ModalDeleteClientes';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
@@ -84,7 +84,11 @@ export default function OpticaClientes() {
 
   const [tableData, setTableData] = useState([]);
 
+  const [clienteId, setClienteId] = useState('');
+
   const [filterName, setFilterName] = useState('');
+
+  const [openDeleteClienteDialog, setOpenDeleteClienteDialog] = useState(false);
 
 // ----------------------------------------------------------------------
 
@@ -120,6 +124,8 @@ function applySortFilter({ tableData, comparator, filterName }) {
   return tableData;
 }
 
+
+
   useEffect(() => {
     dispatch(getClientes());
   }, [dispatch]);
@@ -136,9 +142,8 @@ function applySortFilter({ tableData, comparator, filterName }) {
   };
 
   const handleDeleteRow = (id) => {
-    const deleteRow = tableData.filter((row) => row.clie_Id !== id);
-    setSelected([]);
-    setTableData(deleteRow);
+    setClienteId(id);
+    handleOpenDeleteClienteDialog();
   };
 
   const handleDeleteRows = (selected) => {
@@ -146,7 +151,6 @@ function applySortFilter({ tableData, comparator, filterName }) {
     setSelected([]);
     setTableData(deleteRows);
   };
-
 
   const handleEditRow = (id) => {
     navigate(PATH_OPTICA.clientesEdit(id));
@@ -157,6 +161,17 @@ function applySortFilter({ tableData, comparator, filterName }) {
     comparator: getComparator(order, orderBy),
     filterName,
   });
+
+
+  const handleOpenDeleteClienteDialog = () => {
+    setOpenDeleteClienteDialog(true);
+  }
+
+  const handleCloseDeleteClienteDialog = () => {
+    setOpenDeleteClienteDialog(false);
+  }
+
+
 
   const denseHeight = dense ? 60 : 80;
 
@@ -172,6 +187,7 @@ function applySortFilter({ tableData, comparator, filterName }) {
             { name: 'Clientes' },
           ]}
           action={
+            <div>
             <Button
               variant="contained"
               startIcon={<Iconify icon="eva:plus-fill" />}
@@ -179,7 +195,10 @@ function applySortFilter({ tableData, comparator, filterName }) {
               to={PATH_OPTICA.clientesNew}
             >
               Agregar
+
             </Button>
+            <DeleteClienteDialog open={openDeleteClienteDialog} onClose={handleCloseDeleteClienteDialog} clientes={clientes} setTableData={setTableData} clienteId={clienteId} />
+            </div>
           }
         />
 
@@ -216,7 +235,7 @@ function applySortFilter({ tableData, comparator, filterName }) {
                           selected={selected.includes(row.clie_Id)}
                           onSelectRow={() => onSelectRow(row.clie_Id)}
                           onDeleteRow={() => handleDeleteRow(row.clie_Id)}
-                          onEditRow={() => handleEditRow(row.clie_NombreCompleto)}
+                          onEditRow={() => handleEditRow(row.clie_Id)}
                         />
                       ) : (
                         !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
