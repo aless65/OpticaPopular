@@ -58,6 +58,14 @@ namespace OpticaPopular.API.Controllers
             return Ok(item);
         }
 
+        [HttpGet("BuscarCitasTerminadas/{cita_Id}")]
+        public IActionResult BuscarCitasTerminadas(int cita_Id)
+        {
+            var item = _opticaPopularService.ListadoTerminadas(cita_Id);
+            //item.Data = _mapper.Map<CitasViewModel>(item.Data);
+            return Ok(item);
+        }
+
         [HttpPost("Eliminar")]
         public IActionResult Delete(int cita_Id, int usua_IdModificacion )
         {

@@ -31,7 +31,7 @@ export default function OrdenDetallesTableRow({ row, selected, onEditRow, onSele
 
   const theme = useTheme();
 
-  const { aros_Descripcion, deor_GraduacionLeft, deor_GraduacionRight, deor_Precio, deor_Cantidad, deor_Total } = row;
+  const { aros_Descripcion, deor_GraduacionLeft, deor_GraduacionRight, deor_Precio, deor_Cantidad, deor_Total, deor_Transition, deor_FiltroLuzAzul } = row;
   
   const [openMenu, setOpenMenuActions] = useState(null);
 
@@ -51,6 +51,14 @@ export default function OrdenDetallesTableRow({ row, selected, onEditRow, onSele
       <TableCell>{(deor_GraduacionLeft)}</TableCell>
 
       <TableCell>{(deor_GraduacionRight)}</TableCell>
+
+      <TableCell>
+        <Checkbox checked={deor_Transition} disabled={!deor_Transition} />
+      </TableCell>
+      
+      <TableCell>
+        <Checkbox checked={deor_FiltroLuzAzul} disabled={!deor_FiltroLuzAzul} />
+      </TableCell>
 
       <TableCell>{(deor_Precio)}</TableCell>
 
@@ -73,7 +81,7 @@ export default function OrdenDetallesTableRow({ row, selected, onEditRow, onSele
                 sx={{ color: 'error.main' }}
               >
                 <Iconify icon={'eva:trash-2-outline'} />
-                Cancelar
+                Eliminar
               </MenuItem>
               <MenuItem
                 onClick={() => {

@@ -57,7 +57,7 @@ function applySortFilter({ tableData, comparator, filterName }) {
   if (filterName) {
     tableData = tableData.filter((item) =>
       item.clie_NombreCompleto.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 ||
-      item.sucu_Descripcion.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 
+      item.sucu_Descripcion.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
     );
   }
 
@@ -119,7 +119,25 @@ export default function OpticaOrdenes() {
 
   const [filterName, setFilterName] = useState('');
 
-  const orden  = useSelector((state) => state.orden.orden);
+  const orden = useSelector((state) => state.orden.orden);
+
+  const [isLoadingPage, setIsLoadingPage] = useState(true);
+
+  // ----------------------------------------------------------------------
+
+  useEffect(() => {
+    fetch(`http://opticapopular.somee.com/api/Pantallas/PantallasAccesos?role_Id=${JSON.parse(localStorage.getItem('usuario')).role_Id}&esAdmin=${JSON.parse(localStorage.getItem('usuario')).usua_EsAdmin}&pant_Nombre=ordenes`)
+      .then(response => response.json())
+      .then(data => {
+        if (data === 0) {
+          navigate(PATH_DASHBOARD.general.app);
+        } else {
+          setIsLoadingPage(false);
+        }
+      })
+      .catch(error => console.error(error));
+
+  }, [])
 
   useEffect(() => {
     dispatch(getOrdenes());
@@ -127,9 +145,9 @@ export default function OpticaOrdenes() {
 
   useEffect(() => {
     if (ordenId) {
-        dispatch(getOrden(ordenId));
+      dispatch(getOrden(ordenId));
     }
-}, [ordenId, dispatch]);
+  }, [ordenId, dispatch]);
 
   useEffect(() => {
     if (ordenes.length) {
@@ -179,6 +197,10 @@ export default function OpticaOrdenes() {
   const denseHeight = dense ? 60 : 80;
 
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
+
+  if(isLoadingPage){
+    return null;
+  }
 
   return (
     <Page title="Órdenes">

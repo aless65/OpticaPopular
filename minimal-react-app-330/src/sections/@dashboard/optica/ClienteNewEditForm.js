@@ -145,12 +145,11 @@ export default function ClienteNewEditForm({ isEdit, currentCliente }) {
         estacivi_Id: data.estadoCivil,
         clie_Telefono: data.telefono,
         clie_CorreoElectronico: data.email,
-        clie_UsuCreacion: 1,
-        clie_UsuModificacion: 1,
+        clie_UsuCreacion: JSON.parse(localStorage.getItem('usuario')).usua_Id,
+        clie_UsuModificacion: JSON.parse(localStorage.getItem('usuario')).usua_Id,
         dire_DireccionExacta: data.direccion,
         muni_Id: data.municipio,
       };
-     console.log(jsonData)
 
       if (isEdit) {
         fetch("https://localhost:44362/api/Clientes/Editar", {

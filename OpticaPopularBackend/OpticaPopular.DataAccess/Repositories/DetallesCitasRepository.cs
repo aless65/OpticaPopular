@@ -28,6 +28,17 @@ namespace OpticaPopular.DataAccess.Repositories
             return db.QueryFirst<tbDetallesCitas>(ScriptsDataBase.UDP_tbDetallesCitaPorIdCita, parametros, commandType: CommandType.StoredProcedure);
         }
 
+        public IEnumerable<tbDetallesCitas> FindLista(int? id)
+        {
+            using var db = new SqlConnection(OpticaPopularContext.ConnectionString);
+
+            var parametros = new DynamicParameters();
+
+            parametros.Add("@cita_Id", id, DbType.Int32, ParameterDirection.Input);
+
+            return db.Query<tbDetallesCitas>(ScriptsDataBase.UDP_tbDetallesCitaPorIdCita, parametros, commandType: CommandType.StoredProcedure);
+        }
+
         public RequestStatus Insert(tbDetallesCitas item)
         {
             using var db = new SqlConnection(OpticaPopularContext.ConnectionString);

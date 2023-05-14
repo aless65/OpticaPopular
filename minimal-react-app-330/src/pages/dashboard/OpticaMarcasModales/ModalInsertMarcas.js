@@ -76,7 +76,7 @@ export default function AddMarcaDialog({ open, onClose, marcas, setTableData }) 
     try {
       const jsonData = {
         marc_Nombre: data.nombre,
-        usua_IdCreacion: 1,
+        usua_IdCreacion: JSON.parse(localStorage.getItem('usuario')).usua_Id,
       };
 
       fetch("http://opticapopular.somee.com/api/Marcas/Insertar", {

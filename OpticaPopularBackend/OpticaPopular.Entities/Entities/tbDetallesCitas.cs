@@ -53,6 +53,9 @@ namespace OpticaPopular.Entities.Entities
         [NotMapped]
         public string clie_Apellidos { get; set; }
 
+        [NotMapped]
+        public int? orde_Id { get; set; }
+
         public virtual tbCitas cita { get; set; }
         public virtual tbUsuarios usua_IdCreacionNavigation { get; set; }
         public virtual tbUsuarios usua_IdModificacionNavigation { get; set; }

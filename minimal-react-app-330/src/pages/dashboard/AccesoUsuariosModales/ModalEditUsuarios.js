@@ -145,7 +145,7 @@ export default function EditUserDialog({ open, onClose, usuarios, setTableData, 
                 usua_EsAdmin: data.esAdmin,
                 role_Id: data.rol,
                 empe_Id: data.empleado,
-                usua_UsuModificacion: 1,
+                usua_UsuModificacion: JSON.parse(localStorage.getItem('usuario')).usua_Id,
             };
 
             fetch("http://opticapopular.somee.com/api/Usuarios/Editar", {

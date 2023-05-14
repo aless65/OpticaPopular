@@ -74,9 +74,26 @@ export default function AccesoRoles() {
     defaultOrderBy: 'role_Id',
   });
 
-  const { themeStretch } = useSettings();
-
   const navigate = useNavigate();
+
+  const [isLoadingPage, setIsLoadingPage] = useState(true);
+
+  useEffect(() => {
+    fetch(`http://opticapopular.somee.com/api/Pantallas/PantallasAccesos?role_Id=${JSON.parse(localStorage.getItem('usuario')).role_Id}&esAdmin=${JSON.parse(localStorage.getItem('usuario')).usua_EsAdmin}&pant_Nombre=roles`)
+      .then(response => response.json())
+      .then(data => {
+        if(data === 0){
+          console.log("nooooo");
+          navigate(PATH_DASHBOARD.general.app);
+        } else{
+          setIsLoadingPage(false);
+        }
+      })
+      .catch(error => console.error(error));
+
+  }, [])
+
+  const { themeStretch } = useSettings();
 
   const dispatch = useDispatch();
 
@@ -122,6 +139,10 @@ export default function AccesoRoles() {
     setTableData(deleteRows);
   };
 
+  const handleDetalle = (Id) => {
+    navigate(`/acceso/roles/Detalles/${Id}`, { replace: true });
+  }
+
   const handleEditRow = (id, nombre) => {
     setRoleId(id);
     setRoleNombre(nombre);
@@ -161,6 +182,10 @@ export default function AccesoRoles() {
   const denseHeight = dense ? 60 : 80;
 
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
+
+  if(isLoadingPage){
+    return null;
+  } 
 
   return (
     <Page title="Roles">
@@ -220,6 +245,7 @@ export default function AccesoRoles() {
                           onSelectRow={() => onSelectRow(row.role_Id)}
                           onDeleteRow={() => handleDeleteRow(row.role_Id)}
                           onEditRow={() => handleEditRow(row.role_Id, row.role_Nombre)}
+                          onDetalleRow={() => handleDetalle(row.role_Id)}
                         />
                       ) : (
                         !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />

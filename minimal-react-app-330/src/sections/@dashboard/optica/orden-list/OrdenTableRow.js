@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import { useState, useEffect } from 'react';
 import { sentenceCase } from 'change-case';
 // @mui
-import { MenuItem } from '@mui/material';
+import { MenuItem, Checkbox } from '@mui/material';
 import Box from '@mui/material/Box';
 import Collapse from '@mui/material/Collapse';
 import IconButton from '@mui/material/IconButton';
@@ -158,10 +158,11 @@ export default function OrdenTableRow({ row, selected, onEditRow, onSelectRow, o
                             <Table size="small" aria-label="purchases">
                                 <TableHead>
                                     <TableRow>
-                                        <TableCell>Id</TableCell>
                                         <TableCell>Aros</TableCell>
                                         <TableCell>Graduación (izquierdo)</TableCell>
                                         <TableCell>Graduación (derecho)</TableCell>
+                                        <TableCell>Transition</TableCell>
+                                        <TableCell>Luz azul</TableCell>
                                         <TableCell>Precio</TableCell>
                                         <TableCell>Cantidad</TableCell>
                                         <TableCell>Total</TableCell>
@@ -171,9 +172,6 @@ export default function OrdenTableRow({ row, selected, onEditRow, onSelectRow, o
                                     {detallesOrden.map((detalle) => (
                                         <TableRow key={detalle.deor_Id}>
                                             <TableCell component="th" scope="row">
-                                                {detalle.orde_Id === 0 ? '' : detalle.orde_Id}
-                                            </TableCell>
-                                            <TableCell component="th" scope="row">
                                                 {detalle.aros_Descripcion}
                                             </TableCell>
                                             <TableCell component="th" scope="row">
@@ -181,6 +179,13 @@ export default function OrdenTableRow({ row, selected, onEditRow, onSelectRow, o
                                             </TableCell>
                                             <TableCell component="th" scope="row">
                                                 {detalle.deor_GraduacionRight}
+                                            </TableCell>
+                                            <TableCell component="th" scope="row">
+                                                <Checkbox checked={detalle.deor_Transition} disabled={!detalle.deor_Transition} />
+                                            </TableCell>
+
+                                            <TableCell component="th" scope="row">
+                                                <Checkbox checked={detalle.deor_FiltroLuzAzul} disabled={!detalle.deor_FiltroLuzAzul} />
                                             </TableCell>
                                             <TableCell component="th" scope="row">
                                                 {detalle.deor_Precio}

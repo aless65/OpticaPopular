@@ -77,10 +77,6 @@ export default function GeneralApp() {
             <AppAreaInstalled />
           </Grid>
 
-          <Grid item xs={12} lg={8}>
-            <AppNewInvoice />
-          </Grid>
-
           <Grid item xs={12} md={6} lg={4}>
             <AppTopRelated />
           </Grid>

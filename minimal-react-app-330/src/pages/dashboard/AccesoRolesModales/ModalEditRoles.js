@@ -90,11 +90,10 @@ export default function EditRolDialog({ open, onClose, roles, setTableData, role
       const jsonData = {
         role_Id: roleId,
         role_Nombre: data.nombre,
-        role_UsuModificacion: 1,
+        role_UsuModificacion: JSON.parse(localStorage.getItem('usuario')).usua_Id,
         role_Pantallas: data.pantallas,
       };
 
-      console.log(jsonData);
 
       fetch("http://opticapopular.somee.com/api/Roles/Editar", {
         method: "PUT",

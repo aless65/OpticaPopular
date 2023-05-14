@@ -123,8 +123,8 @@ export default function ProveedorNewEditForm({ isEdit, currentProveedor }) {
         prov_Nombre: data.nombres,
         prov_CorreoElectronico: data.email,
         prov_Telefono: data.telefono,
-        prov_UsuCreacion: 1,
-        prov_UsuModificacion: 1,
+        prov_UsuCreacion: JSON.parse(localStorage.getItem('usuario')).usua_Id,
+        prov_UsuModificacion: JSON.parse(localStorage.getItem('usuario')).usua_Id,
         dire_DireccionExacta: data.direccion,
         muni_Id: data.municipio,
       };

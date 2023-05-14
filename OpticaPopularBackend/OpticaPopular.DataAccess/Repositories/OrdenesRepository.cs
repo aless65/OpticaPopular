@@ -36,6 +36,7 @@ namespace OpticaPopular.DataAccess.Repositories
 
             var parametros = new DynamicParameters();
             parametros.Add("@clie_Id", item.clie_Id, DbType.Int32, ParameterDirection.Input);
+            parametros.Add("@cita_Id", item.cita_Id, DbType.Int32, ParameterDirection.Input);
             parametros.Add("@orde_Fecha", item.orde_Fecha, DbType.Date, ParameterDirection.Input);
             parametros.Add("@orde_FechaEntrega", item.orde_FechaEntrega, DbType.Date, ParameterDirection.Input);
             parametros.Add("@sucu_Id", item.sucu_Id, DbType.Int32, ParameterDirection.Input);
@@ -60,6 +61,8 @@ namespace OpticaPopular.DataAccess.Repositories
             parametros.Add("@aros_Id", item.aros_Id, DbType.Int32, ParameterDirection.Input);
             parametros.Add("@deor_GraduacionLeft", item.deor_GraduacionLeft, DbType.String, ParameterDirection.Input);
             parametros.Add("@deor_GraduacionRight", item.deor_GraduacionRight, DbType.String, ParameterDirection.Input);
+            parametros.Add("@deor_Transition", item.deor_Transition, DbType.Boolean, ParameterDirection.Input);
+            parametros.Add("@deor_FiltroLuzAzul", item.deor_FiltroLuzAzul, DbType.Boolean, ParameterDirection.Input);
             parametros.Add("@deor_Cantidad", item.deor_Cantidad, DbType.Int32, ParameterDirection.Input);
             parametros.Add("@usua_IdCreacion", item.usua_IdCreacion, DbType.Int32, ParameterDirection.Input);
 
@@ -83,6 +86,14 @@ namespace OpticaPopular.DataAccess.Repositories
             using var db = new SqlConnection(OpticaPopularContext.ConnectionString);
             return db.Query<VW_tbOrdenes>(ScriptsDataBase.UDP_Lista_Ordenes, null, commandType: CommandType.StoredProcedure);
         }
+
+        public IEnumerable<GraficasOrdenesTop2Sucursales> GraficaXSucursales()
+        {
+            using var db = new SqlConnection(OpticaPopularContext.ConnectionString);
+
+            return db.Query<GraficasOrdenesTop2Sucursales>(ScriptsDataBase.UDP_Grafica_Ordenes, null, commandType: CommandType.StoredProcedure);
+        }
+
 
         public IEnumerable<VW_tbDetallesOrdenes> ListDetalles(int id)
         {

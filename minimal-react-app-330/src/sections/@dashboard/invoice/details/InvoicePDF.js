@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import { useState, useEffect } from 'react';
 import { Page, View, Text, Image, Document } from '@react-pdf/renderer';
 // utils
 import { fCurrency } from '../../../../utils/formatNumber';
@@ -27,14 +28,16 @@ export default function InvoicePDF({ invoice }) {
     subTotalPrice,
   } = invoice;
 
+  const [fechaActual, setFechaActual] = useState(new Date());
+
   return (
     <Document>
       <Page size="A4" style={styles.page}>
         <View style={[styles.gridContainer, styles.mb40]}>
           <Image source="/logo/logo_full.jpg" style={{ height: 32 }} />
           <View style={{ alignItems: 'flex-end', flexDirection: 'column' }}>
-            <Text style={styles.h3}>{status}</Text>
-            <Text> {invoiceNumber} </Text>
+            <Text style={styles.h3}>Citas finalizadas</Text>
+            <Text> { fDate(fechaActual) } </Text>
           </View>
         </View>
 

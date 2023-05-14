@@ -31,6 +31,14 @@ namespace OpticaPopular.API.Controllers
             return Ok(list);
         }
 
+        [HttpGet("Find")]
+        public IActionResult Find(int id)
+        {
+            var list = _accesoService.FindRoles(id);
+            return Ok(list);
+        }
+
+
         [HttpPost("Insertar")]
         public IActionResult Insert(RolViewModel rol)
         {

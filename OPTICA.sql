@@ -50,8 +50,10 @@ GO
 INSERT INTO acce.tbPantallas(pant_Nombre, pant_Url, pant_Menu, pant_Icon, pant_UsuCreacion)
 VALUES ('usuarios', '/acceso/usuarios', 'acceso', '<ManageAccountsIcon/>', 1),
        ('roles', '/acceso/roles', 'acceso', 'ICONS.kanban', 1),
+	   ('reporte citas', '/reportes/citas', 'reportes', 'SummarizeIcon', 1),
        ('empleados', '/optica/empleados', 'óptica', '<PeopleAltIcon/>', 1),
 	   ('clientes', '/optica/clientes', 'óptica', '<GroupIcon/>', 1),
+	   ('citas', '/optica/citas', 'óptica', 'CalendarMonthIcon', 1),
 	   ('proveedores', '/optica/proveedores', 'óptica', '<BusinessIcon/>', 1),
 	   ('ordenes', '/optica/ordenes', 'óptica', '<ShoppingBasketIcon/>', 1),
 	   ('marcas', '/optica/marcas', 'óptica', '<SellIcon/>', 1),
@@ -63,6 +65,8 @@ VALUES ('usuarios', '/acceso/usuarios', 'acceso', '<ManageAccountsIcon/>', 1),
 	   ('facturas', '/optica/facturas', 'óptica', '<DeskIcon/>', 1)
        --('Marca', '/Marca/Listado', 'Optica', 'marcasItem', 1)
 GO
+
+
 
 --***********CREACION TABLA ROLES/PANTALLA*****************---
 CREATE TABLE acce.tbPantallasPorRoles(

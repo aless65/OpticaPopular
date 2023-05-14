@@ -484,6 +484,21 @@ namespace OpticaPopular.BusinessLogic.Services
                 return resultado.Error(ex.Message);
             }
         }
+        public ServiceResult ListadoTerminadas(int cita_Id)
+        {
+            var resultado = new ServiceResult();
+
+            try
+            {
+                var respuesta = _detallesCitasRepository.FindLista(cita_Id);
+                return resultado.Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+
+                return resultado.Error(ex.Message);
+            }
+        }
 
         public ServiceResult InsertarDetalleCita(tbDetallesCitas item)
         {
@@ -564,6 +579,20 @@ namespace OpticaPopular.BusinessLogic.Services
             try
             {
                 var empleado = _empleadosRepository.Find(id);
+                return result.Ok(empleado);
+            }
+            catch (Exception e)
+            {
+                return result.Error(e.Message);
+            }
+        }
+
+        public ServiceResult GraficaSexoEmpleados()
+        {
+            var result = new ServiceResult();
+            try
+            {
+                var empleado = _empleadosRepository.GraficaSexo();
                 return result.Ok(empleado);
             }
             catch (Exception e)
@@ -732,6 +761,20 @@ namespace OpticaPopular.BusinessLogic.Services
         #endregion
 
         #region Ordenes
+        public ServiceResult GraficaOrdenes()
+        {
+            var result = new ServiceResult();
+            try
+            {
+                var list = _ordenesRepository.GraficaXSucursales();
+                return result.Ok(list);
+            }
+            catch (Exception e)
+            {
+                return result.Error(e.Message);
+            }
+        }
+
         public ServiceResult ListadoOrdenes()
         {
             var result = new ServiceResult();

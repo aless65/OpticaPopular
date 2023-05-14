@@ -48,6 +48,29 @@ export default function Envios() {
 
     const navigate = useNavigate();
 
+    const [isLoadingPage, setIsLoadingPage] = useState(true);
+
+
+    // ----------------------------------------------------------------------
+
+    useEffect(() => {
+        fetch(`http://opticapopular.somee.com/api/Pantallas/PantallasAccesos?role_Id=${JSON.parse(localStorage.getItem('usuario')).role_Id}&esAdmin=${JSON.parse(localStorage.getItem('usuario')).usua_EsAdmin}&pant_Nombre=envios`)
+            .then(response => response.json())
+            .then(data => {
+                if (data === 0) {
+                    navigate(PATH_DASHBOARD.general.app);
+                } else {
+                    setIsLoadingPage(false);
+                }
+            })
+            .catch(error => console.error(error));
+
+    }, [])
+
+    if (isLoadingPage) {
+        return null;
+    }
+
     return (
         <Page title="Envios">
             <Container maxWidth={themeStretch ? false : 'lg'}>
@@ -59,8 +82,8 @@ export default function Envios() {
                     ]}
                 />
 
-                
-                
+
+
             </Container>
         </Page>
     );

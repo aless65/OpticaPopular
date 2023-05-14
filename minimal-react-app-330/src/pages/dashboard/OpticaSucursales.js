@@ -96,6 +96,24 @@ export default function OpticaSucursales() {
 
   const [sucursalNombre, setsucursalNombre] = useState('');
 
+  const [isLoadingPage, setIsLoadingPage] = useState(true);
+
+  // ----------------------------------------------------------------------
+
+  useEffect(() => {
+    fetch(`http://opticapopular.somee.com/api/Pantallas/PantallasAccesos?role_Id=${JSON.parse(localStorage.getItem('usuario')).role_Id}&esAdmin=${JSON.parse(localStorage.getItem('usuario')).usua_EsAdmin}&pant_Nombre=sucursales`)
+      .then(response => response.json())
+      .then(data => {
+        if (data === 0) {
+          navigate(PATH_DASHBOARD.general.app);
+        } else {
+          setIsLoadingPage(false);
+        }
+      })
+      .catch(error => console.error(error));
+
+  }, [])
+
   useEffect(() => {
     dispatch(getSucursales());
   }, [dispatch]);
@@ -161,6 +179,10 @@ export default function OpticaSucursales() {
   const denseHeight = dense ? 60 : 80;
 
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
+
+  if(isLoadingPage){
+    return null;
+  }
 
   return (
     <Page title="Sucursales">

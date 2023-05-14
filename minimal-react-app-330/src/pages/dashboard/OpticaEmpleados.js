@@ -89,6 +89,25 @@ export default function OpticaEmpleados() {
 
   const [filterName, setFilterName] = useState('');
 
+  const [isLoadingPage, setIsLoadingPage] = useState(true);
+
+
+// ----------------------------------------------------------------------
+
+useEffect(() => {
+  fetch(`http://opticapopular.somee.com/api/Pantallas/PantallasAccesos?role_Id=${JSON.parse(localStorage.getItem('usuario')).role_Id}&esAdmin=${JSON.parse(localStorage.getItem('usuario')).usua_EsAdmin}&pant_Nombre=empleados`)
+    .then(response => response.json())
+    .then(data => {
+      if(data === 0){
+        navigate(PATH_DASHBOARD.general.app);
+      } else{
+        setIsLoadingPage(false);
+      }
+    })
+    .catch(error => console.error(error));
+
+}, [])
+
   useEffect(() => {
     dispatch(getEmpleados());
   }, [dispatch]);
@@ -136,6 +155,10 @@ export default function OpticaEmpleados() {
   const denseHeight = dense ? 60 : 80;
 
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
+
+  if(isLoadingPage){
+    return null;
+  }
 
   return (
     <Page title="Empleados">

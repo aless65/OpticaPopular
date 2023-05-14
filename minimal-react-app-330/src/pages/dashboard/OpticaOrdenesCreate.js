@@ -33,7 +33,7 @@ export default function OrdenCreate() {
 
   const orden = useSelector((state) => state.orden.orden);
 
-  const isEdit = pathname.includes('editar');
+  const isEdit = pathname.includes('editar') || false;
 
   useEffect(() => {
     if(isEdit){
@@ -58,7 +58,7 @@ export default function OrdenCreate() {
             { name: !isEdit ? 'Nueva orden' : 'Editar orden' },
           ]}
         />
-        <OrdenNewEditForm isEdit={isEdit} currentOrden={currentOrden} orden={name}/>
+        <OrdenNewEditForm isEdit={isEdit} currentOrden={currentOrden} orden={name} sucuId={localStorage.getItem('sucu_Id')}/>
       </Container>
     </Page>
   );

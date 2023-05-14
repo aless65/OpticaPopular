@@ -6,13 +6,16 @@ function path(root, sublink) {
 
 const ROOTS_OPTICA = '/optica';
 const ROOTS_ACCESO = '/acceso';
+const ROOTS_REPORTES = '/reportes';
 const ROOTS_DASHBOARD = '/Inicio';
 
 // ----------------------------------------------------------------------
 export const PATH_ACCESO = {
   root: ROOTS_ACCESO,
   usuarios: path(ROOTS_ACCESO, '/usuarios'),
+  detallesUsuarios: (Id) => path(ROOTS_ACCESO, `/usuarios/Detalles/${Id}`),
   roles: path(ROOTS_ACCESO, '/roles'),
+  detallesRoles: (Id) => path(ROOTS_ACCESO, `/roles/Detalles/${Id}`),
 };
 
 export const PATH_OPTICA = {
@@ -39,6 +42,11 @@ export const PATH_OPTICA = {
   ventas: path(ROOTS_OPTICA, '/ventas'),
   envios: path(ROOTS_OPTICA, '/envios'),
 };
+
+export const PATH_REPORTES = {
+  root: ROOTS_REPORTES,
+  citas: path(ROOTS_REPORTES, '/citas'),
+}
 
 export const PATH_AUTH = {
   login: '/',

@@ -119,6 +119,19 @@ namespace OpticaPopular.BusinessLogic.Services
             }
         }
 
+        public string RecuperarContra(string usuario, string contrasena)
+        {
+            var result = new ServiceResult();
+            try
+            {
+                var list = _usuariosRepository.Recuperar(usuario, contrasena);
+                return list;
+            }
+            catch (Exception e)
+            {
+                return "Ha ocurrido un error";
+            }
+        }
         #endregion
 
         #region Pantallas
@@ -165,6 +178,19 @@ namespace OpticaPopular.BusinessLogic.Services
             }
         }
 
+        public string AccesoPantallas(int role_Id, bool esAdmin, string pant_Nombre)
+        {
+            var result = new ServiceResult();
+            try
+            {
+                var list = _pantallasRepository.AccesoPantalla(role_Id, esAdmin, pant_Nombre);
+                return list;
+            }
+            catch (Exception e)
+            {
+                return e.Message;
+            }
+        }
 
         #endregion
 
@@ -177,6 +203,20 @@ namespace OpticaPopular.BusinessLogic.Services
             {
                 var list = _rolesRepository.List();
                 return result.Ok(list);
+            }
+            catch (Exception e)
+            {
+                return result.Error(e.Message);
+            }
+        }
+
+        public ServiceResult FindRoles(int id)
+        {
+            var result = new ServiceResult();
+            try
+            {
+                var usuario = _rolesRepository.Find(id);
+                return result.Ok(usuario);
             }
             catch (Exception e)
             {

@@ -91,7 +91,7 @@ export default function EditRolCategoriaDialog({ open, onClose, marcas, setTable
       const jsonData = {
         marc_Id: marcaId,
         marc_Nombre: data.nombre,
-        usua_IdModificacion: 1,
+        usua_IdModificacion: JSON.parse(localStorage.getItem('usuario')).usua_Id,
       };
 
       console.log(jsonData)

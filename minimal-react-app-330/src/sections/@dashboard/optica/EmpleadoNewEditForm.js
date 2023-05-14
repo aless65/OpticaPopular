@@ -159,8 +159,8 @@ export default function EmpleadoNewEditForm({ isEdit, currentEmpleado }) {
         muni_Id: data.municipio,
         carg_Id: data.cargo,
         sucu_Id: data.sucursal,
-        empe_UsuCreacion: 1,
-        empe_UsuModificacion: 1,
+        empe_UsuCreacion: JSON.parse(localStorage.getItem('usuario')).usua_Id,
+        empe_UsuModificacion: JSON.parse(localStorage.getItem('usuario')).usua_Id,
       };
 
       if (isEdit) {

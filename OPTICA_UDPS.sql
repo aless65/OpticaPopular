@@ -25,7 +25,28 @@ BEGIN
 END
 GO
 
+/*Cambiar Contrasena*/
+GO
+CREATE OR ALTER PROCEDURE acce.UDP_RecuperarContrasena
+	@usua_NombreUsuario	NVARCHAR(100),
+	@usua_Contrasena	NVARCHAR(100)
+AS
+BEGIN
+	DECLARE @usua_ContrasenaEncript NVARCHAR(MAX) = HASHBYTES('SHA2_512', @usua_Contrasena)
+	IF EXISTS (SELECT usua_NombreUsuario FROM acce.tbUsuarios WHERE usua_NombreUsuario = @usua_NombreUsuario)
+		BEGIN
+			UPDATE acce.tbUsuarios 
+			SET usua_Contrasena = @usua_ContrasenaEncript
+			WHERE usua_NombreUsuario = @usua_NombreUsuario
+		SELECT 'La contraseña ha sido cambiada exitosamente'
+	END
+	ELSE
+		BEGIN
+		SELECT 'El usuario no existe'
+	END
+END
 
+GO
 /*UDP para vista de usuarios*/
 CREATE OR ALTER PROCEDURE acce.UDP_VW_tbUsuarios
 	@usua_Id INT
@@ -2164,6 +2185,27 @@ ON T1.pant_Id = T5.pant_Id
 WHERE T1.pantrole_Estado = 1
 GO
 
+/*Acceso a pantallas*/
+GO
+CREATE OR ALTER PROCEDURE acce.UDP_tbRolesPorPantalla_Accesos
+	@role_Id		INT,
+	@esAdmin		BIT,
+	@pant_Nombre	NVARCHAR(100)
+AS
+BEGIN
+	IF @esAdmin = 1
+		SELECT 1
+	ELSE IF EXISTS (SELECT * 
+					FROM [acce].[tbPantallasPorRoles] T1 INNER JOIN acce.tbPantallas T2
+					ON T1.pant_Id = T2.pant_Id
+					WHERE T1.[role_Id] = @role_Id 
+					AND T2.pant_Nombre = @pant_Nombre)
+		SELECT 1
+	ELSE
+		SELECT 0
+END
+
+GO
 /*Listado de Pantallas*/
 CREATE OR ALTER PROCEDURE acce.UDP_acce_tbPantallas_List
 AS
@@ -2519,6 +2561,16 @@ BEGIN
 END
 GO
 
+/*Listado de roles find*/
+CREATE OR ALTER PROCEDURE acce.UDP_acce_tbRoles_Find
+	@role_Id	INT
+AS
+BEGIN
+	SELECT *
+	FROM acce.VW_tbRoles
+	WHERE role_Id = @role_Id
+END
+GO
 
 /*Insertar roles*/
 CREATE OR ALTER PROCEDURE acce.UDP_acce_tbRoles_Insert 
@@ -2556,7 +2608,7 @@ GO
 
 
 /*Editar roles*/
-CREATE OR ALTER PROCEDURE acce.UDP_acce_tbRoles_Update
+CREATE OR ALTER PROCEDURE acce.UDP_acce_tbRoles_Update 
 	@role_Id                  INT,
 	@role_Nombre              NVARCHAR(100),  
 	@role_UsuModificacion     INT
@@ -2582,7 +2634,8 @@ BEGIN
 		ELSE
 			UPDATE [acce].[tbRoles]
 			SET role_Estado = 1,
-			    role_UsuModificacion = @role_UsuModificacion
+			    role_UsuModificacion = @role_UsuModificacion,
+				[role_FechaModificacion] = GETDATE()
 			WHERE role_Nombre = @role_Nombre
 
 			SELECT 'El rol ha sido editado con éxito'
@@ -2725,49 +2778,94 @@ BEGIN
 END
 GO
 
-CREATE OR ALTER PROCEDURE opti.UDP_tbCitas_BuscarCitaPorId
+CREATE OR ALTER PROCEDURE opti.UDP_tbCitas_BuscarCitaPorId 
 	@cita_Id	INT
 AS
 BEGIN
-	SELECT tb1.[cita_Id],
-		   tb1.[clie_Id],
-		   tb2.clie_Nombres,
-		   tb2.clie_Apellidos,
-		   tb1.[cons_Id],
-		   tb3.cons_Nombre,
-		   [cita_Fecha],
-		   tb6.empe_Id,
-		   tb6.empe_Nombres,
-		   tb6.empe_Apellidos,
-		   tb6.sucu_Id,
-		   tb7.sucu_Descripcion,
-		   tb8.deci_Id,
-		   tb8.deci_Costo,
-		   tb8.deci_HoraInicio,
-		   tb8.deci_HoraFin,
-		   tb1.usua_IdCreacion,
-		   tb4.usua_NombreUsuario AS usua_NombreCreacion,
-		   tb1.cita_FechaCreacion,
-		   tb1.usua_IdModificacion,
-		   tb5.usua_NombreUsuario AS usua_NombreModificacion,
-		   tb1.cita_FechaModificacion
-	 FROM [opti].[tbCitas] tb1
-	 LEFT JOIN [opti].[tbClientes] tb2
-	 ON tb1.clie_Id = tb2.clie_Id
-	 LEFT JOIN [opti].[tbConsultorios] tb3
-	 ON tb1.cons_Id = tb3.cons_Id
-	 LEFT JOIN [acce].[tbUsuarios] tb4
-	 ON tb1.usua_IdCreacion = tb4.usua_Id
-	 LEFT JOIN [acce].[tbUsuarios] tb5
-	 ON tb1.usua_IdModificacion = tb5.usua_Id
-	 LEFT JOIN [opti].[tbEmpleados] tb6
-	 ON tb3.empe_Id = tb6.empe_Id
-	 LEFT JOIN [opti].[tbSucursales] tb7
-	 ON tb6.sucu_Id = tb7.sucu_Id
-	 LEFT JOIN [opti].[tbDetallesCitas] tb8
-	 ON tb1.cita_Id = tb8.cita_Id
-	 WHERE tb1.cita_Id = @cita_Id
-	 AND [cita_Estado] = 1
+	IF @cita_Id > 0
+	BEGIN
+		SELECT tb1.[cita_Id],
+			   tb1.[clie_Id],
+			   tb2.clie_Nombres,
+			   tb2.clie_Apellidos,
+			   tb1.[cons_Id],
+			   tb3.cons_Nombre,
+			   [cita_Fecha],
+			   tb6.empe_Id,
+			   tb6.empe_Nombres,
+			   tb6.empe_Apellidos,
+			   tb6.sucu_Id,
+			   tb7.sucu_Descripcion,
+			   tb8.deci_Id,
+			   tb8.deci_Costo,
+			   tb8.deci_HoraInicio,
+			   tb8.deci_HoraFin,
+			   tb1.usua_IdCreacion,
+			   tb4.usua_NombreUsuario AS usua_NombreCreacion,
+			   tb1.cita_FechaCreacion,
+			   tb1.usua_IdModificacion,
+			   tb5.usua_NombreUsuario AS usua_NombreModificacion,
+			   tb1.cita_FechaModificacion
+		 FROM [opti].[tbCitas] tb1
+		 LEFT JOIN [opti].[tbClientes] tb2
+		 ON tb1.clie_Id = tb2.clie_Id
+		 LEFT JOIN [opti].[tbConsultorios] tb3
+		 ON tb1.cons_Id = tb3.cons_Id
+		 LEFT JOIN [acce].[tbUsuarios] tb4
+		 ON tb1.usua_IdCreacion = tb4.usua_Id
+		 LEFT JOIN [acce].[tbUsuarios] tb5
+		 ON tb1.usua_IdModificacion = tb5.usua_Id
+		 LEFT JOIN [opti].[tbEmpleados] tb6
+		 ON tb3.empe_Id = tb6.empe_Id
+		 LEFT JOIN [opti].[tbSucursales] tb7
+		 ON tb6.sucu_Id = tb7.sucu_Id
+		 LEFT JOIN [opti].[tbDetallesCitas] tb8
+		 ON tb1.cita_Id = tb8.cita_Id
+		 WHERE tb1.cita_Id = @cita_Id
+		 AND [cita_Estado] = 1
+	 END
+	 ELSE
+	 BEGIN
+			SELECT tb1.[cita_Id],
+			   tb1.[clie_Id],
+			   tb2.clie_Nombres,
+			   tb2.clie_Apellidos,
+			   tb1.[cons_Id],
+			   tb3.cons_Nombre,
+			   [cita_Fecha],
+			   tb6.empe_Id,
+			   tb6.empe_Nombres,
+			   tb6.empe_Apellidos,
+			   tb6.sucu_Id,
+			   tb7.sucu_Descripcion,
+			   tb8.deci_Id,
+			   tb8.deci_Costo,
+			   tb8.deci_HoraInicio,
+			   tb8.deci_HoraFin,
+			   tb1.usua_IdCreacion,
+			   tb4.usua_NombreUsuario AS usua_NombreCreacion,
+			   tb1.cita_FechaCreacion,
+			   tb1.usua_IdModificacion,
+			   tb5.usua_NombreUsuario AS usua_NombreModificacion,
+			   tb1.cita_FechaModificacion
+		 FROM [opti].[tbCitas] tb1
+		 LEFT JOIN [opti].[tbClientes] tb2
+		 ON tb1.clie_Id = tb2.clie_Id
+		 LEFT JOIN [opti].[tbConsultorios] tb3
+		 ON tb1.cons_Id = tb3.cons_Id
+		 LEFT JOIN [acce].[tbUsuarios] tb4
+		 ON tb1.usua_IdCreacion = tb4.usua_Id
+		 LEFT JOIN [acce].[tbUsuarios] tb5
+		 ON tb1.usua_IdModificacion = tb5.usua_Id
+		 LEFT JOIN [opti].[tbEmpleados] tb6
+		 ON tb3.empe_Id = tb6.empe_Id
+		 LEFT JOIN [opti].[tbSucursales] tb7
+		 ON tb6.sucu_Id = tb7.sucu_Id
+		 LEFT JOIN [opti].[tbDetallesCitas] tb8
+		 ON tb1.cita_Id = tb8.cita_Id
+		 WHERE [cita_Estado] = 1
+		 AND tb8.deci_HoraFin IS NOT NULL
+	 END
 END
 GO
 
@@ -2817,22 +2915,43 @@ AS
 GO
 
 /*Listado de detalles citas*/
-CREATE OR ALTER PROCEDURE opti.UDP_tbDetallesCitaPorIdCita
+CREATE OR ALTER PROCEDURE opti.UDP_tbDetallesCitaPorIdCita 
 	@cita_Id INT
 AS
 BEGIN
+	IF @cita_Id > 0
+		BEGIN
 		SELECT *
-		FROM opti.VW_tbDetallesCitas tb1
-		INNER JOIN opti.tbCitas tb2 
-		ON tb1.cita_Id = tb2.cita_Id
-		LEFT JOIN opti.tbConsultorios tb3
-		ON tb2.cons_Id = tb3.cons_Id
-		LEFT JOIN opti.tbEmpleados tb4
-		ON tb3.empe_Id = tb4.empe_Id
-		LEFT JOIN opti.tbSucursales tb5
-		ON tb4.sucu_Id = tb5.sucu_Id
-		WHERE tb2.cita_Id = @cita_Id
-		AND [deci_Estado] = 1
+			FROM opti.VW_tbDetallesCitas tb1
+			INNER JOIN opti.tbCitas tb2 
+			ON tb1.cita_Id = tb2.cita_Id
+			LEFT JOIN opti.tbConsultorios tb3
+			ON tb2.cons_Id = tb3.cons_Id
+			LEFT JOIN opti.tbEmpleados tb4
+			ON tb3.empe_Id = tb4.empe_Id
+			LEFT JOIN opti.tbSucursales tb5
+			ON tb4.sucu_Id = tb5.sucu_Id LEFT JOIN opti.tbClientes tb6
+			ON tb2.clie_Id = tb6.clie_Id
+			WHERE tb2.cita_Id = @cita_Id
+			AND [deci_Estado] = 1
+		END
+	ELSE
+		BEGIN
+			SELECT *
+			FROM opti.VW_tbDetallesCitas tb1
+			INNER JOIN opti.tbCitas tb2 
+			ON tb1.cita_Id = tb2.cita_Id
+			LEFT JOIN opti.tbConsultorios tb3
+			ON tb2.cons_Id = tb3.cons_Id
+			LEFT JOIN opti.tbEmpleados tb4
+			ON tb3.empe_Id = tb4.empe_Id
+			LEFT JOIN opti.tbSucursales tb5
+			ON tb4.sucu_Id = tb5.sucu_Id LEFT JOIN opti.tbClientes tb6
+			ON tb2.clie_Id = tb6.clie_Id LEFT JOIN opti.tbOrdenes tb7
+			ON TB1.cita_Id = tb7.orde_Id
+			AND [deci_Estado] = 1
+		END
+		
 END
 GO
 
@@ -2911,6 +3030,7 @@ CREATE OR ALTER VIEW opti.VW_tbOrdenes
 AS
 	SELECT  orde_Id,
 	        T1.clie_Id,
+			T1.cita_Id,
 			(T4.clie_Nombres + ' ' + T4.clie_Apellidos) AS clie_NombreCompleto,
 		    orde_Fecha, 
 			orde_FechaEntrega, 
@@ -2918,18 +3038,41 @@ AS
 			T1.sucu_Id,
 			T5.sucu_Descripcion, 
 			orde_Estado, 
-			usua_IdCreacion, 
+			t1.usua_IdCreacion, 
 			orde_FechaCreacion, 
-			usua_IdModificacion, 
+			t1.usua_IdModificacion, 
 			orde_FechaModificacion 
 FROM opti.tbOrdenes t1 INNER JOIN acce.tbUsuarios t2
 ON t1.usua_IdCreacion = t2.usua_Id LEFT JOIN acce.tbUsuarios t3
-ON t1.usua_IdModificacion = t3.usua_Id INNER JOIN opti.tbClientes T4
-ON T1.clie_Id = T4.clie_Id INNER JOIN opti.tbSucursales T5
-ON T1.sucu_Id = T5.sucu_Id
+ON t1.usua_IdModificacion = t3.usua_Id LEFT JOIN opti.tbClientes T4
+ON T1.clie_Id = T4.clie_Id LEFT JOIN opti.tbSucursales T5
+ON T1.sucu_Id = T5.sucu_Id 
 GO
 
 
+/*grafica ordenes top 2 sucursales*/
+go
+CREATE OR ALTER PROCEDURE opti.Grafica_Ordenes_Sucursales
+AS
+BEGIN
+		SELECT sucu_Descripcion AS name,
+		   SUM(CASE WHEN DATEPART(month, orde_Fecha) = 1 THEN 1 ELSE 0 END) AS Jan,
+		   SUM(CASE WHEN DATEPART(month, orde_Fecha) = 2 THEN 1 ELSE 0 END) AS Feb,
+		   SUM(CASE WHEN DATEPART(month, orde_Fecha) = 3 THEN 1 ELSE 0 END) AS Mar,
+		   SUM(CASE WHEN DATEPART(month, orde_Fecha) = 4 THEN 1 ELSE 0 END) AS Apr,
+		   SUM(CASE WHEN DATEPART(month, orde_Fecha) = 5 THEN 1 ELSE 0 END) AS May,
+		   SUM(CASE WHEN DATEPART(month, orde_Fecha) = 6 THEN 1 ELSE 0 END) AS Jun,
+		   SUM(CASE WHEN DATEPART(month, orde_Fecha) = 7 THEN 1 ELSE 0 END) AS Jul,
+		   SUM(CASE WHEN DATEPART(month, orde_Fecha) = 8 THEN 1 ELSE 0 END) AS Aug,
+		   SUM(CASE WHEN DATEPART(month, orde_Fecha) = 9 THEN 1 ELSE 0 END) AS Sep
+	FROM opti.VW_tbOrdenes
+	GROUP BY sucu_Descripcion
+	ORDER BY COUNT(orde_Id) DESC
+	OFFSET 0 ROWS
+	FETCH NEXT 2 ROWS ONLY;
+END
+
+GO
 /*Listado de Ordenes*/
 CREATE OR ALTER PROCEDURE opti.UDP_opti_tbOrdenes_List
 AS
@@ -2941,22 +3084,28 @@ END
 GO
 
 /*Listado de Ordenes x sucursal*/
-CREATE OR ALTER PROCEDURE opti.UDP_opti_tbOrdenes_ListXSucu
+CREATE OR ALTER PROCEDURE opti.UDP_opti_tbOrdenes_ListXSucu 
 	@sucu_Id	INT
 AS
 BEGIN
 	IF @sucu_Id > 0
 		BEGIN
-			SELECT *
-			FROM opti.VW_tbOrdenes
+			SELECT *,
+				  (t3.clie_Nombres + ' ' + t3.clie_Apellidos) AS clie_NombreCompleto
+			FROM opti.VW_tbOrdenes T1 LEFT JOIN opti.tbCitas T2
+			ON T1.cita_Id = T2.cita_Id LEFT JOIN opti.tbClientes T3
+			ON T2.clie_Id = T3.clie_Id
 			WHERE orde_Estado = 1
 			AND sucu_Id = @sucu_Id
 		END
 	ELSE
 		BEGIN
-		SELECT *
-				FROM opti.VW_tbOrdenes
-				WHERE orde_Estado = 1
+			SELECT *,
+				 (t3.clie_Nombres + ' ' + t3.clie_Apellidos) AS clie_NombreCompleto
+			FROM opti.VW_tbOrdenes T1 LEFT JOIN opti.tbCitas T2
+			ON T1.cita_Id = T2.cita_Id LEFT JOIN opti.tbClientes T3
+			ON T2.clie_Id = T3.clie_Id
+			WHERE orde_Estado = 1
 	
 		END
 END
@@ -2977,8 +3126,9 @@ GO
 
 
 /*Insertar Ordenes*/
-CREATE OR ALTER PROCEDURE opti.UDP_opti_tbOrdenes_Insert 
+CREATE OR ALTER PROCEDURE opti.UDP_opti_tbOrdenes_Insert
 	 @clie_Id               INT, 
+	 @cita_Id				INT,
 	 @orde_Fecha            DATE, 
 	 @orde_FechaEntrega     DATE, 
 	 @sucu_Id               INT, 
@@ -2987,8 +3137,18 @@ AS
 BEGIN
 	BEGIN TRY
 			BEGIN
-			INSERT INTO [opti].[tbOrdenes](clie_Id, orde_Fecha, orde_FechaEntrega, sucu_Id, usua_IdCreacion)
-			VALUES(@clie_Id, @orde_Fecha, @orde_FechaEntrega, @sucu_Id, @usua_IdCreacion)
+			IF @clie_Id < 1 OR @clie_Id IS NULL
+				BEGIN
+					SET @clie_Id = NULL
+				END
+
+			IF @cita_Id < 1 OR @cita_Id IS NULL
+				BEGIN
+					SET @cita_Id = NULL
+				END
+
+			INSERT INTO [opti].[tbOrdenes](clie_Id, cita_Id, orde_Fecha, orde_FechaEntrega, sucu_Id, usua_IdCreacion)
+			VALUES(@clie_Id, @cita_Id, @orde_Fecha, @orde_FechaEntrega, @sucu_Id, @usua_IdCreacion)
 			
 			SELECT SCOPE_IDENTITY()
 			END
@@ -3008,24 +3168,21 @@ GO
 
 /*Editar Ordenes*/
 CREATE OR ALTER PROCEDURE opti.UDP_opti_tbOrdenes_Update
-	@orde_Id				INT, 
-	@clie_Id				INT, 
-	@orde_Fecha				DATE, 
+	@orde_Id				INT,  
 	@orde_FechaEntrega		DATE, 
-	@orde_FechaEntregaReal	DATE, 
-	@sucu_Id				INT, 
+	@orde_FechaEntregaReal	DATE,  
 	@usua_IdModificacion	INT
 AS
 BEGIN 
 	BEGIN TRY
 		BEGIN			
 			UPDATE  [opti].[tbOrdenes] 
-			SET 	clie_Id = @clie_Id,
-					orde_FechaEntrega = @orde_FechaEntrega,
-					sucu_Id = @sucu_Id,
+			SET 	orde_FechaEntrega = @orde_FechaEntrega,
+					orde_FechaEntregaReal = @orde_FechaEntregaReal,
 					usua_IdModificacion = usua_IdModificacion,
                     orde_FechaModificacion = GETDATE()
 			WHERE 	orde_Id  = @orde_Id 
+
 			SELECT 'La orden ha sido editada con éxito'
 		  END
 	END TRY
@@ -3042,7 +3199,7 @@ CREATE OR ALTER PROCEDURE opti.UDP_opti_tbOrdenes_Delete
 AS
 BEGIN
 	BEGIN TRY
-		IF NOT EXISTS (SELECT * FROM opti.tbFacturasDetalles WHERE orde_Id  = @orde_Id )
+		IF NOT EXISTS (SELECT * FROM opti.tbDetallesFactura WHERE orde_Id  = @orde_Id )
 			BEGIN
 				UPDATE [opti].[tbOrdenes]
 				SET [orde_Estado] = 0
@@ -3070,7 +3227,9 @@ AS
 		   T1.aros_Id, 
 		   T2.aros_Descripcion,
 		   deor_GraduacionLeft, 
-		   deor_GraduacionRight, 
+		   deor_GraduacionRight,
+		   deor_Transition,
+		   deor_FiltroLuzAzul,
 		   deor_Precio, 
 		   deor_Cantidad, 
 		   deor_Total, 
@@ -3104,32 +3263,52 @@ CREATE OR ALTER PROCEDURE opti.UDP_opti_tbDetallesOrdenes_Insert
 	@deor_GraduacionLeft		NVARCHAR(10), 
 	@deor_GraduacionRight		NVARCHAR(10), 
 	@deor_Cantidad				INT, 
+	@deor_Transition			BIT,
+	@deor_FiltroLuzAzul			BIT,
 	@usua_IdCreacion			INT
 AS
 BEGIN
 	BEGIN TRY
 		DECLARE @aros_Unitario DECIMAL(18,2) = (SELECT [aros_CostoUni] FROM [opti].[tbAros] WHERE [aros_Id] = @aros_Id)
 
-		DECLARE @deor_Precio DECIMAL (18,2) = (@aros_Unitario + (@aros_Unitario * 0.20))
+		DECLARE @deor_Precio DECIMAL (18,2)
+
+		IF @deor_GraduacionLeft IS NOT NULL OR @deor_GraduacionRight IS NOT NULL
+			SET @deor_Precio = (@aros_Unitario + (@aros_Unitario * 0.20))
+		ELSE
+			SET @deor_Precio = @aros_Unitario
+
+		IF @deor_Transition > 0
+			SET @deor_Precio = (@deor_Precio + 200)
+
+		IF @deor_FiltroLuzAzul > 0
+			SET @deor_Precio = (@deor_Precio + 200)
+
 
 		DECLARE @IVA DECIMAL (18,2) = (@deor_Precio * 0.15)
 
 		DECLARE @deor_Total DECIMAL (18,2) = ((@deor_Precio + @IVA) * @deor_Cantidad)
 
-		IF EXISTS (SELECT * FROM [opti].[tbDetallesOrdenes] WHERE aros_Id = @aros_Id AND deor_GraduacionLeft = @deor_GraduacionLeft AND deor_GraduacionRight = @deor_GraduacionRight)
+		IF EXISTS (SELECT * FROM [opti].[tbDetallesOrdenes] 
+					WHERE aros_Id = @aros_Id 
+					AND deor_GraduacionLeft = @deor_GraduacionLeft 
+					AND deor_GraduacionRight = @deor_GraduacionRight
+					AND deor_FiltroLuzAzul = @deor_FiltroLuzAzul
+					AND deor_Transition = @deor_Transition)
 			BEGIN 
 				UPDATE [opti].[tbDetallesOrdenes]
 				SET deor_Cantidad = (deor_Cantidad + @deor_Cantidad),
 					deor_Total = deor_Total + @deor_Total
-				WHERE aros_Id = @aros_Id AND deor_GraduacionLeft = @deor_GraduacionLeft AND deor_GraduacionRight = @deor_GraduacionRight
+				WHERE aros_Id = @aros_Id AND deor_GraduacionLeft = @deor_GraduacionLeft AND deor_GraduacionRight = @deor_GraduacionRight AND deor_FiltroLuzAzul = @deor_FiltroLuzAzul
+					AND deor_Transition = @deor_Transition
 
 				SELECT 'El detalle ha sido ingresado con éxito'
 			END
 		ELSE
 			BEGIN
 
-				INSERT INTO [opti].[tbDetallesOrdenes](orde_Id, aros_Id, deor_GraduacionLeft, deor_GraduacionRight, deor_Precio, deor_Cantidad, deor_Total, usua_IdCreacion)
-				VALUES(@orde_Id, @aros_Id, @deor_GraduacionLeft, @deor_GraduacionRight, @deor_Precio, @deor_Cantidad, @deor_Total, @usua_IdCreacion)
+				INSERT INTO [opti].[tbDetallesOrdenes](orde_Id, aros_Id, deor_GraduacionLeft, deor_GraduacionRight, deor_Transition, deor_FiltroLuzAzul, deor_Precio, deor_Cantidad, deor_Total, usua_IdCreacion)
+				VALUES(@orde_Id, @aros_Id, @deor_GraduacionLeft, @deor_GraduacionRight, @deor_Transition, @deor_FiltroLuzAzul, @deor_Precio, @deor_Cantidad, @deor_Total, @usua_IdCreacion)
 
 				SELECT 'El detalle ha sido ingresado con éxito'
 			END
@@ -3240,3 +3419,12 @@ BEGIN
 	FROM [gral].tbDepartamentos
 	WHERE depa_Estado = 1
 END
+
+
+---------- Gráficas -----------
+
+GO
+CREATE OR ALTER PROCEDURE opti.Grafica_Sexo
+AS
+SELECT ( SELECT COUNT(empe_Sexo) FROM opti.tbEmpleados where empe_Sexo = 'M' group by empe_Sexo ) Masculino,
+		( SELECT COUNT(empe_Sexo) FROM opti.tbEmpleados where empe_Sexo = 'F' group by empe_Sexo ) Femenino

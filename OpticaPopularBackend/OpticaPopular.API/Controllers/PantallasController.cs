@@ -42,5 +42,12 @@ namespace OpticaPopular.API.Controllers
             var list = _accesoService.ListadoPantallasXRoles(id);
             return Ok(list);
         }
+
+        [HttpGet("PantallasAccesos")]
+        public IActionResult PantallasAccesos(int role_Id, bool esAdmin, string pant_Nombre)
+        {
+            var list = _accesoService.AccesoPantallas(role_Id, esAdmin, pant_Nombre);
+            return Ok(list);
+        }
     }
 }

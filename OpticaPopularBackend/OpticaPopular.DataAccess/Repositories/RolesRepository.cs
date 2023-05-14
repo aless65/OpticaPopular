@@ -37,7 +37,14 @@ namespace OpticaPopular.DataAccess.Repositories
 
         public VW_tbRoles Find(int? id)
         {
-            throw new NotImplementedException();
+            RequestStatus result = new RequestStatus();
+
+            using var db = new SqlConnection(OpticaPopularContext.ConnectionString);
+
+            var parametros = new DynamicParameters();
+            parametros.Add("@role_Id", id, DbType.Int32, ParameterDirection.Input);
+
+            return db.QueryFirst<VW_tbRoles>(ScriptsDataBase.UDP_Find_Roles, parametros, commandType: CommandType.StoredProcedure);
         }
 
         public RequestStatus Insert(tbRoles item)

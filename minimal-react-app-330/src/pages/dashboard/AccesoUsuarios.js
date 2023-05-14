@@ -87,7 +87,7 @@ export default function AccesoUsuarios() {
   const [tableData, setTableData] = useState([]);
 
   const [filterName, setFilterName] = useState('');
-    
+
   const [usuaId, setUsuaId] = useState('');
 
   const [openAddUserDialog, setOpenAddUserDialog] = useState(false);
@@ -98,39 +98,48 @@ export default function AccesoUsuarios() {
 
   const [insertSuccess, setInsertSuccess] = useState(false);
 
-// ----------------------------------------------------------------------
+  const [isLoadingPage, setIsLoadingPage] = useState(true);
 
-function applySortFilter({ tableData, comparator, filterName }) {
-  const stabilizedThis = tableData.map((el, index) => [el, index]);
 
-  stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) return order;
-    return a[1] - b[1];
-  });
+  // ----------------------------------------------------------------------
 
-  tableData = stabilizedThis.map((el) => el[0]);
+  useEffect(() => {
+    fetch(`http://opticapopular.somee.com/api/Pantallas/PantallasAccesos?role_Id=${JSON.parse(localStorage.getItem('usuario')).role_Id}&esAdmin=${JSON.parse(localStorage.getItem('usuario')).usua_EsAdmin}&pant_Nombre=usuarios`)
+      .then(response => response.json())
+      .then(data => {
+        if (data === 0) {
+          console.log("nooooo");
+          navigate(PATH_DASHBOARD.general.app);
+        } else {
+          setIsLoadingPage(false);
+        }
+      })
+      .catch(error => console.error(error));
 
-  // if (filterName) {
-  //   tableData = tableData.filter((item) => 
-  //     Object.values(item).some(
-  //       (value) => 
-  //         value && value.toString().toLowerCase().indexOf(filterName.toLowerCase()) !== -1
-  //     )
-  //   );
-  // }
+  }, [])
 
-  if (filterName) {
-    tableData = tableData.filter((item) =>
-      item.usua_NombreUsuario.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 ||
-      item.empe_NombreCompleto.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 ||
-      item.role_Nombre.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
-    );
+  function applySortFilter({ tableData, comparator, filterName }) {
+    const stabilizedThis = tableData.map((el, index) => [el, index]);
+
+    stabilizedThis.sort((a, b) => {
+      const order = comparator(a[0], b[0]);
+      if (order !== 0) return order;
+      return a[1] - b[1];
+    });
+
+    tableData = stabilizedThis.map((el) => el[0]);
+
+    if (filterName) {
+      tableData = tableData.filter((item) =>
+        item.usua_NombreUsuario.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 ||
+        item.empe_NombreCompleto.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 ||
+        item.role_Nombre.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
+      );
+    }
+
+
+    return tableData;
   }
-
-
-  return tableData;
-}
 
 
   useEffect(() => {
@@ -158,6 +167,10 @@ function applySortFilter({ tableData, comparator, filterName }) {
     setSelected([]);
     setTableData(deleteRows);
   };
+
+  const handleDetalle = (Id) => {
+    navigate(`/acceso/usuarios/Detalles/${Id}`, { replace: true });
+  }
 
   // useEffect(() => {
   //   console.log(usuaId);
@@ -197,10 +210,14 @@ function applySortFilter({ tableData, comparator, filterName }) {
   const handleCloseDeleteUserDialog = () => {
     setOpenDeleteUserDialog(false);
   }
-  
+
   const denseHeight = dense ? 60 : 80;
 
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
+
+  if (isLoadingPage) {
+    return null;
+  }
 
   return (
     <Page title="Usuarios">
@@ -262,6 +279,7 @@ function applySortFilter({ tableData, comparator, filterName }) {
                           onSelectRow={() => onSelectRow(row.usua_Id)}
                           onDeleteRow={() => handleDeleteRow(row.usua_Id)}
                           onEditRow={() => handleEditRow(row.usua_Id)}
+                          onDetalleRow={() => handleDetalle(row.usua_Id)}
                         />
                       ) : (
                         !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
@@ -288,7 +306,7 @@ function applySortFilter({ tableData, comparator, filterName }) {
             />
 
             <FormControlLabel
-              control={<Switch checked={dense} onChange={onChangeDense}  />}
+              control={<Switch checked={dense} onChange={onChangeDense} />}
               label="Denso"
               sx={{ px: 3, py: 1.5, top: 0, position: { md: 'absolute' } }}
             />

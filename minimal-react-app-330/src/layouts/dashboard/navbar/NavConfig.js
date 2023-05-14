@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 // import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 // import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 // import GroupIcon from '@mui/icons-material/Group';
-// import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 // import ShoppingBasketIcon from '@mui/icons-material/ShoppingBasket';
 // import BusinessIcon from '@mui/icons-material/Business';
 // import SellIcon from '@mui/icons-material/Sell';
@@ -14,7 +14,7 @@ import { useEffect, useState } from 'react';
 // import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 
 // routes
-import { PATH_ACCESO, PATH_DASHBOARD, PATH_OPTICA } from '../../../routes/paths';
+import { PATH_ACCESO, PATH_DASHBOARD, PATH_OPTICA, PATH_REPORTES } from '../../../routes/paths';
 // components
 import Label from '../../../components/Label';
 import SvgIconStyle from '../../../components/SvgIconStyle';
@@ -44,17 +44,17 @@ const ICONS = {
 
 const fetchPantallasData = async () => {
   try {
-    console.log("entra");
+    // console.log("entra");
     const response = await fetch(`http://opticapopular.somee.com/api/Pantallas/ListadoMenu?esAdmin=${JSON.parse(localStorage.getItem('usuario')).usua_EsAdmin}&role_Id=${JSON.parse(localStorage.getItem('usuario')).role_Id}`, {
       headers: {
         'Content-Type': 'application/json',
       },
     });
     const data = await response.json();
-    console.log(data);
+    // console.log(data);
 
     const menuAcceso = data.data.filter((item) => item.pant_Menu === 'acceso');
-    console.log(menuAcceso);
+    // console.log(menuAcceso);
 
     const extractedDataAcceso = menuAcceso.map((item) => {
       // Extract the specific data you need from each item
@@ -65,7 +65,7 @@ const fetchPantallasData = async () => {
         icon: getIcon(item.pant_Icon),
       };
     });
-    console.log(extractedDataAcceso);
+    // console.log(extractedDataAcceso);
 
     if (extractedDataAcceso.length > 0) {
       console.log("hay acceso");
@@ -86,8 +86,43 @@ const fetchPantallasData = async () => {
       }
     }
 
+  // ------------------------------------------
+
+    const menuReportes = data.data.filter((item) => item.pant_Menu === 'reportes');
+
+    const extractedDataReportes = menuReportes.map((item) => {
+      // Extract the specific data you need from each item
+      // For example:
+      return {
+        title: item.pant_Nombre,
+        path: item.pant_Url,
+        icon: getIcon(item.pant_Icon),
+      };
+    });
+
+    if (extractedDataReportes.length > 0) {
+      // console.log("hay optica");
+      const opticaSectionIndex = navConfig.findIndex((section) => section.subheader === 'reportes');
+      if (opticaSectionIndex !== -1) {
+        navConfig[opticaSectionIndex].items = extractedDataReportes;
+      } else {
+        navConfig.push({
+          subheader: 'reportes',
+          items: extractedDataReportes,
+        });
+      }
+    } else {
+      // Remove the "reportes" section if extractedDataReportes is empty
+      const opticaSectionIndex = navConfig.findIndex((section) => section.subheader === 'reportes');
+      if (opticaSectionIndex !== -1) {
+        navConfig.splice(opticaSectionIndex, 1);
+      }
+    }
+
+    // -----------------------------------------------
+
     const menuOptica = data.data.filter((item) => item.pant_Menu === 'óptica');
-    console.log(menuOptica);
+    // console.log(menuOptica);
 
     const extractedDataOptica = menuOptica.map((item) => {
       // Extract the specific data you need from each item
@@ -100,7 +135,7 @@ const fetchPantallasData = async () => {
     });
 
     if (extractedDataOptica.length > 0) {
-      console.log("hay optica");
+      // console.log("hay optica");
       const opticaSectionIndex = navConfig.findIndex((section) => section.subheader === 'óptica');
       if (opticaSectionIndex !== -1) {
         navConfig[opticaSectionIndex].items = extractedDataOptica;
@@ -167,6 +202,12 @@ const navConfig = [
 
   //   ],
   // },
+  // {
+  //     subheader: 'reportes',
+  //     items: [
+  //       { title: 'citas', path: PATH_REPORTES.citas, icon: <CalendarMonthIcon/> },
+  //     ],
+  //   },
 ];
 
 export default navConfig;

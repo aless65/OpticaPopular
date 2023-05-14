@@ -26,7 +26,7 @@ UsuarioTableRow.propTypes = {
 };
 
 
-export default function UsuarioTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRow }) {
+export default function UsuarioTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRow, onDetalleRow }) {
 
   const theme = useTheme();
 
@@ -84,7 +84,7 @@ export default function UsuarioTableRow({ row, selected, onEditRow, onSelectRow,
 
               <MenuItem
                 onClick={() => {
-                  onEditRow();
+                  onDetalleRow();
                   handleCloseMenu();
                 }}
               >

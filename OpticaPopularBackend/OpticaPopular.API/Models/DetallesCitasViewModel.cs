@@ -38,5 +38,6 @@ namespace OpticaPopular.API.Models
         public string clie_Nombres { get; set; }
 
         public string clie_Apellidos { get; set; }
+        public int? orde_Id { get; set; }
     }
 }

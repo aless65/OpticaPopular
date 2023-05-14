@@ -24,6 +24,13 @@ namespace OpticaPopular.API.Controllers
             _mapper = mapper;
         }
 
+        [HttpGet("GraficaXSucursales")]
+        public IActionResult GraficaXSucursales()
+        {
+            var list = _opticaPopularService.GraficaOrdenes();
+            return Ok(list);
+        }
+
         [HttpGet("Listado")]
         public IActionResult Index()
         {

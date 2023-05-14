@@ -91,13 +91,12 @@ export function getRoles() {
 
 // ----------------------------------------------------------------------
 
-export function getRol(name) {
+export function getRol(Id) {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('/api/products/product', {
-        params: { name },
-      });
+      const response = await axios.get(`Roles/Find?id=${Id}`);
+
       dispatch(slice.actions.getRolSuccess(response.data.data));
     } catch (error) {
       console.error(error);

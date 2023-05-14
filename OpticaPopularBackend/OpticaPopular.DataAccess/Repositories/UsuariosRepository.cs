@@ -96,5 +96,15 @@ namespace OpticaPopular.DataAccess.Repositories
 
             return db.Query<VW_tbUsuarios>(ScriptsDataBase.UDP_Login_Usuarios, parametros, commandType: System.Data.CommandType.StoredProcedure);
         }
+
+        public string Recuperar(string usuario, string contrasena)
+        {
+            using var db = new SqlConnection(OpticaPopularContext.ConnectionString);
+            var parametros = new DynamicParameters();
+            parametros.Add("@usua_NombreUsuario", usuario, DbType.String, ParameterDirection.Input);
+            parametros.Add("@usua_Contrasena", contrasena, DbType.String, ParameterDirection.Input);
+
+            return db.QueryFirst<string>(ScriptsDataBase.UDP_RecuperarContra_Usuarios, parametros, commandType: System.Data.CommandType.StoredProcedure);
+        }
     }
 }

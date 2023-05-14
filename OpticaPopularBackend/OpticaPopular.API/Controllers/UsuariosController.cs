@@ -71,5 +71,12 @@ namespace OpticaPopular.API.Controllers
             var list = _accesoService.Login(usuario, contrasena);
             return Ok(list);
         }
+
+        [HttpGet("RecuperarContra")]
+        public IActionResult Recuperar(string usuario, string contrasena)
+        {
+            var list = _accesoService.RecuperarContra(usuario, contrasena);
+            return Ok(list);
+        }
     }
 }

@@ -98,7 +98,7 @@ export default function AddConsultorioDialog({ open, onClose, consultorios, setT
       const jsonData = {
         cons_Nombre: data.consulNombre,
         empe_Id: data.empleado,
-        usua_IdCreacion: 1,
+        usua_IdCreacion: JSON.parse(localStorage.getItem('usuario')).usua_Id,
       };
 
       fetch("http://opticapopular.somee.com/api/Consultorios/Insertar", {

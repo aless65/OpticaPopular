@@ -32,6 +32,7 @@ import {
     Button,
     TablePagination,
     IconButton,
+    Checkbox,
 } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
@@ -63,6 +64,8 @@ const TABLE_HEAD = [
     { id: 'aros_Descripcion', label: 'Descripción', align: 'left' },
     { id: 'deor_GraduacionLeft', label: 'Graduación izquierdo', align: 'left' },
     { id: 'deor_GraduacionRight', label: 'Graduación derecho', align: 'left' },
+    { id: 'deor_Transition', label: 'Transition', align: 'left' },
+    { id: 'deor_FiltroLuzAzul', label: 'Luz Azul', align: 'left' },
     { id: 'deor_Precio', label: 'Precio', align: 'left' },
     { id: 'deor_Cantidad', label: 'Cantidad', align: 'left' },
     { id: 'deor_Total', label: 'Total', align: 'left' },
@@ -97,7 +100,7 @@ const LabelStyle = styled(Typography)(({ theme }) => ({
     marginBottom: theme.spacing(1),
 }));
 
-export default function OrdenNewEditForm({ isEdit, currentOrden, orden }) {
+export default function OrdenNewEditForm({ isEdit, currentOrden, orden, sucuId }) {
     const navigate = useNavigate();
 
     const [tableData, setTableData] = useState([]);
@@ -149,8 +152,10 @@ export default function OrdenNewEditForm({ isEdit, currentOrden, orden }) {
 
     const [optionsSucursales, setOptionsSucursales] = useState([]);
 
+    const [optionsCitas, setOptionsCitas] = useState([]);
+
     const [encabezadoInserted, setEncabezadoInserted] = useState(isEdit === true);
-    
+
     const [ordeId, setOrdeId] = useState(isEdit ? orden : '');
 
     const [detalleInserted, setDetalleInserted] = useState(isEdit === true);
@@ -186,36 +191,36 @@ export default function OrdenNewEditForm({ isEdit, currentOrden, orden }) {
         setPage(0);
     };
 
-    // const [estadoCivilTemporal, setEstadoCivilTemporal] = useState(currentEmpleado?.estacivi_Id || '');
 
     const FirstFormSchema = Yup.object().shape({
-        cliente: Yup.string().required('Cliente requerido'),
         fecha: Yup.string().required('Fecha requerida'),
         fechaEntrega: Yup.string().required('Fecha requerida').nullable(),
         sucursal: Yup.string().required('Sucursal requerida').nullable(),
-        // avatarUrl: Yup.mixed().test('required', 'Avatar is required', (value) => value !== ''),
     });
 
     const SecondFormSchema = Yup.object().shape({
         aros: Yup.string().required('Aros requeridos'),
-        // precio: Yup.string().required('Precio requerido'),
-        graduacionLeft: Yup.string().required('Graduación requerida'),
-        graduacionRight: Yup.string().required('Graduación requerida'),
-        // cantidad: Yup.string().required('Cantidad requerida'),
-        // avatarUrl: Yup.mixed().test('required', 'Avatar is required', (value) => value !== ''),
+        // graduacionLeft: Yup.string().required('Graduación requerida'),
+        // graduacionRight: Yup.string().required('Graduación requerida'),
     });
+
+    // const sucursalDefaultValue = 1;
+    // console.log('sucursalDefaultValue:', sucursalDefaultValue);
 
     const defaultValues = useMemo(
         () => ({
             cliente: currentOrden?.clie_Id || '',
             fecha: currentOrden?.orde_Fecha || new Date(),
             fechaEntrega: currentOrden?.orde_FechaEntrega || '',
-            sucursal: currentOrden?.sucu_Id || '',
+            sucursal: currentOrden?.sucu_Id || parseInt(localStorage.getItem('sucu_Id'), 10),
             aros: '',
             precio: '',
             graduacionLeft: '',
             graduacionRight: '',
-            cantidad: ''
+            cantidad: '',
+            cita: currentOrden?.cita_Id || '',
+            esTransition: false,
+            esLuzAzul: false,
         }),
         // eslint-disable-next-line react-hooks/exhaustive-deps
         [currentOrden]
@@ -263,54 +268,66 @@ export default function OrdenNewEditForm({ isEdit, currentOrden, orden }) {
     }, [defaultValues.aros])
 
     const onSubmit = async (data) => {
-        try {
-            const date = new Date();
-            const year = date.getFullYear();
-            const month = date.getMonth() + 1; // add 1 to month to get 1-based month number
-            const day = date.getDate();
-            const formattedFecha = `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
+        if (!defaultValues.cita && !defaultValues.cliente) {
+            enqueueSnackbar('Debe escoger una cita o un cliente', { variant: 'warning' });
+        } else {
+            try {
+                const date = new Date();
+                const year = date.getFullYear();
+                const month = date.getMonth() + 1; // add 1 to month to get 1-based month number
+                const day = date.getDate();
+                const formattedFecha = `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
 
-            const dateEntrega = new Date(data.fechaEntrega);
-            const yearEntrega = dateEntrega.getFullYear();
-            const monthEntrega = dateEntrega.getMonth() + 1; // add 1 to month to get 1-based month number
-            const dayEntrega = dateEntrega.getDate();
-            const formattedFechaEntrega = `${yearEntrega}-${monthEntrega.toString().padStart(2, '0')}-${dayEntrega.toString().padStart(2, '0')}`;
-            console.log(data.fechaEntrega);
+                const dateEntrega = new Date(data.fechaEntrega);
+                const yearEntrega = dateEntrega.getFullYear();
+                const monthEntrega = dateEntrega.getMonth() + 1; // add 1 to month to get 1-based month number
+                const dayEntrega = dateEntrega.getDate();
+                const formattedFechaEntrega = `${yearEntrega}-${monthEntrega.toString().padStart(2, '0')}-${dayEntrega.toString().padStart(2, '0')}`;
+                console.log(data.fechaEntrega);
 
-            const jsonData = {
-                orde_Id: currentOrden?.orde_Id,
-                clie_Id: data.cliente,
-                orde_Fecha: formattedFecha,
-                orde_FechaEntrega: formattedFechaEntrega,
-                sucu_Id: data.sucursal,
-                usua_IdCreacion: 1,
-            };
+                if (formattedFechaEntrega < formattedFecha) {
+                    enqueueSnackbar("La fecha de entrega debe ser posterior a la fecha actual", { variant: 'warning' });
+                    defaultValues.fechaEntrega = '';
+                    methods.setValue('fechaEntrega', '');
+                } else {
+                    const jsonData = {
+                        orde_Id: currentOrden?.orde_Id,
+                        clie_Id: data.cliente || 0,
+                        cita_Id: data.cita || 0,
+                        orde_Fecha: formattedFecha,
+                        orde_FechaEntrega: formattedFechaEntrega,
+                        sucu_Id: data.sucursal,
+                        usua_IdCreacion: JSON.parse(localStorage.getItem('usuario')).usua_Id,
+                    };
 
-            console.log(jsonData);
+                    console.log(jsonData);
 
-            fetch("http://opticapopular.somee.com/api/Ordenes/Insertar", {
-                method: "POST",
-                mode: "cors",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(jsonData),
-            })
-                .then((response) => response.json())
-                .then((data) => {
-                    console.log(data);
-                    if (data.message === "Ha ocurrido un error") {
-                        enqueueSnackbar(data.message, { variant: 'error' });
-                    } else {
-                        setOrdeId(data.message);
-                        setEncabezadoInserted(true);
-                    }
-                })
-                .catch((error) => console.error(error));
-
+                    fetch("http://opticapopular.somee.com/api/Ordenes/Insertar", {
+                        method: "POST",
+                        mode: "cors",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify(jsonData),
+                    })
+                        .then((response) => response.json())
+                        .then((data) => {
+                            console.log(data);
+                            if (data.message === "Ha ocurrido un error") {
+                                enqueueSnackbar(data.message, { variant: 'error' });
+                            } else {
+                                setOrdeId(data.message);
+                                setEncabezadoInserted(true);
+                            }
+                        })
+                        .catch((error) => console.error(error));
+            }
+                
         } catch (error) {
             console.error(error);
         }
+        }
+
     };
 
     const onSubmitDetalle = async (data) => {
@@ -321,8 +338,10 @@ export default function OrdenNewEditForm({ isEdit, currentOrden, orden }) {
                 aros_Id: data.aros,
                 deor_GraduacionLeft: data.graduacionLeft,
                 deor_GraduacionRight: data.graduacionRight,
+                deor_Transition: data.esTransition,
+                deor_FiltroLuzAzul: data.esLuzAzul,
                 deor_Cantidad: quantity,
-                usua_IdCreacion: 1,
+                usua_IdCreacion: JSON.parse(localStorage.getItem('usuario')).usua_Id,
             };
 
             console.log(jsonData);
@@ -347,6 +366,10 @@ export default function OrdenNewEditForm({ isEdit, currentOrden, orden }) {
                         methods.setValue('precio', 0.00);
                         methods.setValue('graduacionLeft', '');
                         methods.setValue('graduacionRight', '');
+                        methods.setValue('esLuzAzul', false);
+                        methods.setValue('esTransition', false);
+                        defaultValues.esLuzAzul = false;
+                        defaultValues.esTransition = false;
                         setQuantity(1);
                         setAvailable(0);
                         setDetalleInserted(true);
@@ -401,11 +424,55 @@ export default function OrdenNewEditForm({ isEdit, currentOrden, orden }) {
                 .catch(error => console.error(error));
 
         }
+
+        if(isEdit === false){
+            fetch('http://opticapopular.somee.com/api/Citas/BuscarCitasTerminadas/0')
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                    const optionsData = data.data
+                        .filter(item => {
+                            const citaFecha = new Date(item.cita_Fecha).toISOString().split('T')[0];
+                            const defaultFecha = defaultValues.fecha.toISOString().split('T')[0];
+                            return item.sucu_Id === defaultValues.sucursal && citaFecha === defaultFecha && item.orde_Id === 0;
+                        })
+                        .map(item => ({
+                            label: `${item.clie_Nombres} ${item.clie_Apellidos} - ${item.deci_HoraInicio}`, // replace 'name' with the property name that contains the label
+                            id: item.cita_Id // replace 'id' with the property name that contains the ID
+                        }));
+                    console.log(optionsData);
+                    setOptionsCitas(optionsData);
+                })
+                .catch(error => console.error(error));
+
+        } else {
+            fetch('http://opticapopular.somee.com/api/Citas/BuscarCitasTerminadas/0')
+                .then(response => response.json())
+                .then(data => {
+                    const optionsData = data.data.map(item => ({
+                            label: `${item.clie_Nombres} ${item.clie_Apellidos} - ${item.deci_HoraInicio}`, // replace 'name' with the property name that contains the label
+                            id: item.cita_Id // replace 'id' with the property name that contains the ID
+                        }));
+                    console.log(optionsData);
+                    setOptionsCitas(optionsData);
+                })
+                .catch(error => console.error(error));
+
+        }
+
     }, [defaultValues.sucursal]);
 
     const denseHeight = dense ? 60 : 80;
 
     const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
+
+    const handleEsTransitionChange = (event) => {
+        methods.setValue('esTransition', event.target.checked);
+      };
+
+      const handleEsLuzAzulChange = (event) => {
+        methods.setValue('esLuzAzul', event.target.checked);
+      };
 
     return (
 
@@ -421,33 +488,36 @@ export default function OrdenNewEditForm({ isEdit, currentOrden, orden }) {
                                 gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
                             }}
                         >
+
                             <Autocomplete
-                                name="cliente"
-                                options={optionsClientes}
-                                error={!!errors.cliente}
+                                name="sucursal"
+                                options={optionsSucursales}
+                                error={!!errors.sucursal}
                                 getOptionLabel={(option) => option.label}
                                 renderInput={(params) => (
                                     <TextField
                                         {...params}
-                                        label="Cliente"
-                                        error={!!errors.cliente}
-                                        helperText={errors.cliente?.message}
+                                        label="Sucursal"
+                                        error={!!errors.sucursal}
+                                        helperText={errors.sucursal?.message}
                                     />
                                 )}
                                 onChange={(event, value) => {
                                     if (value != null) {
-                                        methods.setValue('cliente', value.id);
+                                        methods.setValue('sucursal', value.id);
                                         // setEstadoCivilTemporal(value.id);
-                                        defaultValues.cliente = value.id;
+                                        defaultValues.sucursal = value.id;
                                         // console.log(defaultValues.estadoCivil);
                                     } else {
-                                        methods.setValue('cliente', '');
-                                        defaultValues.cliente = '';
+                                        methods.setValue('sucursal', '');
+                                        defaultValues.sucursal = '';
+                                        methods.setValue('cita', '');
+                                        defaultValues.cita = '';
                                     }
                                 }}
                                 disabled={encabezadoInserted}
                                 isOptionEqualToValue={(option, value) => option.id === value.id}
-                                value={optionsClientes.find(option => option.id === defaultValues.cliente) ?? null}
+                                value={optionsSucursales.find(option => option.id === defaultValues.sucursal) ?? null}
                             />
 
                             <Controller
@@ -492,33 +562,62 @@ export default function OrdenNewEditForm({ isEdit, currentOrden, orden }) {
                             />
 
                             <Autocomplete
-                                name="sucursal"
-                                options={optionsSucursales}
-                                error={!!errors.sucursal}
+                                name="cita"
+                                options={optionsCitas}
+                                error={!!errors.cita}
                                 getOptionLabel={(option) => option.label}
                                 renderInput={(params) => (
                                     <TextField
                                         {...params}
-                                        label="Sucursal"
-                                        error={!!errors.sucursal}
-                                        helperText={errors.sucursal?.message}
+                                        label="Cita"
+                                        error={!!errors.cita}
+                                        helperText={errors.cita?.message}
                                     />
                                 )}
                                 onChange={(event, value) => {
                                     if (value != null) {
-                                        methods.setValue('sucursal', value.id);
+                                        methods.setValue('cita', value.id);
                                         // setEstadoCivilTemporal(value.id);
-                                        defaultValues.sucursal = value.id;
+                                        defaultValues.cita = value.id;
                                         // console.log(defaultValues.estadoCivil);
                                     } else {
-                                        methods.setValue('sucursal', '');
-                                        defaultValues.sucursal = '';
+                                        methods.setValue('cita', '');
+                                        defaultValues.cita = '';
                                     }
                                 }}
-                                disabled={encabezadoInserted}
+                                disabled={encabezadoInserted || defaultValues.cliente}
                                 isOptionEqualToValue={(option, value) => option.id === value.id}
-                                value={optionsSucursales.find(option => option.id === defaultValues.sucursal) ?? null}
+                                value={optionsCitas.find(option => option.id === defaultValues.cita) ?? null}
                             />
+
+
+                            <Autocomplete
+                                name="cliente"
+                                options={optionsClientes}
+                                error={!!errors.cliente}
+                                getOptionLabel={(option) => option.label}
+                                renderInput={(params) => (
+                                    <TextField
+                                        {...params}
+                                        label="Cliente"
+                                        error={!!errors.cliente}
+                                        helperText={errors.cliente?.message}
+                                    />
+                                )}
+                                onChange={(event, value) => {
+                                    if (value != null) {
+                                        methods.setValue('cliente', value.id);
+                                        defaultValues.cliente = value.id;
+                                    } else {
+                                        methods.setValue('cliente', '');
+                                        defaultValues.cliente = '';
+                                    }
+                                }}
+                                disabled={encabezadoInserted || defaultValues.cita}
+                                isOptionEqualToValue={(option, value) => option.id === value.id}
+                                value={optionsClientes.find(option => option.id === defaultValues.cliente) ?? null}
+                            />
+
 
                         </Box>
 
@@ -576,6 +675,28 @@ export default function OrdenNewEditForm({ isEdit, currentOrden, orden }) {
                             <RHFTextField name="precio" disabled label="Precio" />
                             <RHFTextField name="graduacionLeft" disabled={!encabezadoInserted} label="Graduación izquierdo" />
                             <RHFTextField name="graduacionRight" disabled={!encabezadoInserted} label="Graduación derecho" />
+                            
+
+                            <FormControlLabel
+                                        control={
+                                        <Checkbox
+                                            // checked={defaultValues.esAdmin}
+                                            onChange={handleEsTransitionChange}
+                                        />
+                                        }
+                                        label="Transition"
+                                    />
+
+                                    <FormControlLabel
+                                        control={
+                                        <Checkbox
+                                            // checked={defaultValues.esAdmin}
+                                            onChange={handleEsLuzAzulChange}
+                                        />
+                                        }
+                                        label="Filtro luz azul"
+                                    />
+
                             <TableCell align="left">
                                 <Incrementer
                                     quantity={quantity}

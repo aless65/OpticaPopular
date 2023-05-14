@@ -61,6 +61,17 @@ export default function Router() {
             ],
         },
         {
+            path: 'reportes',
+            element: (
+                <GuestGuard>
+                    <DashboardLayout />
+                </GuestGuard>
+            ),
+            children: [
+                { path: 'citas', element: <GuestGuard> <OpticaCitasReporte /> </GuestGuard>  },
+            ],
+        },
+        {
             path: 'acceso',
             element: (
                 <GuestGuard>
@@ -69,7 +80,9 @@ export default function Router() {
             ),
             children: [
                 { path: 'usuarios', element: <GuestGuard> <AccesoUsuarios /> </GuestGuard>  },
+                { path: 'usuarios/Detalles/:Id', element: <GuestGuard> <AccesoUsuariosDetalles /> </GuestGuard>  },
                 { path: 'roles', element: <GuestGuard> <AccesoRoles /> </GuestGuard>  },
+                { path: 'roles/Detalles/:Id', element: <GuestGuard> <AccesoRolesDetalles /> </GuestGuard>  },
             ],
         },
         {
@@ -134,7 +147,10 @@ const VerifyCode = Loadable(lazy(() => import('../pages/auth/VerifyCode')));
 
 // ACCESO
 const AccesoUsuarios = Loadable(lazy(() => import('../pages/dashboard/AccesoUsuarios')));
+const AccesoUsuariosDetalles = Loadable(lazy(() => import('../pages/dashboard/AccesoUsuariosDetalles')));
 const AccesoRoles = Loadable(lazy(() => import('../pages/dashboard/AccesoRoles')));
+const AccesoRolesDetalles = Loadable(lazy(() => import('../pages/dashboard/AccesoRolesDetalles')));
+
 
 // OPTICA
 
@@ -175,3 +191,6 @@ const GeneralApp = Loadable(lazy(() => import('../pages/dashboard/GeneralApp')))
 
 const Page500 = Loadable(lazy(() => import('../pages/Page500')));
 const NotFound = Loadable(lazy(() => import('../pages/Page404')));
+
+// REPORTES
+const OpticaCitasReporte = Loadable(lazy(() => import('../pages/dashboard/OpticaCitasReporte')));

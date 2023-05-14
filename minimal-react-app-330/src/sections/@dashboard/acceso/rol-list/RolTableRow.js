@@ -27,7 +27,7 @@ RolTableRow.propTypes = {
 
 
 
-export default function RolTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRow }) {
+export default function RolTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRow, onDetalleRow }) {
 
   const theme = useTheme();
 
@@ -75,6 +75,16 @@ export default function RolTableRow({ row, selected, onEditRow, onSelectRow, onD
               >
                 <Iconify icon={'eva:edit-fill'} />
                 Editar
+              </MenuItem>
+
+              <MenuItem
+                onClick={() => {
+                  onDetalleRow();
+                  handleCloseMenu();
+                }}
+              >
+                <Iconify icon={'eva:list-fill'} />
+                Detalles
               </MenuItem>
             </>
           }

@@ -59,5 +59,18 @@ namespace OpticaPopular.DataAccess.Repositories
         {
             throw new NotImplementedException();
         }
+
+        public string AccesoPantalla(int role_Id, bool esAdmin, string pant_Nombre)
+        {
+            using var db = new SqlConnection(OpticaPopularContext.ConnectionString);
+
+            var parametros = new DynamicParameters();
+
+            parametros.Add("@role_Id", role_Id, DbType.Int32, ParameterDirection.Input);
+            parametros.Add("@esAdmin", esAdmin, DbType.Boolean, ParameterDirection.Input);
+            parametros.Add("@pant_Nombre", pant_Nombre, DbType.String, ParameterDirection.Input);
+
+            return db.QueryFirst<string>(ScriptsDataBase.UDP_Accesos_Pantallas, parametros, commandType: CommandType.StoredProcedure);
+        }
     }
 }

@@ -221,6 +221,7 @@ export default function ModalEditarOrden({ open, onClose, ordenes, setTableData,
                                             setClienteTemporal(value.id);
                                         }
                                     }}
+                                    disabled
                                     isOptionEqualToValue={(option, value) => option.id === value.id}
                                     value={optionsClientes.find(option => option.id === clienteTemporal) ?? null}
                                 />
@@ -298,6 +299,7 @@ export default function ModalEditarOrden({ open, onClose, ordenes, setTableData,
                                             // console.log(defaultValues.sucu_Id);
                                         }
                                     }}
+                                    disabled
                                     isOptionEqualToValue={(option, value) => option.id === value.id}
                                     value={optionsSucursales.find(option => option.id === sucursalTemporal) ?? null}
                                 />

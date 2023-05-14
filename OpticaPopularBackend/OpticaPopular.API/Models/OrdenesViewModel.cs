@@ -8,7 +8,8 @@ namespace OpticaPopular.API.Models
     public class OrdenesViewModel
     {
         public int orde_Id { get; set; }
-        public int clie_Id { get; set; }
+        public int? clie_Id { get; set; }
+        public int? cita_Id { get; set; }
         public DateTime? orde_Fecha { get; set; }
         public DateTime orde_FechaEntrega { get; set; }
         public DateTime? orde_FechaEntregaReal { get; set; }

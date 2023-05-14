@@ -72,6 +72,15 @@ namespace OpticaPopular.DataAccess.Repositories
             return db.Query<VW_tbEmpleados>(ScriptsDataBase.UDP_Lista_Empleados, null, commandType: CommandType.StoredProcedure);
         }
 
+        public SexoEmpleados GraficaSexo()
+        {
+
+            using var db = new SqlConnection(OpticaPopularContext.ConnectionString);
+
+            return db.QueryFirst<SexoEmpleados>(ScriptsDataBase.UDP_Grafica_EmpleadosSexo, null, commandType: CommandType.StoredProcedure);
+
+        }
+
         public RequestStatus Update(VW_tbEmpleados item)
         {
             RequestStatus result = new RequestStatus();

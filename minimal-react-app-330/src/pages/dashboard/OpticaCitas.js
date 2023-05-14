@@ -114,13 +114,13 @@ export default function OpticaCitas() {
 
     const { citas, isLoading } = useSelector((state) => state.cita);
 
-    const [citaIdEditar, setCitaIdEditar ] = useState('');
+    const [citaIdEditar, setCitaIdEditar] = useState('');
 
-    const [citaIdAddDetalleCita, setcitaIdAddDetalleCita ] = useState('');
+    const [citaIdAddDetalleCita, setcitaIdAddDetalleCita] = useState('');
 
-    const [citaIdEliminar, setCitaIdEliminar ] = useState('');
+    const [citaIdEliminar, setCitaIdEliminar] = useState('');
 
-    const [citaIdDetalleEditar, setCitaIdDetalleEditar ] = useState('');
+    const [citaIdDetalleEditar, setCitaIdDetalleEditar] = useState('');
 
     const [tableData, setTableData] = useState([]);
 
@@ -128,7 +128,7 @@ export default function OpticaCitas() {
 
     const [openEditCitaDialog, setOpenEditCitaDialog] = useState(false);
 
-    const [openDeleteCitaDialog, setOpenDeleteCitaDialog]= useState(false);
+    const [openDeleteCitaDialog, setOpenDeleteCitaDialog] = useState(false);
 
     const [openAddDetalleCitaDialog, setOpenAddDetalleCitaDialog] = useState(false);
 
@@ -138,7 +138,25 @@ export default function OpticaCitas() {
 
     const { enqueueSnackbar } = useSnackbar();
 
-    const cita  = useSelector((state) => state.cita.cita);
+    const cita = useSelector((state) => state.cita.cita);
+    const [isLoadingPage, setIsLoadingPage] = useState(true);
+
+
+    // ----------------------------------------------------------------------
+
+    useEffect(() => {
+        fetch(`http://opticapopular.somee.com/api/Pantallas/PantallasAccesos?role_Id=${JSON.parse(localStorage.getItem('usuario')).role_Id}&esAdmin=${JSON.parse(localStorage.getItem('usuario')).usua_EsAdmin}&pant_Nombre=citas`)
+            .then(response => response.json())
+            .then(data => {
+                if (data === 0) {
+                    navigate(PATH_DASHBOARD.general.app);
+                } else {
+                    setIsLoadingPage(false);
+                }
+            })
+            .catch(error => console.error(error));
+
+    }, [])
 
     useEffect(() => {
         if (citaIdEditar) {
@@ -183,7 +201,7 @@ export default function OpticaCitas() {
     const handleCloseAddDetalleCitaDialog = () => {
         setOpenAddDetalleCitaDialog(false);
     }
-    
+
     const handleOpenEditCitaDetalleDialog = () => {
         setOpenEditDetalleCitaDialog(true);
     }
@@ -217,9 +235,9 @@ export default function OpticaCitas() {
     };
 
     const handleDetailsRow = (Id, fecha) => {
-        if(dayjs(new Date(fecha)) > dayjs(new Date())){
-            enqueueSnackbar(`No se puede completar la cita por que la fecha de la cita es mayor a la fecha actual`, { variant: 'error' }); 
-        }else{
+        if (dayjs(new Date(fecha)) > dayjs(new Date())) {
+            enqueueSnackbar(`No se puede completar la cita por que la fecha de la cita es mayor a la fecha actual`, { variant: 'error' });
+        } else {
             setcitaIdAddDetalleCita(Id);
             handleOpenAddDetalleCitaDialog();
         }
@@ -235,12 +253,12 @@ export default function OpticaCitas() {
             .then((response) => {
                 if (response.data.code === 200) {
                     if (response.data.data.deci_Id > 0) {
-                        enqueueSnackbar(`No se puede eliminar la cita por que ya fue completada`, { variant: 'error' }); 
+                        enqueueSnackbar(`No se puede eliminar la cita por que ya fue completada`, { variant: 'error' });
                     } else {
                         setCitaIdEliminar(Id);
                         handleOpenDeleteCitaDialog();
                     }
-                }else if (response.data.code === 500 && response.data.message === "Sequence contains no elements"){
+                } else if (response.data.code === 500 && response.data.message === "Sequence contains no elements") {
                     setCitaIdEliminar(Id);
                     handleOpenDeleteCitaDialog();
                 }
@@ -255,10 +273,14 @@ export default function OpticaCitas() {
         comparator: getComparator(order, orderBy),
         filterName,
     });
-    
+
     const denseHeight = dense ? 60 : 80;
 
     const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
+
+    if (isLoadingPage) {
+        return null;
+    }
 
     return (
         <Page title="Citas">
@@ -278,37 +300,37 @@ export default function OpticaCitas() {
                             >
                                 Agregar
                             </Button>
-                            <ModalAgregarCita 
-                                open={openAddCitaDialog} 
-                                onClose={handleCloseAddCitaDialog} 
-                                citas={citas} 
-                                setTableData={setTableData} 
-                            />
-                            <ModalEditarCita 
-                                open={openEditCitaDialog} 
-                                onClose={handleCloseEditCitaDialog} 
+                            <ModalAgregarCita
+                                open={openAddCitaDialog}
+                                onClose={handleCloseAddCitaDialog}
                                 citas={citas}
-                                setTableData={setTableData} 
-                                cita={cita} 
+                                setTableData={setTableData}
                             />
-                            <ModalEliminarCita 
-                                open={openDeleteCitaDialog} 
-                                onClose={handleCloseDeleteCitaDialog} 
-                                citas={citas} 
-                                setTableData={setTableData} 
-                                citaId={citaIdEliminar} 
+                            <ModalEditarCita
+                                open={openEditCitaDialog}
+                                onClose={handleCloseEditCitaDialog}
+                                citas={citas}
+                                setTableData={setTableData}
+                                cita={cita}
                             />
-                            <ModalAgregarDetalleCita 
-                                open={openAddDetalleCitaDialog} 
-                                onClose={handleCloseAddDetalleCitaDialog} 
-                                citas={citas} setTableData={setTableData} 
-                                citaId={citaIdAddDetalleCita} 
+                            <ModalEliminarCita
+                                open={openDeleteCitaDialog}
+                                onClose={handleCloseDeleteCitaDialog}
+                                citas={citas}
+                                setTableData={setTableData}
+                                citaId={citaIdEliminar}
+                            />
+                            <ModalAgregarDetalleCita
+                                open={openAddDetalleCitaDialog}
+                                onClose={handleCloseAddDetalleCitaDialog}
+                                citas={citas} setTableData={setTableData}
+                                citaId={citaIdAddDetalleCita}
                             />
                             <ModalEditarDetalleCita
-                                open={openEditDetailsCitaDialog} 
-                                onClose={handleCloseEditDetalleCitaDialog} 
+                                open={openEditDetailsCitaDialog}
+                                onClose={handleCloseEditDetalleCitaDialog}
                                 citaId={citaIdDetalleEditar}
-                                citas={citas} 
+                                citas={citas}
                                 setTableData={setTableData}
                             />
                         </div>
@@ -348,10 +370,10 @@ export default function OpticaCitas() {
                                                     onSelectRow={() => onSelectRow(row.cita_Id)}
                                                     onDeleteRow={() => handleDeleteRow(row.cita_Id)}
                                                     onEditRow={() => handleEditRow(row.cita_Id)}
-                                                    onDetailsRow={() => handleDetailsRow(row.cita_Id, row.cita_Fecha)}      
+                                                    onDetailsRow={() => handleDetailsRow(row.cita_Id, row.cita_Fecha)}
                                                     onDetallesCita={() => handleEditDetailsRow(row.cita_Id)}
                                                     onDetalle={() => handleDetalle(row.cita_Id)}
-                                                    />
+                                                />
                                             ) : (
                                                 !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
                                             )

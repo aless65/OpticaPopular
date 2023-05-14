@@ -57,3 +57,4 @@ C:\Users\PC\Documents\GitHub\OpticaPopular\OpticaPopularBackend\OpticaPopular.En
 C:\Users\PC\Documents\GitHub\OpticaPopular\OpticaPopularBackend\OpticaPopular.Entities\obj\Release\net5.0\OpticaPopular.Entities.dll
 C:\Users\PC\Documents\GitHub\OpticaPopular\OpticaPopularBackend\OpticaPopular.Entities\obj\Release\net5.0\ref\OpticaPopular.Entities.dll
 C:\Users\PC\Documents\GitHub\OpticaPopular\OpticaPopularBackend\OpticaPopular.Entities\obj\Release\net5.0\OpticaPopular.Entities.pdb
+C:\Users\PC\Documents\GitHub\OpticaPopular\OpticaPopularBackend\OpticaPopular.Entities\obj\Release\net5.0\OpticaPopular.Entities.csproj.AssemblyReference.cache

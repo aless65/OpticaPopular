@@ -118,7 +118,7 @@ export default function AddUserDialog({ open, onClose, usuarios, setTableData })
         usua_EsAdmin: data.esAdmin,
         role_Id: data.rol,
         empe_Id: data.empleado,
-        usua_UsuCreacion: 1,
+        usua_UsuCreacion: JSON.parse(localStorage.getItem('usuario')).usua_Id,
       };
 
       fetch("http://opticapopular.somee.com/api/Usuarios/Insertar", {

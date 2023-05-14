@@ -38,6 +38,13 @@ namespace OpticaPopular.API.Controllers
             return Ok(list);
         }
 
+        [HttpGet("GráficaSexo")]
+        public IActionResult GraficaSexo()
+        {
+            var list = _opticaPopularService.GraficaSexoEmpleados();
+            return Ok(list);
+        }
+
         [HttpPost("Insertar")]
         public IActionResult Insert(EmpleadoViewModel empleado)
         {

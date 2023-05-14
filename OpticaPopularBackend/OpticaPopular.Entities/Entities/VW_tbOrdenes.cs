@@ -10,6 +10,7 @@ namespace OpticaPopular.Entities.Entities
     {
         public int orde_Id { get; set; }
         public int? clie_Id { get; set; }
+        public int? cita_Id { get; set; }
         public string clie_NombreCompleto { get; set; }
         public DateTime? orde_Fecha { get; set; }
         public DateTime orde_FechaEntrega { get; set; }

@@ -15,10 +15,13 @@ namespace OpticaPopular.DataAccess.Repositories
         public static string UDP_Edita_Usuarios = "acce.UDP_acce_tbUsuarios_Update";
         public static string UDP_Elimina_Usuarios = "acce.UDP_acce_tbUsuarios_DELETE";
         public static string UDP_Login_Usuarios = "acce.UDP_Login";
+
+        public static string UDP_RecuperarContra_Usuarios = "acce.UDP_RecuperarContrasena";
         #endregion
 
         #region Roles
         public static string UDP_Lista_Roles = "acce.UDP_acce_tbRoles_List";
+        public static string UDP_Find_Roles = "acce.UDP_acce_tbRoles_Find";
         public static string UDP_Inserta_Roles = "acce.UDP_acce_tbRoles_Insert";
         public static string UDP_Edita_Roles = "acce.UDP_acce_tbRoles_Update";
         public static string UDP_Elimina_Roles = "acce.UDP_acce_tbRoles_Delete";
@@ -31,6 +34,8 @@ namespace OpticaPopular.DataAccess.Repositories
         #region Pantallas
         public static string UDP_Lista_Pantallas = "acce.UDP_acce_tbPantallas_List";
         public static string UDP_Lista_PantallasMenu = "acce.UDP_opti_tbPantallas_ListMenu";
+
+        public static string UDP_Accesos_Pantallas = "acce.UDP_tbRolesPorPantalla_Accesos";
         #endregion
 
         #region Clientes
@@ -47,6 +52,7 @@ namespace OpticaPopular.DataAccess.Repositories
         public static string UDP_Edita_Empleados = "opti.UDP_opti_tbEmpleados_Update";
         public static string UDP_Elimina_Empleados = "opti.UDP_opti_tbEmpleados_Delete";
         public static string UDP_Find_Empleados = "opti.UDP_opti_tbEmpleados_Find";
+        public static string UDP_Grafica_EmpleadosSexo = "opti.Grafica_Sexo";
         #endregion
 
         #region Sucursales
@@ -98,6 +104,7 @@ namespace OpticaPopular.DataAccess.Repositories
         #endregion
 
         #region Órdenes
+        public static string UDP_Grafica_Ordenes = "opti.Grafica_Ordenes_Sucursales";
         public static string UDP_Lista_Ordenes = "opti.UDP_opti_tbOrdenes_List";
         public static string UDP_Find_Ordenes = "opti.UDP_opti_tbOrdenes_Find";
         public static string UDP_Inserta_Ordenes = "opti.UDP_opti_tbOrdenes_Insert";

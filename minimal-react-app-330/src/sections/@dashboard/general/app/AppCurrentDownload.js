@@ -1,4 +1,5 @@
 import merge from 'lodash/merge';
+import { useEffect, useState } from 'react';
 import ReactApexChart from 'react-apexcharts';
 // @mui
 import { useTheme, styled } from '@mui/material/styles';
@@ -7,7 +8,6 @@ import { Card, CardHeader } from '@mui/material';
 import { fNumber } from '../../../../utils/formatNumber';
 //
 import { BaseOptionChart } from '../../../../components/chart';
-import { useEffect } from 'react';
 
 // ----------------------------------------------------------------------
 
@@ -32,14 +32,24 @@ const ChartWrapperStyle = styled('div')(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-const CHART_DATA = [12244, 53345];
+// const CHART_DATA = [12244, 53345];
 
 export default function AppCurrentDownload() {
   const theme = useTheme();
 
+  const [chartData, setChartData] = useState([]);
+
   useEffect(() => {
-    
-  }, [CHART_DATA])
+    fetch('http://opticapopular.somee.com/api/Empleados/GráficaSexo')
+      .then(response => response.json())
+      .then(data => {
+        const newData = [parseInt(data.data.femenino, 10), parseInt(data.data.masculino, 10)];
+        console.log(newData); // Optional: Log the new data
+        // Set the new data to CHART_DATA
+        setChartData(newData);
+      })
+      .catch(error => console.error(error));
+  }, [])
 
   const chartOptions = merge(BaseOptionChart(), {
     colors: [
@@ -82,9 +92,9 @@ export default function AppCurrentDownload() {
 
   return (
     <Card>
-      <CardHeader title="Current Download" />
+      <CardHeader title="Sexo de empleados" />
       <ChartWrapperStyle dir="ltr">
-        <ReactApexChart type="donut" series={CHART_DATA} options={chartOptions} height={280} />
+        <ReactApexChart type="donut" series={chartData} options={chartOptions} height={280} />
       </ChartWrapperStyle>
     </Card>
   );

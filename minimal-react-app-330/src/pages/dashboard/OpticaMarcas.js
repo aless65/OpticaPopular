@@ -38,7 +38,7 @@ import {
 } from '../../components/table';
 // sections
 import { MarcasTableRow, TableToolbar } from '../../sections/@dashboard/optica/marcas-list';
-import AddMarcaDialog from './OpticaMarcasModales/ModalInsertMarcas'; 
+import AddMarcaDialog from './OpticaMarcasModales/ModalInsertMarcas';
 import EditMarcaDialog from './OpticaMarcasModales/ModalEditMarcas';
 import DeleteMarcaDialog from './OpticaMarcasModales/ModalDeleteMarcas';
 // ----------------------------------------------------------------------
@@ -91,6 +91,25 @@ export default function OpticaMarcas() {
   const [openAddMarcaDialog, setOpenAddMarcaDialog] = useState(false);
   const [openEditMarcaDialog, setOpenEditMarcaDialog] = useState(false);
   const [openDeleteMarcaDialog, setOpenDeleteMarcaDialog] = useState(false);
+
+  const [isLoadingPage, setIsLoadingPage] = useState(true);
+
+
+  // ----------------------------------------------------------------------
+
+  useEffect(() => {
+    fetch(`http://opticapopular.somee.com/api/Pantallas/PantallasAccesos?role_Id=${JSON.parse(localStorage.getItem('usuario')).role_Id}&esAdmin=${JSON.parse(localStorage.getItem('usuario')).usua_EsAdmin}&pant_Nombre=marcas`)
+      .then(response => response.json())
+      .then(data => {
+        if (data === 0) {
+          navigate(PATH_DASHBOARD.general.app);
+        } else {
+          setIsLoadingPage(false);
+        }
+      })
+      .catch(error => console.error(error));
+
+  }, [])
 
 
   const handleOpenAddMarcaDialog = () => {
@@ -151,7 +170,7 @@ export default function OpticaMarcas() {
   };
 
 
- 
+
 
 
 
@@ -164,6 +183,10 @@ export default function OpticaMarcas() {
   const denseHeight = dense ? 60 : 80;
 
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
+
+  if (isLoadingPage) {
+    return null;
+  }
 
   return (
     <Page title="Marcas">
@@ -193,7 +216,7 @@ export default function OpticaMarcas() {
         />
 
         <Card>
-        <TableToolbar filterName={filterName} onFilterName={handleFilterName} />
+          <TableToolbar filterName={filterName} onFilterName={handleFilterName} />
 
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800 }}>
@@ -225,7 +248,7 @@ export default function OpticaMarcas() {
                           selected={selected.includes(row.marc_Id)}
                           onSelectRow={() => onSelectRow(row.marc_Id)}
                           onDeleteRow={() => handleDeleteRow(row.marc_Id)}
-                          onEditRow={() => handleEditRow(row.marc_Id,row.marc_Nombre,)}
+                          onEditRow={() => handleEditRow(row.marc_Id, row.marc_Nombre,)}
                         />
                       ) : (
                         !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
@@ -276,15 +299,15 @@ function applySortFilter({ tableData, comparator, filterName }) {
 
   tableData = stabilizedThis.map((el) => el[0]);
 
-  
+
 
   if (filterName) {
     tableData = tableData.filter((item) =>
       item.marc_Id.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 ||
-      item.marc_Nombre.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 
+      item.marc_Nombre.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
     );
   }
-  
+
 
   return tableData;
 }

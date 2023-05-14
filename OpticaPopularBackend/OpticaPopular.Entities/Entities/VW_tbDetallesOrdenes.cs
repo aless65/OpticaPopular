@@ -14,6 +14,8 @@ namespace OpticaPopular.Entities.Entities
         public string aros_Descripcion { get; set; }
         public string deor_GraduacionLeft { get; set; }
         public string deor_GraduacionRight { get; set; }
+        public bool? deor_Transition { get; set; }
+        public bool? deor_FiltroLuzAzul { get; set; }
         public decimal deor_Precio { get; set; }
         public int deor_Cantidad { get; set; }
         public decimal deor_Total { get; set; }

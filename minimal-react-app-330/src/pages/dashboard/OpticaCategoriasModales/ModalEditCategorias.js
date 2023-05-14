@@ -80,7 +80,7 @@ export default function EditRolCategoriaDialog({ open, onClose, categorias, setT
       const jsonData = {
         cate_Id: categoriaId,
         cate_Nombre: data.nombre,
-        cate_UsuModificacion: 1,
+        cate_UsuModificacion: JSON.parse(localStorage.getItem('usuario')).usua_Id,
       };
 
       fetch("http://opticapopular.somee.com/api/Categorias/Editar", {

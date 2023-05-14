@@ -133,7 +133,7 @@ export default function EditConsultorioDialog({ open, onClose, consultorios, set
                 cons_Id: consultorioId,
                 cons_Nombre:consultorioNombre, 
                 empe_Id: data.empleado,
-                usua_UsuModificacion: 1,
+                usua_UsuModificacion: JSON.parse(localStorage.getItem('usuario')).usua_Id,
             };
 
             fetch("http://opticapopular.somee.com/api/Consultorios/Editar", {

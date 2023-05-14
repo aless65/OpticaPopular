@@ -84,12 +84,10 @@ export default function AddRolDialog({ open, onClose, roles, setTableData }) {
 
       const jsonData = {
         role_Nombre: data.nombre,
-        role_UsuCreacion: 1,
+        role_UsuCreacion: JSON.parse(localStorage.getItem('usuario')).usua_Id,
         role_Pantallas: data.pantallas,
       };
 
-      // console.log(selectedValuesRef.current);
-      // console.log(jsonData);
       fetch("http://opticapopular.somee.com/api/Roles/Insertar", {
         method: "POST",
         mode: "cors",
