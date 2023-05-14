@@ -168,8 +168,10 @@ export default function ModalEditarOrden({ open, onClose, ordenes, setTableData,
                     enqueueSnackbar(`Ha ocurrido un error`, { variant: 'error' });
                     console.log(error);
                 });
-        } else{
+        } else if(orden?.fact_Id){
             enqueueSnackbar("La fecha no puede ser anterior a la fecha de entrega", { variant: 'warning' });
+        } else{
+            enqueueSnackbar("La orden aún no ha sido pagada", { variant: 'warning' });
         }
     };
 
@@ -177,8 +179,8 @@ export default function ModalEditarOrden({ open, onClose, ordenes, setTableData,
 
     const handleDialogClose = () => {
         console.log("qq");
-        orden = '';
-        // reset();
+        setFechaEntregaRealTemporal('');
+        reset();
         onClose();
     };
 
@@ -313,6 +315,13 @@ export default function ModalEditarOrden({ open, onClose, ordenes, setTableData,
                                                     } else {
                                                         enqueueSnackbar("La fecha no puede ser anterior a la fecha de entrega", { variant: 'warning' });
                                                         field.onChange(null);
+                                                        setCanInsert(false);
+                                                    }
+
+                                                    if (orden?.fact_Id) {
+                                                        setCanInsert(true);
+                                                    } else {
+                                                        enqueueSnackbar("La orden aún no ha sido pagada", { variant: 'warning' });
                                                         setCanInsert(false);
                                                     }
 

@@ -40,7 +40,7 @@ export default function OrdenCreate() {
       // console.log(name);
       dispatch(getOrden(name));
       // console.log(orden);
-    }
+    } 
   }, [isEdit]);
 
   // const currentEmpleado = _userList.find((user) => paramCase(user.name) === name);
