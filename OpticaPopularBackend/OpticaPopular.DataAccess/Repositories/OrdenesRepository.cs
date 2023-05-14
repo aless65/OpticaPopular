@@ -14,7 +14,19 @@ namespace OpticaPopular.DataAccess.Repositories
     {
         public RequestStatus Delete(tbOrdenes item)
         {
-            throw new NotImplementedException();
+            RequestStatus result = new RequestStatus();
+
+            using var db = new SqlConnection(OpticaPopularContext.ConnectionString);
+
+            var parametros = new DynamicParameters();
+            parametros.Add("@orde_Id", item.orde_Id, DbType.Int32, ParameterDirection.Input);
+
+            result.MessageStatus = db.QueryFirst<string>(ScriptsDataBase.UDP_Elimina_Ordenes, parametros, commandType: CommandType.StoredProcedure);
+
+            //if (result.MessageStatus == "La orden ha sido insertada con éxito")
+            //    result.MessageStatus = result.CodeStatus.ToString();
+
+            return result;
         }
 
         public VW_tbOrdenes Find(int? id)
@@ -114,11 +126,8 @@ namespace OpticaPopular.DataAccess.Repositories
 
             var parametros = new DynamicParameters();
             parametros.Add("@orde_Id", item.orde_Id, DbType.Int32, ParameterDirection.Input);
-            parametros.Add("@clie_Id", item.clie_Id, DbType.Int32, ParameterDirection.Input);
-            parametros.Add("@orde_Fecha", item.orde_Fecha, DbType.Date, ParameterDirection.Input);
             parametros.Add("@orde_FechaEntrega", item.orde_FechaEntrega, DbType.Date, ParameterDirection.Input);
             parametros.Add("@orde_FechaEntregaReal", item.orde_FechaEntregaReal, DbType.Date, ParameterDirection.Input);
-            parametros.Add("@sucu_Id", item.sucu_Id, DbType.Int32, ParameterDirection.Input);
             parametros.Add("@usua_IdModificacion", item.usua_IdModificacion, DbType.Int32, ParameterDirection.Input);
 
             var resultado = db.QueryFirst<string>(ScriptsDataBase.UDP_Edita_Ordenes, parametros, commandType: CommandType.StoredProcedure);

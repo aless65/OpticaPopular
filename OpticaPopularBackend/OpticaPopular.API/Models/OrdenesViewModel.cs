@@ -19,6 +19,7 @@ namespace OpticaPopular.API.Models
         public DateTime? orde_FechaCreacion { get; set; }
         public int? usua_IdModificacion { get; set; }
         public DateTime? orde_FechaModificacion { get; set; }
+        public int? fact_Id { get; set; }
 
     }
 }

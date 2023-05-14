@@ -3116,10 +3116,12 @@ CREATE OR ALTER PROCEDURE opti.UDP_opti_tbOrdenes_Find
 	@orde_Id	INT
 AS
 BEGIN
-	SELECT *
-	FROM opti.VW_tbOrdenes
+	SELECT *,	
+		  T2.fact_Id
+	FROM opti.VW_tbOrdenes T1 LEFT JOIN opti.tbDetallesFactura T2
+	ON T1.orde_Id = T2.orde_Id
 	WHERE orde_Estado = 1
-	AND orde_Id = @orde_Id
+	AND T1.orde_Id = @orde_Id
 END
 GO
 
@@ -3199,13 +3201,16 @@ CREATE OR ALTER PROCEDURE opti.UDP_opti_tbOrdenes_Delete
 AS
 BEGIN
 	BEGIN TRY
-		IF NOT EXISTS (SELECT * FROM opti.tbDetallesFactura WHERE orde_Id  = @orde_Id )
+		IF NOT EXISTS (SELECT * FROM opti.tbDetallesFactura WHERE orde_Id = @orde_Id)
 			BEGIN
 				UPDATE [opti].[tbOrdenes]
 				SET [orde_Estado] = 0
 				WHERE orde_Id = @orde_Id 
 
-				SELECT 'La orden ha sido eliminada'
+				DELETE FROM opti.tbDetallesOrdenes
+				WHERE orde_Id = @orde_Id
+
+				SELECT 'La orden ha sido cancelada'
 			END
 		ELSE
 			SELECT 'La orden no puede ser eliminada ya que está siendo usada'
@@ -3371,9 +3376,11 @@ AFTER DELETE
 AS
 BEGIN
 	UPDATE [opti].[tbStockArosPorSucursal]
-	SET [stsu_Stock] = [stsu_Stock] + (SELECT [deor_Cantidad] FROM deleted)
-	WHERE [aros_Id] = (SELECT [aros_Id] FROM deleted)
-	AND [sucu_Id] = (SELECT [sucu_Id] FROM [opti].[tbOrdenes] WHERE [orde_Id] = (SELECT [orde_Id] FROM deleted))
+	SET [stsu_Stock] = [stsu_Stock] + D.[deor_Cantidad]
+	FROM [opti].[tbStockArosPorSucursal] S
+	JOIN deleted D ON S.[aros_Id] = D.[aros_Id]
+	INNER JOIN [opti].[tbOrdenes] O ON S.[sucu_Id] = O.[sucu_Id]
+	WHERE O.[orde_Id] = D.[orde_Id]
 END
 GO
 

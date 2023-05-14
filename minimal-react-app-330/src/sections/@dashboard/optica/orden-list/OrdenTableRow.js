@@ -24,6 +24,8 @@ import { TableMoreMenu, TableNoData } from '../../../../components/table';
 
 // ----------------------------------------------------------------------
 
+export const detallesOrden = [];
+
 export default function OrdenTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRow, onDetallesRow }) {
 
     OrdenTableRow.propTypes = {
@@ -109,9 +111,10 @@ export default function OrdenTableRow({ row, selected, onEditRow, onSelectRow, o
                                         handleCloseMenu();
                                     }}
                                     sx={{ color: 'error.main' }}
+                                    style={{ display: row.orde_FechaEntregaReal !== null ? 'none' : '' }}
                                 >
                                     <Iconify icon={'eva:trash-2-outline'} />
-                                    Eliminar
+                                    Cancelar
                                 </MenuItem>
                                 <MenuItem
                                     onClick={() => {
@@ -122,7 +125,7 @@ export default function OrdenTableRow({ row, selected, onEditRow, onSelectRow, o
                                     <Iconify icon={'eva:edit-fill'} />
                                     Editar
                                 </MenuItem>
-                                <MenuItem
+                                {/* <MenuItem
                                     onClick={() => {
                                         // onDetailsRow();
                                         handleCloseMenu();
@@ -131,7 +134,7 @@ export default function OrdenTableRow({ row, selected, onEditRow, onSelectRow, o
                                 >
                                     <Iconify icon={'mdi:check-all'} />
                                     Cerrar orden
-                                </MenuItem>
+                                </MenuItem> */}
                                 <MenuItem
                                     onClick={() => {
                                         onDetallesRow();

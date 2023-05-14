@@ -429,12 +429,11 @@ export default function OrdenNewEditForm({ isEdit, currentOrden, orden, sucuId }
             fetch('http://opticapopular.somee.com/api/Citas/BuscarCitasTerminadas/0')
                 .then(response => response.json())
                 .then(data => {
-                    console.log(data);
                     const optionsData = data.data
                         .filter(item => {
                             const citaFecha = new Date(item.cita_Fecha).toISOString().split('T')[0];
                             const defaultFecha = defaultValues.fecha.toISOString().split('T')[0];
-                            return item.sucu_Id === defaultValues.sucursal && citaFecha === defaultFecha && item.orde_Id === 0;
+                            return item.sucu_Id === defaultValues.sucursal && citaFecha === defaultFecha && item.orde_Id === null;
                         })
                         .map(item => ({
                             label: `${item.clie_Nombres} ${item.clie_Apellidos} - ${item.deci_HoraInicio}`, // replace 'name' with the property name that contains the label

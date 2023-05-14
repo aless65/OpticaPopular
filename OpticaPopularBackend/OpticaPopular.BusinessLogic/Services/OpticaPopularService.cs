@@ -851,6 +851,26 @@ namespace OpticaPopular.BusinessLogic.Services
             }
         }
 
+        public ServiceResult DeleteOrdenes(tbOrdenes item)
+        {
+            var result = new ServiceResult();
+            try
+            {
+                var delete = _ordenesRepository.Delete(item);
+
+                if (delete.MessageStatus == "Ha ocurrido un error")
+                    return result.SetMessage(delete.MessageStatus, ServiceResultType.Error);
+                else if(delete.MessageStatus == "La orden no puede ser eliminada ya que está siendo usada")
+                    return result.SetMessage(delete.MessageStatus, ServiceResultType.Warning);
+                else
+                    return result.SetMessage(delete.MessageStatus, ServiceResultType.Success);
+            }
+            catch (Exception e)
+            {
+                return result.Error(e.Message);
+            }
+        }
+
         public ServiceResult InsertOrdenesDetalles(tbDetallesOrdenes item)
         {
             var result = new ServiceResult();

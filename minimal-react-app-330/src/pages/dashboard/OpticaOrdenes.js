@@ -39,6 +39,7 @@ import {
 // sections
 import { OrdenTableRow, TableToolbar } from '../../sections/@dashboard/optica/orden-list';
 import ModalEditarOrden from './OpticaOrdenesModales/ModalEditOrdenes';
+import ModalEliminarOrden from './OpticaOrdenesModales/ModalDeleteOrdenes';
 
 // ----------------------------------------------------------------------
 
@@ -115,7 +116,7 @@ export default function OpticaOrdenes() {
 
   const [openEditOrdenDialog, setOpenEditOrdenDialog] = useState(false);
 
-  const [openDeleteEmpleadoDialog, setOpenDeleteEmpleadoDialog] = useState(false);
+  const [openDeleteOrdenDialog, setOpenDeleteOrdenDialog] = useState(false);
 
   const [filterName, setFilterName] = useState('');
 
@@ -161,8 +162,8 @@ export default function OpticaOrdenes() {
   };
 
   const handleDeleteRow = (id) => {
-    // setEmpeId(id);
-    // handleOpenDeleteEmpleadoDialog();
+    setOrdenId(id);
+    handleOpenDeleteOrdenDialog();
   };
 
   const handleDeleteRows = (selected) => {
@@ -192,6 +193,14 @@ export default function OpticaOrdenes() {
 
   const handleCloseEditOrdenDialog = () => {
     setOpenEditOrdenDialog(false);
+  }
+
+  const handleOpenDeleteOrdenDialog = () => {
+    setOpenDeleteOrdenDialog(true);
+  }
+
+  const handleCloseDeleteOrdenDialog = () => {
+    setOpenDeleteOrdenDialog(false);
   }
 
   const denseHeight = dense ? 60 : 80;
@@ -228,7 +237,7 @@ export default function OpticaOrdenes() {
                 setTableData={setTableData}
                 orden={orden}
               />
-              {/* <DeleteEmpleadoDialog open={openDeleteEmpleadoDialog} onClose={handleCloseDeleteEmpleadoDialog} empleados={ordenes} setTableData={setTableData} empeId={empeId} /> */}
+              <ModalEliminarOrden open={openDeleteOrdenDialog} onClose={handleCloseDeleteOrdenDialog} ordenes={ordenes} setTableData={setTableData} ordenId={ordenId} />
 
             </div>
           }

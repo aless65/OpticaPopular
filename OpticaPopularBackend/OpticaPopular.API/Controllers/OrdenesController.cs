@@ -70,6 +70,15 @@ namespace OpticaPopular.API.Controllers
             return Ok(update);
         }
 
+        [HttpPut("Eliminar")]
+        public IActionResult Delete(OrdenesViewModel orden)
+        {
+            var item = _mapper.Map<tbOrdenes>(orden);
+            var delete = _opticaPopularService.DeleteOrdenes(item);
+
+            return Ok(delete);
+        }
+
         [HttpGet("ListadoDetalles")]
         public IActionResult IndexDetalles(int id)
         {
