@@ -879,5 +879,20 @@ namespace OpticaPopular.BusinessLogic.Services
         }
         #endregion
 
+        #region Direcciones por cliente
+        public ServiceResult ListadoDireccionesPorCliente(int clie_Id)
+        {
+            var result = new ServiceResult();
+            try
+            {
+                var list = _direccionesPorClienteRepository.ListByIdCliente(clie_Id);
+                return result.Ok(list);
+            }
+            catch (Exception ex)
+            {
+                return result.Error(ex.Message);
+            }
+        }
+        #endregion
     }
 }

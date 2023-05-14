@@ -1244,7 +1244,6 @@ BEGIN
 END
 GO
 
-
 ---------- DIRECCIONES -----------
 /*Vista Direcciones*/
 CREATE OR ALTER VIEW opti.VW_tbDirecciones
@@ -1252,19 +1251,25 @@ AS
 	SELECT dire_Id,
 	       T1.muni_Id, 
 		   T4.muni_Nombre AS muni_NombreMunicipio,
+		   T4.depa_Id,
+		   tb5.depa_Nombre,
 		   dire_DireccionExacta, 
 		   [dire_Estado], 
-		   usua_IdCreacion, 
+		   T1.usua_IdCreacion, 
 		   t2.usua_NombreUsuario AS dire_UsuarioCreacion,
-		    [dire_FechaCreacion], 
-		   usua_IdModificacion, 
+		   T1.[dire_FechaCreacion], 
+		   T1.usua_IdModificacion, 
 		   T3.usua_NombreUsuario AS dire_UsuarioModificacion,
-		   [dire_FechaModificacion]
-		   FROM opti.tbDirecciones T1 INNER JOIN acce.tbUsuarios T2
+		   T1.[dire_FechaModificacion]
+		   FROM opti.tbDirecciones T1 
+		   INNER JOIN acce.tbUsuarios T2
 		   ON T1.usua_IdCreacion = T2.usua_Id
 		   LEFT JOIN acce.tbUsuarios T3
-		   ON T1.usua_IdModificacion = T3.usua_Id INNER JOIN gral.tbMunicipios T4
-		   ON T1.muni_Id = T4.muni_Nombre
+		   ON T1.usua_IdModificacion = T3.usua_Id 
+		   INNER JOIN gral.tbMunicipios T4
+		   ON T1.muni_Id = T4.muni_id
+		   INNER JOIN gral.tbDepartamentos tb5
+		   ON T4.depa_Id = tb5.depa_Id
 GO
 
 
@@ -1365,14 +1370,29 @@ BEGIN
 END
 GO
 
+CREATE OR ALTER PROCEDURE opti.UDP_tbDireccionesPorCliente_List
+	@clie_Id	INT
+AS
+BEGIN
+	SELECT * 
+	  FROM opti.VW_tbDireccionesPorClientes 
+	 WHERE clie_Id = @clie_Id
+END
+GO
 
 ---------- Direcciones Por Clientes  -----------
+
 /*Vista direcciones por cliente*/
-CREATE OR ALTER VIEW opti.VW_tbDireccionesPorClientes
+CREATE OR ALTER VIEW opti.VW_tbDireccionesPorClientes 
 AS
 	SELECT dicl_Id,
 	       t1.clie_Id, 
 		   T4.clie_Nombres AS dicl_NombreClientes,
+		   T4.clie_Telefono,
+		   t5.muni_Id,
+		   tb6.muni_Nombre,
+		   tb6.depa_Id,
+		   tb7.depa_Nombre,
 		   T1.dire_Id,
 		   t5.dire_DireccionExacta AS dicl_DireccionExacta, 
 		   t1.dicl_Estado, 
@@ -1382,12 +1402,19 @@ AS
 		   T1.usua_IdModificacion, 
 		   t3.usua_NombreUsuario AS dicl_NombreUsuarioModificacion,
 		   t1.clie_FechaModificacion
-		   FROM opti.tbDireccionesPorCliente t1 INNER JOIN acce.tbUsuarios t2
+		   FROM opti.tbDireccionesPorCliente t1 
+		   INNER JOIN acce.tbUsuarios t2
 		   ON t1.usua_IdCreacion = T2.usua_Id
 		   LEFT JOIN acce.tbUsuarios t3
-		   ON t1.usua_IdModificacion = t3.usua_Id INNER JOIN opti.tbClientes T4
-		   ON T1.clie_Id = T4.clie_Id INNER JOIN opti.tbDirecciones t5
+		   ON t1.usua_IdModificacion = t3.usua_Id 
+		   INNER JOIN opti.tbClientes T4
+		   ON T1.clie_Id = T4.clie_Id 
+		   INNER JOIN opti.tbDirecciones t5
 		   ON T1.dire_Id = T5.dire_Id
+		   INNER JOIN gral.tbMunicipios tb6
+		   ON t5.muni_Id = tb6.muni_id
+		   INNER JOIN gral.tbDepartamentos tb7
+		   ON tb6.depa_Id = tb7.depa_Id
 		   WHERE T1.dicl_Estado = 1
 GO
 
@@ -1397,7 +1424,6 @@ CREATE OR ALTER PROCEDURE opti.UDP_opti_tbDireccionesPorClientes_Insert
     @clie_Id           INT, 
 	@dire_Id           INT, 
 	@usua_IdCreacion   INT
-	
 AS 
 BEGIN
 	BEGIN TRY
@@ -2803,6 +2829,7 @@ CREATE OR ALTER VIEW opti.VW_tbOrdenes
 AS
 	SELECT  orde_Id,
 	        T1.clie_Id,
+			cita_Id,
 			(T4.clie_Nombres + ' ' + T4.clie_Apellidos) AS clie_NombreCompleto,
 		    orde_Fecha, 
 			orde_FechaEntrega, 
@@ -2833,7 +2860,7 @@ END
 GO
 
 /*Listado de Ordenes x sucursal*/
-CREATE OR ALTER PROCEDURE opti.UDP_opti_tbOrdenes_ListXSucu
+CREATE OR ALTER PROCEDURE opti.UDP_opti_tbOrdenes_ListXSucu 1
 	@sucu_Id	INT
 AS
 BEGIN
@@ -2889,13 +2916,6 @@ BEGIN
 		SELECT 'Ha ocurrido un error'
 	END CATCH
 END
-GO
-
-EXEC opti.UDP_opti_tbOrdenes_Insert 1, '2023-05-10', '2023-06-10', 1, 1
-go
-EXEC opti.UDP_opti_tbOrdenes_Insert 4, '2023-05-11', '2023-06-09', 3, 1
-go
-EXEC opti.UDP_opti_tbOrdenes_Insert 2, '2023-06-01', '2023-06-30', 3, 1
 GO
 
 /*Editar Ordenes*/
@@ -2964,7 +2984,9 @@ AS
 		   T1.aros_Id, 
 		   T2.aros_Descripcion,
 		   deor_GraduacionLeft, 
-		   deor_GraduacionRight, 
+		   deor_GraduacionRight,
+		   deor_Transition,
+		   deor_FiltroLuzAzul,
 		   deor_Precio, 
 		   deor_Cantidad, 
 		   deor_Total, 
@@ -3034,53 +3056,6 @@ BEGIN
 	END CATCH
 END
 GO
-
-
-/*TRIGGER AROS*/
-GO
-CREATE OR ALTER TRIGGER opti.trg_tbDetallesOrdenes_ReducirStock
-ON [opti].[tbDetallesOrdenes]
-AFTER INSERT
-AS
-BEGIN
-	UPDATE [opti].[tbStockArosPorSucursal]
-	SET [stsu_Stock] = [stsu_Stock] - (SELECT [deor_Cantidad] FROM inserted)
-	WHERE [aros_Id] = (SELECT [aros_Id] FROM inserted)
-	AND [sucu_Id] = (SELECT [sucu_Id] FROM [opti].[tbOrdenes] WHERE [orde_Id] = (SELECT [orde_Id] FROM inserted))
-END
-GO
-
-GO
-CREATE OR ALTER TRIGGER opti.trg_tbDetallesOrdenes_ReducirStock2
-ON [opti].[tbDetallesOrdenes]
-AFTER UPDATE
-AS
-BEGIN
-	UPDATE [opti].[tbStockArosPorSucursal]
-	SET [stsu_Stock] = [stsu_Stock] - ((SELECT [deor_Cantidad] FROM inserted) - (SELECT [deor_Cantidad] FROM deleted))
-	WHERE [aros_Id] = (SELECT [aros_Id] FROM inserted)
-	AND [sucu_Id] = (SELECT [sucu_Id] FROM [opti].[tbOrdenes] WHERE [orde_Id] = (SELECT [orde_Id] FROM inserted))
-END
-GO
-
-
-CREATE OR ALTER TRIGGER opti.trg_tbDetallesOrdenes_AumentarStock
-ON [opti].[tbDetallesOrdenes]
-AFTER DELETE
-AS
-BEGIN
-	UPDATE [opti].[tbStockArosPorSucursal]
-	SET [stsu_Stock] = [stsu_Stock] + (SELECT [deor_Cantidad] FROM deleted)
-	WHERE [aros_Id] = (SELECT [aros_Id] FROM deleted)
-	AND [sucu_Id] = (SELECT [sucu_Id] FROM [opti].[tbOrdenes] WHERE [orde_Id] = (SELECT [orde_Id] FROM deleted))
-END
-GO
-
---INSERT INTO opti.tbDetallesOrdenes(orde_Id, aros_Id, deor_GraduacionLeft, deor_GraduacionRight, deor_Precio, deor_Cantidad, deor_Total, usua_IdCreacion)
---VALUES(1, 2, 0.25, 0.50, 2000.00, 1, 2500.00, 1),
---      (3, 8, 1.15, 0.65, 4800.00, 1, 5000.00, 1)
-
-
 
 ---------- Estados Civiles -----------
 

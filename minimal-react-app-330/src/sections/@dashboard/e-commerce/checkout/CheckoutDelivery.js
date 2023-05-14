@@ -42,7 +42,7 @@ export default function CheckoutDelivery({ deliveryOptions, onApplyShipping }) {
 
   return (
     <Card>
-      <CardHeader title="Delivery options" />
+      <CardHeader title="Opciones de envio" />
       <CardContent>
         <Controller
           name="delivery"

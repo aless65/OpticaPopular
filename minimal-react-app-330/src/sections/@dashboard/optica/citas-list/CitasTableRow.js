@@ -88,11 +88,11 @@ export default function CitasTableRow({ row, selected, onEditRow, onSelectRow, o
 
       <TableCell>{(row.empe_Nombres)}</TableCell>
 
-      <TableCell>{(Moment(row.cita_Fecha).format('DD-MM-YYYY'))}</TableCell>
+      <TableCell>{(Moment(row.cita_Fecha).format('DD/MM/YYYY'))}</TableCell>
 
       <TableCell>{(row.sucu_Id)}</TableCell>
       
-      <TableCell  onClick={onSelectRow}>
+      <TableCell onClick={onSelectRow}>
         <TableMoreMenu
           open={openMenu}
           onOpen={handleOpenMenu}

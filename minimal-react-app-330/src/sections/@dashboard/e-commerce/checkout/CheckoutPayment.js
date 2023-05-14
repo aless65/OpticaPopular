@@ -22,27 +22,30 @@ import CheckoutPaymentMethods from './CheckoutPaymentMethods';
 const DELIVERY_OPTIONS = [
   {
     value: 0,
-    title: 'Standard delivery (Free)',
-    description: 'Delivered on Monday, August 12',
+    title: 'Envío estándar (Gratuito)',
+    description: 'Envío en 4-7 días hábiles',
   },
   {
     value: 2,
-    title: 'Fast delivery ($2,00)',
-    description: 'Delivered on Monday, August 5',
+    title: 'Envío acelerado (L. 200.00)',
+    description: 'Envío en 3-5 días hábiles',
   },
 ];
 
 const PAYMENT_OPTIONS = [
   {
-    value: 'paypal',
-    title: 'Pay with Paypal',
-    description: 'You will be redirected to PayPal website to complete your purchase securely.',
-    icons: ['https://minimal-assets-api.vercel.app/assets/icons/ic_paypal.svg'],
+    value: 'credit_card',
+    title: 'Pago con tarjeta de crédito',
+    description: 'Aceptamos tarjetas Visa y Mastercard.',
+    icons: [
+        'https://minimal-assets-api.vercel.app/assets/icons/ic_mastercard.svg',
+        'https://minimal-assets-api.vercel.app/assets/icons/ic_visa.svg',
+      ],
   },
   {
-    value: 'credit_card',
-    title: 'Credit / Debit Card',
-    description: 'We support Mastercard, Visa, Discover and Stripe.',
+    value: 'debit_card',
+    title: 'Pago con tarjeta de débito',
+    description: 'Aceptamos tarjetas Visa y Mastercard.',
     icons: [
       'https://minimal-assets-api.vercel.app/assets/icons/ic_mastercard.svg',
       'https://minimal-assets-api.vercel.app/assets/icons/ic_visa.svg',
@@ -50,43 +53,27 @@ const PAYMENT_OPTIONS = [
   },
   {
     value: 'cash',
-    title: 'Cash on CheckoutDelivery',
-    description: 'Pay with cash when your order is delivered.',
-    icons: [],
+    title: 'Pago con efectivo',
+    description: 'Paga el total de la venta con efectivo',
+    icons: [
+        
+    ],
   },
 ];
 
-const CARDS_OPTIONS = [
-  { value: 'ViSa1', label: '**** **** **** 1212 - Jimmy Holland' },
-  { value: 'ViSa2', label: '**** **** **** 2424 - Shawn Stokes' },
-  { value: 'MasterCard', label: '**** **** **** 4545 - Cole Armstrong' },
-];
-
-export default function CheckoutPayment() {
+export default function CheckoutPayment({onBackStep, direccion}) {
   const dispatch = useDispatch();
 
   const { checkout } = useSelector((state) => state.product);
 
-  const { total, discount, subtotal, shipping } = checkout;
-
-  const handleNextStep = () => {
-    dispatch(onNextStep());
-  };
+  const { total, subtotal, shipping } = checkout;
 
   const handleBackStep = () => {
-    dispatch(onBackStep());
-  };
-
-  const handleGotoStep = (step) => {
-    dispatch(onGotoStep(step));
-  };
-
-  const handleApplyShipping = (value) => {
-    dispatch(applyShipping(value));
+    onBackStep();
   };
 
   const PaymentSchema = Yup.object().shape({
-    payment: Yup.string().required('Payment is required!'),
+    payment: Yup.string().required('El metodo de pago es requerido!'),
   });
 
   const defaultValues = {
@@ -106,7 +93,7 @@ export default function CheckoutPayment() {
 
   const onSubmit = async () => {
     try {
-      handleNextStep();
+        console.log('Hola');
     } catch (error) {
       console.error(error);
     }
@@ -116,31 +103,23 @@ export default function CheckoutPayment() {
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Grid container spacing={3}>
         <Grid item xs={12} md={8}>
-          <CheckoutDelivery onApplyShipping={handleApplyShipping} deliveryOptions={DELIVERY_OPTIONS} />
-          <CheckoutPaymentMethods cardOptions={CARDS_OPTIONS} paymentOptions={PAYMENT_OPTIONS} />
-          <Button
-            size="small"
-            color="inherit"
-            onClick={handleBackStep}
-            startIcon={<Iconify icon={'eva:arrow-ios-back-fill'} />}
-          >
-            Back
-          </Button>
+            {direccion.id > 0 && (
+                <CheckoutDelivery deliveryOptions={DELIVERY_OPTIONS} />
+            )}
+          <CheckoutPaymentMethods paymentOptions={PAYMENT_OPTIONS} />
         </Grid>
 
         <Grid item xs={12} md={4}>
-          <CheckoutBillingInfo onBackStep={handleBackStep} />
-
+          {direccion.id > 0 && (
+                <CheckoutBillingInfo onBackStep={handleBackStep} billing={direccion} />
+            )}
           <CheckoutSummary
-            enableEdit
             total={total}
             subtotal={subtotal}
-            discount={discount}
             shipping={shipping}
-            onEdit={() => handleGotoStep(0)}
           />
           <LoadingButton fullWidth size="large" type="submit" variant="contained" loading={isSubmitting}>
-            Complete Order
+            Finalizar venta
           </LoadingButton>
         </Grid>
       </Grid>

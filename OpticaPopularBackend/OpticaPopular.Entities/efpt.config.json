@@ -206,7 +206,7 @@
          "ObjectType": 3
       }
    ],
-   "UiHint": "DESKTOP-5RUMQNH\\SQLEXPRESS.OpticaPopular",
+   "UiHint": "EJSM\\SQLEXPRESS.OpticaPopular",
    "UseBoolPropertiesWithoutDefaultSql": false,
    "UseDatabaseNames": true,
    "UseDbContextSplitting": false,

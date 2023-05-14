@@ -1,7 +1,10 @@
+/* eslint-disable camelcase */
+import axios from 'axios';
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 // @mui
 import { Box, Grid, Card, Button, Typography } from '@mui/material';
+import { useSnackbar } from 'notistack';
 // redux
 import { useDispatch, useSelector } from '../../../../redux/store';
 import { onBackStep, onNextStep, createBilling } from '../../../../redux/slices/product';
@@ -16,14 +19,20 @@ import CheckoutNewAddressForm from './CheckoutNewAddressForm';
 
 // ----------------------------------------------------------------------
 
-export default function CheckoutBillingAddress() {
+export default function CheckoutBillingAddress({clie_Id, cita_Id, ordenes, nextStep, direccion}) {
   //
+  const { enqueueSnackbar } = useSnackbar();
+
   const dispatch = useDispatch();
+
   const { checkout } = useSelector((state) => state.product);
-  const { total, discount, subtotal } = checkout;
+
+  const { total, subtotal } = checkout;
   //
   const [open, setOpen] = useState(false);
 
+  const[tableData, setTableData] = useState([]);
+    
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -33,22 +42,37 @@ export default function CheckoutBillingAddress() {
   };
 
   const handleNextStep = () => {
-    dispatch(onNextStep());
-  };
-
-  const handleBackStep = () => {
-    dispatch(onBackStep());
+    nextStep();
   };
 
   const handleCreateBilling = (value) => {
-    dispatch(createBilling(value));
+    direccion(value);
   };
+
+  useEffect(() => {
+    axios.get(`DireccionesPorCliente/ListadoByIdCliente?clie_Id=${clie_Id}`)
+    .then((response) => {
+        if (response.data.code === 200) {
+            if (response.data.data.length > 0) {
+                const data = response.data.data.map((item, index) => ({
+                    id: item.dire_Id,
+                    receiver: item.dicl_NombreClientes,
+                    fullAddress: `Honduras, ${item.depa_Nombre}, ${item.muni_Nombre}.  ${item.dicl_DireccionExacta}`,
+                    phone: item.clie_Telefono,
+                    addressType: index === 0 ? 'Casa' : 'Otro',
+                    isDefault: index === 0,
+                }));
+                setTableData(data);
+            }
+        }
+    });
+  }, [clie_Id])
 
   return (
     <>
       <Grid container spacing={3}>
         <Grid item xs={12} md={8}>
-          {_addressBooks.map((address, index) => (
+          {tableData.map((address, index) => (
             <AddressItem
               key={index}
               address={address}
@@ -56,31 +80,21 @@ export default function CheckoutBillingAddress() {
               onCreateBilling={handleCreateBilling}
             />
           ))}
-          <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Button
-              size="small"
-              color="inherit"
-              onClick={handleBackStep}
-              startIcon={<Iconify icon={'eva:arrow-ios-back-fill'} />}
-            >
-              Back
-            </Button>
+          <Box sx={{ display: 'flex', justifyContent: 'end' }}>
             <Button size="small" onClick={handleClickOpen} startIcon={<Iconify icon={'eva:plus-fill'} />}>
-              Add new address
+              Agregar nueva direccion
             </Button>
           </Box>
         </Grid>
 
         <Grid item xs={12} md={4}>
-          <CheckoutSummary subtotal={subtotal} total={total} discount={discount} />
+          <CheckoutSummary subtotal={subtotal} total={total} direccion={direccion} />
         </Grid>
       </Grid>
 
       <CheckoutNewAddressForm
         open={open}
         onClose={handleClose}
-        onNextStep={handleNextStep}
-        onCreateBilling={handleCreateBilling}
       />
     </>
   );
@@ -90,12 +104,12 @@ export default function CheckoutBillingAddress() {
 
 AddressItem.propTypes = {
   address: PropTypes.object,
-  onNextStep: PropTypes.func,
   onCreateBilling: PropTypes.func,
 };
 
-function AddressItem({ address, onNextStep, onCreateBilling }) {
-  const { receiver, fullAddress, addressType, phone, isDefault } = address;
+function AddressItem({ address, onCreateBilling, onNextStep }) {
+
+  const { id, receiver, fullAddress, addressType, phone, isDefault } = address;
 
   const handleCreateBilling = () => {
     onCreateBilling(address);
@@ -111,7 +125,7 @@ function AddressItem({ address, onNextStep, onCreateBilling }) {
         </Typography>
         {isDefault && (
           <Label color="info" sx={{ ml: 1 }}>
-            Default
+            Por defecto
           </Label>
         )}
       </Box>
@@ -133,12 +147,12 @@ function AddressItem({ address, onNextStep, onCreateBilling }) {
       >
         {!isDefault && (
           <Button variant="outlined" size="small" color="inherit">
-            Delete
+            Eliminar
           </Button>
         )}
         <Box sx={{ mx: 0.5 }} />
         <Button variant="outlined" size="small" onClick={handleCreateBilling}>
-          Deliver to this Address
+            Enviar a esta dirección
         </Button>
       </Box>
     </Card>

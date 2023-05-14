@@ -21,5 +21,13 @@ namespace OpticaPopular.API.Controllers
             _opticaPopularService = opticaPopularService;
             _mapper = mapper;
         }
+
+        [HttpGet("ListadoByIdCliente")]
+        public IActionResult CarritoPorIdUsuario(int clie_Id)
+        {
+            var lista = _opticaPopularService.ListadoDireccionesPorCliente(clie_Id);
+
+            return Ok(lista);
+        }
     }
 }

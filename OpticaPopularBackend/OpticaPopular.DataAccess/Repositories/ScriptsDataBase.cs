@@ -134,5 +134,9 @@ namespace OpticaPopular.DataAccess.Repositories
         public static string UDP_Edita_Categorias = "opti.UDP_opti_tbCategorias_Update";
         public static string UDP_Elimina_Categorias = "opti.UDP_opti_tbCategorias_Delete";
         #endregion
+
+        #region Direcciones por cliente
+        public static string UDP_tbDireccionesPorCliente_List = "opti.UDP_tbDireccionesPorCliente_List";
+        #endregion
     }
 }

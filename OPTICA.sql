@@ -822,7 +822,127 @@ BEGIN
 END
 GO
 
---**************************************TRIGGERS tbAros*******************************************--
+--***********************************************TRIGGERS tbAros*******************************************--
+
+
+--******************************************TRIGGERS tbDetallesOrdenes*******************************************--
+
+CREATE OR ALTER TRIGGER opti.TRG_tbDetallesOrdenes_Total
+ON [opti].[tbDetallesOrdenes]
+AFTER INSERT
+AS
+BEGIN
+	BEGIN TRY
+		BEGIN TRAN
+			DECLARE @aros_CostoUni DECIMAL(18,2), @deor_Transition DECIMAL(18,2), @deor_FiltroLuzAzul DECIMAL(18,2), @deor_Precio DECIMAL(18,2)
+
+			SELECT @aros_CostoUni = [aros_CostoUni] FROM [opti].[tbAros] WHERE [aros_Id] = (SELECT [aros_Id] from inserted)
+
+			IF (SELECT [deor_Transition] FROM inserted) = 1
+			BEGIN
+				SET @deor_Transition = 820
+			END
+			ELSE
+			BEGIN
+				SET @deor_Transition = 0
+			END
+
+			IF (SELECT [deor_FiltroLuzAzul] FROM inserted) = 1
+			BEGIN
+				SET @deor_FiltroLuzAzul = 750
+			END
+			ELSE
+			BEGIN
+				SET @deor_FiltroLuzAzul = 0
+			END
+
+			IF (SELECT [deor_Precio] FROM inserted) > 0
+			BEGIN
+				SET @deor_Precio = @deor_Transition + @deor_FiltroLuzAzul + @aros_CostoUni + (SELECT [deor_Precio] FROM inserted)
+				UPDATE [opti].[tbDetallesOrdenes]
+				SET [deor_Precio] = @deor_Precio,
+					[deor_Total] = [deor_Cantidad] * @deor_Precio
+				WHERE [deor_Id] = (SELECT [deor_Id] FROM inserted)
+			END
+			ELSE
+			BEGIN
+				SET @deor_Precio = @deor_Transition + @deor_FiltroLuzAzul + @aros_CostoUni + 600
+				UPDATE [opti].[tbDetallesOrdenes]
+				SET [deor_Precio] = @deor_Precio,
+					[deor_Total] = [deor_Cantidad] * @deor_Precio
+				WHERE [deor_Id] = (SELECT [deor_Id] FROM inserted)
+			END
+		COMMIT
+	END TRY
+	BEGIN CATCH
+		ROLLBACK
+	END CATCH
+END
+GO
+
+CREATE OR ALTER TRIGGER opti.TRG_tbClientes_Direcciones
+ON [opti].[tbClientes]
+AFTER INSERT
+AS
+BEGIN
+	BEGIN TRY
+		BEGIN TRAN
+			DECLARE @clie_Id INT, @dire_Id INT, @usua_IdCreacion INT
+
+			SELECT @clie_Id = [clie_Id],
+				   @dire_Id = [dire_Id],
+				   @usua_IdCreacion = clie_UsuCreacion
+			  FROM inserted
+
+			INSERT INTO [opti].[tbDireccionesPorCliente] ([clie_Id], [dire_Id], [usua_IdCreacion])
+			VALUES (@clie_Id, @dire_Id, @usua_IdCreacion)
+
+		COMMIT
+	END TRY
+	BEGIN CATCH
+		ROLLBACK
+	END CATCH
+END
+GO
+
+--*****************************************/TRIGGERS tbDetallesOrdenes*******************************************--
+
+/*TRIGGER AROS*/
+CREATE OR ALTER TRIGGER opti.trg_tbDetallesOrdenes_ReducirStock
+ON [opti].[tbDetallesOrdenes]
+AFTER INSERT
+AS
+BEGIN
+	UPDATE [opti].[tbStockArosPorSucursal]
+	SET [stsu_Stock] = [stsu_Stock] - (SELECT [deor_Cantidad] FROM inserted)
+	WHERE [aros_Id] = (SELECT [aros_Id] FROM inserted)
+	AND [sucu_Id] = (SELECT [sucu_Id] FROM [opti].[tbOrdenes] WHERE [orde_Id] = (SELECT [orde_Id] FROM inserted))
+END
+GO
+
+CREATE OR ALTER TRIGGER opti.trg_tbDetallesOrdenes_ReducirStock2
+ON [opti].[tbDetallesOrdenes]
+AFTER UPDATE
+AS
+BEGIN
+	UPDATE [opti].[tbStockArosPorSucursal]
+	SET [stsu_Stock] = [stsu_Stock] - ((SELECT [deor_Cantidad] FROM inserted) - (SELECT [deor_Cantidad] FROM deleted))
+	WHERE [aros_Id] = (SELECT [aros_Id] FROM inserted)
+	AND [sucu_Id] = (SELECT [sucu_Id] FROM [opti].[tbOrdenes] WHERE [orde_Id] = (SELECT [orde_Id] FROM inserted))
+END
+GO
+
+CREATE OR ALTER TRIGGER opti.trg_tbDetallesOrdenes_AumentarStock
+ON [opti].[tbDetallesOrdenes]
+AFTER DELETE
+AS
+BEGIN
+	UPDATE [opti].[tbStockArosPorSucursal]
+	SET [stsu_Stock] = [stsu_Stock] + (SELECT [deor_Cantidad] FROM deleted)
+	WHERE [aros_Id] = (SELECT [aros_Id] FROM deleted)
+	AND [sucu_Id] = (SELECT [sucu_Id] FROM [opti].[tbOrdenes] WHERE [orde_Id] = (SELECT [orde_Id] FROM deleted))
+END
+GO
 
 --INSERT DE LA BASE DE DATOS
 INSERT gral.tbDepartamentos(depa_Id, depa_Nombre, depa_UsuCreacion)
@@ -1065,22 +1185,41 @@ VALUES('Clara','Gomez','1234567890123','2003-12-05','F',1,'98107260','gomez23.e@
 ('Erick','Hernadez','0561272415799','2007-04-30','M',1,'92007930','erickhernadez@gmail.com', 16, 1,3,1)
 GO
 
-
 ALTER TABLE acce.tbUsuarios 
 ADD CONSTRAINT FK_acce_tbUsuarios_opti_tbEmpleados_empe_Id FOREIGN KEY(empe_Id) REFERENCES opti.tbEmpleados(empe_Id) 
 GO
 
-
   --********INSERT TABLA Clientes****************---
 INSERT INTO opti.tbClientes(clie_Nombres, clie_Apellidos, clie_Identidad, clie_Sexo, clie_FechaNacimiento, estacivi_Id, clie_Telefono, clie_CorreoElectronico, dire_Id, clie_UsuCreacion)
-VALUES('Juan','Perez','1234567890123','M','2000-02-08',2,'12345678','juan.perez@example.com', 16, 1),
-('María','Gómez','9876543210987','F','2004-06-06',1,'98765432','maria.gomez@example.com', 15, 1),
-('Pedro','González','4567890123456','M','2006-02-05',1,'45678901','pedro.gonzalez@example.com', 14, 1),
-('Ana','Fernández','7654321098765','F','2009-12-25',1,'76543210','ana.fernandez@example.com', 13, 1),
-('Carlos','López','9876543212345','M','2003-02-28',1,'98765432','carlos.lopez@example.com', 12, 1),
-('Laura','Martínez','5678901234567','F','2003-12-05',1,'56789012','laura.martinez@example.com', 16, 1),
-('Manuel','Díaz','3456789012345','M','2007-12-05',1,'34567890','manuel.diaz@example.com', 15, 1),
-('David','Hernández','5678901234567','M','2008-12-05',1,'55400045','david.hernandez@example.com', 14, 1)
+VALUES('Juan','Perez','1234567890123','M','2000-02-08',2,'12345678','juan.perez@example.com', 16, 1)
+GO
+
+INSERT INTO opti.tbClientes(clie_Nombres, clie_Apellidos, clie_Identidad, clie_Sexo, clie_FechaNacimiento, estacivi_Id, clie_Telefono, clie_CorreoElectronico, dire_Id, clie_UsuCreacion)
+VALUES ('María','Gómez','9876543210987','F','2004-06-06',1,'98765432','maria.gomez@example.com', 15, 1)
+GO
+
+INSERT INTO opti.tbClientes(clie_Nombres, clie_Apellidos, clie_Identidad, clie_Sexo, clie_FechaNacimiento, estacivi_Id, clie_Telefono, clie_CorreoElectronico, dire_Id, clie_UsuCreacion)
+VALUES ('Pedro','González','4567890123456','M','2006-02-05',1,'45678901','pedro.gonzalez@example.com', 14, 1)
+GO
+
+INSERT INTO opti.tbClientes(clie_Nombres, clie_Apellidos, clie_Identidad, clie_Sexo, clie_FechaNacimiento, estacivi_Id, clie_Telefono, clie_CorreoElectronico, dire_Id, clie_UsuCreacion)
+VALUES ('Ana','Fernández','7654321098765','F','2009-12-25',1,'76543210','ana.fernandez@example.com', 13, 1)
+GO
+
+INSERT INTO opti.tbClientes(clie_Nombres, clie_Apellidos, clie_Identidad, clie_Sexo, clie_FechaNacimiento, estacivi_Id, clie_Telefono, clie_CorreoElectronico, dire_Id, clie_UsuCreacion)
+VALUES ('Carlos','López','9876543212345','M','2003-02-28',1,'98765432','carlos.lopez@example.com', 12, 1)
+GO
+
+INSERT INTO opti.tbClientes(clie_Nombres, clie_Apellidos, clie_Identidad, clie_Sexo, clie_FechaNacimiento, estacivi_Id, clie_Telefono, clie_CorreoElectronico, dire_Id, clie_UsuCreacion)
+VALUES ('Laura','Martínez','5678901234567','F','2003-12-05',1,'56789012','laura.martinez@example.com', 16, 1)
+GO
+
+INSERT INTO opti.tbClientes(clie_Nombres, clie_Apellidos, clie_Identidad, clie_Sexo, clie_FechaNacimiento, estacivi_Id, clie_Telefono, clie_CorreoElectronico, dire_Id, clie_UsuCreacion)
+VALUES ('Manuel','Díaz','3456789012345','M','2007-12-05',1,'34567890','manuel.diaz@example.com', 15, 1)
+GO
+
+INSERT INTO opti.tbClientes(clie_Nombres, clie_Apellidos, clie_Identidad, clie_Sexo, clie_FechaNacimiento, estacivi_Id, clie_Telefono, clie_CorreoElectronico, dire_Id, clie_UsuCreacion)
+VALUES ('David','Hernández','5678901234567','M','2008-12-05',1,'55400045','david.hernandez@example.com', 14, 1)
 GO
 
 --********INSERT TABLA Marcas****************---
@@ -1403,7 +1542,7 @@ GO
 
 --*************************************************INSERTS tbCitas*************************************************--
 INSERT INTO [opti].[tbCitas] ([clie_Id], [cons_Id], [cita_Fecha], [usua_IdCreacion])
-VALUES (1, 2, '06-23-2023', 1)
+VALUES (1, 2, GETDATE(), 1)
 GO
 
 INSERT INTO [opti].[tbCitas] ([clie_Id], [cons_Id], [cita_Fecha], [usua_IdCreacion])
@@ -1413,9 +1552,57 @@ GO
 
 --*********************************************INSERTS tbDetallesCitas*************************************************--
 INSERT INTO [opti].[tbDetallesCitas] ([cita_Id], [deci_Costo], [deci_HoraInicio], [deci_HoraFin], [usua_IdCreacion])
-VALUES (2, 450.00, '13:20', '13:40', 1)
+VALUES (1, 450.00, '10:20', '10:40', 1)
 GO
 
+INSERT INTO [opti].[tbDetallesCitas] ([cita_Id], [deci_Costo], [deci_HoraInicio], [deci_HoraFin], [usua_IdCreacion])
+VALUES (2, 450.00, '11:20', '12:00', 1)
+GO
+--********************************************/INSERTS tbDetallesCitas*************************************************--
 
+INSERT INTO [opti].[tbOrdenes] ([clie_Id], [cita_Id], [sucu_Id], [orde_FechaEntrega], [usua_IdCreacion])
+VALUES (null, 1, 1, '06-02-2023', 1)
+GO
 
+INSERT INTO [opti].[tbOrdenes] ([clie_Id], [cita_Id], [sucu_Id], [orde_FechaEntrega], [usua_IdCreacion])
+VALUES (2, null, 1, '06-03-2023', 1)
+GO
 
+INSERT INTO [opti].[tbOrdenes] ([clie_Id], [cita_Id], [sucu_Id], [orde_FechaEntrega], [usua_IdCreacion])
+VALUES (null, 1, 1, '06-10-2023', 1)
+GO
+
+INSERT INTO [opti].[tbOrdenes] ([clie_Id], [cita_Id], [sucu_Id], [orde_FechaEntrega], [usua_IdCreacion])
+VALUES (null, 2, 3, '06-09-2023', 1)
+GO
+
+INSERT INTO [opti].[tbOrdenes] ([clie_Id], [cita_Id], [sucu_Id], [orde_FechaEntrega], [usua_IdCreacion])
+VALUES (2, null, 2, '06-30-2023', 1)
+GO
+
+--********************************************INSERTS tbDetallesOrdenes*************************************************--
+INSERT INTO [opti].[tbDetallesOrdenes]([orde_Id], [aros_Id], [deor_GraduacionLeft], [deor_GraduacionRight], [deor_Transition], [deor_FiltroLuzAzul], [deor_Precio], [deor_Cantidad], [deor_Total], [usua_IdCreacion])
+VALUES (1, 2, '-0.125', '-0.301', 1, 1, 0, 1, 0, 1)
+GO
+
+INSERT INTO [opti].[tbDetallesOrdenes]([orde_Id], [aros_Id], [deor_GraduacionLeft], [deor_GraduacionRight], [deor_Transition], [deor_FiltroLuzAzul], [deor_Precio], [deor_Cantidad], [deor_Total], [usua_IdCreacion])
+VALUES (1, 3, '-0.125', '-0.301', 1, 0, 0, 1, 0, 1)
+GO
+
+INSERT INTO [opti].[tbDetallesOrdenes]([orde_Id], [aros_Id], [deor_GraduacionLeft], [deor_GraduacionRight], [deor_Transition], [deor_FiltroLuzAzul], [deor_Precio], [deor_Cantidad], [deor_Total], [usua_IdCreacion])
+VALUES (2, 3, '+1.000', '+1.150', 0, 0, 800, 1, 0, 1)
+GO
+
+INSERT INTO [opti].[tbDetallesOrdenes]([orde_Id], [aros_Id], [deor_GraduacionLeft], [deor_GraduacionRight], [deor_Transition], [deor_FiltroLuzAzul], [deor_Precio], [deor_Cantidad], [deor_Total], [usua_IdCreacion])
+VALUES (3, 1, '-0.250', '-1.000', 1, 0, 0, 2, 0, 1)
+GO
+
+INSERT INTO [opti].[tbDetallesOrdenes]([orde_Id], [aros_Id], [deor_GraduacionLeft], [deor_GraduacionRight], [deor_Transition], [deor_FiltroLuzAzul], [deor_Precio], [deor_Cantidad], [deor_Total], [usua_IdCreacion])
+VALUES (4, 4, '+2.000', '+1.300', 1, 0, 0, 1, 0, 1)
+GO
+
+INSERT INTO [opti].[tbDetallesOrdenes]([orde_Id], [aros_Id], [deor_GraduacionLeft], [deor_GraduacionRight], [deor_Transition], [deor_FiltroLuzAzul], [deor_Precio], [deor_Cantidad], [deor_Total], [usua_IdCreacion])
+VALUES (5, 5, '+1.010', '+1.320', 1, 1, 0, 2, 0, 1)
+GO
+
+--********************************************INSERTS tbDetallesOrdenes*************************************************--

@@ -12,18 +12,16 @@ CheckoutBillingInfo.propTypes = {
   onBackStep: PropTypes.func,
 };
 
-export default function CheckoutBillingInfo({ onBackStep }) {
+export default function CheckoutBillingInfo({ onBackStep, billing }) {
   const { checkout } = useSelector((state) => state.product);
-
-  const { billing } = checkout;
 
   return (
     <Card sx={{ mb: 3 }}>
       <CardHeader
-        title="Billing Address"
+        title="Dirección de envío"
         action={
           <Button size="small" startIcon={<Iconify icon={'eva:edit-fill'} />} onClick={onBackStep}>
-            Edit
+            Editar
           </Button>
         }
       />
