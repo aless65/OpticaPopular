@@ -674,7 +674,7 @@ CREATE TABLE opti.tbEnvios
 	dire_Id						INT NOT NULL,
 	envi_Fecha					DATE DEFAULT GETDATE(),
 	envi_FechaEntrega			DATE NOT NULL,
-	envi_FechaEntregaReal		DATE NOT NULL,
+	envi_FechaEntregaReal		DATE,
 
 	envi_Estado					BIT DEFAULT 1,
 	usua_IdCreacion				INT NOT NULL,
@@ -1076,8 +1076,19 @@ GO
 
 --********INSERT TABLA METODOS DE PAGOS****************---
 INSERT INTO opti.tbMetodosPago(meto_Nombre, meto_UsuCreacion)
-VALUES('Efectivo',1),
-      ('Tarjeta',1)
+VALUES ('Efectivo', 1)
+GO
+
+INSERT INTO opti.tbMetodosPago(meto_Nombre, meto_UsuCreacion)
+VALUES ('Tarjeta de crédito', 1)
+GO
+
+INSERT INTO opti.tbMetodosPago(meto_Nombre, meto_UsuCreacion)
+VALUES ('Tarjeta de debito', 1)
+GO
+
+INSERT INTO opti.tbMetodosPago(meto_Nombre, meto_UsuCreacion)
+VALUES ('Paypal', 1)
 GO
 
 --********INSERT TABLA Estados Civiles****************---

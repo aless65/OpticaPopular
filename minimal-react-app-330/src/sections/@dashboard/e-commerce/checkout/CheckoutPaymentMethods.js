@@ -42,13 +42,13 @@ CheckoutPaymentMethods.propTypes = {
   paymentOptions: PropTypes.array,
 };
 
-export default function CheckoutPaymentMethods({ paymentOptions }) {
+export default function CheckoutPaymentMethods({ paymentOptions, optionPayment }) {
   const { control } = useFormContext();
 
   const isDesktop = useResponsive('up', 'sm');
 
   return (
-    <Card sx={{ my: 3 }}>
+    <Card sx={{ mb: 3 }}>
       <CardHeader title="Opciones de pago" />
       <CardContent>
         <Controller
@@ -56,7 +56,14 @@ export default function CheckoutPaymentMethods({ paymentOptions }) {
           control={control}
           render={({ field, fieldState: { error } }) => (
             <>
-              <RadioGroup row {...field}>
+              <RadioGroup 
+                row {...field}
+                onChange={(event) => {
+                    const { value } = event.target;
+                    field.onChange(Number(value));
+                    optionPayment(value);
+                  }}
+              >
                 <Stack spacing={2} width={1}>
                   {paymentOptions.map((method) => {
                     const { value, title, icons, description } = method;
@@ -86,7 +93,7 @@ export default function CheckoutPaymentMethods({ paymentOptions }) {
                           sx={{ flexGrow: 1, py: 3 }}
                         />
 
-                        {isDesktop && (
+                        {isDesktop && value !== 1 && (
                           <Stack direction="row" spacing={1} flexShrink={0}>
                             {icons.map((icon) => (
                               <Image key={icon} alt="logo card" src={icon} />

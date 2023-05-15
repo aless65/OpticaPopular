@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import { useEffect, useState } from 'react';
 // @mui
 import {
   Box,
@@ -19,21 +20,30 @@ import Iconify from '../../../../components/Iconify';
 
 // ----------------------------------------------------------------------
 
+
 CheckoutSummary.propTypes = {
-  total: PropTypes.number,
-  subtotal: PropTypes.number,
-  shipping: PropTypes.number,
-  onEdit: PropTypes.func,
-  enableEdit: PropTypes.bool,
-};
+    total: PropTypes.number,
+    subtotal: PropTypes.number,
+  };
 
 export default function CheckoutSummary({
   total,
+  precioCita,
   subtotal,
+  isv,
   shipping,
-  direccion
+  direccion,
 }) {
-  const displayShipping = shipping !== null ? 'Gratis' : '-';
+
+  const [subTotalReal, setSubTotalReal] = useState(0);
+  const [isvReal, setIsvReal] = useState(0);
+  const [totalReal, setTotalReal] = useState(0);
+
+  useEffect(() => {
+    setSubTotalReal(subtotal + precioCita);
+    setIsvReal(isv);
+    setTotalReal(subTotalReal + isvReal + (shipping === 'L. 200.00' ? 200 : 0));
+  }, [subtotal, total, precioCita, shipping, subTotalReal])
 
   return (
     <Card sx={{ mb: 3 }}>
@@ -46,10 +56,10 @@ export default function CheckoutSummary({
 
             <Stack direction="row" justifyContent="space-between">
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              Consulta
+              Cita
             </Typography>
             <Typography variant="subtitle2">
-                0
+                L. {(precioCita.toFixed(2))}
             </Typography>
           </Stack>
 
@@ -58,16 +68,16 @@ export default function CheckoutSummary({
               Sub Total
             </Typography>
             <Typography variant="subtitle2">
-               0
+               L. {(subTotalReal.toFixed(2))}
             </Typography>
           </Stack>
 
           <Stack direction="row" justifyContent="space-between">
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              ISV
+              ISV(15%)
             </Typography>
             <Typography variant="subtitle2">
-                0
+                L. {(isvReal.toFixed(2))}
             </Typography>
           </Stack>
 
@@ -76,7 +86,7 @@ export default function CheckoutSummary({
               Envío
             </Typography>
             <Typography variant="subtitle2">
-                {displayShipping}
+                {(shipping)}
             </Typography>
           </Stack>
 
@@ -86,7 +96,7 @@ export default function CheckoutSummary({
             <Typography variant="subtitle1">Total</Typography>
             <Box sx={{ textAlign: 'right' }}>
               <Typography variant="subtitle1" sx={{ color: 'error.main' }}>
-                {fCurrency(total)}
+                L. {(totalReal.toFixed(2))}
               </Typography>
             </Box>
           </Stack>

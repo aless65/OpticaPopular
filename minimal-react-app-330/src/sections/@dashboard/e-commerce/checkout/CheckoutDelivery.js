@@ -34,14 +34,13 @@ const OptionStyle = styled('div')(({ theme }) => ({
 
 CheckoutDelivery.propTypes = {
   deliveryOptions: PropTypes.array,
-  onApplyShipping: PropTypes.func,
 };
 
-export default function CheckoutDelivery({ deliveryOptions, onApplyShipping }) {
+export default function CheckoutDelivery({ deliveryOptions, optionDelivery }) {
   const { control } = useFormContext();
 
   return (
-    <Card>
+    <Card sx={{ mb: 3 }}>
       <CardHeader title="Opciones de envio" />
       <CardContent>
         <Controller
@@ -53,7 +52,7 @@ export default function CheckoutDelivery({ deliveryOptions, onApplyShipping }) {
               onChange={(event) => {
                 const { value } = event.target;
                 field.onChange(Number(value));
-                onApplyShipping(Number(value));
+                optionDelivery(Number(value));
               }}
             >
               <Stack spacing={2} alignItems="center" direction={{ xs: 'column', md: 'row' }}>

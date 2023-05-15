@@ -893,6 +893,129 @@ namespace OpticaPopular.BusinessLogic.Services
                 return result.Error(ex.Message);
             }
         }
+
+        public ServiceResult UltimaDireccionPorCliente(int clie_Id)
+        {
+            var result = new ServiceResult();
+            try
+            {
+                var list = _direccionesPorClienteRepository.UltimaDireccionPorCliente(clie_Id);
+                return result.Ok(list);
+            }
+            catch (Exception ex)
+            {
+                return result.Error(ex.Message);
+            }
+        }
+
+        public ServiceResult DireccionesPorClienteInsert(tbDireccionesPorCliente item)
+        {
+            var result = new ServiceResult();
+            try
+            {
+                var resultado = _direccionesPorClienteRepository.Insert(item);
+                return result.Ok(resultado);
+            }
+            catch (Exception ex)
+            {
+                return result.Error(ex.Message);
+            }
+        }
+
+
+        public ServiceResult DireccionesPorClienteDelete(tbDireccionesPorCliente item)
+        {
+            var result = new ServiceResult();
+            try
+            {
+                var resultado = _direccionesPorClienteRepository.Delete(item);
+                return result.Ok(resultado);
+            }
+            catch (Exception ex)
+            {
+                return result.Error(ex.Message);
+            }
+        }
+        #endregion
+
+        #region Metodos de pago
+        public ServiceResult ListadoMetodosPago()
+        {
+            var result = new ServiceResult();
+            try
+            {
+                var list = _metodosPagoRepository.List();
+                return result.Ok(list);
+            }
+            catch (Exception ex)
+            {
+                return result.Error(ex.Message);
+            }
+        }
+        #endregion
+
+        #region Facturas
+        public ServiceResult FacturasInsert(tbFacturas item)
+        {
+            var result = new ServiceResult();
+            try
+            {
+                var resultado = _facturasRepository.Insert(item);
+                return result.Ok(resultado);
+            }
+            catch (Exception ex)
+            {
+                return result.Error(ex.Message);
+            }
+        }
+        #endregion
+
+        #region Detalles Factura
+        public ServiceResult DetallesFacturasInsert(tbDetallesFactura item)
+        {
+            var result = new ServiceResult();
+            try
+            {
+                var resultado = _facturasDetallesRepository.Insert(item);
+                return result.Ok(resultado);
+            }
+            catch (Exception ex)
+            {
+                return result.Error(ex.Message);
+            }
+        }
+        #endregion
+
+        #region Envios
+        public ServiceResult EnviosInsert(tbEnvios item)
+        {
+            var result = new ServiceResult();
+            try
+            {
+                var resultado = _enviosRepository.Insert(item);
+                return result.Ok(resultado);
+            }
+            catch (Exception ex)
+            {
+                return result.Error(ex.Message);
+            }
+        }
+        #endregion
+
+        #region Detalles envios
+        public ServiceResult DetallesEnviosInsert(tbDetallesEnvios item)
+        {
+            var result = new ServiceResult();
+            try
+            {
+                var resultado = _detallesEnviosRepository.Insert(item);
+                return result.Ok(resultado);
+            }
+            catch (Exception ex)
+            {
+                return result.Error(ex.Message);
+            }
+        }
         #endregion
     }
 }

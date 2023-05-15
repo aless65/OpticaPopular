@@ -137,6 +137,29 @@ namespace OpticaPopular.DataAccess.Repositories
 
         #region Direcciones por cliente
         public static string UDP_tbDireccionesPorCliente_List = "opti.UDP_tbDireccionesPorCliente_List";
+        public static string UDP_tbDireccionesPorCliente_Insert = "opti.UDP_tbDireccionesPorCliente_Insert";
+        public static string UDP_tbDireccionesPorCliente_Delete = "opti.UDP_tbDireccionesPorCliente_Delete";
+        public static string UDP_tbDireccionesPorCliente_Ultima = "opti.UDP_tbDireccionesPorCliente_Ultima";
+        #endregion
+
+        #region Metodos de pago
+        public static string UDP_opti_tbMetodosPagos_List = "opti.UDP_opti_tbMetodosPagos_List";
+        #endregion
+
+        #region Facturas
+        public static string UDP_tbFacturas_Insert = "opti.UDP_tbFacturas_Insert";
+        #endregion
+
+        #region Detalles Facturas
+        public static string UDP_tbDetallesFactura_Insert = "opti.UDP_tbDetallesFactura_Insert";
+        #endregion
+
+        #region Envios
+        public static string UDP_tbEnvios_Insert = "opti.UDP_tbEnvios_Insert";
+        #endregion
+
+        #region Detalles envios
+        public static string UDP_tbDetallesEnvios_Insert = "opti.UDP_tbDetallesEnvios_Insert";
         #endregion
     }
 }

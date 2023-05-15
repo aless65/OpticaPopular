@@ -15,7 +15,15 @@ BEGIN
 
 	DECLARE @contraEncriptada NVARCHAR(MAX) = HASHBYTES('SHA2_512', @usua_Contrasena);
 
-	SELECT [usua_Id], [usua_NombreUsuario], [role_Id], usua_EsAdmin, role_Id, empe_NombreCompleto, tb2.sucu_Id, tb2.empe_CorreoElectronico
+	SELECT [usua_Id], 
+		   [usua_NombreUsuario], 
+		   [role_Id], 
+		   usua_EsAdmin, 
+		   role_Id, 
+		   empe_NombreCompleto,
+		   tb1.empe_Id,
+		   tb2.sucu_Id, 
+		   tb2.empe_CorreoElectronico
 	FROM acce.VW_tbUsuarios tb1
 	INNER JOIN [opti].[tbEmpleados] tb2
 	ON tb1.empe_Id = tb2.empe_Id
@@ -1380,6 +1388,17 @@ BEGIN
 END
 GO
 
+CREATE OR ALTER PROCEDURE opti.UDP_tbDireccionesPorCliente_Ultima
+	@clie_Id	INT
+AS
+BEGIN
+	SELECT TOP 1 * 
+	  FROM opti.VW_tbDireccionesPorClientes 
+	 WHERE clie_Id = @clie_Id
+	 ORDER BY dire_Id DESC
+END
+GO
+
 ---------- Direcciones Por Clientes  -----------
 
 /*Vista direcciones por cliente*/
@@ -1418,115 +1437,67 @@ AS
 		   WHERE T1.dicl_Estado = 1
 GO
 
-
-/*Insertar Direcciones por Cliente*/
-CREATE OR ALTER PROCEDURE opti.UDP_opti_tbDireccionesPorClientes_Insert
-    @clie_Id           INT, 
-	@dire_Id           INT, 
-	@usua_IdCreacion   INT
-AS 
+CREATE OR ALTER PROCEDURE opti.UDP_tbDireccionesPorCliente_Insert
+	@clie_Id				INT,
+	@muni_Id				CHAR(4),
+	@dire_DireccionExacta	NVARCHAR(MAX),
+	@usua_IdCreacion		INT
+AS
 BEGIN
 	BEGIN TRY
-		IF NOT EXISTS (SELECT * FROM opti.tbDireccionesPorCliente 
-						WHERE clie_Id = @clie_Id AND dire_Id = @dire_Id)
-			BEGIN
-			INSERT INTO opti.tbDireccionesPorCliente(clie_Id,dire_Id,usua_IdCreacion)
-			VALUES(@clie_Id,@dire_Id,@usua_IdCreacion)
+		BEGIN TRAN
+			DECLARE @dire_Id INT
+
+			INSERT INTO [opti].[tbDirecciones] ([muni_Id], [dire_DireccionExacta], [usua_IdCreacion])
+			VALUES(@muni_Id, @dire_DireccionExacta, @usua_IdCreacion)
 			
-			SELECT 'La direccion ha sido insertado'
-			END
-		ELSE IF EXISTS (SELECT * FROM opti.tbDireccionesPorCliente
-						WHERE clie_Id = @clie_Id AND dire_Id = @dire_Id
-						AND dicl_Estado = 0)
-			BEGIN
-				UPDATE opti.tbDireccionesPorCliente 
-				SET dicl_Estado = 1
-				WHERE clie_Id = @clie_Id AND dire_Id = @dire_Id
+			SELECT TOP 1 @dire_Id = [dire_Id] FROM [opti].[tbDirecciones] ORDER BY [dire_Id] DESC
 
-				SELECT 'La direccion ha sido insertado'
-			END
-		ELSE
-			SELECT 'Eata direccion ya existe'
+			INSERT INTO [opti].[tbDireccionesPorCliente] ([clie_Id], [dire_Id], [usua_IdCreacion])
+			VALUES(@clie_Id, @dire_Id, @usua_IdCreacion)
+
+		COMMIT
+		SELECT @dire_Id
 	END TRY
 	BEGIN CATCH
-		SELECT 'Ha ocurrido un error'
+		ROLLBACK
+		SELECT 0
 	END CATCH
 END
 GO
 
-
-/*Listar cargos*/
-CREATE OR ALTER PROCEDURE opti.UDP_opti_tbDireccionPorCliente_List
-AS
-BEGIN
-	SELECT * 
-	From opti.VW_tbDireccionesPorClientes
-END
-GO
-
-
-/*Editar cargos*/
-CREATE OR ALTER PROCEDURE opti.UDP_opti_tbDireccionPorCliente_Update
-	@dicl_Id              INT, 
-	@clie_Id              INT, 
-	@dire_Id              INT, 
-	@usua_IdModificacion  INT
+CREATE OR ALTER PROCEDURE opti.UDP_tbDireccionesPorCliente_Delete
+	@clie_Id				INT,
+	@dire_Id				INT,
+	@usua_IdModificacion	INT
 AS
 BEGIN
 	BEGIN TRY
-	IF NOT EXISTS (SELECT * FROM opti.tbDireccionesPorCliente 
-						WHERE clie_Id = @clie_Id AND dire_Id = @dire_Id)
-		BEGIN			
-			UPDATE opti.tbDireccionesPorCliente
-			SET 	[clie_Id] = @clie_Id,
-                    [dire_Id] = @dire_Id,
-                    [usua_IdModificacion] = @usua_IdModificacion,
-					[clie_FechaModificacion] = GETDATE()
-			WHERE 	[dicl_Id] = @dicl_Id
-
-			SELECT 'La direción ha sido editada'
-		END
-		ELSE IF EXISTS (SELECT * FROM opti.tbDireccionesPorCliente
-						WHERE @dire_Id = dire_Id
-						      AND @clie_Id = clie_Id
-							  AND dicl_Estado = 1
-							  AND [dicl_Id] != @dicl_Id)
-
-			SELECT 'La dirección ya existe'
-		ELSE
-			UPDATE opti.tbDireccionesPorCliente
-			SET dicl_Estado = 1,
-			    [usua_IdModificacion] = @usua_IdModificacion,
+		BEGIN TRAN
+		 UPDATE [opti].[tbDireccionesPorCliente]
+			SET [dicl_Estado] = 0,
+				[usua_IdModificacion] = @usua_IdModificacion,
 				[clie_FechaModificacion] = GETDATE()
-			WHERE clie_Id = @clie_Id AND dire_Id = @dire_Id
+		  WHERE [clie_Id] = @clie_Id
+		    AND [dire_Id] = @dire_Id
+		    AND [dicl_Estado] = 1
 
-			SELECT 'La direccioon ha sido editado'
+		 UPDATE [opti].[tbDirecciones]
+			SET [dire_Estado] = 0,
+				[usua_IdModificacion] = @usua_IdModificacion,
+				[dire_FechaModificacion] = GETDATE()
+		  WHERE [dire_Id] = @dire_Id
+			AND [dire_Estado] = 1
+
+		COMMIT 
+		SELECT 1
 	END TRY
 	BEGIN CATCH
-		SELECT 'Ha ocurrido un error'
+		ROLLBACK
+		SELECT 0
 	END CATCH
 END
 GO
-
-
-/*Eliminar cargos*/
-CREATE OR ALTER PROCEDURE opti.UDP_opti_tbDireccionesPorCliente_Delete
-	@dicl_Id   INT
-AS
-BEGIN
-	BEGIN TRY
-		UPDATE opti.tbDireccionesPorCliente
-		SET dicl_Estado = 0
-		WHERE dicl_Id = @dicl_Id
-
-		SELECT 'La direccion ha sido eliminado'
-	END TRY
-	BEGIN CATCH
-		SELECT 'Ha ocurrido un error'
-	END CATCH
-END
-GO
-
 
 ---------- Marcas -----------
 CREATE OR ALTER VIEW opti.VW_tbMarcas
@@ -2535,9 +2506,128 @@ BEGIN
 END
 GO
 
+CREATE OR ALTER PROCEDURE opti.UDP_tbFacturas_Insert
+	@cita_Id			INT,
+	@meto_Id			INT,
+	@empe_Id			INT,
+	@fact_Total			DECIMAL(18,2),
+	@usua_IdCreacion	INT
+AS
+BEGIN
+	BEGIN TRY
+		BEGIN TRAN
+		DECLARE @citaId INT
+
+		IF @cita_Id = 0
+		BEGIN
+			SET @citaId = null
+		END
+		ELSE
+		BEGIN
+			SET @citaId = @cita_Id
+		END
+
+		INSERT INTO [opti].[tbFacturas] ([cita_Id], [meto_Id], [empe_Id], [fact_Total], [usua_IdCreacion])
+		VALUES (@citaId, @meto_Id, @empe_Id, @fact_Total, @usua_IdCreacion)
+
+		COMMIT
+		SELECT TOP 1 [fact_Id] FROM [opti].[tbFacturas] ORDER BY [fact_Id] DESC
+	END TRY
+	BEGIN CATCH
+		ROLLBACK
+		SELECT 0
+	END CATCH
+END
+GO
+
+CREATE OR ALTER PROCEDURE opti.UDP_tbDetallesFactura_Insert
+	@fact_Id			INT,
+	@orde_Id			INT,
+	@envi_Id			INT,
+	@usua_IdCreacion	INT
+AS
+BEGIN
+	BEGIN TRY
+		BEGIN TRAN
+		DECLARE @ordeId INT, @enviId INT
+
+		IF @orde_Id > 0
+		BEGIN
+			SET @ordeId = @orde_Id
+		END
+		ELSE
+		BEGIN
+			SET @ordeId = null
+		END
+
+		IF @envi_Id > 0
+		BEGIN
+			SET @enviId = @envi_Id
+		END
+		ELSE
+		BEGIN
+			SET @enviId = null
+		END
+
+		 INSERT INTO [opti].[tbDetallesFactura] ([fact_Id], [orde_Id], [envi_Id], [defa_Total], [usua_IdCreacion])
+		 VALUES (@fact_Id, @ordeId, @enviId, 0, @usua_IdCreacion)
+
+		COMMIT
+
+		SELECT 1
+	END TRY
+	BEGIN CATCH
+		ROLLBACK 
+		SELECT 0
+	END CATCH
+END
+GO	
+
+CREATE OR ALTER PROCEDURE opti.UDP_tbEnvios_Insert
+	@fact_Id			INT,
+	@dire_Id			INT,
+	@envi_FechaEntrega	DATE,
+	@usua_IdCreacion	INT
+AS
+BEGIN
+	BEGIN TRY
+		BEGIN TRAN
+			INSERT INTO [opti].[tbEnvios] ([fact_Id], [dire_Id], [envi_FechaEntrega], [usua_IdCreacion])
+			VALUES (@fact_Id, @dire_Id, @envi_FechaEntrega, @usua_IdCreacion)
+
+		COMMIT
+		SELECT TOP 1 [envi_Id] FROM [opti].[tbEnvios] ORDER BY [envi_Id] DESC
+	END TRY
+	BEGIN CATCH
+		ROLLBACK
+		SELECT 0
+	END CATCH
+END
+GO
+
+CREATE OR ALTER PROCEDURE opti.UDP_tbDetallesEnvios_Insert
+	@envi_Id			INT,
+	@orde_Id			INT,
+	@usua_IdCreacion	INT
+AS
+BEGIN
+	BEGIN TRY
+		BEGIN TRAN
+			INSERT INTO [opti].[tbDetallesEnvios] ([envi_Id], [orde_Id], [usua_IdCreacion])
+			VALUES(@envi_Id, @orde_Id, @usua_IdCreacion)
+
+		COMMIT
+		SELECT 1
+	END TRY
+	BEGIN CATCH
+		ROLLBACK
+
+		SELECT 0
+	END CATCH
+END
+GO
 
 --****************************************************UDPS tbCitas****************************************************--
-
 CREATE OR ALTER PROCEDURE opti.UDP_tbCitas_ListadoPorIdSucursal
 	@sucu_Id	INT
 AS
@@ -2841,11 +2931,15 @@ AS
 			orde_FechaCreacion, 
 			usua_IdModificacion, 
 			orde_FechaModificacion 
-FROM opti.tbOrdenes t1 INNER JOIN acce.tbUsuarios t2
-ON t1.usua_IdCreacion = t2.usua_Id LEFT JOIN acce.tbUsuarios t3
-ON t1.usua_IdModificacion = t3.usua_Id INNER JOIN opti.tbClientes T4
-ON T1.clie_Id = T4.clie_Id INNER JOIN opti.tbSucursales T5
-ON T1.sucu_Id = T5.sucu_Id
+	FROM opti.tbOrdenes t1 
+	INNER JOIN acce.tbUsuarios t2
+	ON t1.usua_IdCreacion = t2.usua_Id 
+	LEFT JOIN acce.tbUsuarios t3
+	ON t1.usua_IdModificacion = t3.usua_Id 
+	LEFT JOIN opti.tbClientes T4
+	ON T1.clie_Id = T4.clie_Id 
+	INNER JOIN opti.tbSucursales T5
+	ON T1.sucu_Id = T5.sucu_Id
 GO
 
 
@@ -2860,7 +2954,7 @@ END
 GO
 
 /*Listado de Ordenes x sucursal*/
-CREATE OR ALTER PROCEDURE opti.UDP_opti_tbOrdenes_ListXSucu 1
+CREATE OR ALTER PROCEDURE opti.UDP_opti_tbOrdenes_ListXSucu
 	@sucu_Id	INT
 AS
 BEGIN
@@ -2956,7 +3050,7 @@ CREATE OR ALTER PROCEDURE opti.UDP_opti_tbOrdenes_Delete
 AS
 BEGIN
 	BEGIN TRY
-		IF NOT EXISTS (SELECT * FROM opti.tbFacturasDetalles WHERE orde_Id  = @orde_Id )
+		IF NOT EXISTS (SELECT * FROM opti.tbDetallesFactura WHERE orde_Id  = @orde_Id )
 			BEGIN
 				UPDATE [opti].[tbOrdenes]
 				SET [orde_Estado] = 0

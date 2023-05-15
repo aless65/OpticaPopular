@@ -59,6 +59,7 @@ import useTable, { getComparator, emptyRows } from '../../hooks/useTable';
 import { dispatch, useDispatch, useSelector } from '../../redux/store';
 // sections
 import { OrdenesTableRow, OrdenesTableToolbar } from '../../sections/@dashboard/optica/Ordenes-list-venta-step1';
+import { OrderCompleteIllustration } from '../../assets';
 
 // ----------------------------------------------------------------------
 
@@ -93,6 +94,7 @@ export default function Ventas() {
     const [clie_Id, setClie_Id] = useState('');
 
     const [clieId, setClieId] = useState('');
+
     const [direccion, setDireccion] = useState([]);
 
     const { enqueueSnackbar } = useSnackbar();
@@ -155,7 +157,44 @@ export default function Ventas() {
     };
 
     const handleDireccion = (value) => {
-        setDireccion(value);
+
+        if (isCita) {
+            axios.get('Ordenes/Listado')
+                .then(response => {
+                    if (response.data.code === 200) {
+                        const data = response.data.data.
+                            filter(item => item.cita_Id === cita_Id)
+                            .map(item => ({
+                                clie_Id: item.clie_Id
+                            }));
+
+                        if (data.length === 0) {
+                            enqueueSnackbar(`No puede seleccionar una direccion de envio ya que no posee ordenes en la cita`, { variant: 'warning' });
+                        } else {
+                            setDireccion(value);
+                        }
+                    }
+                })
+        }
+
+        if (!isCita) {
+            axios.get('Ordenes/Listado')
+                .then(response => {
+                    if (response.data.code === 200) {
+                        const data = response.data.data.
+                            filter(item => item.clie_Id === clieId)
+                            .map(item => ({
+                                clie_Id: item.clie_Id
+                            }));
+
+                        if (data.length === 0) {
+                            enqueueSnackbar(`No puede seleccionar una direccion de envio ya que no posee ordenes`, { variant: 'warning' });
+                        } else {
+                            setDireccion(value);
+                        }
+                    }
+                })
+        }
     }
 
     const handleNext = () => {
@@ -167,7 +206,6 @@ export default function Ventas() {
             enqueueSnackbar(`Debe seleccionar al menos una orden para continuar`, { variant: 'warning' });
         } else {
             setMostrarErrorStep1(false);
-
             let newSkipped = skipped;
             if (isStepSkipped(activeStep)) {
                 newSkipped = new Set(newSkipped.values());
@@ -200,6 +238,16 @@ export default function Ventas() {
 
     const handleReset = () => {
         setActiveStep(0);
+        setClieId(0);
+        setClie_Id([]);
+        setTableData([]);
+        setCita_Id(0);
+        setSelected([]);
+        setDireccion([]);
+        setMostrarContenedor(false);
+        setMostrarContenedorCitas(true);
+        setMostrarContenedorClientes(true);
+        setMostrarContenedorOBien(true);
     };
 
     useEffect(() => {
@@ -270,8 +318,7 @@ export default function Ventas() {
                             if (response1.data.code === 200) {
                                 if (response1.data.data.length > 0) {
                                     const data = response1.data.data.filter(item =>
-                                        item.clie_Id === respuesta.data.data.clie_Id &&
-                                        item.cita_Id !== 0 &&
+                                        item.cita_Id === cita_Id &&
                                         dayjs(item.orde_Fecha).format('DD/MM/YYYY') === dayjs().format('DD/MM/YYYY')
                                     ).map(item => ({
                                         clie_Id: item.clie_Id,
@@ -323,12 +370,18 @@ export default function Ventas() {
                     </Stepper>
                     {activeStep === steps.length ? (
                         <>
-                            <Typography sx={{ mt: 2, mb: 1 }}>
-                                All steps completed - you&apos;re finished
-                            </Typography>
                             <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
                                 <Box sx={{ flex: '1 1 auto' }} />
-                                <Button onClick={handleReset}>Reset</Button>
+                                <Button onClick={handleReset}>Regresar</Button>
+                            </Box>
+                            <Box sx={{ p: 4, maxWidth: 480, margin: 'auto' }}>
+                                <Box sx={{ textAlign: 'center' }}>
+                                    <Typography variant="h4" paragraph>
+                                        Gracias por su compra!
+                                    </Typography>
+
+                                    <OrderCompleteIllustration sx={{ height: 260, my: 10 }} />
+                                </Box>
                             </Box>
                         </>
                     ) : (
@@ -377,7 +430,7 @@ export default function Ventas() {
                                                                     setMostrarContenedorClientes(false);
                                                                     setMostrarErrorStep1(false);
                                                                 } else {
-                                                                    setClieId('');
+                                                                    setCita_Id('');
                                                                     setMostrarContenedor(false);
                                                                     setMostrarContenedorOBien(true);
                                                                     setMostrarContenedorClientes(true);
@@ -417,6 +470,7 @@ export default function Ventas() {
                                                                     setMostrarContenedorCitas(true);
                                                                     setMostrarContenedorOBien(true);
                                                                 }
+                                                                setSelected([]);
                                                                 setDireccion([]);
                                                             }}
                                                             isOptionEqualToValue={(option, value) => option.id === value.id}
@@ -432,12 +486,12 @@ export default function Ventas() {
                                         </Card>
                                         <div style={{ display: mostrarContenedor ? '' : 'none' }}>
                                             <br />
-                                            <br/>
+                                            <br />
                                             <Divider />
                                             <br />
                                             <Container>
                                                 <Typography style={{ textAlign: 'center' }}>
-                                                    <Chip label='Seleccione una o varias ordenes' style={{fontSize: 'large', display: isCita ? 'none' : ''}} />
+                                                    <Chip label='Seleccione una o varias ordenes' style={{ fontSize: 'large', display: isCita ? 'none' : '' }} />
                                                 </Typography>
                                             </Container>
                                             <br />
@@ -521,10 +575,10 @@ export default function Ventas() {
                                 </Grid>
                             </Container>
                             <Container style={{ display: activeStep === 1 ? '' : 'none' }}>
-                                <CheckoutBillingAddress clie_Id={clieId} cita_Id={cita_Id} ordenes={selected} nextStep={handleNext} direccion={handleDireccion}/>
+                                <CheckoutBillingAddress clie_Id={clieId} cita_Id={cita_Id} ordenes={selected} nextStep={handleNext} direccion={handleDireccion} />
                             </Container>
                             <Container style={{ display: activeStep === 2 ? '' : 'none' }}>
-                                <CheckoutPayment onBackStep={handleBack} direccion={direccion}/>
+                                <CheckoutPayment onBackStep={handleBack} direccion={direccion} clie_Id={clieId} cita_Id={cita_Id} ordenes={selected} stepActive={activeStep} nextStep={handleNext} />
                             </Container>
                         </>
                     )}
