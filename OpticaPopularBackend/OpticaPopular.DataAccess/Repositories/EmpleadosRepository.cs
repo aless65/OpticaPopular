@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace OpticaPopular.DataAccess.Repositories
 {
-    public class EmpleadosRepository : IRepository<VW_tbEmpleados, VW_tbEmpleados>
+    public class EmpleadosRepository : IRepository<VW_tbEmpleados, VW_tbEmpleados> 
     {
         public RequestStatus Delete(VW_tbEmpleados item)
         {

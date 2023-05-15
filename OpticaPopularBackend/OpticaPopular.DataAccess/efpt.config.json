@@ -210,7 +210,7 @@
          "ObjectType": 3
       }
    ],
-   "UiHint": "DESKTOP-6FS11M8\\MSSQLSERVER1.OpticaPopular",
+   "UiHint": "DESKTOP-DR8MUTE\\SQLEXPRESS.OpticaPopular",
    "UseBoolPropertiesWithoutDefaultSql": false,
    "UseDatabaseNames": true,
    "UseDbContextSplitting": false,

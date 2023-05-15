@@ -49,9 +49,10 @@ namespace OpticaPopular.DataAccess.Repositories
 
         #region Sucursales
         public static string UDP_Lista_Sucursales = "opti.UDP_opti_tbSucursales_List";
-
-
-
+        public static string UDP_Find_Sucursales = "opti.UDP_opti_tbSucursales_Find";
+        public static string UDP_Inserta_Sucursales = "opti.UDP_opti_tbSucursales_Insert";
+        public static string UDP_Edita_Sucursales = "opti.UDP_opti_tbSucursales_Update";
+        public static string UDP_Elimina_Sucursales = "opti.UDP_opti_tbSucursales_Delete";
         #endregion
 
         #region Cargos
@@ -118,7 +119,7 @@ namespace OpticaPopular.DataAccess.Repositories
         public static string UDP_Edita_Consultorios = "opti.UDP_opti_tbConsultorios_Update";
         public static string UDP_Elimina_Consultorios = "opti.UDP_opti_tbConsultorio_Delete";
         public static string UDP_Lista2_Consultorios = "opti.UDP_ConsultoriosListado";
-
+        public static string UDP_Fin_Consultorios = "opti.UDP_opti_tbConsultorios_Find";
         #endregion
 
         #region Marcas

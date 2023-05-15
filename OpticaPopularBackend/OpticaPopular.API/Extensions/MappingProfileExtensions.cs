@@ -13,6 +13,8 @@ namespace OpticaPopular.API.Extensions
             CreateMap<ClienteViewModel, tbClientes>().ReverseMap();
             CreateMap<ClienteViewModel, VW_tbClientes>().ReverseMap();
             CreateMap<EmpleadoViewModel, VW_tbEmpleados>().ReverseMap();
+            CreateMap<SucursalesViewModel, VW_tbSucursales>().ReverseMap();
+            CreateMap<SucursalesViewModel, tbSucursales>().ReverseMap();
             CreateMap<CitasViewModel, tbCitas>().ReverseMap();
             CreateMap<ConsultoriosViewModel, tbConsultorios>().ReverseMap();
             CreateMap<ProveedoresViewModel, tbProveedores>().ReverseMap();

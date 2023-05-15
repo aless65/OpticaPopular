@@ -38,7 +38,7 @@ import useAuth from '../../../hooks/useAuth';
 import useIsMountedRef from '../../../hooks/useIsMountedRef';
 
 
-export default function EditConsultorioDialog({ open, onClose, consultorios, setTableData, consultorioId,consultorioNombre }) {
+export default function EditConsultorioDialog({ open, onClose, consultorios, setTableData, consultorioId, consultorioNombre }) {
 
     const isMountedRef = useIsMountedRef();
 
@@ -48,16 +48,13 @@ export default function EditConsultorioDialog({ open, onClose, consultorios, set
 
     const [optionsEmpleados, setOptionsEmpleados] = useState([]);
 
-   
-
     const consultorio = useSelector((state) => state.consultorio.consultorio);
 
     const dispatch = useDispatch();
 
     const [empleadoTemporal, setEmpleadoTemporal] = useState('');
-    const [consultorioTemporal, setconsultorioTemporal] = useState('');
     
-    const [ConsultorioNombre, setConsultorioNombre] = useState('');
+    const [consultorioTemporal, setconsultorioTemporal] = useState('');
    
 
     // const { register, handleSubmit, setValue, reset, formState: { errors } } = useForm({ defaultValues });
@@ -69,18 +66,15 @@ export default function EditConsultorioDialog({ open, onClose, consultorios, set
     }, [consultorioId, dispatch, insertSuccess]);
 
     useEffect(() => {
-        setconsultorioTemporal(consultorioNombre);
-      }, [consultorioId]);
-
-    useEffect(() => {
         if (consultorio) {
+          setconsultorioTemporal(consultorioNombre);
           setEmpleadoTemporal(consultorio.empe_Id);
           
         }
       }, [consultorio]);
 
     useEffect(() => {
-        fetch('http://opticapopular.somee.com/api/Empleados/Listado')
+        fetch('https://localhost:44362/api/Empleados/Listado')
             .then(response => response.json())
             .then(data => {
                 const optionsData = data.data.map(item => ({
@@ -95,16 +89,13 @@ export default function EditConsultorioDialog({ open, onClose, consultorios, set
     
 
     const InsertSchema = Yup.object().shape({
-        // username: Yup.string().required('Nombre de usuario requerido'),
-        // password: Yup.string().required('Contraseña requerida'),
-        // empleado: Yup.string().required('Empleado requerido'),
-        // rol: Yup.string().required('Rol requerido'),
+        consultorioNombre: Yup.string().required('Nombre del consultorio requerido'),
+        empleado: Yup.string().required('Empleado requerido'),
     });
 
     const defaultValues = {
-        consultorioNombre: consultorio?.cons_Nombre || '',
+        consultorioNombre: consultorioNombre || '',
         empleado: empleadoTemporal || '',
-        
     };
 
     const methods = useForm({
@@ -114,29 +105,32 @@ export default function EditConsultorioDialog({ open, onClose, consultorios, set
 
     const {
         reset,
-
+        register, // Registrar el campo consultorioNombre
         setError,
         handleSubmit,
         formState: { errors, isSubmitting },
     } = methods;
 
     useEffect(() => {
-        methods.setValue('nombre', defaultValues.consultorioNombre);
+        methods.setValue('consultorioNombre', defaultValues.consultorioNombre);
         methods.setValue('empleado', defaultValues.empleado);
         
       }, [defaultValues]);
 
+      
+
     const onSubmit = async (data) => {
-        // console.log(data);
+         
         try {
+            console.log(data);
             const jsonData = {
                 cons_Id: consultorioId,
-                cons_Nombre:consultorioNombre, 
+                cons_Nombre: data.consultorioNombre, // Agregar el valor del nombre del consultorio
                 empe_Id: data.empleado,
                 usua_UsuModificacion: 1,
             };
-
-            fetch("http://opticapopular.somee.com/api/Consultorios/Editar", {
+              console.log(jsonData);
+            fetch("https://localhost:44362/api/Consultorios/Editar", {
                 method: "PUT",
                 mode: "cors",
                 headers: {
@@ -156,7 +150,7 @@ export default function EditConsultorioDialog({ open, onClose, consultorios, set
                     }
                 })
                 .catch((error) => console.error(error));
-            // console.log(response);
+             console.log(data);
         } catch (error) {
             console.error(error);
             reset();
@@ -176,15 +170,18 @@ export default function EditConsultorioDialog({ open, onClose, consultorios, set
 
     }, [insertSuccess]);
 
-   
+    useEffect(() => {
+        methods.setValue('consultorioNombre', consultorioTemporal);
+      }, [consultorioTemporal])
 
     const submitHandler = handleSubmit(onSubmit);
 
     const handleDialogClose = () => {
+        setconsultorioTemporal(consultorioNombre);
         onClose();
         reset();
     };
-
+    
     return (
         <FormProvider methods={methods}>
             <Dialog open={open} fullWidth maxWidth="sm" onClose={handleDialogClose} consultorios={consultorios}>
@@ -193,17 +190,15 @@ export default function EditConsultorioDialog({ open, onClose, consultorios, set
                 {!!errors.afterSubmit && <Alert severity="error">{errors.afterSubmit.message}</Alert>}
 
                 <Stack spacing={3} sx={{ p: 3, pb: 0, pl: 5, pr: 5 }}>
-                    
-                                  
+                {/* Agregar el campo TextField para el nombre del consultorio */}
                 <TextField
-    label="Nombre del consultorio"
-    variant="outlined"
-    fullWidth
-    inputProps={{ readOnly: false }}
-    {...methods.register('consultorioNombre')}
-    value={consultorioTemporal}
-    onChange={(event) => setconsultorioTemporal(event.target.value)}
-/>
+                    fullWidth
+                    label="Nombre del consultorio"
+                    {...register('consultorioNombre')}
+                    error={!!errors.consultorioNombre}
+                    helperText={errors.consultorioNombre?.message}
+                    onChange={e => setconsultorioTemporal(e.target.value)} value={consultorioTemporal}
+                />
 
                     <Grid container>
                         <Grid item xs={12} sx={{ pr: 5 }} sm={12}>
