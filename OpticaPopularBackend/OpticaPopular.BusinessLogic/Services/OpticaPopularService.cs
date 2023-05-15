@@ -407,6 +407,20 @@ namespace OpticaPopular.BusinessLogic.Services
             }
         }
 
+        public ServiceResult FindConsultorio(int id)
+        {
+            var result = new ServiceResult();
+            try
+            {
+                var consultorio = _consultoriosRepository.Find(id);
+                return result.Ok(consultorio);
+            }
+            catch (Exception e)
+            {
+                return result.Error(e.Message);
+            }
+        }
+
         public ServiceResult InsertConsultorios(tbConsultorios item)
         {
             var result = new ServiceResult();
@@ -1049,6 +1063,77 @@ namespace OpticaPopular.BusinessLogic.Services
                 return result.Error(e.Message);
             }
         }
+
+        public ServiceResult FindSucursales(int id)
+        {
+            var result = new ServiceResult();
+            try
+            {
+                var sucursal = _sucursalesRepository.Find(id);
+                return result.Ok(sucursal);
+            }
+            catch (Exception e)
+            {
+                return result.Error(e.Message);
+            }
+        }
+
+        public ServiceResult InsertSucursales(VW_tbSucursales item)
+        {
+            var result = new ServiceResult();
+            try
+            {
+                var insert = _sucursalesRepository.Insert(item);
+                if (insert.MessageStatus == "La sucursal ha sido insertada con éxito")
+                    return result.SetMessage(insert.MessageStatus, ServiceResultType.Success);
+                else if (insert.MessageStatus == "La sucursal ya existe")
+                    return result.SetMessage(insert.MessageStatus, ServiceResultType.Warning);
+                else
+                    return result.SetMessage(insert.MessageStatus, ServiceResultType.Error);
+            }
+            catch (Exception e)
+            {
+                return result.Error(e.Message);
+            }
+        }
+
+        public ServiceResult UpdateSucursales(VW_tbSucursales item)
+        {
+            var result = new ServiceResult();
+            try
+            {
+                var update = _sucursalesRepository.Update(item);
+                if (update.MessageStatus == "La sucursal ha sido editado con éxito")
+                    return result.SetMessage(update.MessageStatus, ServiceResultType.Success);
+                else if (update.MessageStatus == "La sucursal ya existe")
+                    return result.SetMessage(update.MessageStatus, ServiceResultType.Warning);
+                else
+                    return result.SetMessage(update.MessageStatus, ServiceResultType.Error);
+            }
+            catch (Exception e)
+            {
+                return result.Error(e.Message);
+            }
+        }
+
+        public ServiceResult DeleteSucursales(VW_tbSucursales item)
+        {
+            var result = new ServiceResult();
+            try
+            {
+                var update = _sucursalesRepository.Delete(item);
+                if (update.MessageStatus == "La sucursal ha sido eliminada")
+                    return result.SetMessage(update.MessageStatus, ServiceResultType.Success);
+                else
+                    return result.SetMessage(update.MessageStatus, ServiceResultType.Error);
+            }
+            catch (Exception e)
+            {
+                return result.Error(e.Message);
+            }
+        }
+
+
         #endregion
 
     }

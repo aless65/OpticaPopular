@@ -13,6 +13,7 @@ namespace OpticaPopular.Entities.Entities
         public int dire_Id { get; set; }
         public string muni_Id { get; set; }
         public string sucu_MunicipioNombre { get; set; }
+        public string depa_Id { get; set; }
         public string dire_DireccionExacta { get; set; }
         public DateTime sucu_FechaCreacion { get; set; }
         public int sucu_UsuCreacion { get; set; }

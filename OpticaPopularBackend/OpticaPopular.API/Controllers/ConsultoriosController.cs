@@ -15,9 +15,9 @@ namespace OpticaPopular.API.Controllers
     [ApiController]
     public class ConsultoriosController : ControllerBase
     {
-        private readonly OpticaPopularService _opticaPopularService; 
-        private readonly IMapper _mapper; 
-        
+        private readonly OpticaPopularService _opticaPopularService;
+        private readonly IMapper _mapper;
+
         public ConsultoriosController(OpticaPopularService opticaPopularService, IMapper mapper)
         {
             _opticaPopularService = opticaPopularService;
@@ -28,6 +28,13 @@ namespace OpticaPopular.API.Controllers
         public IActionResult Index()
         {
             var list = _opticaPopularService.ListadoConsultorios();
+            return Ok(list);
+        }
+
+        [HttpGet("Find")]
+        public IActionResult Find(int id)
+        {
+            var list = _opticaPopularService.FindConsultorio(id);
             return Ok(list);
         }
 

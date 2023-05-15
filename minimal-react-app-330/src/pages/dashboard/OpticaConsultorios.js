@@ -101,24 +101,7 @@ export default function OpticaConsultorio() {
 
   const [insertSuccess, setInsertSuccess] = useState(false);
   
-  const [isLoadingPage, setIsLoadingPage] = useState(true);
-
-  // ----------------------------------------------------------------------
-  
-  useEffect(() => {
-    fetch(`http://opticapopular.somee.com/api/Pantallas/PantallasAccesos?role_Id=${JSON.parse(localStorage.getItem('usuario')).role_Id}&esAdmin=${JSON.parse(localStorage.getItem('usuario')).usua_EsAdmin}&pant_Nombre=consultorios`)
-      .then(response => response.json())
-      .then(data => {
-        if(data === 0){
-          console.log("nooooo");
-          navigate(PATH_DASHBOARD.general.app);
-        } else{
-          setIsLoadingPage(false);
-        }
-      })
-      .catch(error => console.error(error));
-  
-  }, [])
+// ----------------------------------------------------------------------
 
 function applySortFilter({ tableData, comparator, filterName }) {
   const stabilizedThis = tableData.map((el, index) => [el, index]);
@@ -135,12 +118,12 @@ function applySortFilter({ tableData, comparator, filterName }) {
 
   if (filterName) {
     tableData = tableData.filter((item) =>
-      item.cons_Id.indexOf(filterName.toLowerCase()) !== -1 ||
+      item.cons_Id.toString().indexOf(filterName.toLowerCase()) !== -1 ||
       item.cons_Nombre.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 ||
       item.empe_Nombres.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
     );
   }
-
+  
 
   return tableData;
 }
@@ -215,10 +198,6 @@ function applySortFilter({ tableData, comparator, filterName }) {
   const denseHeight = dense ? 60 : 80;
 
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
-
-  if(isLoadingPage){
-    return null;
-  }
 
   return (
     <Page title="Consultorios">
