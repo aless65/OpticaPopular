@@ -60,7 +60,6 @@ VALUES ('usuarios', '/acceso/usuarios', 'acceso', 'ic_user', 1),
 	   ('categorias', '/optica/categorias','óptica', 'ic_blog', 1),
 	   ('sucursales', '/optica/sucursales', 'óptica', 'ic_banking', 1),
 	   ('consultorios', '/optica/consultorios', 'óptica', 'ic_chat', 1),
-	   ('envios', '/optica/envios', 'óptica', 'ic_mail', 1),
 	   ('ventas', '/optica/ventas', 'óptica', 'ic_cart', 1),
 	   ('facturas', '/optica/facturas', 'óptica', 'ic_invoice', 1)
        --('Marca', '/Marca/Listado', 'Optica', 'marcasItem', 1)

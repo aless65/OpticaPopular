@@ -81,7 +81,7 @@ export function getConsultorios() {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('https://localhost:44362/api/Consultorios/Listado');
+      const response = await axios.get('http://opticapopular.somee.com/api/Consultorios/Listado');
       dispatch(slice.actions.getConsultoriosSuccess(response.data.data));
       console.log(response.data.data);
     } catch (error) {
@@ -111,7 +111,7 @@ export function getConsultorio(id) {
   return async (dispatch) => { // add dispatch parameter
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`https://localhost:44362/api/Consultorios/Find?id=${id}`);
+      const response = await axios.get(`http://opticapopular.somee.com/api/Consultorios/Find?id=${id}`);
       
       dispatch(slice.actions.getConsultorioSuccess(response.data.data));
     } catch (error) {

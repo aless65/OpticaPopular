@@ -121,7 +121,7 @@ export default function SUcursalNewEditForm({ isEdit, currentSucursal }) {
       };
 
       if (isEdit) {
-        fetch("https://localhost:44362/api/Consultorios/Editar", {
+        fetch("http://opticapopular.somee.com/api/Consultorios/Editar", {
           method: "PUT",
           mode: "cors",
           headers: {
@@ -143,7 +143,7 @@ export default function SUcursalNewEditForm({ isEdit, currentSucursal }) {
           })
           .catch((error) => console.error(error));
       } else {
-        fetch("https://localhost:44362/api/Sucursales/Insertar", {
+        fetch("http://opticapopular.somee.com/api/Sucursales/Insertar", {
           method: "POST",
           mode: "cors",
           headers: {
@@ -173,7 +173,7 @@ export default function SUcursalNewEditForm({ isEdit, currentSucursal }) {
   useEffect(() => {
 
 
-    fetch('https://localhost:44362/api/Departamentos/Listado')
+    fetch('http://opticapopular.somee.com/api/Departamentos/Listado')
       .then(response => response.json())
       .then(data => {
         const optionsData = data.data.map(item => ({
@@ -188,7 +188,7 @@ export default function SUcursalNewEditForm({ isEdit, currentSucursal }) {
   }, [currentSucursal]);
 
   useEffect(() => {
-    fetch(`https://localhost:44362/api/Municipios/ListadoDdl?id=${depaId}`)
+    fetch(`http://opticapopular.somee.com/api/Municipios/ListadoDdl?id=${depaId}`)
       .then(response => response.json())
       .then(data => {
         const optionsData = data.data.map(item => ({
@@ -205,7 +205,7 @@ export default function SUcursalNewEditForm({ isEdit, currentSucursal }) {
   }, [depaId])
 
   useEffect(() => {
-    fetch(`https://localhost:44362/api/Municipios/ListadoDdl?id=${currentSucursal?.depa_Id}`)
+    fetch(`http://opticapopular.somee.com/api/Municipios/ListadoDdl?id=${currentSucursal?.depa_Id}`)
       .then(response => response.json())
       .then(data => {
         const optionsData = data.data.map(item => ({

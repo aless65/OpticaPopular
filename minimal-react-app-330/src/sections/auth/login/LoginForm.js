@@ -71,7 +71,7 @@ export default function LoginForm() {
   const onSubmit = (data) => {
     try {
       if (data.email !== "" && data.password !== "") {
-        axios.get(`https://localhost:44362/api/Usuarios/Login?usuario=${data.email}&contrasena=${data.password}`)
+        axios.get(`http://opticapopular.somee.com/api/Usuarios/Login?usuario=${data.email}&contrasena=${data.password}`)
           .then((response) => {
             if (response.data.code === 200) {
               if (response.data.data.length > 0) {

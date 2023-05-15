@@ -43,7 +43,6 @@ export const PATH_OPTICA = {
   envios: path(ROOTS_OPTICA, '/envios'),
   sucursalesNew: path(ROOTS_OPTICA, '/sucursales/nuevo'),
   sucursalesEdit: (name) => path(ROOTS_OPTICA, `/sucursales/${name}/editar`),
-  consultorios: path(ROOTS_OPTICA, '/consultorios') ,
 };
 
 export const PATH_REPORTES = {

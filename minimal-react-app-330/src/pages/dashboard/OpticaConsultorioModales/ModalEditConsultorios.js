@@ -74,7 +74,7 @@ export default function EditConsultorioDialog({ open, onClose, consultorios, set
     }, [consultorio]);
 
     useEffect(() => {
-        fetch('https://localhost:44362/api/Empleados/Listado')
+        fetch('http://opticapopular.somee.com/api/Empleados/Listado')
             .then(response => response.json())
             .then(data => {
                 const optionsData = data.data.map(item => ({
@@ -130,7 +130,7 @@ export default function EditConsultorioDialog({ open, onClose, consultorios, set
                 usua_UsuModificacion: JSON.parse(localStorage.getItem('usuario')).usua_Id,
             };
             console.log(jsonData);
-            fetch("https://localhost:44362/api/Consultorios/Editar", {
+            fetch("http://opticapopular.somee.com/api/Consultorios/Editar", {
                 method: "PUT",
                 mode: "cors",
                 headers: {

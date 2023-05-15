@@ -87,7 +87,7 @@ export default function EditSucursalDialog({ open, onClose, sucursales, setTable
 
   useEffect(() => {
 
-    fetch('https://localhost:44362/api/Departamentos/Listado')
+    fetch('http://opticapopular.somee.com/api/Departamentos/Listado')
       .then(response => response.json())
       .then(data => {
         const optionsData = data.data.map(item => ({
@@ -101,7 +101,7 @@ export default function EditSucursalDialog({ open, onClose, sucursales, setTable
   }, [sucursales]);
 
   useEffect(() => {
-    fetch(`https://localhost:44362/api/Municipios/ListadoDdl?id=${depaId}`)
+    fetch(`http://opticapopular.somee.com/api/Municipios/ListadoDdl?id=${depaId}`)
       .then(response => response.json())
       .then(data => {
         const optionsData = data.data.map(item => ({
@@ -118,7 +118,7 @@ export default function EditSucursalDialog({ open, onClose, sucursales, setTable
   }, [depaId])
 
   useEffect(() => {
-    fetch(`https://localhost:44362/api/Municipios/ListadoDdl?id=${sucursales?.depa_Id}`)
+    fetch(`http://opticapopular.somee.com/api/Municipios/ListadoDdl?id=${sucursales?.depa_Id}`)
       .then(response => response.json())
       .then(data => {
         const optionsData = data.data.map(item => ({
@@ -188,7 +188,7 @@ export default function EditSucursalDialog({ open, onClose, sucursales, setTable
         muni_Id: data.municipio,
       };
       console.log(jsonData);
-      fetch("https://localhost:44362/api/Sucursales/Editar", {
+      fetch("http://opticapopular.somee.com/api/Sucursales/Editar", {
         method: "PUT",
         mode: "cors",
         headers: {

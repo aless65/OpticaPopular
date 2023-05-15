@@ -48,15 +48,13 @@ export default function AddConsultorioDialog({ open, onClose, consultorios, setT
 
   const [optionsEmpleados, setOptionsEmpleados] = useState([]);
 
- 
+
 
   useEffect(() => {
-    fetch('https://localhost:44362/api/Empleados/Listado')
+    fetch('http://opticapopular.somee.com/api/Empleados/Listado')
       .then(response => response.json())
       .then(data => {
-        // console.log(data);
-        const filteredData = data.data.filter(item => item.carg_Nombre === "Oftalmólogo");
-        const optionsData = filteredData.map(item => ({
+        const optionsData = data.data.map(item => ({
           label: item.empe_NombreCompleto, // replace 'name' with the property name that contains the label
           id: item.empe_Id // replace 'id' with the property name that contains the ID
         }));
@@ -69,7 +67,7 @@ export default function AddConsultorioDialog({ open, onClose, consultorios, setT
   const InsertSchema = Yup.object().shape({
     consulNombre: Yup.string().required('Nombre del consultorio requerido'),
     empleado: Yup.string().required('Empleado requerido'),
-    
+
   });
 
   const defaultValues = {
@@ -107,7 +105,7 @@ export default function AddConsultorioDialog({ open, onClose, consultorios, setT
 
       console.log(jsonData);
 
-      fetch("https://localhost:44362/api/Consultorios/Insertar", {
+      fetch("http://opticapopular.somee.com/api/Consultorios/Insertar", {
         method: "POST",
         mode: "cors",
         headers: {
@@ -115,7 +113,7 @@ export default function AddConsultorioDialog({ open, onClose, consultorios, setT
         },
         body: JSON.stringify(jsonData),
       })
-        .then((response) => response.json()) 
+        .then((response) => response.json())
         .then((data) => {
           console.log(data);
           if (data.message === "El Consultorio ha sido insertado con éxito") {
@@ -131,7 +129,7 @@ export default function AddConsultorioDialog({ open, onClose, consultorios, setT
           }
         })
         .catch((error) => console.error(error));
-       console.log(data.empleado);
+      console.log(data.empleado);
     } catch (error) {
       console.error(error);
       reset();
@@ -152,7 +150,7 @@ export default function AddConsultorioDialog({ open, onClose, consultorios, setT
 
   }, [insertSuccess]);
 
- 
+
 
   const submitHandler = handleSubmit(onSubmit);
 
@@ -196,10 +194,10 @@ export default function AddConsultorioDialog({ open, onClose, consultorios, setT
                 value={optionsEmpleados.find(option => option.id === defaultValues.empleado)}
               />
             </Grid>
-           
+
           </Grid>
 
-         
+
         </Stack>
         <DialogActions>
           <LoadingButton variant="contained" type="submit" loading={isSubmitting} onClick={submitHandler}>

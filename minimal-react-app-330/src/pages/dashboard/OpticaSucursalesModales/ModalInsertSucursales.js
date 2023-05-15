@@ -107,7 +107,7 @@ export default function AddConsultorioDialog({ open, onClose, sucursales, setTab
       };
       console.log(jsonData);
 
-      fetch("https://localhost:44362/api/Sucursales/Insertar", {
+      fetch("http://opticapopular.somee.com/api/Sucursales/Insertar", {
         method: "POST",
         mode: "cors",
         headers: {
@@ -143,7 +143,7 @@ export default function AddConsultorioDialog({ open, onClose, sucursales, setTab
 
   useEffect(() => {
 
-    fetch('https://localhost:44362/api/Departamentos/Listado')
+    fetch('http://opticapopular.somee.com/api/Departamentos/Listado')
       .then(response => response.json())
       .then(data => {
         const optionsData = data.data.map(item => ({
@@ -158,7 +158,7 @@ export default function AddConsultorioDialog({ open, onClose, sucursales, setTab
   }, [sucursales]);
 
   useEffect(() => {
-    fetch(`https://localhost:44362/api/Municipios/ListadoDdl?id=${depaId}`)
+    fetch(`http://opticapopular.somee.com/api/Municipios/ListadoDdl?id=${depaId}`)
       .then(response => response.json())
       .then(data => {
         const optionsData = data.data.map(item => ({
@@ -176,7 +176,7 @@ export default function AddConsultorioDialog({ open, onClose, sucursales, setTab
   }, [depaId])
 
   useEffect(() => {
-    fetch(`https://localhost:44362/api/Municipios/ListadoDdl?id=${sucursales?.depa_Id}`)
+    fetch(`http://opticapopular.somee.com/api/Municipios/ListadoDdl?id=${sucursales?.depa_Id}`)
       .then(response => response.json())
       .then(data => {
         const optionsData = data.data.map(item => ({
@@ -226,7 +226,7 @@ export default function AddConsultorioDialog({ open, onClose, sucursales, setTab
         <Stack spacing={3} sx={{ p: 3, pb: 0, pl: 5, pr: 5 }}>
           <Grid container>
             <Grid item xs={12} sx={{ pr: 1 }} sm={6}>
-              <RHFTextField name="sucursalNombre" label="Nombre del consultorio" value={sucursal} onChange={(e) => setSucursal(e.target.value)} />
+              <RHFTextField name="sucursalNombre" label="Nombre de sucursal" value={sucursal} onChange={(e) => setSucursal(e.target.value)} />
 
             </Grid>
             <Grid item xs={12} sx={{ pr: 1 }} sm={6}>

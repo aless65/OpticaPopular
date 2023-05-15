@@ -57,7 +57,7 @@ export default function DeleteSucursalDialog({ open, onClose, sucursales, setTab
                 sucu_Id: sucursalId,
             };
 
-            fetch("https://localhost:44362/api/Sucursales/Eliminar", {
+            fetch("http://opticapopular.somee.com/api/Sucursales/Eliminar", {
                 method: "PUT",
                 mode: "cors",
                 headers: {
