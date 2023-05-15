@@ -2914,6 +2914,44 @@ GO
 
 --***********************************************/UDPS tbDetallesCitas****************************************************--
 
+CREATE OR ALTER PROCEDURE opti.UDP_tbEnvios_ListadoByIdSucursal
+	@sucu_Id	INT
+AS
+BEGIN
+	SELECT tb1.[envi_Id],
+		   tb1.[fact_Id],
+		   tb1.[dire_Id],
+		   tb3.muni_Nombre,
+		   tb4.depa_Nombre,
+		   [envi_FechaEntrega],
+		   [envi_FechaEntregaReal]
+	  FROM [opti].[tbEnvios] tb1
+INNER JOIN [opti].[tbDirecciones] tb2
+		ON tb1.dire_Id = tb2.dire_Id
+INNER JOIN [gral].[tbMunicipios] tb3
+		ON tb2.muni_Id = tb3.muni_id
+INNER JOIN [gral].[tbDepartamentos] tb4
+		ON tb3.depa_Id = tb4.depa_Id
+ FULL JOIN [opti].[tbFacturas] tb5
+	    ON tb1.fact_Id = tb5.fact_Id
+ FULL JOIN [opti].[tbDetallesFactura] tb6
+	    ON tb1.fact_Id = tb6.fact_Id
+ FULL JOIN [opti].[tbCitas] tb7
+		ON tb5.cita_Id = tb7.cita_Id
+ FULL JOIN [opti].[tbOrdenes] tb8
+		ON tb6.orde_Id = tb8.orde_Id
+	 WHERE [envi_Estado] = 1
+END
+GO
+
+CREATE OR ALTER PROCEDURE OPTI.UDP_tbDetallesEnvios_ByIdEnvio
+	@envi_Id	INT
+AS
+BEGIN
+	SELECT [deen_Id]
+END
+GO
+
 ---------- Ordenes -----------
 CREATE OR ALTER VIEW opti.VW_tbOrdenes
 AS
@@ -3043,7 +3081,6 @@ BEGIN
 END
 GO
 
-
 /*Eliminar Ordenes*/
 CREATE OR ALTER PROCEDURE opti.UDP_opti_tbOrdenes_Delete 
 	@orde_Id	INT
@@ -3096,6 +3133,7 @@ AS
 	ON T1.usua_IdCreacion = T3.usua_Id LEFT JOIN acce.tbUsuarios T4
 	ON T1.usua_IdModificacion = T4.usua_Id
 GO
+
 
 
 CREATE OR ALTER PROCEDURE opti.UDP_opti_tbDetallesOrdenes_List
