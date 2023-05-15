@@ -1,6 +1,9 @@
-﻿using OpticaPopular.Entities.Entities;
+﻿using Dapper;
+using Microsoft.Data.SqlClient;
+using OpticaPopular.Entities.Entities;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,7 +29,9 @@ namespace OpticaPopular.DataAccess.Repositories
 
         public IEnumerable<tbMetodosPago> List()
         {
-            throw new NotImplementedException();
+            using var db = new SqlConnection(OpticaPopularContext.ConnectionString);
+
+            return db.Query<tbMetodosPago>(ScriptsDataBase.UDP_opti_tbMetodosPagos_List, null, commandType: CommandType.StoredProcedure);
         }
 
         public RequestStatus Update(tbMetodosPago item)

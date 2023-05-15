@@ -224,6 +224,21 @@ namespace OpticaPopular.BusinessLogic.Services
             }
         }
 
+        public ServiceResult ListadoCitasVentaCita()
+        {
+            var resultado = new ServiceResult();
+
+            try
+            {
+                var list = _citasRepository.ListCitasVentaCita();
+                return resultado.Ok(list);
+            }
+            catch (Exception ex)
+            {
+                return resultado.Error(ex.Message);
+            }
+        }
+
         public ServiceResult InsertarCita(tbCitas item)
         {
             var resultado = new ServiceResult();
@@ -817,6 +832,21 @@ namespace OpticaPopular.BusinessLogic.Services
             }
         }
 
+        public ServiceResult ListadoOrdenesVentaCliente()
+        {
+            var result = new ServiceResult();
+            try
+            {
+                var list = _ordenesRepository.ListOrdenesVentaCliente();
+                return result.Ok(list);
+            }
+            catch (Exception e)
+            {
+                return result.Error(e.Message);
+            }
+        }
+
+
         public ServiceResult FindOrdenes(int id)
         {
             var result = new ServiceResult();
@@ -1136,7 +1166,219 @@ namespace OpticaPopular.BusinessLogic.Services
 
         #endregion
 
+        #region Direcciones por cliente
+        public ServiceResult ListadoDireccionesPorCliente(int clie_Id)
+        {
+            var result = new ServiceResult();
+            try
+            {
+                var list = _direccionesPorClienteRepository.ListByIdCliente(clie_Id);
+                return result.Ok(list);
+            }
+            catch (Exception ex)
+            {
+                return result.Error(ex.Message);
+            }
+        }
+
+        public ServiceResult UltimaDireccionPorCliente(int clie_Id)
+        {
+            var result = new ServiceResult();
+            try
+            {
+                var list = _direccionesPorClienteRepository.UltimaDireccionPorCliente(clie_Id);
+                return result.Ok(list);
+            }
+            catch (Exception ex)
+            {
+                return result.Error(ex.Message);
+            }
+        }
+
+        public ServiceResult DireccionesPorClienteInsert(tbDireccionesPorCliente item)
+        {
+            var result = new ServiceResult();
+            try
+            {
+                var resultado = _direccionesPorClienteRepository.Insert(item);
+                return result.Ok(resultado);
+            }
+            catch (Exception ex)
+            {
+                return result.Error(ex.Message);
+            }
+        }
 
 
+        public ServiceResult DireccionesPorClienteDelete(tbDireccionesPorCliente item)
+        {
+            var result = new ServiceResult();
+            try
+            {
+                var resultado = _direccionesPorClienteRepository.Delete(item);
+                return result.Ok(resultado);
+            }
+            catch (Exception ex)
+            {
+                return result.Error(ex.Message);
+            }
+        }
+        #endregion
+
+        #region Metodos de pago
+        public ServiceResult ListadoMetodosPago()
+        {
+            var result = new ServiceResult();
+            try
+            {
+                var list = _metodosPagoRepository.List();
+                return result.Ok(list);
+            }
+            catch (Exception ex)
+            {
+                return result.Error(ex.Message);
+            }
+        }
+        #endregion
+
+        #region Facturas
+        public ServiceResult FacturasInsert(tbFacturas item)
+        {
+            var result = new ServiceResult();
+            try
+            {
+                var resultado = _facturasRepository.Insert(item);
+                return result.Ok(resultado);
+            }
+            catch (Exception ex)
+            {
+                return result.Error(ex.Message);
+            }
+        }
+
+        public ServiceResult ListadoFacturasByIdCita(int cita_Id)
+        {
+            var resultado = new ServiceResult();
+
+            try
+            {
+                var list = _facturasRepository.ListByIdCita(cita_Id);
+                return resultado.Ok(list);
+            }
+            catch (Exception ex)
+            {
+                return resultado.Error(ex.Message);
+            }
+        }
+
+        public ServiceResult ListadoFacturas()
+        {
+            var resultado = new ServiceResult();
+
+            try
+            {
+                var list = _facturasRepository.List();
+                return resultado.Ok(list);
+            }
+            catch (Exception ex)
+            {
+                return resultado.Error(ex.Message);
+            }
+        }
+        #endregion
+
+        #region Detalles Factura
+        public ServiceResult DetallesFacturasInsert(tbDetallesFactura item)
+        {
+            var result = new ServiceResult();
+            try
+            {
+                var resultado = _facturasDetallesRepository.Insert(item);
+                return result.Ok(resultado);
+            }
+            catch (Exception ex)
+            {
+                return result.Error(ex.Message);
+            }
+        }
+
+        public ServiceResult ListadoDetallesFacturasByIdOrden(int orde_Id)
+        {
+            var resultado = new ServiceResult();
+
+            try
+            {
+                var list = _facturasDetallesRepository.ListByIdOrden(orde_Id);
+                return resultado.Ok(list);
+            }
+            catch (Exception ex)
+            {
+                return resultado.Error(ex.Message);
+            }
+        }
+
+        public ServiceResult ListadoDetallesFacturaByIdFactura(int fact_Id)
+        {
+            var resultado = new ServiceResult();
+
+            try
+            {
+                var list = _facturasDetallesRepository.ListByIdFactura(fact_Id);
+                return resultado.Ok(list);
+            }
+            catch (Exception ex)
+            {
+                return resultado.Error(ex.Message);
+            }
+        }
+        #endregion
+
+        #region Envios
+        public ServiceResult EnviosInsert(tbEnvios item)
+        {
+            var result = new ServiceResult();
+            try
+            {
+                var resultado = _enviosRepository.Insert(item);
+                return result.Ok(resultado);
+            }
+            catch (Exception ex)
+            {
+                return result.Error(ex.Message);
+            }
+        }
+        #endregion
+
+        #region Detalles envios
+        public ServiceResult DetallesEnviosInsert(tbDetallesEnvios item)
+        {
+            var result = new ServiceResult();
+            try
+            {
+                var resultado = _detallesEnviosRepository.Insert(item);
+                return result.Ok(resultado);
+            }
+            catch (Exception ex)
+            {
+                return result.Error(ex.Message);
+            }
+        }
+
+        public ServiceResult ListadoDetallesEnviosByIdOrden(int orde_Id)
+        {
+            var resultado = new ServiceResult();
+
+            try
+            {
+                var list = _detallesEnviosRepository.ListByIdOrden(orde_Id);
+                return resultado.Ok(list);
+            }
+            catch (Exception ex)
+            {
+                return resultado.Error(ex.Message);
+            }
+        }
+
+        #endregion
     }
 }

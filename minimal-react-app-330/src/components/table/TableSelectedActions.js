@@ -42,7 +42,7 @@ export default function TableSelectedActions({ dense, actions, rowCount, numSele
           }),
         }}
       >
-        {numSelected} selected
+        {numSelected} seleccionada
       </Typography>
 
       {actions && actions}

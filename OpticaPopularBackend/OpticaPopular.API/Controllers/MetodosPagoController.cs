@@ -21,5 +21,13 @@ namespace OpticaPopular.API.Controllers
             _opticaPopularService = opticaPopularService;
             _mapper = mapper;
         }
+
+        [HttpGet("Listado")]
+        public IActionResult ListadoMetodosPago()
+        {
+            var lista = _opticaPopularService.ListadoMetodosPago();
+
+            return Ok(lista);
+        }
     }
 }

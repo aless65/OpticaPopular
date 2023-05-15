@@ -77,12 +77,13 @@ export default function LoginForm() {
               if (response.data.data.length > 0) {
 
                 const usuario = {
-                  usua_Id: response.data.data[0].usua_Id,
-                  usua_NombreUsuario: response.data.data[0].usua_NombreUsuario,
-                  usua_EsAdmin: response.data.data[0].usua_EsAdmin,
-                  empe_NombreCompleto: response.data.data[0].empe_NombreCompleto,
-                  role_Id: response.data.data[0].role_Id,
-                  empe_CorreoElectronico: response.data.data[0].empe_CorreoElectronico,
+                    usua_Id: response.data.data[0].usua_Id,
+                    usua_NombreUsuario: response.data.data[0].usua_NombreUsuario,
+                    usua_EsAdmin: response.data.data[0].usua_EsAdmin,
+                    empe_NombreCompleto: response.data.data[0].empe_NombreCompleto,
+                    role_Id: response.data.data[0].role_Id,
+                    empe_CorreoElectronico: response.data.data[0].empe_CorreoElectronico,
+                    empe_Id: response.data.data[0].empe_Id
                 };
 
                 localStorage.setItem('sucu_Id', response.data.data[0].sucu_Id);

@@ -92,6 +92,7 @@ namespace OpticaPopular.DataAccess.Repositories
         public static string UDP_tbCitas_BuscarCitaPorId = "opti.UDP_tbCitas_BuscarCitaPorId";
         public static string UDP_tbCitas_EditarCita = "opti.UDP_tbCitas_EditarCita";
         public static string UDP_tbCitas_EliminarCita = "opti.UDP_tbCitas_EliminarCita";
+        public static string UDP_tbCitas_ListadoVentasCita = "opti.UDP_tbCitas_ListadoVentasCita";
         #endregion
 
         #region Detalles Cita
@@ -112,7 +113,7 @@ namespace OpticaPopular.DataAccess.Repositories
         public static string UDP_Edita_Ordenes = "opti.UDP_opti_tbOrdenes_Update";
         public static string UDP_Elimina_Ordenes = "opti.UDP_opti_tbOrdenes_Delete";
         public static string UDP_Lista_OrdenesPorSucursal = "opti.UDP_opti_tbOrdenes_ListXSucu";
-
+        public static string UDP_tbOrdenes_ListadoVentaCliente = "opti.UDP_tbOrdenes_ListadoVentaCliente";
         public static string UDP_Lista_DetallesOrdenes = "opti.UDP_opti_tbDetallesOrdenes_List";
         public static string UDP_Inserta_DetallesOrdenes = "opti.UDP_opti_tbDetallesOrdenes_Insert";
         public static string UDP_Elimina_DetallesOrdenes = "opti.UDP_opti_tbDetallesOrdenes_Delete";
@@ -148,6 +149,38 @@ namespace OpticaPopular.DataAccess.Repositories
         public static string UDP_Inserta_Categorias = "opti.UDP_opti_tbCategorias_Insert";
         public static string UDP_Edita_Categorias = "opti.UDP_opti_tbCategorias_Update";
         public static string UDP_Elimina_Categorias = "opti.UDP_opti_tbCategorias_Delete";
+        #endregion
+
+        #region Direcciones por cliente
+        public static string UDP_tbDireccionesPorCliente_List = "opti.UDP_tbDireccionesPorCliente_List";
+        public static string UDP_tbDireccionesPorCliente_Insert = "opti.UDP_tbDireccionesPorCliente_Insert";
+        public static string UDP_tbDireccionesPorCliente_Delete = "opti.UDP_tbDireccionesPorCliente_Delete";
+        public static string UDP_tbDireccionesPorCliente_Ultima = "opti.UDP_tbDireccionesPorCliente_Ultima";
+        #endregion
+
+        #region Metodos de pago
+        public static string UDP_opti_tbMetodosPagos_List = "opti.UDP_opti_tbMetodosPagos_List";
+        #endregion
+
+        #region Facturas
+        public static string UDP_tbFacturas_Insert = "opti.UDP_tbFacturas_Insert";
+        public static string UDP_tbFacturas_ListByIdCita = "opti.UDP_tbFacturas_ListByIdCita";
+        public static string UDP_tbFacturas_Listado = "opti.UDP_tbFacturas_Listado";
+        #endregion
+
+        #region Detalles Facturas
+        public static string UDP_tbDetallesFactura_Insert = "opti.UDP_tbDetallesFactura_Insert";
+        public static string UDP_tbDetallesFacturasByIdOrden = "opti.UDP_tbDetallesFacturasByIdOrden ";
+        public static string UDP_tbDetallesFactura_ListByFacturaId = "opti.UDP_tbDetallesFactura_ListByFacturaId";
+        #endregion
+
+        #region Envios
+        public static string UDP_tbEnvios_Insert = "opti.UDP_tbEnvios_Insert";
+        public static string UDP_tbEnvios_ByIdOrden = "opti.UDP_tbEnvios_ByIdOrden";
+        #endregion
+
+        #region Detalles envios
+        public static string UDP_tbDetallesEnvios_Insert = "opti.UDP_tbDetallesEnvios_Insert";
         #endregion
     }
 }

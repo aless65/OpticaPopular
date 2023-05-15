@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using OpticaPopular.API.Models;
 using OpticaPopular.BusinessLogic.Services;
+using OpticaPopular.Entities.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,5 +23,14 @@ namespace OpticaPopular.API.Controllers
             _opticaPopularService = opticaPopularService;
             _mapper = mapper;
         }
+
+        [HttpPost("Insert")]
+        public IActionResult Insert(EnviosViewModel enviosViewModel)
+        {
+            var item = _mapper.Map<tbEnvios>(enviosViewModel);
+            var respuesta = _opticaPopularService.EnviosInsert(item);
+            return Ok(respuesta);
+        }
+
     }
 }

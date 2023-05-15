@@ -25,9 +25,19 @@ namespace OpticaPopular.API.Controllers
         }
 
         [HttpGet("ListadoCitasPorIdSucursal/{sucu_Id}")]
-        public IActionResult CarritoPorIdUsuario(int sucu_Id)
+        public IActionResult ListadoCitasPorIdSucursal(int sucu_Id)
         {
             var lista = _opticaPopularService.ListadoCitasPorIdSucursal(sucu_Id);
+
+            lista.Data = _mapper.Map<IEnumerable<CitasViewModel>>(lista.Data);
+
+            return Ok(lista);
+        }
+
+        [HttpGet("ListadoParaVentas")]
+        public IActionResult ListadoParaVentaCita()
+        {
+            var lista = _opticaPopularService.ListadoCitasVentaCita();
 
             lista.Data = _mapper.Map<IEnumerable<CitasViewModel>>(lista.Data);
 

@@ -20,5 +20,11 @@ namespace OpticaPopular.Entities.Entities
         public int? usua_IdModificacion { get; set; }
         public string dicl_NombreUsuarioModificacion { get; set; }
         public DateTime? clie_FechaModificacion { get; set; }
+
+        public string muni_Id { get; set; }
+        public string muni_Nombre { get; set; }
+		public string depa_Id { get; set; }
+	    public string depa_Nombre { get; set; }
+        public string clie_Telefono { get; set; }
     }
 }
