@@ -2,13 +2,13 @@ import { useEffect, useState } from 'react';
 // import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 // import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 // import GroupIcon from '@mui/icons-material/Group';
-// import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 // import ShoppingBasketIcon from '@mui/icons-material/ShoppingBasket';
 // import BusinessIcon from '@mui/icons-material/Business';
 // import SellIcon from '@mui/icons-material/Sell';
 // import CategoryIcon from '@mui/icons-material/Category';
 // import StoreIcon from '@mui/icons-material/Store';
-import DeskIcon from '@mui/icons-material/Desk';
+// import DeskIcon from '@mui/icons-material/Desk';
 // import DescriptionIcon from '@mui/icons-material/Description';
 // import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 // import LocalShippingIcon from '@mui/icons-material/LocalShipping';
@@ -24,21 +24,21 @@ import SvgIconStyle from '../../../components/SvgIconStyle';
 
 const getIcon = (name) => <SvgIconStyle src={`/icons/${name}.svg`} sx={{ width: 1, height: 1 }} />;
 
-const getIcon2 = (name) => {
-  try {
-    const { default: IconComponent } = import(`@mui/icons-material/${name}`);
-    return <IconComponent />;
-  } catch (error) {
-    console.error(`Failed to load icon component: ${name}`);
-    return null; // Return a default value if the icon component fails to load
-  }
-};
-
-// const ICONS = {
-//   user: getIcon('ic_user'),
-//   kanban: getIcon('ic_kanban'),
-//   dashboard: getIcon('ic_dashboard'),
+// const getIcon2 = (name) => {
+//   try {
+//     const { default: IconComponent } = import(`@mui/icons-material/${name}`);
+//     return <IconComponent />;
+//   } catch (error) {
+//     console.error(`Failed to load icon component: ${name}`);
+//     return null; // Return a default value if the icon component fails to load
+//   }
 // };
+
+const ICONS = {
+  user: getIcon('ic_user'),
+  kanban: getIcon('ic_kanban'),
+  dashboard: getIcon('ic_dashboard'),
+};
 
 //  menuAcceso = [];
 
@@ -62,7 +62,7 @@ const fetchPantallasData = async () => {
       return {
         title: item.pant_Nombre,
         path: item.pant_Url,
-        icon: getIcon('CalendarMonthIcon'),
+        icon: getIcon(item.pant_Icon),
       };
     });
     // console.log(extractedDataAcceso);
@@ -96,7 +96,7 @@ const fetchPantallasData = async () => {
       return {
         title: item.pant_Nombre,
         path: item.pant_Url,
-        icon: getIcon('CalendarMonthIcon'),
+        icon: getIcon(item.pant_Icon),
       };
     });
 
@@ -130,7 +130,7 @@ const fetchPantallasData = async () => {
       return {
         title: item.pant_Nombre,
         path: item.pant_Url,
-        icon: getIcon('CalendarMonthIcon'),
+        icon: getIcon(item.pant_Icon),
       };
     });
 
@@ -170,7 +170,7 @@ const navConfig = [
   {
     subheader: 'inicio',
     items: [
-      { title: 'app', path: PATH_DASHBOARD.general.app, icon: <DeskIcon/> },
+      { title: 'app', path: PATH_DASHBOARD.general.app, icon: ICONS.dashboard },
     ],
   },
   // ACCESO

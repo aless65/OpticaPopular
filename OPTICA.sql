@@ -48,21 +48,21 @@ CREATE TABLE acce.tbPantallas(
 GO
 
 INSERT INTO acce.tbPantallas(pant_Nombre, pant_Url, pant_Menu, pant_Icon, pant_UsuCreacion)
-VALUES ('usuarios', '/acceso/usuarios', 'acceso', '<ManageAccountsIcon/>', 1),
-       ('roles', '/acceso/roles', 'acceso', 'ICONS.kanban', 1),
-	   ('reporte citas', '/reportes/citas', 'reportes', 'SummarizeIcon', 1),
-       ('empleados', '/optica/empleados', 'óptica', '<PeopleAltIcon/>', 1),
-	   ('clientes', '/optica/clientes', 'óptica', '<GroupIcon/>', 1),
-	   ('citas', '/optica/citas', 'óptica', 'CalendarMonthIcon', 1),
-	   ('proveedores', '/optica/proveedores', 'óptica', '<BusinessIcon/>', 1),
-	   ('ordenes', '/optica/ordenes', 'óptica', '<ShoppingBasketIcon/>', 1),
-	   ('marcas', '/optica/marcas', 'óptica', '<SellIcon/>', 1),
-	   ('categorias', '/optica/categorias','óptica', '<CategoryIcon/>', 1),
-	   ('sucursales', '/optica/sucursales', 'óptica', '<StoreIcon/>', 1),
-	   ('consultorios', '/optica/consultorios', 'óptica', '<DeskIcon/>', 1),
-	   ('envios', '/optica/envios', 'óptica', '<DeskIcon/>', 1),
-	   ('ventas', '/optica/ventas', 'óptica', '<DeskIcon/>', 1),
-	   ('facturas', '/optica/facturas', 'óptica', '<DeskIcon/>', 1)
+VALUES ('usuarios', '/acceso/usuarios', 'acceso', 'ic_user', 1),
+       ('roles', '/acceso/roles', 'acceso', 'ic_kanban', 1),
+	   ('reporte citas', '/reportes/citas', 'reportes', 'ic_analytics', 1),
+       ('empleados', '/optica/empleados', 'óptica', 'ic_user', 1),
+	   ('clientes', '/optica/clientes', 'óptica', 'ic_user', 1),
+	   ('citas', '/optica/citas', 'óptica', 'ic_calendar', 1),
+	   ('proveedores', '/optica/proveedores', 'óptica', 'ic_banking', 1),
+	   ('ordenes', '/optica/ordenes', 'óptica', 'ic_booking', 1),
+	   ('marcas', '/optica/marcas', 'óptica', 'ic_ecommerce', 1),
+	   ('categorias', '/optica/categorias','óptica', 'ic_blog', 1),
+	   ('sucursales', '/optica/sucursales', 'óptica', 'ic_banking', 1),
+	   ('consultorios', '/optica/consultorios', 'óptica', 'ic_chat', 1),
+	   ('envios', '/optica/envios', 'óptica', 'ic_mail', 1),
+	   ('ventas', '/optica/ventas', 'óptica', 'ic_cart', 1),
+	   ('facturas', '/optica/facturas', 'óptica', 'ic_invoice', 1)
        --('Marca', '/Marca/Listado', 'Optica', 'marcasItem', 1)
 GO
 

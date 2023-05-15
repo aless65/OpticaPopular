@@ -89,7 +89,9 @@ export default function LoginForm() {
                 localStorage.setItem('usuario', JSON.stringify(usuario));
                 
                 console.log(localStorage.getItem('usuario'));
-                navigate('/Inicio/app', { replace: true });
+
+                window.location.replace('/Inicio/app');
+                
               } else {
                 setErrorMessages({ name: "generalError", message: errores.generalError });
               }

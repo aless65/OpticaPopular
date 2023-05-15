@@ -311,7 +311,7 @@ export default function ModalEditarOrden({ open, onClose, ordenes, setTableData,
                                             <DatePicker
                                                 label="Fecha de Entrega Real"
                                                 value={field.value || fechaTemp}
-                                                minDate={defaultValues.orde_FechaEntrega}
+                                                minDate={fechaEntregaTemporal}
                                                 error={errors.orde_FechaEntregaReal?.message !== undefined}
                                                 onChange={(newValue) => {
 

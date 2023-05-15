@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
 import { paramCase, capitalCase } from 'change-case';
-import { useParams, useLocation } from 'react-router-dom';
+import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 // @mui
 import { Container } from '@mui/material';
@@ -20,7 +20,25 @@ import { getEmpleado } from '../../redux/slices/empleado';
 
 // ----------------------------------------------------------------------
 
+
 export default function UserCreate() {
+
+  const [isLoadingPage, setIsLoadingPage] = useState(true);
+
+  useEffect(() => {
+    fetch(`http://opticapopular.somee.com/api/Pantallas/PantallasAccesos?role_Id=${JSON.parse(localStorage.getItem('usuario')).role_Id}&esAdmin=${JSON.parse(localStorage.getItem('usuario')).usua_EsAdmin}&pant_Nombre=empleados`)
+      .then(response => response.json())
+      .then(data => {
+        if(data === 0){
+          navigate(PATH_DASHBOARD.general.app);
+        } else{
+          setIsLoadingPage(false);
+        }
+      })
+      .catch(error => console.error(error));
+  
+  }, [])
+
   const { themeStretch } = useSettings();
 
   const { pathname } = useLocation();
@@ -35,6 +53,8 @@ export default function UserCreate() {
 
   const isEdit = pathname.includes('editar');
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     if(isEdit){
       dispatch(getEmpleado(name));
@@ -44,6 +64,11 @@ export default function UserCreate() {
   // const currentEmpleado = _userList.find((user) => paramCase(user.name) === name);
 
   const currentEmpleado = isEdit ? empleado : null;
+
+  if(isLoadingPage){
+    return null;
+  }
+
 
   return (
     <Page title="Empleado: Crear nuevo">

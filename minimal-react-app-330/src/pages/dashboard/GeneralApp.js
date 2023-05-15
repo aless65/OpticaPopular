@@ -38,7 +38,7 @@ export default function GeneralApp() {
           <Grid item xs={12} md={4}>
             <AppFeatured />
           </Grid>
-
+{/* 
           <Grid item xs={12} md={4}>
             <AppWidgetSummary
               title="Total Active Users"
@@ -67,7 +67,7 @@ export default function GeneralApp() {
               chartColor={theme.palette.chart.red[0]}
               chartData={[8, 9, 31, 8, 16, 37, 8, 33, 46, 31]}
             />
-          </Grid>
+          </Grid> */}
 
           <Grid item xs={12} md={6} lg={4}>
             <AppCurrentDownload />
@@ -76,7 +76,7 @@ export default function GeneralApp() {
           <Grid item xs={12} md={6} lg={8}>
             <AppAreaInstalled />
           </Grid>
-
+{/* 
           <Grid item xs={12} md={6} lg={4}>
             <AppTopRelated />
           </Grid>
@@ -94,7 +94,7 @@ export default function GeneralApp() {
               <AppWidget title="Conversion" total={38566} icon={'eva:person-fill'} chartData={48} />
               <AppWidget title="Applications" total={55566} icon={'eva:email-fill'} color="warning" chartData={75} />
             </Stack>
-          </Grid>
+          </Grid> */}
         </Grid>
       </Container>
     </Page>
