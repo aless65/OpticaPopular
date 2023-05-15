@@ -31,7 +31,7 @@ export default function SucursalTableRow({ row, selected, onEditRow, onSelectRow
 
   const theme = useTheme();
 
-  const { sucu_Id, sucu_Descripcion } = row;
+  const { sucu_Id, sucu_Descripcion, dire_DireccionExacta } = row;
   
   const [openMenu, setOpenMenuActions] = useState(null);
 
@@ -49,6 +49,8 @@ export default function SucursalTableRow({ row, selected, onEditRow, onSelectRow
       <TableCell>{(sucu_Id)}</TableCell>
 
       <TableCell>{(sucu_Descripcion)}</TableCell>
+
+      <TableCell>{(dire_DireccionExacta)}</TableCell>
 
       <TableCell align="right" onClick={onSelectRow}>
         <TableMoreMenu

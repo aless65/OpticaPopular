@@ -24,6 +24,7 @@ namespace OpticaPopular.API.Models
         public string sucu_MunicipioNombre { get; set; }
         public string depa_Id { get; set; }
         public int carg_Id { get; set; }
+        public string carg_Nombre { get; set; }
         public int sucu_Id { get; set; }
         public string Empe_SucursalNombre { get; set; }
         public int empe_UsuCreacion { get; set; }

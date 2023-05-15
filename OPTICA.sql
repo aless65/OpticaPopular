@@ -945,7 +945,12 @@ GO
 
 --********INSERT TABLA Cargos****************---
 INSERT INTO opti.tbCargos(carg_Nombre,carg_UsuCreacion)
-VALUES('Oftalmólogo',1)
+VALUES ('Gerente',1),
+	   ('Oftalmólogo',1),
+	   ('Recepcionista',1),
+	   ('Cajero',1),
+	   ('Limpieza',1)
+
 GO
 	  
 --********INSERT TABLA Categorias****************---
@@ -1058,15 +1063,15 @@ GO
 --INSERT TABLA Empleados********---
 INSERT INTO opti.tbEmpleados(empe_Nombres, empe_Apellidos, empe_Identidad, empe_FechaNacimiento, empe_Sexo, estacivi_Id, empe_Telefono, empe_CorreoElectronico, dire_Id, carg_Id, sucu_Id, empe_UsuCreacion)
 VALUES('Clara','Gomez','1234567890123','2003-12-05','F',1,'98107260','gomez23.e@gmail.com', 12, 1, 1,1),
-('Maria Lucero','Ramirez','452879612354','2003-12-02','F',1,'97260425','maria.lucero@gmail.com', 13, 1, 1,1),
+('Maria Lucero','Ramirez','452879612354','2003-12-02','F',1,'97260425','maria.lucero@gmail.com', 13, 2, 1,1),
 ('Karla Elisa','Ramirez','859679612354','2000-02-02','F',1,'98107260','karlaramirez@gmail.com', 14, 1,1,1),
 ('Manuel','Cardona','8759632415785','2001-05-05','M',1,'97307260','manuel@gmail.com', 15, 1, 1,1),
 ('Mauricio','Mendosa','0529632415785','2001-05-15','M',1,'99307260','mMENDOZA@gmail.com', 16, 1, 2,1),
 ('Rafael','Alvarado','0529582415785','2000-05-05','M',1,'99307260','alvarado@gmail.com', 12, 1, 2,1),
 ('Carlos','Amaya','0569582415785','2000-05-04','M',1,'99307260','amayacarlos@gmail.com', 13, 1, 2,1),
-('Jose Manuel','Hernadez','0569582415712','2004-05-14','M',1,'33207260','josemanuel12@gmail.com', 14, 1,3,1),
+('Jose Manuel','Hernadez','0569582415712','2004-05-14','M',1,'33207260','josemanuel12@gmail.com', 14, 2,3,1),
 ('Samuel','Bautista','0561272415712','2007-04-14','M',1,'32007260','samuel12@gmail.com', 15, 1,3,1),
-('Erick','Hernadez','0561272415799','2007-04-30','M',1,'92007930','erickhernadez@gmail.com', 16, 1,3,1)
+('Erick','Hernadez','0561272415799','2007-04-30','M',1,'92007930','erickhernadez@gmail.com', 16, 3,3,1)
 GO
 
 

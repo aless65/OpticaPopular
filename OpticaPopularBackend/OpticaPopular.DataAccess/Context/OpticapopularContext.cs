@@ -652,6 +652,12 @@ namespace OpticaPopular.DataAccess.Context
 
                 entity.ToView("VW_tbSucursales", "opti");
 
+                entity.Property(e => e.depa_Id)
+                    .IsRequired()
+                    .HasMaxLength(2)
+                    .IsUnicode(false)
+                    .IsFixedLength(true);
+
                 entity.Property(e => e.dire_DireccionExacta).IsRequired();
 
                 entity.Property(e => e.muni_Id)

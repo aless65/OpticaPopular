@@ -4,7 +4,8 @@ import uniqBy from 'lodash/uniqBy';
 // utils
 import axios from '../../utils/axios';
 //
-import { dispatch } from '../store';
+import { store, useSelector, dispatch } from "../store"
+
 
 // ----------------------------------------------------------------------
 
@@ -81,7 +82,7 @@ export function getSucursales() {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('Sucursales/Listado');
+      const response = await axios.get('https://localhost:44362/api/Sucursales/Listado');
       dispatch(slice.actions.getSucursalesSuccess(response.data.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
@@ -91,17 +92,20 @@ export function getSucursales() {
 
 // ----------------------------------------------------------------------
 
-export function getSucursal(name) {
+
+
+export function getSucursal(id) {
   return async () => {
-    dispatch(slice.actions.startLoading());
+    // Usa `store.dispatch` en lugar de `dispatch`
+    store.dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('/api/products/product', {
-        params: { name },
-      });
-      dispatch(slice.actions.getSucursalSuccess(response.data.data));
+      console.log(id);
+      const response = await axios.get(`https://localhost:44362/api/Sucursales/Find?id=${id}`);
+      store.dispatch(slice.actions.getSucursalSuccess(response.data.data));
+      console.log(response.data.data);
     } catch (error) {
       console.error(error);
-      dispatch(slice.actions.hasError(error));
+      store.dispatch(slice.actions.hasError(error));
     }
   };
 }

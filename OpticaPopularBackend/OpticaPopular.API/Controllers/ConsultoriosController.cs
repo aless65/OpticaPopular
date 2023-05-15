@@ -31,6 +31,13 @@ namespace OpticaPopular.API.Controllers
             return Ok(list);
         }
 
+        [HttpGet("Find")]
+        public IActionResult Find(int id)
+        {
+            var list = _opticaPopularService.FindConsultorio(id);
+            return Ok(list);
+        }
+
         [HttpGet("ListadoConsultoriosPorIdSucursal/{sucu_Id}")]
         public IActionResult CarritoPorIdUsuario(int sucu_Id)
         {

@@ -81,8 +81,7 @@ export default function Facturas() {
                         { name: 'Facturas', href: PATH_OPTICA.facturas },
                     ]}
                 />
-
-
+                
             </Container>
         </Page>
     );

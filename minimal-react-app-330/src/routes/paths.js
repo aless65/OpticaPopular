@@ -41,6 +41,9 @@ export const PATH_OPTICA = {
   facturas: path(ROOTS_OPTICA, '/facturas'),
   ventas: path(ROOTS_OPTICA, '/ventas'),
   envios: path(ROOTS_OPTICA, '/envios'),
+  sucursalesNew: path(ROOTS_OPTICA, '/sucursales/nuevo'),
+  sucursalesEdit: (name) => path(ROOTS_OPTICA, `/sucursales/${name}/editar`),
+  consultorios: path(ROOTS_OPTICA, '/consultorios') ,
 };
 
 export const PATH_REPORTES = {
@@ -74,6 +77,7 @@ export const PATH_DASHBOARD = {
     empleados: path(ROOTS_DASHBOARD, '/empleados'),
     clientes: path(ROOTS_DASHBOARD,'/clientes' ),
     proveedores: path(ROOTS_DASHBOARD,'/proveedores' ),
+    sucursales: path(ROOTS_DASHBOARD, '/sucursales'),
   },
 };
 

@@ -81,9 +81,7 @@ export default function Envios() {
                         { name: 'Envios', href: PATH_OPTICA.envios },
                     ]}
                 />
-
-
-
+                
             </Container>
         </Page>
     );

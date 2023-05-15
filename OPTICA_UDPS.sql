@@ -769,6 +769,7 @@ AS
 		   T7.muni_Nombre AS sucu_MunicipioNombre, 
 		   T7.depa_Id,
 		   T1.carg_Id,
+		   T8.carg_Nombre,
 		   T1.sucu_Id,
 		   T5.sucu_Descripcion AS Empe_SucursalNombre,
 		   empe_UsuCreacion, 
@@ -784,7 +785,8 @@ AS
 	ON T1.estacivi_Id = T4.estacivi_Id INNER JOIN opti.tbSucursales T5
 	ON T1.sucu_Id = T5.sucu_Id INNER JOIN opti.tbDirecciones T6
 	ON T1.dire_Id = T6.dire_Id INNER JOIN gral.tbMunicipios T7
-	ON T6.muni_Id = T7.muni_id 
+	ON T6.muni_Id = T7.muni_id INNER JOIN opti.tbCargos T8
+	ON T1.carg_Id = T8.carg_Id
 GO
 
 
@@ -2034,6 +2036,7 @@ AS
 			T1.dire_Id,
 			t4.muni_Id,
 			T5.muni_Nombre AS sucu_MunicipioNombre, 
+			T5.depa_Id,
 			T4.dire_DireccionExacta, 
 			sucu_FechaCreacion, 
 			sucu_UsuCreacion, 
@@ -2061,35 +2064,66 @@ BEGIN
 END
 GO
 
+/*Find Sucursales*/
+GO
+CREATE OR ALTER PROCEDURE opti.UDP_opti_tbSucursales_Find 
+	@sucu_Id	INT
+AS
+BEGIN
+	SELECT * FROM opti.VW_tbSucursales
+	WHERE sucu_Id = @sucu_Id
+END
+GO
+
 
 /*Insertar Sucursales*/
-CREATE OR ALTER PROCEDURE opti.UDP_opti_tbSucursales_Insert
-	@sucu_Descripcion     NVARCHAR(200),
-	@dire_Id              INT,
-    @sucu_UsuCreacion     INT
+
+CREATE OR ALTER PROCEDURE opti.UDP_opti_tbSucursales_Insert 
+	 @sucu_Descripcion             NVARCHAR(200),
+	 @sucu_UsuCreacion             INT,
+	 @muni_Id					   VARCHAR(4),
+	 @dire_DireccionExacta		   NVARCHAR(350)
 AS
 BEGIN
 	BEGIN TRY
-		IF NOT EXISTS (SELECT * FROM opti.tbSucursales
+		DECLARE @dire_Id INT
+
+		IF NOT EXISTS (SELECT sucu_Descripcion FROM opti.tbSucursales
 						WHERE sucu_Descripcion = @sucu_Descripcion)
 			BEGIN
-			INSERT INTO opti.tbSucursales(sucu_Descripcion,[dire_Id],sucu_UsuCreacion)
-			VALUES(@sucu_Descripcion,@dire_Id,@sucu_UsuCreacion)
-			
-			SELECT 'La sucursal ha sido insertada con éxito'
+				INSERT INTO [opti].[tbDirecciones]([muni_Id], [dire_DireccionExacta], [usua_IdCreacion])
+				VALUES(@muni_Id, @dire_DireccionExacta, @sucu_UsuCreacion)
+
+				SET @dire_Id = SCOPE_IDENTITY()
+				
+				INSERT INTO opti.tbSucursales(sucu_Descripcion,dire_Id,sucu_UsuCreacion)
+				VALUES(@sucu_Descripcion,@dire_Id,@sucu_UsuCreacion)
+
+				SELECT 'La sucursal ha sido insertada con éxito'
+
 			END
 		ELSE IF EXISTS (SELECT * FROM opti.tbSucursales 
 						WHERE sucu_Descripcion = @sucu_Descripcion
-						AND sucu_Estado = 0)
+						AND sucu_Estado = 1)
+
+			SELECT 'La sucursal ya existe'
+		ELSE
 			BEGIN
+
+			UPDATE opti.tbDirecciones
+				SET muni_Id = @muni_Id,
+				    dire_DireccionExacta = @dire_DireccionExacta,
+					dire_Estado = 1
+				WHERE dire_Id = (SELECT dire_Id FROM opti.tbSucursales WHERE sucu_Descripcion = @sucu_Descripcion)
+
 				UPDATE opti.tbSucursales
-				SET sucu_Estado = 1
+				SET sucu_Estado = 1,
+					sucu_Descripcion = @sucu_Descripcion,
+					sucu_UsuCreacion = @sucu_UsuCreacion
 				WHERE sucu_Descripcion = @sucu_Descripcion
 
-				SELECT 'La Sucursal ha sido insertada con éxito'
+				SELECT 'La sucursal ha sido insertada con éxito'
 			END
-		ELSE
-			SELECT 'La sucursal ya existe'
 	END TRY
 	BEGIN CATCH
 		SELECT 'Ha ocurrido un error'
@@ -2099,38 +2133,55 @@ GO
 
 
 /*Editar Sucursal*/
-CREATE OR ALTER PROCEDURE opti.UDP_opti_tbSucursal_Update
-	@sucu_Id                 INT,
-    @sucu_Descripcion        NVARCHAR(200), 
-	@dire_Id                 INT, 
-	@sucu_DireccionExacta    NVARCHAR(500),  
-	@sucu_UsuModificacion    INT
+CREATE OR ALTER PROCEDURE opti.UDP_opti_tbSucursales_Update 
+	 @sucu_Id                      INT,
+     @sucu_Descripcion             NVARCHAR(200), 
+	 @muni_Id					   VARCHAR(4),
+	 @dire_DireccionExacta		   NVARCHAR(350),
+	 @sucu_UsuModificacion         INT
 AS
-BEGIN 
+BEGIN
 	BEGIN TRY
-	IF NOT EXISTS (SELECT * FROM opti.tbSucursales
-						WHERE @sucu_Descripcion = [sucu_Descripcion])
-		BEGIN			
-			UPDATE opti.tbSucursales
-			SET 	sucu_Descripcion = @sucu_Descripcion,
-					[dire_Id]= @dire_Id,
+	IF NOT EXISTS (SELECT sucu_Descripcion FROM [opti].[tbSucursales]
+						WHERE sucu_Descripcion = @sucu_Descripcion)
+		BEGIN	
+			UPDATE opti.tbDirecciones
+				SET muni_Id = @muni_Id,
+				    dire_DireccionExacta = @dire_DireccionExacta,
+					usua_IdModificacion = @sucu_UsuModificacion
+				WHERE dire_Id = (SELECT dire_Id FROM [opti].[tbSucursales] WHERE sucu_Id = @sucu_Id)
+
+			UPDATE [opti].[tbSucursales]
+				SET sucu_Descripcion = @sucu_Descripcion,
 					sucu_UsuModificacion = @sucu_UsuModificacion,
 					sucu_FechaModificacion = GETDATE()
 			WHERE 	sucu_Id = @sucu_Id
+
 			SELECT 'La sucursal ha sido editado con éxito'
 		END
 		ELSE IF EXISTS (SELECT * FROM opti.tbSucursales
-						WHERE @sucu_Descripcion = sucu_Descripcion
+						WHERE sucu_Descripcion = @sucu_Descripcion
 							  AND sucu_Estado = 1
 							  AND sucu_Id != @sucu_Id)
+
 			SELECT 'La sucursal ya existe'
 		ELSE
-			UPDATE opti.tbSucursales
-			SET sucu_Estado = 1,
-			   sucu_UsuModificacion = @sucu_UsuModificacion
-			WHERE sucu_Descripcion = @sucu_Descripcion
+			BEGIN
+				UPDATE opti.tbDirecciones
+				SET dire_Estado = 1,
+					muni_Id = @muni_Id,
+				    dire_DireccionExacta = @dire_DireccionExacta,
+					usua_IdModificacion = @sucu_UsuModificacion
+				WHERE dire_Id = (SELECT dire_Id FROM [opti].[tbSucursales] WHERE sucu_Descripcion = @sucu_Descripcion)
 
-			SELECT 'La sucursal ha sido editada con éxito'
+				
+			    UPDATE opti.tbSucursales
+			      SET     sucu_Estado = 1,
+			              sucu_UsuModificacion = @sucu_UsuModificacion
+			      WHERE   sucu_Descripcion = @sucu_Descripcion
+
+				SELECT 'La sucursal ha sido editada con éxito'
+			END
 	END TRY
 	BEGIN CATCH
 		SELECT 'Ha ocurrido un error'
@@ -2140,21 +2191,25 @@ GO
 
 
 /*Eliminar Sucursal*/
+
 CREATE OR ALTER PROCEDURE opti.UDP_opti_tbSucursales_Delete 
-	@sucu_Id	INT
+	@sucu_Id   INT
 AS
 BEGIN
+	
 	BEGIN TRY
-		IF NOT EXISTS (SELECT * FROM opti.tbOrdenes WHERE sucu_Id = @sucu_Id)
 			BEGIN
+				UPDATE opti.tbDirecciones
+				SET dire_Estado = 0
+				WHERE dire_Id = (SELECT dire_Id FROM [opti].[tbSucursales] WHERE sucu_Id = @sucu_Id)
+
 				UPDATE opti.tbSucursales
 				SET sucu_Estado = 0
 				WHERE sucu_Id = @sucu_Id
-
+				
 				SELECT 'La sucursal ha sido eliminada'
 			END
-		ELSE
-			SELECT 'La sucursal no puede ser eliminada ya que está siendo usada'
+		
 	END TRY
 	BEGIN CATCH
 		SELECT 'Ha ocurrido un error'
@@ -2404,8 +2459,11 @@ BEGIN
         INNER JOIN opti.tbSucursales tb5 ON t4.sucu_Id = tb5.sucu_Id
     ) AS ConsultoriosEmpleados
     WHERE RowNum = 1 
+	AND cons_Estado = 1
 END
 go
+
+
 
 /*Listado de Consultorios*/
 GO
@@ -2426,6 +2484,17 @@ BEGIN
 		FROM opti.VW_tbConsultorios tb1
 		WHERE cons_Estado = 1
 	END
+END
+GO
+
+/*Find consultorio*/
+GO
+CREATE OR ALTER PROCEDURE opti.UDP_opti_tbConsultorios_Find 
+	@cons_Id	INT
+AS
+BEGIN
+	SELECT * FROM opti.VW_tbConsultorios
+	WHERE cons_Id = @cons_Id
 END
 GO
 

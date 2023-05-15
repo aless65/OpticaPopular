@@ -31,7 +31,12 @@ namespace OpticaPopular.DataAccess.Repositories
 
         public VW_tbConsultorios Find(int? id)
         {
-            throw new NotImplementedException();
+            using var db = new SqlConnection(OpticaPopularContext.ConnectionString);
+
+            var parameters = new DynamicParameters();
+            parameters.Add("@cons_Id", id, DbType.Int32, ParameterDirection.Input);
+
+            return db.QueryFirst<VW_tbConsultorios>(ScriptsDataBase.UDP_Fin_Consultorios, parameters, commandType: CommandType.StoredProcedure);
         }
 
         public RequestStatus Insert(tbConsultorios item)

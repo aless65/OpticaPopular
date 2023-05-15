@@ -80,9 +80,7 @@ export default function Ventas() {
                         { name: 'Ventas', href: PATH_OPTICA.citas },
                     ]}
                 />
-
-
-
+                
             </Container>
         </Page>
     );
