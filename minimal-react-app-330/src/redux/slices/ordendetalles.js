@@ -96,12 +96,12 @@ export function getOrdenesDetalles(id) {
 
 // ----------------------------------------------------------------------
 
-// export function getOrden(Id) {
+// export function getOrdenDetalle(Id) {
 //   return async () => {
 //     dispatch(slice.actions.startLoading());
 //     try {
 //       const response = await axios.get(`Citas/BuscarCitaPorId/${Id}`);
-//       dispatch(slice.actions.getcitaSuccess(response.data.data));
+//       dispatch(slice.actions.getOrdenDetalleSuccess(response.data.data));
 //     } catch (error) {
 //       console.error(error);
 //       dispatch(slice.actions.hasError(error));

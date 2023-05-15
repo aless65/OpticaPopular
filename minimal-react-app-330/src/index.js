@@ -55,6 +55,7 @@ import reportWebVitals from './reportWebVitals';
 // ----------------------------------------------------------------------
 
 ReactDOM.render(
+  <AuthProvider>
     <HelmetProvider>
       <ReduxProvider store={store}>
         <PersistGate loading={null} persistor={persistor}>
@@ -69,7 +70,8 @@ ReactDOM.render(
           </LocalizationProvider>
         </PersistGate>
       </ReduxProvider>
-    </HelmetProvider>,
+    </HelmetProvider>
+  </AuthProvider>,
   document.getElementById('root')
 );
 

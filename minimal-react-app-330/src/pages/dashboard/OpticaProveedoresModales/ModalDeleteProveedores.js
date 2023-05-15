@@ -59,7 +59,7 @@ export default function DeleteClienteDialog({ open, onClose, proveedores, setTab
                 prov_Id: proveedorId,
             };
 
-            fetch("https://localhost:44362/api/Proveedores/Eliminar", {
+            fetch("http://opticapopular.somee.com/api/Proveedores/Eliminar", {
                 method: "PUT",
                 mode: "cors",
                 headers: {

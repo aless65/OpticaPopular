@@ -151,5 +151,28 @@ namespace OpticaPopular.DataAccess.Repositories
 
             return result;
         }
+
+        public RequestStatus UpdateDetalles(tbDetallesOrdenes item)
+        {
+            RequestStatus result = new RequestStatus();
+
+            using var db = new SqlConnection(OpticaPopularContext.ConnectionString);
+
+            var parametros = new DynamicParameters();
+            parametros.Add("@deor_Id", item.deor_Id, DbType.Int32, ParameterDirection.Input);
+            parametros.Add("@aros_Id", item.aros_Id, DbType.Int32, ParameterDirection.Input);
+            parametros.Add("@deor_GraduacionLeft", item.deor_GraduacionLeft, DbType.String, ParameterDirection.Input);
+            parametros.Add("@deor_GraduacionRight", item.deor_GraduacionRight, DbType.String, ParameterDirection.Input);
+            parametros.Add("@deor_Cantidad", item.deor_Cantidad, DbType.Int32, ParameterDirection.Input);
+            parametros.Add("@deor_Transition", item.deor_Transition, DbType.Boolean, ParameterDirection.Input);
+            parametros.Add("@deor_FiltroLuzAzul", item.deor_FiltroLuzAzul, DbType.Boolean, ParameterDirection.Input);
+            parametros.Add("@usua_IdModificacion", item.usua_IdModificacion, DbType.Int32, ParameterDirection.Input);
+
+            var resultado = db.QueryFirst<string>(ScriptsDataBase.UDP_Edita_DetallesOrdenes, parametros, commandType: CommandType.StoredProcedure);
+
+            result.MessageStatus = resultado;
+
+            return result;
+        }
     }
 }

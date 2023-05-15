@@ -303,7 +303,7 @@ function applySortFilter({ tableData, comparator, filterName }) {
 
   if (filterName) {
     tableData = tableData.filter((item) =>
-      item.marc_Id.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 ||
+      item.marc_Id.toString().indexOf(filterName.toLowerCase()) !== -1 ||
       item.marc_Nombre.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
     );
   }

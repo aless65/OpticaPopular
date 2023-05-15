@@ -102,5 +102,14 @@ namespace OpticaPopular.API.Controllers
 
             return Ok(delete);
         }
+
+        [HttpPut("EditarDetalles")]
+        public IActionResult UpdateDetalles(DetallesOrdenesViewModel detalle)
+        {
+            var item = _mapper.Map<tbDetallesOrdenes>(detalle);
+            var update = _opticaPopularService.UpdateDetallesOrdenes(item);
+
+            return Ok(update);
+        }
     }
 }

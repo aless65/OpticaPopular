@@ -58,7 +58,10 @@ function applySortFilter({ tableData, comparator, filterName }) {
   if (filterName) {
     tableData = tableData.filter((item) =>
       item.clie_NombreCompleto.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 ||
-      item.sucu_Descripcion.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
+      item.sucu_Descripcion.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 ||
+      item.orde_Id.toString().indexOf(filterName.toLowerCase()) !== -1 ||
+      item.orde_Fecha.toString().indexOf(filterName.toLowerCase()) !== -1 ||
+      item.orde_FechaEntrega.toString().indexOf(filterName.toLowerCase()) !== -1
     );
   }
 

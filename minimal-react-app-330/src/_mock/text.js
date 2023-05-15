@@ -1,9 +1,9 @@
 // ----------------------------------------------------------------------
 
 export const title = [
-  'Apply These 7 Secret Techniques To Improve Event',
-  'Believing These 7 Myths About Event Keeps You From Growing',
-  "Don't Waste Time! 7 Facts Until You Reach Your Event",
+  'Muchos factores influyen a la hora de escoger un nuevo par de lentes',
+  'Conoce los productos más amados por nuestros consumidores',
+  "La confusión y la desinformación abundan en la era actual",
   'How 7 Things Will Change The Way You Approach Event',
   "Event Awards: 7 Reasons Why They Don't Work & What You Can Do About It",
   "Event Doesn't Have To Be Hard. Read These 7 Tips",

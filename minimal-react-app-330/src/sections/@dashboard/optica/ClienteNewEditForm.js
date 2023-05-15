@@ -152,7 +152,7 @@ export default function ClienteNewEditForm({ isEdit, currentCliente }) {
       };
 
       if (isEdit) {
-        fetch("https://localhost:44362/api/Clientes/Editar", {
+        fetch("http://opticapopular.somee.com/api/Clientes/Editar", {
           method: "PUT",
           mode: "cors",
           headers: {
@@ -175,7 +175,7 @@ export default function ClienteNewEditForm({ isEdit, currentCliente }) {
           })
           .catch((error) => console.error(error));
       } else {
-        fetch("https://localhost:44362/api/Clientes/Insertar", {
+        fetch("http://opticapopular.somee.com/api/Clientes/Insertar", {
           method: "POST",
           mode: "cors",
           headers: {

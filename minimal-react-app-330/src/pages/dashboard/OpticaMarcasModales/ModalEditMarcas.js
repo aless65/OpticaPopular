@@ -107,7 +107,7 @@ export default function EditRolCategoriaDialog({ open, onClose, marcas, setTable
         .then((response) => response.json())
         .then((data) => {
         //   console.log(data);
-          if (data.message === "La marca ha sido editada con éxito") {
+          if (data.message === "La marca ha sido editada con éxito" || data.message === "La marca ha sido insertada con éxito") {
             setInsertSuccess(true);
             enqueueSnackbar(data.message);
             handleDialogClose();

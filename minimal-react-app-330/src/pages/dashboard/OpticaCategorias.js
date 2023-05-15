@@ -127,7 +127,7 @@ function applySortFilter({ tableData, comparator, filterName }) {
 
   if (filterName) {
     tableData = tableData.filter((item) =>
-      item.cate_Id.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 ||
+      item.cate_Id.toString().indexOf(filterName.toLowerCase()) !== -1 ||
       item.cate_Nombre.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 
       
     );

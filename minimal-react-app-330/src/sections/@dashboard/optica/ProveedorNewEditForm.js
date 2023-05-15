@@ -131,7 +131,7 @@ export default function ProveedorNewEditForm({ isEdit, currentProveedor }) {
      console.log(jsonData)
 
       if (isEdit) {
-        fetch("https://localhost:44362/api/Proveedores/Editar", {
+        fetch("http://opticapopular.somee.com/api/Proveedores/Editar", {
           method: "PUT",
           mode: "cors",
           headers: {
@@ -145,7 +145,7 @@ export default function ProveedorNewEditForm({ isEdit, currentProveedor }) {
             console.log("update")
             if (data.message === "El Proveedor ha sido editada con éxito") {
               navigate(PATH_OPTICA.proveedores);
-              enqueueSnackbar(data.message);
+              enqueueSnackbar("El proveedor ha sido editado con éxito");
             } else if (data.message === 'El proveedor ya existe') {
               enqueueSnackbar(data.message, { variant: 'warning' });
             } else {
@@ -154,7 +154,7 @@ export default function ProveedorNewEditForm({ isEdit, currentProveedor }) {
           })
           .catch((error) => console.error(error));
       } else {
-        fetch("https://localhost:44362/api/Proveedores/Insertar", {
+        fetch("http://opticapopular.somee.com/api/Proveedores/Insertar", {
           method: "POST",
           mode: "cors",
           headers: {
@@ -168,7 +168,7 @@ export default function ProveedorNewEditForm({ isEdit, currentProveedor }) {
             console.log("insertar");
             if (data.message === "El proveedor ha sido insertada con éxito") {
               navigate(PATH_OPTICA.proveedores);
-              enqueueSnackbar(data.message);
+              enqueueSnackbar("El proveedor ha sido insertado con éxito");
             } else if (data.message === 'El proveedor ya existe') {
               enqueueSnackbar(data.message, { variant: 'warning' });
             } else {
@@ -253,7 +253,6 @@ export default function ProveedorNewEditForm({ isEdit, currentProveedor }) {
           <RHFTextField name="email" label="Correo electrónico" />
 
           <Autocomplete
-            disablePortal
             name="departamento"
             options={optionsDepartamentos}
             error={!!errors.departamento}
@@ -282,7 +281,6 @@ export default function ProveedorNewEditForm({ isEdit, currentProveedor }) {
           />
 
           <Autocomplete
-            disablePortal
             name="municipio"
             options={optionsMunicipios}
             error={!!errors.municipio}

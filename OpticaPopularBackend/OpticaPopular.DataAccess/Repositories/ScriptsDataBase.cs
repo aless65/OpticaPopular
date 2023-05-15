@@ -115,6 +115,7 @@ namespace OpticaPopular.DataAccess.Repositories
         public static string UDP_Lista_DetallesOrdenes = "opti.UDP_opti_tbDetallesOrdenes_List";
         public static string UDP_Inserta_DetallesOrdenes = "opti.UDP_opti_tbDetallesOrdenes_Insert";
         public static string UDP_Elimina_DetallesOrdenes = "opti.UDP_opti_tbDetallesOrdenes_Delete";
+        public static string UDP_Edita_DetallesOrdenes = "opti.UDP_opti_tbDetallesOrdenes_Update";
         #endregion
 
         #region Proveedores

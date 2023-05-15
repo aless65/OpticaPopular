@@ -72,14 +72,6 @@ export default function Login() {
       <RootStyle>
         <HeaderStyle>
           <Logo />
-          {smUp && (
-            <Typography variant="body2" sx={{ mt: { md: -2 } }}>
-                ¿No tienes una cuenta? {''}
-              <Link variant="subtitle2" component={RouterLink} to={PATH_AUTH.register}>
-                Crear cuenta
-              </Link>
-            </Typography>
-          )}
         </HeaderStyle>
 
         {mdUp && (

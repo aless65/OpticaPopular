@@ -38,29 +38,34 @@ export default function ModalEliminarOrden({ open, onClose, ordenes, setTableDat
     const { enqueueSnackbar } = useSnackbar();
 
     const onSubmit = async () => {
-        console.log(ordenId);
-        axios.put('Ordenes/Eliminar', {}, {
-            params:{
-                orde_Id: ordenId,
+        const jsonData = {
+            orde_Id: ordenId,
+        };
+
+        console.log(jsonData);
+
+        fetch("http://opticapopular.somee.com/api/Ordenes/Eliminar", {
+            method: "PUT",
+            mode: "cors",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(jsonData),
+        })
+        .then((response) => response.json())
+        .then((data) => {
+            if (data.message === 'Ha ocurrido un error') {
+                enqueueSnackbar(data.message, { variant: 'error' });
+            } else if(data.message === 'La orden no puede ser eliminada ya que está siendo usada'){
+                enqueueSnackbar('La orden no puede ser eliminada porque ya ha sido pagada', { variant: 'warning' });
+                handleDialogClose();   
+            } else{
+                enqueueSnackbar(data.message, { variant: 'success' });
+                setDeleteSuccess(true);
+                handleDialogClose();   
             }
         })
-            .then((response) => {
-                console.log(response.data.message);
-                if (response.data.message === 'Ha ocurrido un error') {
-                    enqueueSnackbar(response.data.message, { variant: 'error' });
-                } else if(response.data.message === 'La orden no puede ser eliminada ya que está siendo usada'){
-                    enqueueSnackbar('La orden no puede ser eliminada porque ya ha sido pagada', { variant: 'warning' });
-                    handleDialogClose();   
-                } else{
-                    enqueueSnackbar(response.data.message, { variant: 'success' });
-                    setDeleteSuccess(true);
-                    handleDialogClose();   
-                }
-            })
-            .catch((error) => {
-                enqueueSnackbar(`Ocurrio un error al intentar eliminar la orden`, { variant: 'error' });   
-                console.log(error);
-            });
+        .catch((error) => console.error(error));
     };
 
     const handleDialogClose = () => {
@@ -87,12 +92,12 @@ export default function ModalEliminarOrden({ open, onClose, ordenes, setTableDat
             aria-labelledby="alert-dialog-title"
         >
             <DialogTitle component="h2" id="alert-dialog-title">
-                Eliminar orden
+                Cancelar orden
             </DialogTitle>
             <br/>
             <Divider />
             <DialogContent style={{textAlign: "center"}}>
-                ¿Está seguro que desea eliminar la orden?
+                ¿Está seguro que desea cancelar la orden?
             </DialogContent>
             <Divider />
             <DialogActions>

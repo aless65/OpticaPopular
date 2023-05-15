@@ -53,7 +53,7 @@ export default function InvoiceDetails() {
 
     return (
         <Container sx={{ display: 'flex', flexDirection: 'column', height: '180vh', pb: 0 }}>
-            <Box sx={{ flexGrow: 1, overflow: 'auto' }}>
+            <Box sx={{ flexGrow: 2, overflow: 'hidden' }}>
                 <Page title="Citas: Reporte">
                     <HeaderBreadcrumbs
                         heading="Reporte de citas"

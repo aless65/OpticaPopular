@@ -341,7 +341,6 @@ export default function EmpleadoNewEditForm({ isEdit, currentEmpleado }) {
 
 
           <Autocomplete
-            disablePortal
             name="estadoCivil"
             options={optionsEstadosCiviles}
             error={!!errors.estadoCivil}
@@ -373,7 +372,6 @@ export default function EmpleadoNewEditForm({ isEdit, currentEmpleado }) {
           <RHFTextField name="email" label="Correo electrónico" />
 
           <Autocomplete
-            disablePortal
             name="departamento"
             options={optionsDepartamentos}
             error={!!errors.departamento}
@@ -402,7 +400,6 @@ export default function EmpleadoNewEditForm({ isEdit, currentEmpleado }) {
           />
 
           <Autocomplete
-            disablePortal
             name="municipio"
             options={optionsMunicipios}
             error={!!errors.municipio}
@@ -431,7 +428,6 @@ export default function EmpleadoNewEditForm({ isEdit, currentEmpleado }) {
           <RHFTextField name="direccion" label="Dirección Exacta" />
 
           <Autocomplete
-            disablePortal
             name="cargo"
             options={optionsCargos}
             error={!!errors.cargo}
@@ -458,7 +454,6 @@ export default function EmpleadoNewEditForm({ isEdit, currentEmpleado }) {
           />
 
           <Autocomplete
-            disablePortal
             name="sucursal"
             options={optionsSucursales}
             error={!!errors.sucursal}

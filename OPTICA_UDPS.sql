@@ -3117,9 +3117,12 @@ CREATE OR ALTER PROCEDURE opti.UDP_opti_tbOrdenes_Find
 AS
 BEGIN
 	SELECT *,	
-		  T2.fact_Id
+		  T2.fact_Id,
+		  (t4.clie_Nombres + ' ' + t4.clie_Apellidos) AS clie_NombreCompleto
 	FROM opti.VW_tbOrdenes T1 LEFT JOIN opti.tbDetallesFactura T2
-	ON T1.orde_Id = T2.orde_Id
+	ON T1.orde_Id = T2.orde_Id LEFT JOIN opti.tbCitas T3
+			ON T1.cita_Id = T3.cita_Id LEFT JOIN opti.tbClientes T4
+			ON T3.clie_Id = T4.clie_Id
 	WHERE orde_Estado = 1
 	AND T1.orde_Id = @orde_Id
 END
@@ -3325,6 +3328,80 @@ BEGIN
 END
 GO
 
+  CREATE OR ALTER PROCEDURE opti.UDP_opti_tbDetallesOrdenes_Update 
+	@deor_Id					INT,
+	@aros_Id					INT, 
+	@deor_GraduacionLeft		NVARCHAR(10), 
+	@deor_GraduacionRight		NVARCHAR(10), 
+	@deor_Cantidad				INT, 
+	@deor_Transition			BIT,
+	@deor_FiltroLuzAzul			BIT,
+	@usua_IdModificacion		INT
+AS
+BEGIN
+	BEGIN TRY
+		DECLARE @aros_Unitario DECIMAL(18,2) = (SELECT [aros_CostoUni] FROM [opti].[tbAros] WHERE [aros_Id] = @aros_Id)
+
+		DECLARE @deor_Precio DECIMAL (18,2)
+
+		IF @deor_GraduacionLeft IS NOT NULL OR @deor_GraduacionRight IS NOT NULL
+			SET @deor_Precio = (@aros_Unitario + (@aros_Unitario * 0.20))
+		ELSE
+			SET @deor_Precio = @aros_Unitario
+
+		IF @deor_Transition > 0
+			SET @deor_Precio = (@deor_Precio + 200)
+
+		IF @deor_FiltroLuzAzul > 0
+			SET @deor_Precio = (@deor_Precio + 200)
+
+
+		DECLARE @IVA DECIMAL (18,2) = (@deor_Precio * 0.15)
+
+		DECLARE @deor_Total DECIMAL (18,2) = ((@deor_Precio + @IVA) * @deor_Cantidad)
+
+		IF EXISTS (SELECT * FROM [opti].[tbDetallesOrdenes] 
+					WHERE aros_Id = @aros_Id 
+					AND deor_GraduacionLeft = @deor_GraduacionLeft 
+					AND deor_GraduacionRight = @deor_GraduacionRight
+					AND deor_FiltroLuzAzul = @deor_FiltroLuzAzul
+					AND deor_Transition = @deor_Transition
+					AND deor_Id != @deor_Id)
+			BEGIN 
+				UPDATE [opti].[tbDetallesOrdenes]
+				SET deor_Cantidad = (deor_Cantidad + @deor_Cantidad),
+					deor_Total = deor_Total + @deor_Total
+				WHERE aros_Id = @aros_Id AND deor_GraduacionLeft = @deor_GraduacionLeft AND deor_GraduacionRight = @deor_GraduacionRight AND deor_FiltroLuzAzul = @deor_FiltroLuzAzul
+					AND deor_Transition = @deor_Transition
+
+				SELECT 'El detalle ha sido editado con éxito'
+			END
+		ELSE
+			BEGIN
+
+				UPDATE [opti].[tbDetallesOrdenes]
+				SET [aros_Id] = @aros_Id,				
+				[deor_GraduacionLeft] = @deor_GraduacionLeft,	
+				[deor_GraduacionRight] = @deor_GraduacionRight,	
+				[deor_Cantidad] = @deor_Cantidad,
+				[deor_Precio] = @deor_Precio,
+				[deor_Total] = @deor_Total,
+				[deor_Transition] = @deor_Transition,		
+				[deor_FiltroLuzAzul] = @deor_FiltroLuzAzul,		
+				[usua_IdModificacion] = @usua_IdModificacion,
+				[orde_FechaModificacion] = GETDATE()
+				WHERE deor_Id = @deor_Id
+
+				SELECT 'El detalle ha sido editado con éxito'
+			END
+
+	END TRY
+	BEGIN CATCH
+		SELECT 'Ha ocurrido un error'
+	END CATCH
+END
+GO
+
 /*Eliminar Ordenes detalles*/
 CREATE OR ALTER PROCEDURE opti.UDP_opti_tbDetallesOrdenes_Delete 
 	@deor_Id	INT
@@ -3333,6 +3410,8 @@ BEGIN
 	BEGIN TRY
 		DELETE FROM opti.tbDetallesOrdenes
 		WHERE deor_Id = @deor_Id
+
+		SELECT 'El detalle ha sido eliminado'
 	END TRY
 	BEGIN CATCH
 		SELECT 'Ha ocurrido un error'
@@ -3362,10 +3441,25 @@ ON [opti].[tbDetallesOrdenes]
 AFTER UPDATE
 AS
 BEGIN
-	UPDATE [opti].[tbStockArosPorSucursal]
-	SET [stsu_Stock] = [stsu_Stock] - ((SELECT [deor_Cantidad] FROM inserted) - (SELECT [deor_Cantidad] FROM deleted))
-	WHERE [aros_Id] = (SELECT [aros_Id] FROM inserted)
-	AND [sucu_Id] = (SELECT [sucu_Id] FROM [opti].[tbOrdenes] WHERE [orde_Id] = (SELECT [orde_Id] FROM inserted))
+	IF (SELECT [aros_Id] FROM inserted) = (SELECT [aros_Id] FROM deleted)
+		BEGIN
+			UPDATE [opti].[tbStockArosPorSucursal]
+			SET [stsu_Stock] = [stsu_Stock] - ((SELECT [deor_Cantidad] FROM inserted) - (SELECT [deor_Cantidad] FROM deleted))
+			WHERE [aros_Id] = (SELECT [aros_Id] FROM inserted)
+			AND [sucu_Id] = (SELECT [sucu_Id] FROM [opti].[tbOrdenes] WHERE [orde_Id] = (SELECT [orde_Id] FROM inserted))
+		END
+	ELSE
+		BEGIN
+			UPDATE [opti].[tbStockArosPorSucursal]
+			SET [stsu_Stock] = [stsu_Stock] - (SELECT [deor_Cantidad] FROM inserted)
+			WHERE [aros_Id] = (SELECT [aros_Id] FROM inserted)
+			AND [sucu_Id] = (SELECT [sucu_Id] FROM [opti].[tbOrdenes] WHERE [orde_Id] = (SELECT [orde_Id] FROM inserted))
+
+			UPDATE [opti].[tbStockArosPorSucursal]
+			SET [stsu_Stock] = [stsu_Stock] + (SELECT [deor_Cantidad] FROM deleted)
+			WHERE [aros_Id] = (SELECT [aros_Id] FROM deleted)
+			AND [sucu_Id] = (SELECT [sucu_Id] FROM [opti].[tbOrdenes] WHERE [orde_Id] = (SELECT [orde_Id] FROM deleted))
+		END
 END
 GO
 

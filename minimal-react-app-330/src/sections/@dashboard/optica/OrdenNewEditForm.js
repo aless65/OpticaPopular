@@ -58,6 +58,8 @@ import { OrdenDetallesTableRow, TableToolbar } from './orden-list';
 import Page from '../../../components/Page';
 import Scrollbar from '../../../components/Scrollbar';
 import { getOrdenesDetalles } from '../../../redux/slices/ordendetalles';
+import ModalEliminarOrdenDetalles from '../../../pages/dashboard/OpticaOrdenesModales/ModalDeleteOrdenDetalles';
+import ModalEditarOrdenDetalles from '../../../pages/dashboard/OpticaOrdenesModales/ModalEditOrdenDetalles';
 // import sucursal from 'src/redux/slices/sucursal';
 
 const TABLE_HEAD = [
@@ -113,6 +115,11 @@ export default function OrdenNewEditForm({ isEdit, currentOrden, orden, sucuId }
 
     const [available, setAvailable] = useState('');
 
+    const [openDeleteOrdenDetalleDialog, setOpenDeleteOrdenDetalleDialog] = useState(false);
+
+    const [openEditOrdenDetalleDialog, setOpenEditOrdenDetalleDialog] = useState(false);
+
+
     const {
         dense,
         page,
@@ -156,9 +163,17 @@ export default function OrdenNewEditForm({ isEdit, currentOrden, orden, sucuId }
 
     const [encabezadoInserted, setEncabezadoInserted] = useState(isEdit === true);
 
-    const [ordeId, setOrdeId] = useState(isEdit ? orden : '');
+    const [ordeId, setOrdeId] = useState(isEdit ? orden : null);
 
     const [detalleInserted, setDetalleInserted] = useState(isEdit === true);
+
+    const [deorId, setDeorId] = useState('');
+
+    const [ordenDetalle, setOrdenDetalle] = useState([]);
+
+    const [esLuzAzulTemporal, setEsLuzAzulTemporal] = useState(false);
+
+    const [esTransitionTemporal, setEsTransitionTemporal] = useState(false);
 
 
     const onIncreaseQuantity = () => {
@@ -173,12 +188,14 @@ export default function OrdenNewEditForm({ isEdit, currentOrden, orden, sucuId }
         }
     }
 
-
     useEffect(() => {
+        if(isEdit === false){
+            dispatch(getOrdenesDetalles(0));
+        }
+
         if (detalleInserted === true) {
             dispatch(getOrdenesDetalles(ordeId));
             setDetalleInserted(false);
-            // setEncabezadoInserted(true);
         }
     }, [orden, detalleInserted]);
 
@@ -200,12 +217,7 @@ export default function OrdenNewEditForm({ isEdit, currentOrden, orden, sucuId }
 
     const SecondFormSchema = Yup.object().shape({
         aros: Yup.string().required('Aros requeridos'),
-        // graduacionLeft: Yup.string().required('Graduación requerida'),
-        // graduacionRight: Yup.string().required('Graduación requerida'),
     });
-
-    // const sucursalDefaultValue = 1;
-    // console.log('sucursalDefaultValue:', sucursalDefaultValue);
 
     const defaultValues = useMemo(
         () => ({
@@ -321,11 +333,11 @@ export default function OrdenNewEditForm({ isEdit, currentOrden, orden, sucuId }
                             }
                         })
                         .catch((error) => console.error(error));
+                }
+
+            } catch (error) {
+                console.error(error);
             }
-                
-        } catch (error) {
-            console.error(error);
-        }
         }
 
     };
@@ -372,6 +384,8 @@ export default function OrdenNewEditForm({ isEdit, currentOrden, orden, sucuId }
                         defaultValues.esTransition = false;
                         setQuantity(1);
                         setAvailable(0);
+                        setEsLuzAzulTemporal(false);
+                        setEsTransitionTemporal(false);
                         setDetalleInserted(true);
                         enqueueSnackbar(data.message);
                     }
@@ -425,7 +439,7 @@ export default function OrdenNewEditForm({ isEdit, currentOrden, orden, sucuId }
 
         }
 
-        if(isEdit === false){
+        if (isEdit === false) {
             fetch('http://opticapopular.somee.com/api/Citas/BuscarCitasTerminadas/0')
                 .then(response => response.json())
                 .then(data => {
@@ -449,9 +463,9 @@ export default function OrdenNewEditForm({ isEdit, currentOrden, orden, sucuId }
                 .then(response => response.json())
                 .then(data => {
                     const optionsData = data.data.map(item => ({
-                            label: `${item.clie_Nombres} ${item.clie_Apellidos} - ${item.deci_HoraInicio}`, // replace 'name' with the property name that contains the label
-                            id: item.cita_Id // replace 'id' with the property name that contains the ID
-                        }));
+                        label: `${item.clie_Nombres} ${item.clie_Apellidos} - ${item.deci_HoraInicio}`, // replace 'name' with the property name that contains the label
+                        id: item.cita_Id // replace 'id' with the property name that contains the ID
+                    }));
                     console.log(optionsData);
                     setOptionsCitas(optionsData);
                 })
@@ -461,30 +475,75 @@ export default function OrdenNewEditForm({ isEdit, currentOrden, orden, sucuId }
 
     }, [defaultValues.sucursal]);
 
+    const handleOpenDeleteOrdenDetalleDialog = () => {
+        setOpenDeleteOrdenDetalleDialog(true);
+    }
+
+    const handleCloseDeleteOrdenDetalleDialog = () => {
+        setOpenDeleteOrdenDetalleDialog(false);
+    }
+
+    const handleOpenEditOrdenDetalleDialog = () => {
+        setOpenEditOrdenDetalleDialog(true);
+    }
+
+    const handleCloseEditOrdenDetalleDialog = () => {
+        setOpenEditOrdenDetalleDialog(false);
+    }
+
+    const handleDeleteRow = (id) => {
+        setDeorId(id);
+        handleOpenDeleteOrdenDetalleDialog();
+    };
+
+    const handleEditRow = (id) => {
+        setDeorId(id);
+
+        // Find the matching orden detalle using Array.find
+        const matchingOrdenDetalle = ordendetalles.find((detalle) => detalle.deor_Id === id);
+
+        // Set the value of ordenDetalle to the matching orden detalle
+        setOrdenDetalle({
+            ...matchingOrdenDetalle,
+            sucursal: defaultValues.sucursal
+        });
+
+
+        handleOpenEditOrdenDetalleDialog();
+    };
+
+    // useEffect(() => {
+    //     console.log(ordenDetalle);
+    // }, [ordenDetalle])
+
     const denseHeight = dense ? 60 : 80;
 
     const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
 
     const handleEsTransitionChange = (event) => {
+        setEsTransitionTemporal(event.target.checked);
         methods.setValue('esTransition', event.target.checked);
-      };
+    };
 
-      const handleEsLuzAzulChange = (event) => {
+    const handleEsLuzAzulChange = (event) => {
+        setEsLuzAzulTemporal(event.target.checked);
         methods.setValue('esLuzAzul', event.target.checked);
-      };
+    };
 
     return (
 
         <>
             <Box sx={{ display: 'flex', gap: '16px', height: '100%' }}>
                 <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)} quantity={quantity}>
-                    <Card sx={{ flex: 1, p: 3, pl: 4, pr: 4 }}>
+                    <Card sx={{ flex: 1, p: 3, pl: 4, pr: 4, width: '100%' }}>
                         <Box
                             sx={{
                                 display: 'grid',
                                 columnGap: 2,
                                 rowGap: 3,
                                 gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
+                                pt: 3,
+                                pb: 2,
                             }}
                         >
 
@@ -616,21 +675,19 @@ export default function OrdenNewEditForm({ isEdit, currentOrden, orden, sucuId }
                                 isOptionEqualToValue={(option, value) => option.id === value.id}
                                 value={optionsClientes.find(option => option.id === defaultValues.cliente) ?? null}
                             />
-
-
                         </Box>
-
-                        <Stack direction="row" justifyContent="flex-end" sx={{ mt: 3 }}>
-                            {/* <Button to={PATH_DASHBOARD.optica.empleados}>Cancelar</Button> */}
-                            <LoadingButton type="submit" variant="contained" disabled={encabezadoInserted} loading={isSubmitting}>
-                                Siguiente
-                            </LoadingButton>
-                        </Stack>
+                        
+                            <Stack direction="row" justifyContent="flex-end" sx={{ mt: 3 }}>
+                                {/* <Button to={PATH_DASHBOARD.optica.empleados}>Cancelar</Button> */}
+                                <LoadingButton type="submit" variant="contained" disabled={encabezadoInserted} loading={isSubmitting}>
+                                    Siguiente
+                                </LoadingButton>
+                            </Stack>
                     </Card>
                 </FormProvider>
 
                 <FormProvider methods={methods} onSubmit={handleSubmit(onSubmitDetalle)}>
-                    <Card sx={{ flex: 1, p: 3, pl: 4, pr: 4 }}>
+                    <Card sx={{ flex: 1, p: 3, pl: 4, pr: 4, width: '100%' }}>
                         <Box
                             sx={{
                                 display: 'grid',
@@ -674,27 +731,27 @@ export default function OrdenNewEditForm({ isEdit, currentOrden, orden, sucuId }
                             <RHFTextField name="precio" disabled label="Precio" />
                             <RHFTextField name="graduacionLeft" disabled={!encabezadoInserted} label="Graduación izquierdo" />
                             <RHFTextField name="graduacionRight" disabled={!encabezadoInserted} label="Graduación derecho" />
-                            
+
 
                             <FormControlLabel
-                                        control={
-                                        <Checkbox
-                                            // checked={defaultValues.esAdmin}
-                                            onChange={handleEsTransitionChange}
-                                        />
-                                        }
-                                        label="Transition"
+                                control={
+                                    <Checkbox
+                                        checked={esTransitionTemporal}
+                                        onChange={handleEsTransitionChange}
                                     />
+                                }
+                                label="Transition"
+                            />
 
-                                    <FormControlLabel
-                                        control={
-                                        <Checkbox
-                                            // checked={defaultValues.esAdmin}
-                                            onChange={handleEsLuzAzulChange}
-                                        />
-                                        }
-                                        label="Filtro luz azul"
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        checked={esLuzAzulTemporal}
+                                        onChange={handleEsLuzAzulChange}
                                     />
+                                }
+                                label="Filtro luz azul"
+                            />
 
                             <TableCell align="left">
                                 <Incrementer
@@ -723,6 +780,10 @@ export default function OrdenNewEditForm({ isEdit, currentOrden, orden, sucuId }
                 </FormProvider>
             </Box>
             <br />
+
+            <ModalEliminarOrdenDetalles open={openDeleteOrdenDetalleDialog} onClose={handleCloseDeleteOrdenDetalleDialog} ordendetalles={ordendetalles} setTableData={setTableData} deorId={deorId} ordeId={ordeId} />
+            <ModalEditarOrdenDetalles open={openEditOrdenDetalleDialog} onClose={handleCloseEditOrdenDetalleDialog} ordendetalles={ordendetalles} setTableData={setTableData} ordendetalle={ordenDetalle} ordeId={ordeId} optionsAros={optionsAros} />
+
             <Card>
                 <TableToolbar filterName={filterName} onFilterName={handleFilterName} />
 
@@ -752,9 +813,9 @@ export default function OrdenNewEditForm({ isEdit, currentOrden, orden, sucuId }
                                                 key={row.deor_Id}
                                                 row={row}
                                                 selected={selected.includes(row.deor_Id)}
-                                            // onSelectRow={() => onSelectRow(row.empe_Id)}
-                                            // onDeleteRow={() => handleDeleteRow(row.empe_Id)}
-                                            // onEditRow={() => handleEditRow(row.empe_Id)}
+                                                // onSelectRow={() => onSelectRow(row.empe_Id)}
+                                                onDeleteRow={() => handleDeleteRow(row.deor_Id)}
+                                                onEditRow={() => handleEditRow(row.deor_Id)}
                                             />
                                         ) : (
                                             !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />

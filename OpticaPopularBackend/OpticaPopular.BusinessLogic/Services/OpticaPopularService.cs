@@ -908,13 +908,37 @@ namespace OpticaPopular.BusinessLogic.Services
             var result = new ServiceResult();
             try
             {
-                var list = _ordenesRepository.DeleteDetalles(id);
-                return result.Ok(list);
+                var delete = _ordenesRepository.DeleteDetalles(id);
+
+                if (delete.MessageStatus == "Ha ocurrido un error")
+                    return result.SetMessage(delete.MessageStatus, ServiceResultType.Error);
+                else
+                    return result.SetMessage("El detalle se ha eliminado con éxito", ServiceResultType.Success);
             }
             catch (Exception e)
             {
                 return result.Error(e.Message);
             }
+
+        }
+
+        public ServiceResult UpdateDetallesOrdenes(tbDetallesOrdenes item)
+        {
+            var result = new ServiceResult();
+            try
+            {
+                var update = _ordenesRepository.UpdateDetalles(item);
+
+                if (update.MessageStatus == "Ha ocurrido un error")
+                    return result.SetMessage(update.MessageStatus, ServiceResultType.Error);
+                else
+                    return result.SetMessage(update.MessageStatus, ServiceResultType.Success);
+            }
+            catch (Exception e)
+            {
+                return result.Error(e.Message);
+            }
+
         }
         #endregion
 

@@ -68,7 +68,7 @@ export default function LoginForm() {
     formState: { errors, isSubmitting },
   } = methods;
 
-  const onSubmit = async (data) => {
+  const onSubmit = (data) => {
     try {
       if (data.email !== "" && data.password !== "") {
         axios.get(`Usuarios/Login?usuario=${data.email}&contrasena=${data.password}`)
@@ -85,10 +85,10 @@ export default function LoginForm() {
                   empe_CorreoElectronico: response.data.data[0].empe_CorreoElectronico,
                 };
 
-                
-
                 localStorage.setItem('sucu_Id', response.data.data[0].sucu_Id);
                 localStorage.setItem('usuario', JSON.stringify(usuario));
+                
+                console.log(localStorage.getItem('usuario'));
                 navigate('/Inicio/app', { replace: true });
               } else {
                 setErrorMessages({ name: "generalError", message: errores.generalError });

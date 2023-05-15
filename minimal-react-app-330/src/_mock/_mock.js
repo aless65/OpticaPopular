@@ -42,7 +42,14 @@ const _mock = {
   },
   image: {
     cover: (index) => `https://minimal-assets-api.vercel.app/assets/images/covers/cover_${index + 1}.jpg`,
-    feed: (index) => `https://minimal-assets-api.vercel.app/assets/images/feeds/feed_${index + 1}.jpg`,
+    feed: (index) => {
+      const feedImages = [
+        'https://i.ibb.co/XDXdJv4/1.jpg',
+        'https://i.ibb.co/Sdxr89z/2.jpg',
+        'https://i.ibb.co/hfxnxxV/3.jpg',
+      ];
+      return feedImages[index];
+    },
     product: (index) => `https://minimal-assets-api.vercel.app/assets/images/products/product_${index + 1}.jpg`,
     avatar: (index) => `https://minimal-assets-api.vercel.app/assets/images/avatars/avatar_${index + 1}.jpg`,
   },

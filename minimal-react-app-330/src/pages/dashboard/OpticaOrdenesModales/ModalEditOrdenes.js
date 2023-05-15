@@ -52,6 +52,8 @@ export default function ModalEditarOrden({ open, onClose, ordenes, setTableData,
 
     const [canInsert, setCanInsert] = useState(true);
 
+    // const [hasDetalles, setHasDetalles] = useState(false);
+
     const defaultValues = {
         clie_Id: clienteTemporal || '',
         sucu_Id: sucursalTemporal || '',
@@ -75,6 +77,16 @@ export default function ModalEditarOrden({ open, onClose, ordenes, setTableData,
             setFechaEntregaTemporal(dayjs(orden.orde_FechaEntrega));
             setFechaEntregaRealTemporal(dayjs(orden.orde_FechaEntregaReal));
         }
+
+        // fetch(`http://opticapopular.somee.com/api/Ordenes/ListadoDetalles?id=${orden.orde_Id}`)
+        //     .then(response => response.json())
+        //     .then(data => {
+        //         if(data.data){
+        //             setHasDetalles(true);
+        //         }
+        //     })
+        //     .catch(error => console.error(error));
+
     }, [orden]);
 
     const methods = useForm({

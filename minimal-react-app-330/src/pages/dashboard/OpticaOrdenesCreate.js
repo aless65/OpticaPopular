@@ -53,7 +53,7 @@ export default function OrdenCreate() {
         <HeaderBreadcrumbs
           heading={!isEdit ? 'Crear orden' : 'Editar orden'}
           links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
+            { name: 'Inicio', href: PATH_DASHBOARD.root },
             { name: 'Órdenes', href: PATH_OPTICA.ordenes },
             { name: !isEdit ? 'Nueva orden' : 'Editar orden' },
           ]}
