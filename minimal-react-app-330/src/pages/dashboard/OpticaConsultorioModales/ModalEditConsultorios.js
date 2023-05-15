@@ -53,9 +53,9 @@ export default function EditConsultorioDialog({ open, onClose, consultorios, set
     const dispatch = useDispatch();
 
     const [empleadoTemporal, setEmpleadoTemporal] = useState('');
-    
+
     const [consultorioTemporal, setconsultorioTemporal] = useState('');
-   
+
 
     // const { register, handleSubmit, setValue, reset, formState: { errors } } = useForm({ defaultValues });
 
@@ -67,11 +67,11 @@ export default function EditConsultorioDialog({ open, onClose, consultorios, set
 
     useEffect(() => {
         if (consultorio) {
-          setconsultorioTemporal(consultorioNombre);
-          setEmpleadoTemporal(consultorio.empe_Id);
-          
+            setconsultorioTemporal(consultorioNombre);
+            setEmpleadoTemporal(consultorio.empe_Id);
+
         }
-      }, [consultorio]);
+    }, [consultorio]);
 
     useEffect(() => {
         fetch('https://localhost:44362/api/Empleados/Listado')
@@ -86,7 +86,7 @@ export default function EditConsultorioDialog({ open, onClose, consultorios, set
             .catch(error => console.error(error));
     }, []);
 
-    
+
 
     const InsertSchema = Yup.object().shape({
         consultorioNombre: Yup.string().required('Nombre del consultorio requerido'),
@@ -114,13 +114,13 @@ export default function EditConsultorioDialog({ open, onClose, consultorios, set
     useEffect(() => {
         methods.setValue('consultorioNombre', defaultValues.consultorioNombre);
         methods.setValue('empleado', defaultValues.empleado);
-        
-      }, [defaultValues]);
 
-      
+    }, [defaultValues]);
+
+
 
     const onSubmit = async (data) => {
-         
+
         try {
             console.log(data);
             const jsonData = {
@@ -129,7 +129,7 @@ export default function EditConsultorioDialog({ open, onClose, consultorios, set
                 empe_Id: data.empleado,
                 usua_UsuModificacion: 1,
             };
-              console.log(jsonData);
+            console.log(jsonData);
             fetch("https://localhost:44362/api/Consultorios/Editar", {
                 method: "PUT",
                 mode: "cors",
@@ -150,7 +150,7 @@ export default function EditConsultorioDialog({ open, onClose, consultorios, set
                     }
                 })
                 .catch((error) => console.error(error));
-             console.log(data);
+            console.log(data);
         } catch (error) {
             console.error(error);
             reset();
@@ -172,7 +172,7 @@ export default function EditConsultorioDialog({ open, onClose, consultorios, set
 
     useEffect(() => {
         methods.setValue('consultorioNombre', consultorioTemporal);
-      }, [consultorioTemporal])
+    }, [consultorioTemporal])
 
     const submitHandler = handleSubmit(onSubmit);
 
@@ -181,7 +181,7 @@ export default function EditConsultorioDialog({ open, onClose, consultorios, set
         onClose();
         reset();
     };
-    
+
     return (
         <FormProvider methods={methods}>
             <Dialog open={open} fullWidth maxWidth="sm" onClose={handleDialogClose} consultorios={consultorios}>
@@ -190,18 +190,21 @@ export default function EditConsultorioDialog({ open, onClose, consultorios, set
                 {!!errors.afterSubmit && <Alert severity="error">{errors.afterSubmit.message}</Alert>}
 
                 <Stack spacing={3} sx={{ p: 3, pb: 0, pl: 5, pr: 5 }}>
-                {/* Agregar el campo TextField para el nombre del consultorio */}
-                <TextField
-                    fullWidth
-                    label="Nombre del consultorio"
-                    {...register('consultorioNombre')}
-                    error={!!errors.consultorioNombre}
-                    helperText={errors.consultorioNombre?.message}
-                    onChange={e => setconsultorioTemporal(e.target.value)} value={consultorioTemporal}
-                />
 
                     <Grid container>
-                        <Grid item xs={12} sx={{ pr: 5 }} sm={12}>
+                        <Grid item xs={12} sx={{ pr: 5}} sm={12}>
+                            {/* Agregar el campo TextField para el nombre del consultorio */}
+                            <TextField
+                                fullWidth
+                                label="Nombre del consultorio"
+                                {...register('consultorioNombre')}
+                                error={!!errors.consultorioNombre}
+                                helperText={errors.consultorioNombre?.message}
+                                onChange={e => setconsultorioTemporal(e.target.value)} value={consultorioTemporal}
+                            />
+
+                        </Grid>
+                        <Grid item xs={12} sx={{ pr: 5, pt: 3  }} sm={12}>
                             <Autocomplete
                                 disablePortal
                                 name="empleado"
@@ -219,9 +222,9 @@ export default function EditConsultorioDialog({ open, onClose, consultorios, set
                                 value={optionsEmpleados.find((option) => option.id === empleadoTemporal) ?? null}
                             />
                         </Grid>
-                        
+
                     </Grid>
-                   
+
                 </Stack>
                 <DialogActions>
                     <LoadingButton variant="contained" type="submit" loading={isSubmitting} onClick={submitHandler}>

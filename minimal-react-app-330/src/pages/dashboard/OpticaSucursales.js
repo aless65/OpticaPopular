@@ -40,6 +40,7 @@ import {
 // sections
 import { SucursalTableRow, TableToolbar } from '../../sections/@dashboard/optica/sucursal-list';
 import AddSucursalesDialog from './OpticaSucursalesModales/ModalInsertSucursales';
+import EditSucursalDialog from './OpticaSucursalesModales/ModalEditSucursales';
 import DeleteSucursalDialog from './OpticaSucursalesModales/ModalDeleteSucursales';
 
 // ----------------------------------------------------------------------
@@ -47,6 +48,7 @@ import DeleteSucursalDialog from './OpticaSucursalesModales/ModalDeleteSucursale
 const TABLE_HEAD = [
   { id: 'sucu_Id', label: 'ID', align: 'left' },
   { id: 'sucu_Descripcion', label: 'Nombre', align: 'left' },
+  { id: 'dire_DireccionExacta', label: 'Dirección', align: 'left' },
   { id: '' },
 ];
 
@@ -84,8 +86,9 @@ export default function OpticaSucursales() {
 
   const [openAddUserDialog, setOpenAddUserDialog] = useState(false);
 
-
   const [openDeleteRolDialog, setOpenDeleteRolDialog] = useState(false);
+
+  const [openEditSucursalDialog, setOpenEditSucursalDialog] = useState(false);
 
   const [tableData, setTableData] = useState([]);
 
@@ -113,6 +116,11 @@ export default function OpticaSucursales() {
   const handleDeleteRow = (id) => {
     setsucursalId(id);
     handleOpenDeleteRolDialog();
+  };
+
+  const handleEditRow = (id) => {
+    setsucursalId(id);
+    handleOpenEditSucursalDialog();
   };
 
   const handleDeleteRows = (selected) => {
@@ -145,6 +153,14 @@ export default function OpticaSucursales() {
     setOpenDeleteRolDialog(false);
   }
 
+  const handleOpenEditSucursalDialog = () => {
+    setOpenEditSucursalDialog(true)
+  }
+
+  const handleCloseEditSucursalDialog = () => {
+    setOpenEditSucursalDialog(false);
+  }
+
   const denseHeight = dense ? 60 : 80;
 
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
@@ -168,6 +184,7 @@ export default function OpticaSucursales() {
                 Agregar
               </Button>
               <AddSucursalesDialog open={openAddUserDialog} onClose={handleCloseAddUserDialog} sucursales={sucursales} setTableData={setTableData} />
+              <EditSucursalDialog open={openEditSucursalDialog} onClose={handleCloseEditSucursalDialog} sucursales={sucursales} setTableData={setTableData} sucursalId={sucursalId} />
               <DeleteSucursalDialog open={openDeleteRolDialog} onClose={handleCloseDeleteRolDialog} sucursales={sucursales} setTableData={setTableData} sucursalId={sucursalId} />
             </div>
           }
@@ -205,6 +222,7 @@ export default function OpticaSucursales() {
                           selected={selected.includes(row.sucu_Id)}
                           onSelectRow={() => onSelectRow(row.sucu_Id)}
                           onDeleteRow={() => handleDeleteRow(row.sucu_Id)}
+                          onEditRow={() => handleEditRow(row.sucu_Id)}
                           
                         />
                       ) : (

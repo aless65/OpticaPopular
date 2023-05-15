@@ -711,6 +711,7 @@ AS
 		   T7.muni_Nombre AS sucu_MunicipioNombre, 
 		   T7.depa_Id,
 		   T1.carg_Id,
+		   T8.carg_Nombre,
 		   T1.sucu_Id,
 		   T5.sucu_Descripcion AS Empe_SucursalNombre,
 		   empe_UsuCreacion, 
@@ -726,7 +727,8 @@ AS
 	ON T1.estacivi_Id = T4.estacivi_Id INNER JOIN opti.tbSucursales T5
 	ON T1.sucu_Id = T5.sucu_Id INNER JOIN opti.tbDirecciones T6
 	ON T1.dire_Id = T6.dire_Id INNER JOIN gral.tbMunicipios T7
-	ON T6.muni_Id = T7.muni_id 
+	ON T6.muni_Id = T7.muni_id INNER JOIN opti.tbCargos T8
+	ON T1.carg_Id = T8.carg_Id
 GO
 
 
@@ -2306,6 +2308,7 @@ BEGIN
         INNER JOIN opti.tbSucursales tb5 ON t4.sucu_Id = tb5.sucu_Id
     ) AS ConsultoriosEmpleados
     WHERE RowNum = 1 
+	AND cons_Estado = 1
 END
 go
 

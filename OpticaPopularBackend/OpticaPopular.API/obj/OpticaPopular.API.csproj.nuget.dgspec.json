@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\benef\\OneDrive\\Escritorio\\OpticaPopular\\OpticaPopularBackend\\OpticaPopular.API\\OpticaPopular.API.csproj": {}
+    "C:\\Users\\LAB01\\Documents\\OpticaPopular\\OpticaPopularBackend\\OpticaPopular.API\\OpticaPopular.API.csproj": {}
   },
   "projects": {
-    "C:\\Users\\benef\\OneDrive\\Escritorio\\OpticaPopular\\OpticaPopularBackend\\OpticaPopular.API\\OpticaPopular.API.csproj": {
+    "C:\\Users\\LAB01\\Documents\\OpticaPopular\\OpticaPopularBackend\\OpticaPopular.API\\OpticaPopular.API.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\benef\\OneDrive\\Escritorio\\OpticaPopular\\OpticaPopularBackend\\OpticaPopular.API\\OpticaPopular.API.csproj",
+        "projectUniqueName": "C:\\Users\\LAB01\\Documents\\OpticaPopular\\OpticaPopularBackend\\OpticaPopular.API\\OpticaPopular.API.csproj",
         "projectName": "OpticaPopular.API",
-        "projectPath": "C:\\Users\\benef\\OneDrive\\Escritorio\\OpticaPopular\\OpticaPopularBackend\\OpticaPopular.API\\OpticaPopular.API.csproj",
-        "packagesPath": "C:\\Users\\benef\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\benef\\OneDrive\\Escritorio\\OpticaPopular\\OpticaPopularBackend\\OpticaPopular.API\\obj\\",
+        "projectPath": "C:\\Users\\LAB01\\Documents\\OpticaPopular\\OpticaPopularBackend\\OpticaPopular.API\\OpticaPopular.API.csproj",
+        "packagesPath": "C:\\Users\\LAB01\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\LAB01\\Documents\\OpticaPopular\\OpticaPopularBackend\\OpticaPopular.API\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\benef\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\LAB01\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -32,14 +32,14 @@
           "net5.0": {
             "targetAlias": "net5.0",
             "projectReferences": {
-              "C:\\Users\\benef\\OneDrive\\Escritorio\\OpticaPopular\\OpticaPopularBackend\\OpticaPopular.BusinessLogic\\OpticaPopular.BusinessLogic.csproj": {
-                "projectPath": "C:\\Users\\benef\\OneDrive\\Escritorio\\OpticaPopular\\OpticaPopularBackend\\OpticaPopular.BusinessLogic\\OpticaPopular.BusinessLogic.csproj"
+              "C:\\Users\\LAB01\\Documents\\OpticaPopular\\OpticaPopularBackend\\OpticaPopular.BusinessLogic\\OpticaPopular.BusinessLogic.csproj": {
+                "projectPath": "C:\\Users\\LAB01\\Documents\\OpticaPopular\\OpticaPopularBackend\\OpticaPopular.BusinessLogic\\OpticaPopular.BusinessLogic.csproj"
               },
-              "C:\\Users\\benef\\OneDrive\\Escritorio\\OpticaPopular\\OpticaPopularBackend\\OpticaPopular.DataAccess\\OpticaPopular.DataAccess.csproj": {
-                "projectPath": "C:\\Users\\benef\\OneDrive\\Escritorio\\OpticaPopular\\OpticaPopularBackend\\OpticaPopular.DataAccess\\OpticaPopular.DataAccess.csproj"
+              "C:\\Users\\LAB01\\Documents\\OpticaPopular\\OpticaPopularBackend\\OpticaPopular.DataAccess\\OpticaPopular.DataAccess.csproj": {
+                "projectPath": "C:\\Users\\LAB01\\Documents\\OpticaPopular\\OpticaPopularBackend\\OpticaPopular.DataAccess\\OpticaPopular.DataAccess.csproj"
               },
-              "C:\\Users\\benef\\OneDrive\\Escritorio\\OpticaPopular\\OpticaPopularBackend\\OpticaPopular.Entities\\OpticaPopular.Entities.csproj": {
-                "projectPath": "C:\\Users\\benef\\OneDrive\\Escritorio\\OpticaPopular\\OpticaPopularBackend\\OpticaPopular.Entities\\OpticaPopular.Entities.csproj"
+              "C:\\Users\\LAB01\\Documents\\OpticaPopular\\OpticaPopularBackend\\OpticaPopular.Entities\\OpticaPopular.Entities.csproj": {
+                "projectPath": "C:\\Users\\LAB01\\Documents\\OpticaPopular\\OpticaPopularBackend\\OpticaPopular.Entities\\OpticaPopular.Entities.csproj"
               }
             }
           }
@@ -107,20 +107,20 @@
         }
       }
     },
-    "C:\\Users\\benef\\OneDrive\\Escritorio\\OpticaPopular\\OpticaPopularBackend\\OpticaPopular.BusinessLogic\\OpticaPopular.BusinessLogic.csproj": {
+    "C:\\Users\\LAB01\\Documents\\OpticaPopular\\OpticaPopularBackend\\OpticaPopular.BusinessLogic\\OpticaPopular.BusinessLogic.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\benef\\OneDrive\\Escritorio\\OpticaPopular\\OpticaPopularBackend\\OpticaPopular.BusinessLogic\\OpticaPopular.BusinessLogic.csproj",
+        "projectUniqueName": "C:\\Users\\LAB01\\Documents\\OpticaPopular\\OpticaPopularBackend\\OpticaPopular.BusinessLogic\\OpticaPopular.BusinessLogic.csproj",
         "projectName": "OpticaPopular.BusinessLogic",
-        "projectPath": "C:\\Users\\benef\\OneDrive\\Escritorio\\OpticaPopular\\OpticaPopularBackend\\OpticaPopular.BusinessLogic\\OpticaPopular.BusinessLogic.csproj",
-        "packagesPath": "C:\\Users\\benef\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\benef\\OneDrive\\Escritorio\\OpticaPopular\\OpticaPopularBackend\\OpticaPopular.BusinessLogic\\obj\\",
+        "projectPath": "C:\\Users\\LAB01\\Documents\\OpticaPopular\\OpticaPopularBackend\\OpticaPopular.BusinessLogic\\OpticaPopular.BusinessLogic.csproj",
+        "packagesPath": "C:\\Users\\LAB01\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\LAB01\\Documents\\OpticaPopular\\OpticaPopularBackend\\OpticaPopular.BusinessLogic\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\benef\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\LAB01\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -135,8 +135,8 @@
           "net5.0": {
             "targetAlias": "net5.0",
             "projectReferences": {
-              "C:\\Users\\benef\\OneDrive\\Escritorio\\OpticaPopular\\OpticaPopularBackend\\OpticaPopular.DataAccess\\OpticaPopular.DataAccess.csproj": {
-                "projectPath": "C:\\Users\\benef\\OneDrive\\Escritorio\\OpticaPopular\\OpticaPopularBackend\\OpticaPopular.DataAccess\\OpticaPopular.DataAccess.csproj"
+              "C:\\Users\\LAB01\\Documents\\OpticaPopular\\OpticaPopularBackend\\OpticaPopular.DataAccess\\OpticaPopular.DataAccess.csproj": {
+                "projectPath": "C:\\Users\\LAB01\\Documents\\OpticaPopular\\OpticaPopularBackend\\OpticaPopular.DataAccess\\OpticaPopular.DataAccess.csproj"
               }
             }
           }
@@ -169,20 +169,20 @@
         }
       }
     },
-    "C:\\Users\\benef\\OneDrive\\Escritorio\\OpticaPopular\\OpticaPopularBackend\\OpticaPopular.DataAccess\\OpticaPopular.DataAccess.csproj": {
+    "C:\\Users\\LAB01\\Documents\\OpticaPopular\\OpticaPopularBackend\\OpticaPopular.DataAccess\\OpticaPopular.DataAccess.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\benef\\OneDrive\\Escritorio\\OpticaPopular\\OpticaPopularBackend\\OpticaPopular.DataAccess\\OpticaPopular.DataAccess.csproj",
+        "projectUniqueName": "C:\\Users\\LAB01\\Documents\\OpticaPopular\\OpticaPopularBackend\\OpticaPopular.DataAccess\\OpticaPopular.DataAccess.csproj",
         "projectName": "OpticaPopular.DataAccess",
-        "projectPath": "C:\\Users\\benef\\OneDrive\\Escritorio\\OpticaPopular\\OpticaPopularBackend\\OpticaPopular.DataAccess\\OpticaPopular.DataAccess.csproj",
-        "packagesPath": "C:\\Users\\benef\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\benef\\OneDrive\\Escritorio\\OpticaPopular\\OpticaPopularBackend\\OpticaPopular.DataAccess\\obj\\",
+        "projectPath": "C:\\Users\\LAB01\\Documents\\OpticaPopular\\OpticaPopularBackend\\OpticaPopular.DataAccess\\OpticaPopular.DataAccess.csproj",
+        "packagesPath": "C:\\Users\\LAB01\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\LAB01\\Documents\\OpticaPopular\\OpticaPopularBackend\\OpticaPopular.DataAccess\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\benef\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\LAB01\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -197,8 +197,8 @@
           "net5.0": {
             "targetAlias": "net5.0",
             "projectReferences": {
-              "C:\\Users\\benef\\OneDrive\\Escritorio\\OpticaPopular\\OpticaPopularBackend\\OpticaPopular.Entities\\OpticaPopular.Entities.csproj": {
-                "projectPath": "C:\\Users\\benef\\OneDrive\\Escritorio\\OpticaPopular\\OpticaPopularBackend\\OpticaPopular.Entities\\OpticaPopular.Entities.csproj"
+              "C:\\Users\\LAB01\\Documents\\OpticaPopular\\OpticaPopularBackend\\OpticaPopular.Entities\\OpticaPopular.Entities.csproj": {
+                "projectPath": "C:\\Users\\LAB01\\Documents\\OpticaPopular\\OpticaPopularBackend\\OpticaPopular.Entities\\OpticaPopular.Entities.csproj"
               }
             }
           }
@@ -253,20 +253,20 @@
         }
       }
     },
-    "C:\\Users\\benef\\OneDrive\\Escritorio\\OpticaPopular\\OpticaPopularBackend\\OpticaPopular.Entities\\OpticaPopular.Entities.csproj": {
+    "C:\\Users\\LAB01\\Documents\\OpticaPopular\\OpticaPopularBackend\\OpticaPopular.Entities\\OpticaPopular.Entities.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\benef\\OneDrive\\Escritorio\\OpticaPopular\\OpticaPopularBackend\\OpticaPopular.Entities\\OpticaPopular.Entities.csproj",
+        "projectUniqueName": "C:\\Users\\LAB01\\Documents\\OpticaPopular\\OpticaPopularBackend\\OpticaPopular.Entities\\OpticaPopular.Entities.csproj",
         "projectName": "OpticaPopular.Entities",
-        "projectPath": "C:\\Users\\benef\\OneDrive\\Escritorio\\OpticaPopular\\OpticaPopularBackend\\OpticaPopular.Entities\\OpticaPopular.Entities.csproj",
-        "packagesPath": "C:\\Users\\benef\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\benef\\OneDrive\\Escritorio\\OpticaPopular\\OpticaPopularBackend\\OpticaPopular.Entities\\obj\\",
+        "projectPath": "C:\\Users\\LAB01\\Documents\\OpticaPopular\\OpticaPopularBackend\\OpticaPopular.Entities\\OpticaPopular.Entities.csproj",
+        "packagesPath": "C:\\Users\\LAB01\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\LAB01\\Documents\\OpticaPopular\\OpticaPopularBackend\\OpticaPopular.Entities\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\benef\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\LAB01\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],

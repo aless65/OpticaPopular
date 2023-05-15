@@ -118,12 +118,12 @@ function applySortFilter({ tableData, comparator, filterName }) {
 
   if (filterName) {
     tableData = tableData.filter((item) =>
-      item.cons_Id.indexOf(filterName.toLowerCase()) !== -1 ||
+      item.cons_Id.toString().indexOf(filterName.toLowerCase()) !== -1 ||
       item.cons_Nombre.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 ||
       item.empe_Nombres.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
     );
   }
-
+  
 
   return tableData;
 }

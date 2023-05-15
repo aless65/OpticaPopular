@@ -44,8 +44,6 @@ export default function AddConsultorioDialog({ open, onClose, consultorios, setT
 
   const { enqueueSnackbar } = useSnackbar();
 
-  
-
   const [insertSuccess, setInsertSuccess] = useState(false);
 
   const [optionsEmpleados, setOptionsEmpleados] = useState([]);
@@ -53,11 +51,12 @@ export default function AddConsultorioDialog({ open, onClose, consultorios, setT
  
 
   useEffect(() => {
-    fetch('http://opticapopular.somee.com/api/Empleados/Listado')
+    fetch('https://localhost:44362/api/Empleados/Listado')
       .then(response => response.json())
       .then(data => {
         // console.log(data);
-        const optionsData = data.data.map(item => ({
+        const filteredData = data.data.filter(item => item.carg_Nombre === "Oftalmólogo");
+        const optionsData = filteredData.map(item => ({
           label: item.empe_NombreCompleto, // replace 'name' with the property name that contains the label
           id: item.empe_Id // replace 'id' with the property name that contains the ID
         }));
@@ -83,6 +82,11 @@ export default function AddConsultorioDialog({ open, onClose, consultorios, setT
     defaultValues,
   });
 
+  useEffect(() => {
+    methods.setValue('consulNombre', defaultValues.consulNombre);
+    methods.setValue('empleado', defaultValues.empleado);
+  }, [defaultValues]);
+
   const {
     reset,
 
@@ -101,7 +105,9 @@ export default function AddConsultorioDialog({ open, onClose, consultorios, setT
         usua_IdCreacion: 1,
       };
 
-      fetch("http://opticapopular.somee.com/api/Consultorios/Insertar", {
+      console.log(jsonData);
+
+      fetch("https://localhost:44362/api/Consultorios/Insertar", {
         method: "POST",
         mode: "cors",
         headers: {
@@ -166,9 +172,8 @@ export default function AddConsultorioDialog({ open, onClose, consultorios, setT
           <RHFTextField name="consulNombre" label="Nombre del consultorio" />
 
           <Grid container>
-            <Grid item xs={12} sx={{ pr: 1 }} sm={6}>
+            <Grid item xs={12} sx={{ pr: 1 }} sm={12}>
               <Autocomplete
-                disablePortal
                 name="empleado"
                 options={optionsEmpleados}
                 error={errors.empleado?.message !== undefined}

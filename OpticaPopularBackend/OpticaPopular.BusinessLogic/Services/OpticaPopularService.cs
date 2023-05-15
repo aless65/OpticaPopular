@@ -892,8 +892,6 @@ namespace OpticaPopular.BusinessLogic.Services
             }
         }
 
-       
-
         public ServiceResult FindSucursales(int id)
         {
             var result = new ServiceResult();
