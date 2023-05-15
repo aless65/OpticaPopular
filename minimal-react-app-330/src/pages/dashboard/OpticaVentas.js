@@ -97,6 +97,8 @@ export default function Ventas() {
 
     const [direccion, setDireccion] = useState([]);
 
+    const [recargarListas, setrecargarListas] = useState(false);
+
     const { enqueueSnackbar } = useSnackbar();
     const [mostrarContenedor, setMostrarContenedor] = useState(false);
     const [mostrarContenedorCitas, setMostrarContenedorCitas] = useState(true);
@@ -157,7 +159,6 @@ export default function Ventas() {
     };
 
     const handleDireccion = (value) => {
-
         if (isCita) {
             axios.get('Ordenes/Listado')
                 .then(response => {
@@ -185,7 +186,7 @@ export default function Ventas() {
                             filter(item => item.clie_Id === clieId)
                             .map(item => ({
                                 clie_Id: item.clie_Id
-                            }));
+                        }));
 
                         if (data.length === 0) {
                             enqueueSnackbar(`No puede seleccionar una direccion de envio ya que no posee ordenes`, { variant: 'warning' });
@@ -248,11 +249,12 @@ export default function Ventas() {
         setMostrarContenedorCitas(true);
         setMostrarContenedorClientes(true);
         setMostrarContenedorOBien(true);
+        setrecargarListas(true);
     };
-
+   
     useEffect(() => {
         // Agregar esta condicion al filter para la hora => && dayjs(new Date().setHours(data.deci_HoraInicio.substring(0, 2))).format('HH:mm:ss').substring(0, 2) < dayjs().format('HH:mm:ss').substring(0, 2)
-        axios.get(`Citas/ListadoCitasPorIdSucursal/${JSON.parse(localStorage.getItem('usuario')).usua_EsAdmin === true ? 0 : localStorage.getItem('sucu_Id')}`)
+        axios.get(`Citas/ListadoParaVentas`)
             .then((response) => {
                 const optionsData = response.data.data.filter(data =>
                     data.deci_Id !== 0 &&
@@ -276,11 +278,11 @@ export default function Ventas() {
                 setOptionsClientes(optionsData);
             })
             .catch(error => console.error(error));
-    }, []);
+    }, [recargarListas]);
 
     useEffect(() => {
         setTableData([]);
-        axios.get(`Ordenes/ListadoXSucursales?id=${JSON.parse(localStorage.getItem('usuario')).usua_EsAdmin === true ? 0 : localStorage.getItem('sucu_Id')}`)
+        axios.get(`Ordenes/ListadoOrdenesVentaCliente`)
             .then((response) => {
                 if (response.data.code === 200) {
                     if (response.data.data.length > 0) {
@@ -580,6 +582,25 @@ export default function Ventas() {
                             <Container style={{ display: activeStep === 2 ? '' : 'none' }}>
                                 <CheckoutPayment onBackStep={handleBack} direccion={direccion} clie_Id={clieId} cita_Id={cita_Id} ordenes={selected} stepActive={activeStep} nextStep={handleNext} />
                             </Container>
+                            <Box sx={{ display: activeStep === 0 ? 'flex' : 'none', flexDirection: 'row', pt: 2 }}>
+                                <Button
+                                    color="inherit"
+                                    disabled={activeStep === 0}
+                                    onClick={handleBack}
+                                    sx={{ mr: 1 }}
+                                >
+                                    Atras
+                                </Button>
+                                <Box sx={{ flex: '1 1 auto' }} />
+                                {isStepOptional(activeStep) && (
+                                    <Button color="inherit" onClick={handleSkip} sx={{ mr: 1 }}>
+                                        Omitir
+                                    </Button>
+                                )}
+                                <Button onClick={handleNext} style={{ display: activeStep === 2 ? 'none' : '' }}>
+                                    {activeStep === steps.length - 1 ? 'Terminar' : 'Siguiente'}
+                                </Button>
+                            </Box>
                         </>
                     )}
                 </Box>

@@ -37,5 +37,13 @@ namespace OpticaPopular.API.Controllers
             var respuesta = _opticaPopularService.DetallesEnviosInsert(item);
             return Ok(respuesta);
         }
+
+        [HttpGet("ListByIdOrden/{orde_Id}")]
+        public IActionResult ListadoPorIdOrden(int orde_Id)
+        {
+            var lista = _opticaPopularService.ListadoDetallesEnviosByIdOrden(orde_Id);
+
+            return Ok(lista);
+        }   
     }
 }

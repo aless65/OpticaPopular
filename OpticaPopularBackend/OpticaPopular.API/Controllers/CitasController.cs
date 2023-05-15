@@ -34,6 +34,16 @@ namespace OpticaPopular.API.Controllers
             return Ok(lista);
         }
 
+        [HttpGet("ListadoParaVentas")]
+        public IActionResult ListadoParaVentaCita()
+        {
+            var lista = _opticaPopularService.ListadoCitasVentaCita();
+
+            lista.Data = _mapper.Map<IEnumerable<CitasViewModel>>(lista.Data);
+
+            return Ok(lista);
+        }
+
         [HttpPost("Insert")]
         public IActionResult Insert(CitasViewModel citasViewModel)
         {

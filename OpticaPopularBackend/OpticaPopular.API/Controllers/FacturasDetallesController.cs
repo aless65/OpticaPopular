@@ -31,5 +31,21 @@ namespace OpticaPopular.API.Controllers
             var respuesta = _opticaPopularService.DetallesFacturasInsert(item);
             return Ok(respuesta);
         }
+
+        [HttpGet("ListByIdOrden/{orde_Id}")]
+        public IActionResult ListadoPorIdOrden(int orde_Id)
+        {
+            var lista = _opticaPopularService.ListadoDetallesFacturasByIdOrden(orde_Id);
+
+            return Ok(lista);
+        }
+
+        [HttpGet("ListByIdFactura/{fact_Id}")]
+        public IActionResult ListByIdFactura(int fact_Id)
+        {
+            var lista = _opticaPopularService.ListadoDetallesFacturaByIdFactura(fact_Id);
+
+            return Ok(lista);
+        }
     }
 }

@@ -2506,6 +2506,30 @@ BEGIN
 END
 GO
 
+CREATE OR ALTER PROCEDURE opti.UDP_tbFacturas_ListByIdCita 
+	@cita_Id	INT
+AS
+BEGIN
+	SELECT [cita_Id] FROM [opti].[tbFacturas] WHERE [cita_Id] = @cita_Id
+END
+GO
+
+CREATE OR ALTER PROCEDURE opti.UDP_tbDetallesFacturasByIdOrden
+	@orde_Id	INT 
+AS
+BEGIN
+	SELECT ISNULL([orde_Id], 0) [orde_Id] FROM [opti].[tbDetallesFactura] 
+END
+GO
+
+CREATE OR ALTER PROCEDURE opti.UDP_tbDetallesEnvios_ByIdOrden 
+	@orde_Id	INT
+AS
+BEGIN
+	SELECT [orde_Id] FROM [opti].[tbDetallesEnvios] WHERE [orde_Id] = @orde_Id
+END
+GO
+
 CREATE OR ALTER PROCEDURE opti.UDP_tbFacturas_Insert
 	@cita_Id			INT,
 	@meto_Id			INT,
@@ -2540,7 +2564,20 @@ BEGIN
 END
 GO
 
-CREATE OR ALTER PROCEDURE opti.UDP_tbDetallesFactura_Insert
+CREATE OR ALTER PROCEDURE opti.UDP_tbDetallesFactura_ListByFacturaId
+	@fact_Id	INT
+AS
+BEGIN
+	SELECT [defa_Id],
+			[fact_Id],
+			[orde_Id],
+			[envi_Id]
+	FROM [opti].[tbDetallesFactura]
+	WHERE [fact_Id] = @fact_Id
+END
+GO
+
+CREATE OR ALTER PROCEDURE opti.UDP_tbDetallesFactura_Insert 
 	@fact_Id			INT,
 	@orde_Id			INT,
 	@envi_Id			INT,
@@ -2573,7 +2610,6 @@ BEGIN
 		 VALUES (@fact_Id, @ordeId, @enviId, 0, @usua_IdCreacion)
 
 		COMMIT
-
 		SELECT 1
 	END TRY
 	BEGIN CATCH
@@ -2628,6 +2664,39 @@ END
 GO
 
 --****************************************************UDPS tbCitas****************************************************--
+	
+CREATE OR ALTER PROCEDURE opti.UDP_tbCitas_ListadoVentasCita
+AS
+BEGIN
+	SELECT 	tb1.[cita_Id], 
+				tb1.[clie_Id],
+				tb2.clie_Nombres,
+				tb2.clie_Apellidos,
+				tb1.[cons_Id],
+				tb3.cons_Nombre,
+				tb4.empe_Nombres,
+				[cita_Fecha],
+				sucu_Id,
+				[deci_Id],
+				[deci_Costo],
+				[deci_HoraInicio],
+				[deci_HoraFin]
+		FROM [opti].[tbCitas] tb1
+		INNER JOIN [opti].[tbClientes] tb2
+		ON tb1.clie_Id = tb2.clie_Id
+		INNER JOIN [opti].[tbConsultorios] tb3
+		ON tb1.cons_Id = tb3.cons_Id
+		INNER JOIN [opti].[tbEmpleados] tb4
+		ON tb3.empe_Id = tb4.empe_Id
+		LEFT JOIN [opti].[tbDetallesCitas] tb5
+		ON tb1.cita_Id = tb5.cita_Id
+		WHERE tb1.cita_Estado = 1 
+		AND tb1.[cita_Id] NOT IN (SELECT ISNULL([cita_Id], 0) FROM [opti].[tbFacturas])
+		AND tb1.[cita_Id] NOT IN (SELECT ISNULL([cita_Id], 0) FROM [opti].[tbOrdenes] WHERE [orde_FechaEntregaReal] != NULL)
+END
+GO
+
+
 CREATE OR ALTER PROCEDURE opti.UDP_tbCitas_ListadoPorIdSucursal
 	@sucu_Id	INT
 AS
@@ -2918,7 +2987,10 @@ CREATE OR ALTER PROCEDURE opti.UDP_tbEnvios_ListadoByIdSucursal
 	@sucu_Id	INT
 AS
 BEGIN
-	SELECT tb1.[envi_Id],
+	
+	IF @sucu_Id > 0
+	BEGIN	
+		SELECT tb1.[envi_Id],
 		   tb1.[fact_Id],
 		   tb1.[dire_Id],
 		   tb3.muni_Nombre,
@@ -2932,15 +3004,26 @@ INNER JOIN [gral].[tbMunicipios] tb3
 		ON tb2.muni_Id = tb3.muni_id
 INNER JOIN [gral].[tbDepartamentos] tb4
 		ON tb3.depa_Id = tb4.depa_Id
- FULL JOIN [opti].[tbFacturas] tb5
-	    ON tb1.fact_Id = tb5.fact_Id
- FULL JOIN [opti].[tbDetallesFactura] tb6
-	    ON tb1.fact_Id = tb6.fact_Id
- FULL JOIN [opti].[tbCitas] tb7
-		ON tb5.cita_Id = tb7.cita_Id
- FULL JOIN [opti].[tbOrdenes] tb8
-		ON tb6.orde_Id = tb8.orde_Id
 	 WHERE [envi_Estado] = 1
+	END
+	ELSE
+	BEGIN
+		SELECT tb1.[envi_Id],
+		   tb1.[fact_Id],
+		   tb1.[dire_Id],
+		   tb3.muni_Nombre,
+		   tb4.depa_Nombre,
+		   [envi_FechaEntrega],
+		   [envi_FechaEntregaReal]
+	  FROM [opti].[tbEnvios] tb1
+INNER JOIN [opti].[tbDirecciones] tb2
+		ON tb1.dire_Id = tb2.dire_Id
+INNER JOIN [gral].[tbMunicipios] tb3
+		ON tb2.muni_Id = tb3.muni_id
+INNER JOIN [gral].[tbDepartamentos] tb4
+		ON tb3.depa_Id = tb4.depa_Id
+	 WHERE [envi_Estado] = 1
+	END
 END
 GO
 
@@ -2948,9 +3031,15 @@ CREATE OR ALTER PROCEDURE OPTI.UDP_tbDetallesEnvios_ByIdEnvio
 	@envi_Id	INT
 AS
 BEGIN
-	SELECT [deen_Id]
+	SELECT [deen_Id],
+			[orde_Id]
+	FROM [opti].[tbDetallesEnvios]
+	WHERE [envi_Id] = @envi_Id
+	AND [deen_Estado] = 1
 END
 GO
+
+
 
 ---------- Ordenes -----------
 CREATE OR ALTER VIEW opti.VW_tbOrdenes
@@ -2988,6 +3077,37 @@ BEGIN
 	SELECT *
 	FROM opti.VW_tbOrdenes
 	WHERE orde_Estado = 1
+END
+GO
+
+CREATE OR ALTER PROCEDURE opti.UDP_tbOrdenes_ListadoVentaCliente
+AS
+BEGIN
+	SELECT *
+			FROM opti.VW_tbOrdenes
+			WHERE orde_Estado = 1
+			AND [orde_Id] NOT IN (SELECT ISNULL([orde_Id], 0) FROM [opti].[tbDetallesFactura])
+			AND [orde_Id] NOT IN (SELECT ISNULL([orde_Id], 0) FROM [opti].[tbDetallesEnvios])
+END
+GO
+
+CREATE OR ALTER PROCEDURE opti.UDP_tbFacturas_Listado
+AS
+BEGIN
+	SELECT	[fact_Id],
+			[cita_Id],
+			[fact_Fecha],
+			tb1.[meto_Id],
+			tb2.meto_Nombre,
+			tb3.[empe_Id],
+			tb3.empe_Nombres,
+			tb3.empe_Apellidos,
+			[fact_Total]
+	FROM [opti].[tbFacturas] tb1
+	INNER JOIN [opti].[tbMetodosPago] tb2
+	ON tb1.meto_Id = tb2.meto_Id
+	INNER JOIN [opti].[tbEmpleados] tb3
+	ON tb1.empe_Id = tb3.empe_Id
 END
 GO
 

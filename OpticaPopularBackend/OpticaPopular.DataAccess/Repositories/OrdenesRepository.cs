@@ -78,6 +78,14 @@ namespace OpticaPopular.DataAccess.Repositories
             return db.Query<VW_tbOrdenes>(ScriptsDataBase.UDP_Lista_OrdenesPorSucursal, parameters, commandType: CommandType.StoredProcedure);
         }
 
+        public IEnumerable<VW_tbOrdenes> ListOrdenesVentaCliente()
+        {
+            using var db = new SqlConnection(OpticaPopularContext.ConnectionString);
+
+            return db.Query<VW_tbOrdenes>(ScriptsDataBase.UDP_tbOrdenes_ListadoVentaCliente, null, commandType: CommandType.StoredProcedure);
+        }
+
+
         public IEnumerable<VW_tbOrdenes> List()
         {
             using var db = new SqlConnection(OpticaPopularContext.ConnectionString);

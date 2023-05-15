@@ -32,5 +32,21 @@ namespace OpticaPopular.API.Controllers
             return Ok(respuesta);
         }
 
+        [HttpGet("ListByIdCita/{cita_Id}")]
+        public IActionResult ListadoPorIdCital(int cita_Id)
+        {
+            var lista = _opticaPopularService.ListadoFacturasByIdCita(cita_Id);
+
+            return Ok(lista);
+        }
+
+        [HttpGet("List")]
+        public IActionResult ListadoFacturas()
+        {
+            var lista = _opticaPopularService.ListadoFacturas();
+
+            return Ok(lista);
+        }
+
     }
 }

@@ -94,6 +94,15 @@ namespace OpticaPopular.DataAccess.Repositories
             return request;
         }
 
+        public IEnumerable<tbCitas> ListCitasVentaCita()
+        {
+            using var db = new SqlConnection(OpticaPopularContext.ConnectionString);
+
+
+            return db.Query<tbCitas>(ScriptsDataBase.UDP_tbCitas_ListadoVentasCita, null, commandType: CommandType.StoredProcedure);
+        }
+
+
         public IEnumerable<tbCitas> ListPorIdSucursal(int sucu_Id)
         {
             using var db = new SqlConnection(OpticaPopularContext.ConnectionString);

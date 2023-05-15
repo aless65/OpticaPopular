@@ -196,6 +196,21 @@ namespace OpticaPopular.BusinessLogic.Services
             }
         }
 
+        public ServiceResult ListadoCitasVentaCita()
+        {
+            var resultado = new ServiceResult();
+
+            try
+            {
+                var list = _citasRepository.ListCitasVentaCita();
+                return resultado.Ok(list);
+            }
+            catch (Exception ex)
+            {
+                return resultado.Error(ex.Message);
+            }
+        }
+
         public ServiceResult InsertarCita(tbCitas item)
         {
             var resultado = new ServiceResult();
@@ -718,6 +733,21 @@ namespace OpticaPopular.BusinessLogic.Services
             }
         }
 
+        public ServiceResult ListadoOrdenesVentaCliente()
+        {
+            var result = new ServiceResult();
+            try
+            {
+                var list = _ordenesRepository.ListOrdenesVentaCliente();
+                return result.Ok(list);
+            }
+            catch (Exception e)
+            {
+                return result.Error(e.Message);
+            }
+        }
+
+
         public ServiceResult FindOrdenes(int id)
         {
             var result = new ServiceResult();
@@ -968,6 +998,36 @@ namespace OpticaPopular.BusinessLogic.Services
                 return result.Error(ex.Message);
             }
         }
+
+        public ServiceResult ListadoFacturasByIdCita(int cita_Id)
+        {
+            var resultado = new ServiceResult();
+
+            try
+            {
+                var list = _facturasRepository.ListByIdCita(cita_Id);
+                return resultado.Ok(list);
+            }
+            catch (Exception ex)
+            {
+                return resultado.Error(ex.Message);
+            }
+        }
+
+        public ServiceResult ListadoFacturas()
+        {
+            var resultado = new ServiceResult();
+
+            try
+            {
+                var list = _facturasRepository.List();
+                return resultado.Ok(list);
+            }
+            catch (Exception ex)
+            {
+                return resultado.Error(ex.Message);
+            }
+        }
         #endregion
 
         #region Detalles Factura
@@ -982,6 +1042,36 @@ namespace OpticaPopular.BusinessLogic.Services
             catch (Exception ex)
             {
                 return result.Error(ex.Message);
+            }
+        }
+
+        public ServiceResult ListadoDetallesFacturasByIdOrden(int orde_Id)
+        {
+            var resultado = new ServiceResult();
+
+            try
+            {
+                var list = _facturasDetallesRepository.ListByIdOrden(orde_Id);
+                return resultado.Ok(list);
+            }
+            catch (Exception ex)
+            {
+                return resultado.Error(ex.Message);
+            }
+        }
+
+        public ServiceResult ListadoDetallesFacturaByIdFactura(int fact_Id)
+        {
+            var resultado = new ServiceResult();
+
+            try
+            {
+                var list = _facturasDetallesRepository.ListByIdFactura(fact_Id);
+                return resultado.Ok(list);
+            }
+            catch (Exception ex)
+            {
+                return resultado.Error(ex.Message);
             }
         }
         #endregion
@@ -1016,6 +1106,22 @@ namespace OpticaPopular.BusinessLogic.Services
                 return result.Error(ex.Message);
             }
         }
+
+        public ServiceResult ListadoDetallesEnviosByIdOrden(int orde_Id)
+        {
+            var resultado = new ServiceResult();
+
+            try
+            {
+                var list = _detallesEnviosRepository.ListByIdOrden(orde_Id);
+                return resultado.Ok(list);
+            }
+            catch (Exception ex)
+            {
+                return resultado.Error(ex.Message);
+            }
+        }
+
         #endregion
     }
 }

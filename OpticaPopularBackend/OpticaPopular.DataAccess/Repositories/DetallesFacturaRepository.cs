@@ -53,5 +53,27 @@ namespace OpticaPopular.DataAccess.Repositories
         {
             throw new NotImplementedException();
         }
+
+        public IEnumerable<tbDetallesFactura> ListByIdOrden(int orde_Id)
+        {
+            using var db = new SqlConnection(OpticaPopularContext.ConnectionString);
+
+            var parametros = new DynamicParameters();
+
+            parametros.Add("@orde_Id", orde_Id, DbType.Int32, ParameterDirection.Input);
+
+            return db.Query<tbDetallesFactura>(ScriptsDataBase.UDP_tbDetallesFacturasByIdOrden, parametros, commandType: CommandType.StoredProcedure);
+        }
+
+        public IEnumerable<tbDetallesFactura> ListByIdFactura(int fact_Id)
+        {
+            using var db = new SqlConnection(OpticaPopularContext.ConnectionString);
+
+            var parametros = new DynamicParameters();
+
+            parametros.Add("@fact_Id", fact_Id, DbType.Int32, ParameterDirection.Input);
+
+            return db.Query<tbDetallesFactura>(ScriptsDataBase.UDP_tbDetallesFactura_ListByFacturaId, parametros, commandType: CommandType.StoredProcedure);
+        }
     }
 }

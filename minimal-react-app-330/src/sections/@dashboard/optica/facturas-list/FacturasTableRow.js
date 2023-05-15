@@ -1,4 +1,5 @@
 /* eslint-disable camelcase */
+import axios from 'axios';
 import * as React from 'react';
 import Moment from 'moment';
 import PropTypes from 'prop-types';
@@ -25,12 +26,12 @@ import { TableMoreMenu, TableNoData } from '../../../../components/table';
 
 // ----------------------------------------------------------------------
 
-export default function FacturasTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRow, onDetailsRow, onDetallesCita, onDetalle }) {
+export default function FacturasTableRow({ row, onDetallesFactura }) {
 
   Moment.locale('en');
 
-  const { cita_Id, clie_Nombres, clie_Apellidos, cons_Nombre, empe_Nombres, cita_Fecha, sucu_Id, deci_Id, deci_Costo, deci_HoraInicio, deci_HoraFin } = row;
-  
+  const { fact_Id, cita_Id, fact_Fecha, meto_Nombre, empe_Nombres, empe_Apellidos, fact_Total } = row;
+
   const [openMenu, setOpenMenuActions] = useState(null);
 
   const [openMenuDetails, setOpenMenuActionsDetails] = useState(null);
@@ -38,7 +39,9 @@ export default function FacturasTableRow({ row, selected, onEditRow, onSelectRow
   const [open, setOpen] = React.useState(false);
 
   const [tableEmpty, setTableEmpty] = useState(false);
-  
+
+  const [tableData, setTableData] = useState([]);
+
   const handleOpenMenu = (event) => {
     setOpenMenuActions(event.currentTarget);
   };
@@ -55,20 +58,39 @@ export default function FacturasTableRow({ row, selected, onEditRow, onSelectRow
     setOpenMenuActionsDetails(null);
   };
 
+  useEffect(() => {
+    axios.get(`FacturasDetalles/ListByIdFactura/${fact_Id}`)
+    .then((response) => {
+        if (response.data.code === 200) {
+            if (response.data.data.length > 0) {
+                const data = response.data.data
+                .map(item => ({
+                    defa_Id: item.defa_Id, 
+                    fact_Id: item.fact_Id, 
+                    orde_Id: item.orde_Id, 
+                    envi_Id: item.envi_Id, 
+                }));
+                setTableData(data);
+                setTableEmpty(false);   
+            }
+        }
+    })
+    .catch(error => console.error(error));
+}, [])
+
   React.useEffect(() => {
-    if(row.deci_Id === 0){
+    if (tableData.length === 0) {
       setTableEmpty(true);
-    }else{
+    } else {
       setTableEmpty(false);
     }
-  }, [row.deci_Id])
+  }, [tableData])
+
 
   return (
     <>
-    
-    <TableRow hover selected={selected}>
-      
-      <TableCell>
+      <TableRow hover>
+        <TableCell>
           <IconButton
             aria-label="expand row"
             size="small"
@@ -78,135 +100,62 @@ export default function FacturasTableRow({ row, selected, onEditRow, onSelectRow
           </IconButton>
         </TableCell>
 
-      <TableCell>{(row.cita_Id)}</TableCell>
+        <TableCell>{(row.fact_Id)}</TableCell>
 
-      <TableCell>{(row.clie_Nombres)}</TableCell>
+        <TableCell>{(row.cita_Id)}</TableCell>
 
-      <TableCell>{(row.clie_Apellidos)}</TableCell>
-      
-      <TableCell>{(row.cons_Nombre )}</TableCell>
+        <TableCell>{(Moment(row.fact_Fecha).format('DD-MM-YYYY'))}</TableCell>
 
-      <TableCell>{(row.empe_Nombres)}</TableCell>
+        <TableCell>{(row.meto_Nombre)}</TableCell>
 
-      <TableCell>{(Moment(row.cita_Fecha).format('DD-MM-YYYY'))}</TableCell>
+        <TableCell>{(row.empe_Nombres)}</TableCell>
 
-      <TableCell>{(row.sucu_Id)}</TableCell>
-      
-      <TableCell  onClick={onSelectRow}>
-        <TableMoreMenu
-          open={openMenu}
-          onOpen={handleOpenMenu}
-          onClose={handleCloseMenu}
-          actions={
-            <>
-              <MenuItem
-                onClick={() => {
-                  onDeleteRow();
-                  handleCloseMenu();
-                }}
-                sx={{ color: 'error.main' }}
-              >
-                <Iconify icon={'eva:trash-2-outline'} />
-                Eliminar
-              </MenuItem>
-              <MenuItem
-                onClick={() => {
-                  onEditRow();
-                  handleCloseMenu();
-                }}
-              >
-                <Iconify icon={'eva:edit-fill'} />
-                Editar
-              </MenuItem>
-              <MenuItem
-                onClick={() => {
-                  onDetalle();
-                  handleCloseMenu();
-                }}
-              >
-                <Iconify icon={'mdi:format-list-bulleted'} />
-                Detalles
-              </MenuItem>
-              <MenuItem
-                onClick={() => {
-                  onDetailsRow();
-                  handleCloseMenu();
-                }}
-                style={{display: row.deci_Id !== 0 ? 'none' : ''}}
-              >
-                <Iconify icon={'mdi:check-all'} />
-                 Completar cita
-              </MenuItem>
-            </>
-          }
-        />
-      </TableCell>
-    </TableRow>
+        <TableCell>{(row.empe_Apellidos)}</TableCell>
+        <TableCell>L. {(row.fact_Total.toFixed(2))}</TableCell>
 
-    <TableRow>
-    <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={9}>
-      <Collapse in={open} timeout="auto" unmountOnExit>
-        <Box sx={{ margin: 1 }}>
-          <Typography variant="h6" gutterBottom component="div">
-            Detalle cita
-          </Typography>
-          <Table size="small" aria-label="purchases">
-            <TableHead>
-              <TableRow>
-                <TableCell>Id</TableCell>
-                <TableCell>Costo</TableCell>
-                <TableCell>Hora Inicio</TableCell>
-                <TableCell>Hora Fin</TableCell>
-                <TableCell>Acciones</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-            <TableRow key={row.deci_Id}>
-                  <TableCell component="th" scope="row">
-                    {row.deci_Id === 0 ? '' : row.deci_Id}
-                  </TableCell>
-                  <TableCell component="th" scope="row">
-                    {row.deci_Costo === 0 ? '' : row.deci_Costo}
-                  </TableCell>
-                  <TableCell component="th" scope="row">
-                    {row.deci_HoraInicio}
-                  </TableCell>
-                  <TableCell component="th" scope="row">
-                    {row.deci_HoraFin}
-                  </TableCell>
-                  <TableCell component="th" scope="row" style={{display: row.deci_Id === 0 ? 'none' : 'inline'}} >
-                  <TableMoreMenu
-                    open={openMenuDetails}
-                    onOpen={handleOpenMenuDetails}
-                    onClose={handleCloseMenuDetails}
-                    actions={
-                  <>
-                    <MenuItem
-                      onClick={() => {
-                        onDetallesCita();
-                        handleCloseMenuDetails();
-                      }}
-                    >
-                    <Iconify icon={'eva:edit-fill'} />
-                    Editar
-                   </MenuItem>
-                  </>
-                  }
-                   />
-                  </TableCell>
-              </TableRow>
-              <TableNoData isNotFound={tableEmpty} />
-            </TableBody>
-          </Table>
-        </Box>
-      </Collapse>
-    </TableCell>
-  </TableRow>
-  </>
+      </TableRow>
+
+      <TableRow>
+        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={9}>
+          <Collapse in={open} timeout="auto" unmountOnExit>
+            <Box sx={{ margin: 1 }}>
+              <Typography variant="h6" gutterBottom component="div">
+                Detalles factura
+              </Typography>
+              <Table size="small" aria-label="purchases">
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Id</TableCell>
+                    <TableCell>Id Orden</TableCell>
+                    <TableCell>Id Envio</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {tableData.map((item) => (
+                    <TableRow>
+                         <TableCell component="th" scope="row">
+                                      {item?.defa_Id === 0 ? '' : item?.defa_Id}
+                                    </TableCell>
+                                    <TableCell component="th" scope="row">
+                                      {item?.orde_Id === 0 ? '' : item?.orde_Id}
+                                    </TableCell>
+                                    <TableCell component="th" scope="row">
+                                      {item?.envi_Id === 0 ? '' : item?.envi_Id}
+                                    </TableCell>
+                    </TableRow>
+                  ))}
+                  <TableNoData isNotFound={tableEmpty} />
+                </TableBody>
+              </Table>
+            </Box>
+          </Collapse>
+        </TableCell>
+      </TableRow>
+    </>
   );
 }
 
-CitasTableRow.propTypes = {
+FacturasTableRow.propTypes = {
   row: PropTypes.object,
   selected: PropTypes.bool,
   onEditRow: PropTypes.func,

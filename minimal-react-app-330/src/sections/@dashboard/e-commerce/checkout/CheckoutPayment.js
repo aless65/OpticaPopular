@@ -187,8 +187,13 @@ export default function CheckoutPayment({ onBackStep, direccion, clie_Id, cita_I
                 },
             }).then(response => {
                 if (response.data.code === 200) {
-                    setFactId(response.data.data.codeStatus);
-                    setAllCorrect(true);
+                    if(response.data.data.codeStatus > 0){
+                        setFactId(response.data.data.codeStatus);
+                        setAllCorrect(true);
+                    }else{
+                        setAllCorrect(false);
+                        enqueueSnackbar(`Ocurrio un error al intentar finalizar la venta`, { variant: 'error' });
+                    }
                 } else {
                     setAllCorrect(false);
                 }
