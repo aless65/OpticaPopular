@@ -57,7 +57,7 @@ export default function DeleteEmpleadoDialog({ open, onClose, empleados, setTabl
                 empe_Id: empeId,
             };
 
-            fetch("http://opticapopular.somee.com/api/Empleados/Eliminar", {
+            fetch("https://localhost:44362/api/Empleados/Eliminar", {
                 method: "PUT",
                 mode: "cors",
                 headers: {

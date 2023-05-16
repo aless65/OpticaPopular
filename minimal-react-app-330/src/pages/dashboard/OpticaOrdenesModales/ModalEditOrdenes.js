@@ -78,7 +78,7 @@ export default function ModalEditarOrden({ open, onClose, ordenes, setTableData,
             setFechaEntregaRealTemporal(dayjs(orden.orde_FechaEntregaReal));
         }
 
-        // fetch(`http://opticapopular.somee.com/api/Ordenes/ListadoDetalles?id=${orden.orde_Id}`)
+        // fetch(`https://localhost:44362/api/Ordenes/ListadoDetalles?id=${orden.orde_Id}`)
         //     .then(response => response.json())
         //     .then(data => {
         //         if(data.data){

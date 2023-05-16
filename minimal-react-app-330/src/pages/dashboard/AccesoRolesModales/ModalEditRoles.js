@@ -95,7 +95,7 @@ export default function EditRolDialog({ open, onClose, roles, setTableData, role
       };
 
 
-      fetch("http://opticapopular.somee.com/api/Roles/Editar", {
+      fetch("https://localhost:44362/api/Roles/Editar", {
         method: "PUT",
         mode: "cors",
         headers: {
@@ -151,7 +151,7 @@ export default function EditRolDialog({ open, onClose, roles, setTableData, role
   };
 
   useEffect(() => {
-    fetch('http://opticapopular.somee.com/api/Pantallas/Listado')
+    fetch('https://localhost:44362/api/Pantallas/Listado')
       .then(response => response.json())
       .then(data => {
         // console.log(data);
@@ -175,7 +175,7 @@ export default function EditRolDialog({ open, onClose, roles, setTableData, role
 
   useEffect(() => {
     if (roleId) {
-      fetch(`http://opticapopular.somee.com/api/Pantallas/ListadoXRoles?id=${roleId}`)
+      fetch(`https://localhost:44362/api/Pantallas/ListadoXRoles?id=${roleId}`)
         .then(response => response.json())
         .then(data => {
           const optionsSelected = data.data.map(item => ({

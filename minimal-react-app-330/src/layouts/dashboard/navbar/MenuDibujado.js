@@ -7,7 +7,7 @@
 
 // export const fetchPantallasData = async (navConfig, setNavConfig) => {
 //   try {
-//     const response = await axios.get(`http://opticapopular.somee.com/api/Pantallas/ListadoMenu?esAdmin=${JSON.parse(localStorage.getItem('usuario')).usua_EsAdmin}&role_Id=${JSON.parse(localStorage.getItem('usuario')).role_Id}`);
+//     const response = await axios.get(`https://localhost:44362/api/Pantallas/ListadoMenu?esAdmin=${JSON.parse(localStorage.getItem('usuario')).usua_EsAdmin}&role_Id=${JSON.parse(localStorage.getItem('usuario')).role_Id}`);
 //     const pantallasData = response.data;
 
 //     console.log(pantallasData);

@@ -40,7 +40,7 @@ export default function AppCurrentDownload() {
   const [chartData, setChartData] = useState([]);
 
   useEffect(() => {
-    fetch('http://opticapopular.somee.com/api/Empleados/GráficaSexo')
+    fetch('https://localhost:44362/api/Empleados/GráficaSexo')
       .then(response => response.json())
       .then(data => {
         const newData = [parseInt(data.data.femenino, 10), parseInt(data.data.masculino, 10)];

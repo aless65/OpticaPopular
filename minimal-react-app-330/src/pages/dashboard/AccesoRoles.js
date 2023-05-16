@@ -79,7 +79,7 @@ export default function AccesoRoles() {
   const [isLoadingPage, setIsLoadingPage] = useState(true);
 
   useEffect(() => {
-    fetch(`http://opticapopular.somee.com/api/Pantallas/PantallasAccesos?role_Id=${JSON.parse(localStorage.getItem('usuario')).role_Id}&esAdmin=${JSON.parse(localStorage.getItem('usuario')).usua_EsAdmin}&pant_Nombre=roles`)
+    fetch(`https://localhost:44362/api/Pantallas/PantallasAccesos?role_Id=${JSON.parse(localStorage.getItem('usuario')).role_Id}&esAdmin=${JSON.parse(localStorage.getItem('usuario')).usua_EsAdmin}&pant_Nombre=roles`)
       .then(response => response.json())
       .then(data => {
         if(data === 0){

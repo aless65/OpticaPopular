@@ -96,7 +96,7 @@ export default function EditRolCategoriaDialog({ open, onClose, marcas, setTable
 
       console.log(jsonData)
 
-      fetch("http://opticapopular.somee.com/api/Marcas/Editar", {
+      fetch("https://localhost:44362/api/Marcas/Editar", {
         method: "PUT",
         mode: "cors",
         headers: {

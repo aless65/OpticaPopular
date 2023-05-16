@@ -141,7 +141,7 @@ export default function ModalEditarOrdenDetalle({ open, onClose, ordendetalles, 
 
     useEffect(() => {
         if (defaultValues.aros) {
-            fetch(`http://opticapopular.somee.com/api/Aros/StockAros?aros_Id=${defaultValues.aros}&sucu_Id=${defaultValues.sucursal}`)
+            fetch(`https://localhost:44362/api/Aros/StockAros?aros_Id=${defaultValues.aros}&sucu_Id=${defaultValues.sucursal}`)
                 .then(response => response.json())
                 .then(data => {
                     // console.log(defaultValues.aros);
@@ -167,7 +167,7 @@ export default function ModalEditarOrdenDetalle({ open, onClose, ordendetalles, 
 
         console.log(jsonData);
 
-        fetch("http://opticapopular.somee.com/api/Ordenes/EditarDetalles", {
+        fetch("https://localhost:44362/api/Ordenes/EditarDetalles", {
             method: "PUT",
             mode: "cors",
             headers: {

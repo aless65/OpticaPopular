@@ -131,7 +131,7 @@ export default function ProveedorNewEditForm({ isEdit, currentProveedor }) {
      console.log(jsonData)
 
       if (isEdit) {
-        fetch("http://opticapopular.somee.com/api/Proveedores/Editar", {
+        fetch("https://localhost:44362/api/Proveedores/Editar", {
           method: "PUT",
           mode: "cors",
           headers: {
@@ -154,7 +154,7 @@ export default function ProveedorNewEditForm({ isEdit, currentProveedor }) {
           })
           .catch((error) => console.error(error));
       } else {
-        fetch("http://opticapopular.somee.com/api/Proveedores/Insertar", {
+        fetch("https://localhost:44362/api/Proveedores/Insertar", {
           method: "POST",
           mode: "cors",
           headers: {
@@ -185,7 +185,7 @@ export default function ProveedorNewEditForm({ isEdit, currentProveedor }) {
 
   useEffect(() => {
 
-    fetch('http://opticapopular.somee.com/api/Departamentos/Listado')
+    fetch('https://localhost:44362/api/Departamentos/Listado')
       .then(response => response.json())
       .then(data => {
         const optionsData = data.data.map(item => ({
@@ -201,7 +201,7 @@ export default function ProveedorNewEditForm({ isEdit, currentProveedor }) {
   }, [currentProveedor]);
 
   useEffect(() => {
-    fetch(`http://opticapopular.somee.com/api/Municipios/ListadoDdl?id=${depaId}`)
+    fetch(`https://localhost:44362/api/Municipios/ListadoDdl?id=${depaId}`)
       .then(response => response.json())
       .then(data => {
         const optionsData = data.data.map(item => ({
@@ -218,7 +218,7 @@ export default function ProveedorNewEditForm({ isEdit, currentProveedor }) {
   }, [depaId])
 
   useEffect(() => {
-    fetch(`http://opticapopular.somee.com/api/Municipios/ListadoDdl?id=${currentProveedor?.depa_Id}`)
+    fetch(`https://localhost:44362/api/Municipios/ListadoDdl?id=${currentProveedor?.depa_Id}`)
       .then(response => response.json())
       .then(data => {
         const optionsData = data.data.map(item => ({

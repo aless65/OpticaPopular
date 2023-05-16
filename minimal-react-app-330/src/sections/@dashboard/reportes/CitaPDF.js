@@ -33,7 +33,7 @@ export default function InvoicePDF({ invoice }) {
   const [infoCitas, setInfoCitas] = useState([]);
 
   useEffect(() => {
-    fetch(`http://opticapopular.somee.com/api/Citas/BuscarCitasTerminadas/0`)
+    fetch(`https://localhost:44362/api/Citas/BuscarCitasTerminadas/0`)
       .then(response => response.json())
       .then(data => {
         // const optionsData = data.data.map(item => ({

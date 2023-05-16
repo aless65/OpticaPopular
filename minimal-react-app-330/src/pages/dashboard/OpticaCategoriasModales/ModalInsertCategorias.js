@@ -79,7 +79,7 @@ export default function AddCategoriaDialog({ open, onClose, categorias, setTable
         cate_UsuCreacion: JSON.parse(localStorage.getItem('usuario')).usua_Id,
       };
 
-      fetch("http://opticapopular.somee.com/api/Categorias/Insertar", {
+      fetch("https://localhost:44362/api/Categorias/Insertar", {
         method: "POST",
         mode: "cors",
         headers: {

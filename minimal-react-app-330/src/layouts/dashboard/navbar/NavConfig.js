@@ -45,7 +45,7 @@ const ICONS = {
 const fetchPantallasData = async () => {
   try {
     // console.log("entra");
-    const response = await fetch(`http://opticapopular.somee.com/api/Pantallas/ListadoMenu?esAdmin=${JSON.parse(localStorage.getItem('usuario')).usua_EsAdmin}&role_Id=${JSON.parse(localStorage.getItem('usuario')).role_Id}`, {
+    const response = await fetch(`https://localhost:44362/api/Pantallas/ListadoMenu?esAdmin=${JSON.parse(localStorage.getItem('usuario')).usua_EsAdmin}&role_Id=${JSON.parse(localStorage.getItem('usuario')).role_Id}`, {
       headers: {
         'Content-Type': 'application/json',
       },

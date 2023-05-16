@@ -79,7 +79,7 @@ export default function AddMarcaDialog({ open, onClose, marcas, setTableData }) 
         usua_IdCreacion: JSON.parse(localStorage.getItem('usuario')).usua_Id,
       };
 
-      fetch("http://opticapopular.somee.com/api/Marcas/Insertar", {
+      fetch("https://localhost:44362/api/Marcas/Insertar", {
         method: "POST",
         mode: "cors",
         headers: {

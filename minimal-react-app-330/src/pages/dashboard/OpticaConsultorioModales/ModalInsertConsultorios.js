@@ -53,7 +53,7 @@ export default function AddConsultorioDialog({ open, onClose, consultorios, setT
  
 
   useEffect(() => {
-    fetch('http://opticapopular.somee.com/api/Empleados/Listado')
+    fetch('https://localhost:44362/api/Empleados/Listado')
       .then(response => response.json())
       .then(data => {
         // console.log(data);
@@ -101,7 +101,7 @@ export default function AddConsultorioDialog({ open, onClose, consultorios, setT
         usua_IdCreacion: JSON.parse(localStorage.getItem('usuario')).usua_Id,
       };
 
-      fetch("http://opticapopular.somee.com/api/Consultorios/Insertar", {
+      fetch("https://localhost:44362/api/Consultorios/Insertar", {
         method: "POST",
         mode: "cors",
         headers: {

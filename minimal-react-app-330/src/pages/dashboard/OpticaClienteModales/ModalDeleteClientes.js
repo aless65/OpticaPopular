@@ -59,7 +59,7 @@ export default function DeleteClienteDialog({ open, onClose, clientes, setTableD
                 clie_Id: clienteId,
             };
 
-            fetch("http://opticapopular.somee.com/api/Clientes/Eliminar", {
+            fetch("https://localhost:44362/api/Clientes/Eliminar", {
                 method: "PUT",
                 mode: "cors",
                 headers: {

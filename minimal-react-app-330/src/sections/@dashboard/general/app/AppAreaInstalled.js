@@ -25,7 +25,7 @@ export default function AppAreaInstalled() {
   const [dataSucursales, setDataSucursales] = useState([]);
 
   useEffect(() => {
-    fetch('http://opticapopular.somee.com/api/Ordenes/GraficaXSucursales')
+    fetch('https://localhost:44362/api/Ordenes/GraficaXSucursales')
       .then(response => response.json())
       .then(data => {
         // console.log(data.data);

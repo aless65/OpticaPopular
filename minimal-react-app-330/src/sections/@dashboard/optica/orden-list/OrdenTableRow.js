@@ -50,7 +50,7 @@ export default function OrdenTableRow({ row, selected, onEditRow, onSelectRow, o
     const [detallesOrden, setDetallesOrden] = useState([]);
 
     useEffect(() => {
-        fetch(`http://opticapopular.somee.com/api/Ordenes/ListadoDetalles?id=${orde_Id}`)
+        fetch(`https://localhost:44362/api/Ordenes/ListadoDetalles?id=${orde_Id}`)
             .then(response => response.json())
             .then(data => {
                 setDetallesOrden(data.data);

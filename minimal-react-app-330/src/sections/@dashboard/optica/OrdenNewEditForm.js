@@ -189,7 +189,7 @@ export default function OrdenNewEditForm({ isEdit, currentOrden, orden, sucuId }
     }
 
     useEffect(() => {
-        if(isEdit === false){
+        if(isEdit === false && !ordeId){
             dispatch(getOrdenesDetalles(0));
         }
 
@@ -266,7 +266,7 @@ export default function OrdenNewEditForm({ isEdit, currentOrden, orden, sucuId }
 
     useEffect(() => {
         if (defaultValues.aros) {
-            fetch(`http://opticapopular.somee.com/api/Aros/StockAros?aros_Id=${defaultValues.aros}&sucu_Id=${defaultValues.sucursal}`)
+            fetch(`https://localhost:44362/api/Aros/StockAros?aros_Id=${defaultValues.aros}&sucu_Id=${defaultValues.sucursal}`)
                 .then(response => response.json())
                 .then(data => {
                     // console.log(defaultValues.aros);
@@ -314,7 +314,7 @@ export default function OrdenNewEditForm({ isEdit, currentOrden, orden, sucuId }
 
                     console.log(jsonData);
 
-                    fetch("http://opticapopular.somee.com/api/Ordenes/Insertar", {
+                    fetch("https://localhost:44362/api/Ordenes/Insertar", {
                         method: "POST",
                         mode: "cors",
                         headers: {
@@ -358,7 +358,7 @@ export default function OrdenNewEditForm({ isEdit, currentOrden, orden, sucuId }
 
             console.log(jsonData);
 
-            fetch("http://opticapopular.somee.com/api/Ordenes/InsertarDetalles", {
+            fetch("https://localhost:44362/api/Ordenes/InsertarDetalles", {
                 method: "POST",
                 mode: "cors",
                 headers: {
@@ -399,7 +399,7 @@ export default function OrdenNewEditForm({ isEdit, currentOrden, orden, sucuId }
 
     useEffect(() => {
 
-        fetch('http://opticapopular.somee.com/api/Clientes/Listado')
+        fetch('https://localhost:44362/api/Clientes/Listado')
             .then(response => response.json())
             .then(data => {
                 const optionsData = data.data.map(item => ({
@@ -410,7 +410,7 @@ export default function OrdenNewEditForm({ isEdit, currentOrden, orden, sucuId }
             })
             .catch(error => console.error(error));
 
-        fetch('http://opticapopular.somee.com/api/Sucursales/Listado')
+        fetch('https://localhost:44362/api/Sucursales/Listado')
             .then(response => response.json())
             .then(data => {
                 const optionsData = data.data.map(item => ({
@@ -425,7 +425,7 @@ export default function OrdenNewEditForm({ isEdit, currentOrden, orden, sucuId }
 
     useEffect(() => {
         if (defaultValues.sucursal) {
-            fetch(`http://opticapopular.somee.com/api/Aros/ListadoXSucursal?id=${defaultValues.sucursal}`)
+            fetch(`https://localhost:44362/api/Aros/ListadoXSucursal?id=${defaultValues.sucursal}`)
                 .then(response => response.json())
                 .then(data => {
                     const optionsData = data.data.map(item => ({
@@ -440,7 +440,7 @@ export default function OrdenNewEditForm({ isEdit, currentOrden, orden, sucuId }
         }
 
         if (isEdit === false) {
-            fetch('http://opticapopular.somee.com/api/Citas/BuscarCitasTerminadas/0')
+            fetch('https://localhost:44362/api/Citas/BuscarCitasTerminadas/0')
                 .then(response => response.json())
                 .then(data => {
                     const optionsData = data.data
@@ -459,7 +459,7 @@ export default function OrdenNewEditForm({ isEdit, currentOrden, orden, sucuId }
                 .catch(error => console.error(error));
 
         } else {
-            fetch('http://opticapopular.somee.com/api/Citas/BuscarCitasTerminadas/0')
+            fetch('https://localhost:44362/api/Citas/BuscarCitasTerminadas/0')
                 .then(response => response.json())
                 .then(data => {
                     const optionsData = data.data.map(item => ({

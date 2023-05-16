@@ -88,7 +88,7 @@ export default function AddRolDialog({ open, onClose, roles, setTableData }) {
         role_Pantallas: data.pantallas,
       };
 
-      fetch("http://opticapopular.somee.com/api/Roles/Insertar", {
+      fetch("https://localhost:44362/api/Roles/Insertar", {
         method: "POST",
         mode: "cors",
         headers: {
@@ -145,7 +145,7 @@ export default function AddRolDialog({ open, onClose, roles, setTableData }) {
   // const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
   useEffect(() => {
-    fetch('http://opticapopular.somee.com/api/Pantallas/Listado')
+    fetch('https://localhost:44362/api/Pantallas/Listado')
       .then(response => response.json())
       .then(data => {
         // console.log(data);

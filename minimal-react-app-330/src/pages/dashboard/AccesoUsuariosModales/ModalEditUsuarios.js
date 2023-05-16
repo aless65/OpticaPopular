@@ -77,7 +77,7 @@ export default function EditUserDialog({ open, onClose, usuarios, setTableData, 
       }, [usuario]);
 
     useEffect(() => {
-        fetch('http://opticapopular.somee.com/api/Empleados/Listado')
+        fetch('https://localhost:44362/api/Empleados/Listado')
             .then(response => response.json())
             .then(data => {
                 const optionsData = data.data.map(item => ({
@@ -90,7 +90,7 @@ export default function EditUserDialog({ open, onClose, usuarios, setTableData, 
     }, []);
 
     useEffect(() => {
-        fetch('http://opticapopular.somee.com/api/Roles/Listado')
+        fetch('https://localhost:44362/api/Roles/Listado')
             .then(response => response.json())
             .then(data => {
                 // console.log(data);
@@ -148,7 +148,7 @@ export default function EditUserDialog({ open, onClose, usuarios, setTableData, 
                 usua_UsuModificacion: JSON.parse(localStorage.getItem('usuario')).usua_Id,
             };
 
-            fetch("http://opticapopular.somee.com/api/Usuarios/Editar", {
+            fetch("https://localhost:44362/api/Usuarios/Editar", {
                 method: "PUT",
                 mode: "cors",
                 headers: {

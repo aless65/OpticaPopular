@@ -44,7 +44,7 @@ export default function ModalEliminarOrden({ open, onClose, ordenes, setTableDat
 
         console.log(jsonData);
 
-        fetch("http://opticapopular.somee.com/api/Ordenes/Eliminar", {
+        fetch("https://localhost:44362/api/Ordenes/Eliminar", {
             method: "PUT",
             mode: "cors",
             headers: {

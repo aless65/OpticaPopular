@@ -152,7 +152,7 @@ export default function ClienteNewEditForm({ isEdit, currentCliente }) {
       };
 
       if (isEdit) {
-        fetch("http://opticapopular.somee.com/api/Clientes/Editar", {
+        fetch("https://localhost:44362/api/Clientes/Editar", {
           method: "PUT",
           mode: "cors",
           headers: {
@@ -175,7 +175,7 @@ export default function ClienteNewEditForm({ isEdit, currentCliente }) {
           })
           .catch((error) => console.error(error));
       } else {
-        fetch("http://opticapopular.somee.com/api/Clientes/Insertar", {
+        fetch("https://localhost:44362/api/Clientes/Insertar", {
           method: "POST",
           mode: "cors",
           headers: {
@@ -205,7 +205,7 @@ export default function ClienteNewEditForm({ isEdit, currentCliente }) {
 
   useEffect(() => {
 
-    fetch('http://opticapopular.somee.com/api/EstadosCiviles/Listado')
+    fetch('https://localhost:44362/api/EstadosCiviles/Listado')
       .then(response => response.json())
       .then(data => {
         const optionsData = data.data.map(item => ({
@@ -216,7 +216,7 @@ export default function ClienteNewEditForm({ isEdit, currentCliente }) {
       })
       .catch(error => console.error(error));
 
-    fetch('http://opticapopular.somee.com/api/Departamentos/Listado')
+    fetch('https://localhost:44362/api/Departamentos/Listado')
       .then(response => response.json())
       .then(data => {
         const optionsData = data.data.map(item => ({
@@ -232,7 +232,7 @@ export default function ClienteNewEditForm({ isEdit, currentCliente }) {
   }, [currentCliente]);
 
   useEffect(() => {
-    fetch(`http://opticapopular.somee.com/api/Municipios/ListadoDdl?id=${depaId}`)
+    fetch(`https://localhost:44362/api/Municipios/ListadoDdl?id=${depaId}`)
       .then(response => response.json())
       .then(data => {
         const optionsData = data.data.map(item => ({
@@ -249,7 +249,7 @@ export default function ClienteNewEditForm({ isEdit, currentCliente }) {
   }, [depaId])
 
   useEffect(() => {
-    fetch(`http://opticapopular.somee.com/api/Municipios/ListadoDdl?id=${currentCliente?.depa_Id}`)
+    fetch(`https://localhost:44362/api/Municipios/ListadoDdl?id=${currentCliente?.depa_Id}`)
       .then(response => response.json())
       .then(data => {
         const optionsData = data.data.map(item => ({

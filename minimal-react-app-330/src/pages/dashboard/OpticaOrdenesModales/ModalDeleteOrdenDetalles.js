@@ -39,7 +39,7 @@ export default function ModalEliminarOrdenDetalles({ open, onClose, ordendetalle
 
     const onSubmit = async () => {
 
-        fetch(`http://opticapopular.somee.com/api/Ordenes/EliminarDetalles?id=${deorId}`, {
+        fetch(`https://localhost:44362/api/Ordenes/EliminarDetalles?id=${deorId}`, {
             method: "PUT",
             mode: "cors",
             headers: {

@@ -58,7 +58,7 @@ export default function DeleteMarcaDialog({ open, onClose, marcas, setTableData,
                 marc_Id: marcaId,
             };
 
-            fetch("http://opticapopular.somee.com/api/Marcas/Eliminar", {
+            fetch("https://localhost:44362/api/Marcas/Eliminar", {
                 method: "PUT",
                 mode: "cors",
                 headers: {

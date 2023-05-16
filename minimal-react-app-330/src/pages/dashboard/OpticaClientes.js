@@ -96,7 +96,7 @@ export default function OpticaClientes() {
   // ----------------------------------------------------------------------
   
   useEffect(() => {
-    fetch(`http://opticapopular.somee.com/api/Pantallas/PantallasAccesos?role_Id=${JSON.parse(localStorage.getItem('usuario')).role_Id}&esAdmin=${JSON.parse(localStorage.getItem('usuario')).usua_EsAdmin}&pant_Nombre=clientes`)
+    fetch(`https://localhost:44362/api/Pantallas/PantallasAccesos?role_Id=${JSON.parse(localStorage.getItem('usuario')).role_Id}&esAdmin=${JSON.parse(localStorage.getItem('usuario')).usua_EsAdmin}&pant_Nombre=clientes`)
       .then(response => response.json())
       .then(data => {
         if(data === 0){

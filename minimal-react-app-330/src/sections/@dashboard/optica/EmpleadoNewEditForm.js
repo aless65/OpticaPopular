@@ -164,7 +164,7 @@ export default function EmpleadoNewEditForm({ isEdit, currentEmpleado }) {
       };
 
       if (isEdit) {
-        fetch("http://opticapopular.somee.com/api/Empleados/Editar", {
+        fetch("https://localhost:44362/api/Empleados/Editar", {
           method: "PUT",
           mode: "cors",
           headers: {
@@ -186,7 +186,7 @@ export default function EmpleadoNewEditForm({ isEdit, currentEmpleado }) {
           })
           .catch((error) => console.error(error));
       } else {
-        fetch("http://opticapopular.somee.com/api/Empleados/Insertar", {
+        fetch("https://localhost:44362/api/Empleados/Insertar", {
           method: "POST",
           mode: "cors",
           headers: {
@@ -215,7 +215,7 @@ export default function EmpleadoNewEditForm({ isEdit, currentEmpleado }) {
 
   useEffect(() => {
 
-    fetch('http://opticapopular.somee.com/api/EstadosCiviles/Listado')
+    fetch('https://localhost:44362/api/EstadosCiviles/Listado')
       .then(response => response.json())
       .then(data => {
         const optionsData = data.data.map(item => ({
@@ -226,7 +226,7 @@ export default function EmpleadoNewEditForm({ isEdit, currentEmpleado }) {
       })
       .catch(error => console.error(error));
 
-    fetch('http://opticapopular.somee.com/api/Departamentos/Listado')
+    fetch('https://localhost:44362/api/Departamentos/Listado')
       .then(response => response.json())
       .then(data => {
         const optionsData = data.data.map(item => ({
@@ -237,7 +237,7 @@ export default function EmpleadoNewEditForm({ isEdit, currentEmpleado }) {
       })
       .catch(error => console.error(error));
 
-    fetch('http://opticapopular.somee.com/api/Cargos/Listado')
+    fetch('https://localhost:44362/api/Cargos/Listado')
       .then(response => response.json())
       .then(data => {
         const optionsData = data.data.map(item => ({
@@ -248,7 +248,7 @@ export default function EmpleadoNewEditForm({ isEdit, currentEmpleado }) {
       })
       .catch(error => console.error(error));
 
-    fetch('http://opticapopular.somee.com/api/Sucursales/Listado')
+    fetch('https://localhost:44362/api/Sucursales/Listado')
       .then(response => response.json())
       .then(data => {
         const optionsData = data.data.map(item => ({
@@ -263,7 +263,7 @@ export default function EmpleadoNewEditForm({ isEdit, currentEmpleado }) {
   }, [currentEmpleado]);
 
   useEffect(() => {
-    fetch(`http://opticapopular.somee.com/api/Municipios/ListadoDdl?id=${depaId}`)
+    fetch(`https://localhost:44362/api/Municipios/ListadoDdl?id=${depaId}`)
       .then(response => response.json())
       .then(data => {
         const optionsData = data.data.map(item => ({
@@ -280,7 +280,7 @@ export default function EmpleadoNewEditForm({ isEdit, currentEmpleado }) {
   }, [depaId])
 
   useEffect(() => {
-    fetch(`http://opticapopular.somee.com/api/Municipios/ListadoDdl?id=${currentEmpleado?.depa_Id}`)
+    fetch(`https://localhost:44362/api/Municipios/ListadoDdl?id=${currentEmpleado?.depa_Id}`)
       .then(response => response.json())
       .then(data => {
         const optionsData = data.data.map(item => ({

@@ -57,7 +57,7 @@ export default function DeleteUserDialog({ open, onClose, usuarios, setTableData
                 usua_Id: usuaId,
             };
 
-            fetch("http://opticapopular.somee.com/api/Usuarios/Eliminar", {
+            fetch("https://localhost:44362/api/Usuarios/Eliminar", {
                 method: "PUT",
                 mode: "cors",
                 headers: {

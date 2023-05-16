@@ -59,7 +59,7 @@ export default function DeleteRolDialog({ open, onClose, roles, setTableData, ro
                 role_Id: roleId,
             };
 
-            fetch("http://opticapopular.somee.com/api/Roles/Eliminar", {
+            fetch("https://localhost:44362/api/Roles/Eliminar", {
                 method: "PUT",
                 mode: "cors",
                 headers: {
