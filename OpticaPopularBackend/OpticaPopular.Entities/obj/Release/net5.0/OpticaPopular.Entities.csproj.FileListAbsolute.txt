@@ -57,3 +57,15 @@ C:\Users\LAB01\Documents\GitHub\OpticaPopular\OpticaPopularBackend\OpticaPopular
 C:\Users\LAB01\Documents\GitHub\OpticaPopular\OpticaPopularBackend\OpticaPopular.Entities\obj\Release\net5.0\OpticaPopular.Entities.dll
 C:\Users\LAB01\Documents\GitHub\OpticaPopular\OpticaPopularBackend\OpticaPopular.Entities\obj\Release\net5.0\ref\OpticaPopular.Entities.dll
 C:\Users\LAB01\Documents\GitHub\OpticaPopular\OpticaPopularBackend\OpticaPopular.Entities\obj\Release\net5.0\OpticaPopular.Entities.pdb
+C:\Users\LAB02\Desktop\OpticaPopular\OpticaPopularBackend\OpticaPopular.Entities\bin\Release\net5.0\OpticaPopular.Entities.deps.json
+C:\Users\LAB02\Desktop\OpticaPopular\OpticaPopularBackend\OpticaPopular.Entities\bin\Release\net5.0\OpticaPopular.Entities.dll
+C:\Users\LAB02\Desktop\OpticaPopular\OpticaPopularBackend\OpticaPopular.Entities\bin\Release\net5.0\ref\OpticaPopular.Entities.dll
+C:\Users\LAB02\Desktop\OpticaPopular\OpticaPopularBackend\OpticaPopular.Entities\bin\Release\net5.0\OpticaPopular.Entities.pdb
+C:\Users\LAB02\Desktop\OpticaPopular\OpticaPopularBackend\OpticaPopular.Entities\obj\Release\net5.0\OpticaPopular.Entities.csproj.AssemblyReference.cache
+C:\Users\LAB02\Desktop\OpticaPopular\OpticaPopularBackend\OpticaPopular.Entities\obj\Release\net5.0\OpticaPopular.Entities.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\LAB02\Desktop\OpticaPopular\OpticaPopularBackend\OpticaPopular.Entities\obj\Release\net5.0\OpticaPopular.Entities.AssemblyInfoInputs.cache
+C:\Users\LAB02\Desktop\OpticaPopular\OpticaPopularBackend\OpticaPopular.Entities\obj\Release\net5.0\OpticaPopular.Entities.AssemblyInfo.cs
+C:\Users\LAB02\Desktop\OpticaPopular\OpticaPopularBackend\OpticaPopular.Entities\obj\Release\net5.0\OpticaPopular.Entities.csproj.CoreCompileInputs.cache
+C:\Users\LAB02\Desktop\OpticaPopular\OpticaPopularBackend\OpticaPopular.Entities\obj\Release\net5.0\OpticaPopular.Entities.dll
+C:\Users\LAB02\Desktop\OpticaPopular\OpticaPopularBackend\OpticaPopular.Entities\obj\Release\net5.0\ref\OpticaPopular.Entities.dll
+C:\Users\LAB02\Desktop\OpticaPopular\OpticaPopularBackend\OpticaPopular.Entities\obj\Release\net5.0\OpticaPopular.Entities.pdb
